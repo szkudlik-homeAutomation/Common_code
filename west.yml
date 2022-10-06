@@ -1,0 +1,23 @@
+manifest:
+  defaults:
+    remote: szkudlik-homeAutomation
+
+  remotes:
+    - name: szkudlik-homeAutomation
+      url-base: https://github.com/szkudlik-homeAutomation
+
+  projects:
+    - name: TCP_Communication_lib
+      path: src/lib/TCP_Communication_lib
+      repo-path: TCP_Communication_lib
+      revision: fe11351ca06244d7512bc2738dc48e53a84b742f
+
+    - name: TLE8457_serial_lib
+      path: src/lib/TLE8457_serial_lib
+      repo-path: TLE8457_serial_lib
+      revision: 5f7e75bb7b7cd2e54875e103279389eff37a7350
+
+    - name: ds1820
+      path: src/lib/external/ds1820
+      repo-path: Arduino-Temperature-Control-Library
+      revision: a03035a85f730a6835019b1bc740caddf285b302
