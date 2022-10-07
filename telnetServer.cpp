@@ -1,4 +1,4 @@
-#include "../global.h"
+#include "../../global.h"
 #include "telnetServer.h"
 #include <Commander.h>
 

@@ -5,10 +5,10 @@
  *      Author: szkud
  */
 
-#include "../../global.h"
+#include "../../../global.h"
 #include "tDS1820Sensor.h"
 #include <OneWire.h>
-#include "../lib/external/ds1820/DallasTemperature.h"
+#include "../../lib/external/ds1820/DallasTemperature.h"
 
 void tDS1820Sensor::SetSpecificConfig(void *pBlob)
 {

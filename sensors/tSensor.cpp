@@ -5,7 +5,7 @@
  *      Author: szkud
  */
 
-#include "../../global.h"
+#include "../../../global.h"
 #include "tSensor.h"
 
 tSensor* tSensor::pFirst = NULL;

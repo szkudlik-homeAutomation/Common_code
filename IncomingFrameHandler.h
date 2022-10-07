@@ -8,8 +8,8 @@
 #ifndef SRC_INCOMINGFRAMEHANDLER_H_
 #define SRC_INCOMINGFRAMEHANDLER_H_
 
-#include "../global.h"
-#include "lib/TLE8457_serial_lib/TLE8457_serial_lib.h"
+#include "../../global.h"
+#include "../lib/TLE8457_serial_lib/TLE8457_serial_lib.h"
 
 class IncomingFrameHandler: public CommRecieverProcessCallback {
 public:

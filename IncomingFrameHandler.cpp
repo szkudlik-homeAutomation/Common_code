@@ -6,11 +6,11 @@
  */
 
 
-#include "../global.h"
+#include "../../global.h"
 
 #include "IncomingFrameHandler.h"
 
-#include "../WorkerProcess.h"
+#include "../../WorkerProcess.h"
 //TODO
 
 void IncomingFrameHandler::onFrame(void *pData, uint8_t MessageType, uint8_t SenderDevId)

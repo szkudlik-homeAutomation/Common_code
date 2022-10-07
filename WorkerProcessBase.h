@@ -1,6 +1,6 @@
 #ifndef WORKER_PROCESS_BASE
 #define WORKER_PROCESS_BASE
-#include "../global.h"
+#include "../../global.h"
 #include <ProcessScheduler.h>
 #include "ResponseHandler.h"
 #include <ArduinoQueue.h>

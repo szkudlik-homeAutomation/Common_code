@@ -8,8 +8,8 @@
 #ifndef SRC_SERVLETS_H_
 #define SRC_SERVLETS_H_
 
-#include "../global.h"
-#include "lib/TCP_Communication_lib/httpServer.h"
+#include "../../global.h"
+#include "../lib/TCP_Communication_lib/httpServer.h"
 #include "sensors/tDS1820Sensor.h"
 
 /**

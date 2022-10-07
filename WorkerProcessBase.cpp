@@ -1,6 +1,6 @@
 //TODO - split worker to common/sepcific
 
-#include "../global.h"
+#include "../../global.h"
 #include "WorkerProcessBase.h"
 #include "ResponseHandler.h"
 

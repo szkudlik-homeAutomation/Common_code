@@ -8,7 +8,7 @@
 #ifndef SRC_DEBUG_H_
 #define SRC_DEBUG_H_
 
-#include "../global.h"
+#include "../../global.h"
 
 #ifdef CONTROLLER
 

@@ -5,7 +5,7 @@
  *      Author: szkud
  */
 
-#include "../global.h"
+#include "../../global.h"
 #include "servlets.h"
 
 tDS1820Sensor *tDS1820Servlet::mSensors[MAX_NUM_OF_SENSORS];

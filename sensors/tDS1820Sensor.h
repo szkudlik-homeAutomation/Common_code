@@ -8,7 +8,7 @@
 #ifndef SRC_TDS1820SENSOR_H_
 #define SRC_TDS1820SENSOR_H_
 
-#include "../../global.h"
+#include "../../../global.h"
 #include "tSensor.h"
 
 class DallasTemperature;

@@ -1,4 +1,4 @@
-#include "../global.h"
+#include "../../global.h"
 #include "ResponseHandler.h"
 
 ResponseHandler* ResponseHandler::pFirst = NULL;
