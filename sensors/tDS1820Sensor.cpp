@@ -19,6 +19,9 @@ void tDS1820Sensor::SetSpecificConfig(void *pBlob)
    pDs1820->begin();
    pDs1820->setWaitForConversion(false);
    mAvg = pConfig->Avg;
+   mNumOfDevices = pConfig->NumOfDevices;
+   if (mNumOfDevices > MAX_DS1820_DEVICES_ON_BUS)
+      mNumOfDevices  = MAX_DS1820_DEVICES_ON_BUS;
 
    mCurrentMeasurementBlob = (void*) mCurrentMeasurement;
    mMeasurementBlobSize = mAvg ? sizeof(tDS1820Result)  : sizeof(tDS1820Result) * pDs1820->getDS18Count();
@@ -42,14 +45,15 @@ void tDS1820Sensor::doTimeTick()
       mTicksToMeasurementCompete--;
       if (0 == mTicksToMeasurementCompete)
       {
-         uint8_t numOfDev = pDs1820->getDS18Count();
-         if (numOfDev > MAX_DS1820_DEVICES_ON_BUS)
-            numOfDev = MAX_DS1820_DEVICES_ON_BUS;
-         if (mAvg)
+         if (mNumOfDevices != pDs1820->getDS18Count())
+         {
+            Success = false;
+         }
+         else if (mAvg)
          {
             mCurrentMeasurement[0].Temp = 0;
             uint8_t NumOfValidMeasurements = 0;
-            for (uint8_t i = 0; i < numOfDev ; i++)
+            for (uint8_t i = 0; i < mNumOfDevices ; i++)
             {
                int16_t temp = round(pDs1820->getTempCByIndex(i) * 10);
                if (temp > -1270)
@@ -67,7 +71,7 @@ void tDS1820Sensor::doTimeTick()
          else  // mAvg
          {
             Success = true;
-            for (uint8_t i = 0; i < numOfDev ; i++)
+            for (uint8_t i = 0; i < mNumOfDevices ; i++)
             {
                int16_t temp = round(pDs1820->getTempCByIndex(i) * 10);
                if (temp > -1270)
