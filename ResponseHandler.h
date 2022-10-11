@@ -41,13 +41,11 @@ public:
   ResponseHandlerSerial() : ResponseHandler() {}
   virtual ~ResponseHandlerSerial() {};
 
-#ifdef CONTROLLER
 protected:
 #ifdef DEBUG_SERIAL
   virtual void vLog(uint8_t str) { DEBUG_SERIAL.write(str); }
 #else
   virtual void vLog(uint8_t str) { }
-#endif
 #endif
 
 };

@@ -6,6 +6,7 @@
 
 void WorkerProcessBase::service()
 {
+   //TODO - split worker to worker and frame helper (for light control)
   #ifdef CONTROLLER
    if (NULL == pCurrentWorkerTask)
    {

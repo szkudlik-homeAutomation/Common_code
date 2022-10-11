@@ -8,6 +8,8 @@
 #ifndef SRC_DEBUG_H_
 #define SRC_DEBUG_H_
 
+//TODO - move to app code, split
+
 #include "../../global.h"
 
 #ifdef CONTROLLER

@@ -4,10 +4,8 @@
 ResponseHandler* ResponseHandler::pFirst = NULL;
 bool ResponseHandler::mLogsForced = false;
 
-#ifdef CONTROLLER
 #ifdef DEBUG_SERIAL
 ResponseHandlerSerial RespHandler;
-#endif
 #endif
 
 ResponseHandler::~ResponseHandler()
