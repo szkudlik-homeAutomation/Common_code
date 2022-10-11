@@ -67,15 +67,15 @@ tSensor* tSensor::getSensor(uint8_t sensorID)
 void tSensor::onMeasurementCompleted(bool Status)
 {
    misMeasurementValid = Status;
-   if (NULL != mSensorCallback)
+   if (NULL != mpEvent)
       {
       if (Status)
          {
-            mSensorCallback(this,EV_TYPE_MEASUREMENT_COMPLETED);
+            mpEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_COMPLETED);
          }
          else
          {
-            mSensorCallback(this,EV_TYPE_MEASUREMENT_ERROR);
+            mpEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_ERROR);
          }
       }
 }

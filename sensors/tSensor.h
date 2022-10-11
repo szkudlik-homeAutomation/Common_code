@@ -26,21 +26,9 @@
 #define CREATE_SENSOR_STATUS_OTHER_ERROR 3
 //MESSAGE_TYPE_CREATE_SENSOR_STATUS_OTHER_ERROR
 
-
-class tSensorProcess : public Process
+class tSensor;
+class tSensorEvent
 {
-public:
-   tSensorProcess(Scheduler &manager) :
-    Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME) {}
-
-   virtual void setup();
-   virtual void service();
-};
-
-
-extern tSensorProcess SensorProcess;
-
-class tSensor {
 public:
    typedef enum
    {
@@ -50,8 +38,31 @@ public:
       EV_TYPE_THOLD_EXCEEDED
    } tEventType;
 
-   typedef void(*tSensorCallback)(tSensor *pSensor, tEventType EventType);
 
+   tSensorEvent() {}
+   virtual ~tSensorEvent() {}
+
+   virtual void onEvent(tSensor *pSensor, tEventType EventType) = 0;
+private:
+   tSensorEvent *mpNext; friend class tSensor;
+};
+
+class tSensorProcess : public Process
+{
+public:
+   tSensorProcess(Scheduler &manager) :
+    Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME) {}
+
+   virtual void setup();
+   virtual void service();
+
+};
+
+
+extern tSensorProcess SensorProcess;
+
+class tSensor {
+public:
    // create a sensor. Return codes CREATE_SENSOR_STATUS*
    // sensor pointer avaliable through getSensor
    static uint8_t Create(uint8_t SensorType, uint8_t sensorID);
@@ -64,7 +75,7 @@ public:
 
    uint16_t GetMeasurementPeriod() const { return mMeasurementPeriod; }
 
-   void SetCalback(tSensorCallback SensorCallback) { mSensorCallback = SensorCallback; }
+   void SetEventCalback(tSensorEvent *pEvent) { mpEvent = pEvent; }
 
    virtual void SetSpecificConfig(void *pBlob) {};
    void TriggerMeasurement() { if (isRunning()) doTriggerMeasurement(); }
@@ -105,7 +116,7 @@ private:
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
 
-   tSensorCallback mSensorCallback;
+   tSensorEvent *mpEvent;
 };
 
 tSensor *SensorFactory(uint8_t SensorType);
