@@ -75,7 +75,11 @@ public:
 
    uint16_t GetMeasurementPeriod() const { return mMeasurementPeriod; }
 
-   void SetEventCalback(tSensorEvent *pEvent) { mpEvent = pEvent; }
+   void SetEventCalback(tSensorEvent *pEvent)
+   {
+      pEvent->mpNext = mpFirstEvent;
+      mpFirstEvent = pEvent;
+   }
 
    virtual void SetSpecificConfig(void *pBlob) {};
    void TriggerMeasurement() { if (isRunning()) doTriggerMeasurement(); }
@@ -116,7 +120,7 @@ private:
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
 
-   tSensorEvent *mpEvent;
+   tSensorEvent *mpFirstEvent;
 };
 
 tSensor *SensorFactory(uint8_t SensorType);

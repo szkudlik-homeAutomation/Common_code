@@ -42,7 +42,8 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID) :
       mConfigSet(false),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mSensorID(sensorID)
+      mSensorID(sensorID),
+      mpFirstEvent(NULL)
 {
    pNext = pFirst;
    pFirst = this;
@@ -67,17 +68,20 @@ tSensor* tSensor::getSensor(uint8_t sensorID)
 void tSensor::onMeasurementCompleted(bool Status)
 {
    misMeasurementValid = Status;
-   if (NULL != mpEvent)
+   tSensorEvent *pEvent = mpFirstEvent;
+   while (NULL != pEvent)
+   {
+   if (Status)
       {
-      if (Status)
-         {
-            mpEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_COMPLETED);
-         }
-         else
-         {
-            mpEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_ERROR);
-         }
+         pEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_COMPLETED);
       }
+      else
+      {
+         pEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_ERROR);
+      }
+
+   pEvent = pEvent->mpNext;
+   }
 }
 
 void tSensor::Run()
