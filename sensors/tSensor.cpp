@@ -75,7 +75,7 @@ void tSensor::onMeasurementCompleted(bool Status)
       {
          pEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_COMPLETED);
       }
-      else
+   else
       {
          pEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_ERROR);
       }

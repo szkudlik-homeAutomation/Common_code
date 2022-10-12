@@ -39,7 +39,7 @@ public:
    } tEventType;
 
 
-   tSensorEvent() {}
+   tSensorEvent() : mpNext(NULL) {}
    virtual ~tSensorEvent() {}
 
    virtual void onEvent(tSensor *pSensor, tEventType EventType) = 0;
