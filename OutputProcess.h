@@ -2,7 +2,7 @@
 #define OUTPUT_PROCESS
 
 #include "../../global.h"
-#include <ProcessScheduler.h>
+#include "../lib/external/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
 /*
  * requires NUM_OF_OUTPUTS defined

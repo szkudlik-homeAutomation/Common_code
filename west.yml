@@ -10,7 +10,7 @@ manifest:
     - name: TCP_Communication_lib
       path: src/lib/TCP_Communication_lib
       repo-path: TCP_Communication_lib
-      revision: fe11351ca06244d7512bc2738dc48e53a84b742f
+      revision: 240bfac3354ad301098ce89bd6e1734bd7fe8371
 
     - name: TLE8457_serial_lib
       path: src/lib/TLE8457_serial_lib
