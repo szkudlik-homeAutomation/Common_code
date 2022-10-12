@@ -8,7 +8,7 @@
 #define SRC_TSENSOR_H_
 
 #include "../../../global.h"
-#include <ProcessScheduler.h>
+#include "../../lib/external/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
 #define SENSOR_PROCESS_SERVICE_TIME 100
 
