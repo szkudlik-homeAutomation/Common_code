@@ -15,6 +15,7 @@
 // sensor types - equal to communication sensor types
 #define SENSOR_TYPE_DS1820 1
 //MESSAGE_TYPE_CREATE_SENSOR_TYPE_DS1820
+#define SENSOR_TYPE_IMPULSE 2
 
 // error codes - equal to communication error codes
 #define CREATE_SENSOR_STATUS_OK 0
