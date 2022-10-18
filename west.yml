@@ -21,3 +21,9 @@ manifest:
       path: src/lib/external/ds1820
       repo-path: Arduino-Temperature-Control-Library
       revision: a03035a85f730a6835019b1bc740caddf285b302
+            
+    - name: YetAnotherArduinoPcIntLibrary
+      path: src/lib/external/YetAnotherArduinoPcIntLibrary
+      repo-path: YetAnotherArduinoPcIntLibrary
+      revision: eb35b40db38576843ed15337a77a188f7ebe6e16
+      
