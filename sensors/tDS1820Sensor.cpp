@@ -12,7 +12,7 @@
 
 void tDS1820Sensor::SetSpecificConfig(void *pBlob)
 {
-   tDS1820SensorConfig *pConfig = (tDS1820SensorConfig*) pBlob;
+   tConfig *pConfig = (tConfig*) pBlob;
 
    OneWire * pOneWire = new OneWire(pConfig->Pin);
    pDs1820 = new DallasTemperature(pOneWire);
@@ -24,7 +24,7 @@ void tDS1820Sensor::SetSpecificConfig(void *pBlob)
       mNumOfDevices  = MAX_DS1820_DEVICES_ON_BUS;
 
    mCurrentMeasurementBlob = (void*) mCurrentMeasurement;
-   mMeasurementBlobSize = mAvg ? sizeof(tDS1820Result)  : sizeof(tDS1820Result) * pDs1820->getDS18Count();
+   mMeasurementBlobSize = mAvg ? sizeof(tResult)  : sizeof(tResult) * pDs1820->getDS18Count();
 
    mConfigSet = true;
 }
