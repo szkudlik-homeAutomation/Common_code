@@ -15,8 +15,9 @@ public:
    typedef struct
    {
       uint8_t Pin;   // pin that is capable of PCINT
+      uint8_t mode;	//  RISING / FALLING / CHANGE
       bool    ContinousCnt;	// if true the counter won't be cleaned after every period (sum of all impulses since start)
-   } tImpulseSensorConfig;
+   } tConfig;
 
    typedef struct
    {
@@ -27,11 +28,13 @@ public:
    virtual ~tImpulseSensor() {}
    virtual void SetSpecificConfig(void *pBlob);
 
-   void CleanCnt() {}		// makes sense in case of ContinousCnt - clean a counter
+   void CleanCnt(); 	// makes sense in case of ContinousCnt - clean a counter
+   void Impulse() { mCnt++;	}		// interrupt handler
 
 protected:
    virtual void doTriggerMeasurement();
 private:
+   bool mContinousCnt;
    volatile uint16_t mCnt;
    uint16_t mShadowCnt;
 };
