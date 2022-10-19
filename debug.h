@@ -47,7 +47,7 @@
 #define DEBUG_PRINTLN_3(x)
 #endif
 
-
+int getFreeRam();
 
 
 #endif /* SRC_DEBUG_H_ */
