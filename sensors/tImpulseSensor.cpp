@@ -1,19 +1,39 @@
 /*
  * tImpulseSensor.cpp
  *
- *  Created on: 16 paŸ 2022
+ *  Created on: 16 paï¿½ 2022
  *      Author: szkud
  */
 
+#include "../../../global.h"
 #include "tImpulseSensor.h"
 
-void tImpulseSensor::SetSpecificConfig(void *pBlob)
+
+tImpulseSensor::tImpulseSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_IMPULSE,sensorID)
 {
-
+	mResult.Count = 0;
+	mResult.Sum = 0;
+	mCnt = 0;
+	mCurrentMeasurementBlob = &mResult;
+	mMeasurementBlobSize = sizeof(mResult);
+	mConfigSet = true;
 }
-
 
 void tImpulseSensor::doTriggerMeasurement()
 {
+	ATOMIC
+	(
+		mResult.Count = mCnt;
+		mResult.Sum += mCnt;
+		mCnt = 0;
+	);
+	onMeasurementCompleted(true);
+}
 
+void tImpulseSensor::CleanSum()
+{
+	ATOMIC
+	(
+		mResult.Sum = 0;
+	);
 }
