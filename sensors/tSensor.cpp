@@ -9,6 +9,7 @@
 #include "tSensor.h"
 #include "tDS1820Sensor.h"
 #include "tImpulseSensor.h"
+#include "tPt100AnalogSensor.h"
 
 tSensor* tSensor::pFirst = NULL;
 
@@ -29,6 +30,10 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
       case SENSOR_TYPE_IMPULSE:
          pNewSensor = new tImpulseSensor(sensorID);
          break;
+      case SENSOR_TYPE_PT100_ANALOG:
+         pNewSensor = new tPt100AnalogSensor(sensorID);
+         break;
+
       default:
          return CREATE_SENSOR_STATUS_UNKNOWN_SENSOR;
    }
