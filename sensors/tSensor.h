@@ -30,7 +30,7 @@
 //MESSAGE_TYPE_CREATE_SENSOR_STATUS_OTHER_ERROR
 
 class tSensor;
-class tSensorEvent
+class tSensorEvent	//TODO - events by sensorHub only
 {
 public:
    typedef enum
@@ -125,7 +125,5 @@ private:
 
    tSensorEvent *mpFirstEvent;
 };
-
-tSensor *SensorFactory(uint8_t SensorType);
 
 #endif /* SRC_TSENSOR_H_ */
