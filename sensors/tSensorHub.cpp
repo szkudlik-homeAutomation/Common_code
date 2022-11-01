@@ -97,13 +97,15 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
       return;
    }
 
-   Status = pSensor->SetSpecificConfig(pConfigBlob);
-   if (Status != CREATE_SENSOR_STATUS_OK)
+   if (NULL != pConfigBlob)
    {
-      CreateSensorResponse(SensorID, Status);
-      return;
+      Status = pSensor->SetSpecificConfig(pConfigBlob);
+      if (Status != CREATE_SENSOR_STATUS_OK)
+      {
+         CreateSensorResponse(SensorID, Status);
+         return;
+      }
    }
-
    pSensor->SetMeasurementPeriod(MeasurementPeriod);
 
    // add sensor to repository
