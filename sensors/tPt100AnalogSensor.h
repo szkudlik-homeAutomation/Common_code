@@ -27,6 +27,9 @@ public:
 
    virtual void doTriggerMeasurement();
    virtual void SetSpecificConfig(void *pBlob);
+
+   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+
 private:
    tResult mResult;
    uint8_t mPin;

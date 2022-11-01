@@ -10,6 +10,11 @@
 #include <OneWire.h>
 #include "../../lib/external/ds1820/DallasTemperature.h"
 
+uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+{
+   return 0;
+}
+
 void tDS1820Sensor::SetSpecificConfig(void *pBlob)
 {
    tConfig *pConfig = (tConfig*) pBlob;

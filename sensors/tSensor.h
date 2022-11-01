@@ -99,6 +99,14 @@ public:
    uint8_t getSensorID() const { return mSensorID; }
    static tSensor* getSensor(uint8_t sensorID);
 
+   /* the sensor may be located on a remote node, controler has only data blobs and need to translate it to JSON */
+   static uint8_t TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+   /* shortcut to get json from local sensors */
+   uint8_t GetJSON(uint8_t SensorType, Stream *pStream)
+   {
+      return TranslateBlobToJSON(SensorType, getMeasurementBlobSize(), getMeasurementBlob(), pStream);
+   }
+
 protected:
    tSensor(uint8_t SensorType, uint8_t sensorID);
 

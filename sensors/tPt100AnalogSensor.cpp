@@ -87,7 +87,10 @@
 
 
 
-
+uint8_t tPt100AnalogSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+{
+   return 0;
+}
 
 void tPt100AnalogSensor::doTriggerMeasurement()
 {

@@ -37,3 +37,8 @@ void tImpulseSensor::CleanSum()
 		mResult.Sum = 0;
 	);
 }
+
+uint8_t tImpulseSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+{
+   return 0;
+}

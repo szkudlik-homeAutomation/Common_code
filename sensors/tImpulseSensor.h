@@ -25,6 +25,8 @@ public:
    void CleanSum(); 			// clear Sum
    void Impulse() { mCnt++;	}	// COUNTER TRIGGER - interrupt safe, may be called in interrupt handler
 
+   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+
 protected:
    virtual void doTriggerMeasurement();
 private:

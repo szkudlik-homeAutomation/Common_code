@@ -93,6 +93,25 @@ void tSensor::onMeasurementCompleted(bool Status)
    }
 }
 
+// static procedure, can't use virtual methods
+uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+{
+   switch (SensorType)
+   {
+      case SENSOR_TYPE_DS1820:
+         return tDS1820Sensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+         break;
+      case SENSOR_TYPE_IMPULSE:
+         return tImpulseSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+         break;
+      case SENSOR_TYPE_PT100_ANALOG:
+         return tPt100AnalogSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+         break;
+   }
+
+   return CREATE_SENSOR_STATUS_UNKNOWN_SENSOR;
+}
+
 void tSensor::Run()
 {
    tSensor *i = pFirst;

@@ -32,6 +32,8 @@ public:
 
    virtual void SetSpecificConfig(void *pBlob);
 
+   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+
 protected:
    virtual void doTriggerMeasurement();
    virtual void doTimeTick();
