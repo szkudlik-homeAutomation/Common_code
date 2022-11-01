@@ -154,6 +154,7 @@ private:
 	   static const uint8_t STATUS_OPERATIONAL = 1;
 	   static const uint8_t STATUS_NO_DATA_RECIEVED = 2;
       static const uint8_t STATUS_ERROR_INCORRECT_DATA_SIZE = 3;
+      static const uint8_t STATUS_ERROR_REPORTED = 4;
 	   uint8_t SensorID;
 	   uint8_t sensorType;
 	   uint8_t dataBlobSize;
@@ -175,6 +176,8 @@ private:
 	 * Format JSON datra based on pSensor desc - called by getCachedSensorDataJson and getCachedSensorsDataJson
 	 */
 	uint8_t formatJSON(tSensorDesc *pSensorDesc, Stream *pStream);
+
+	void callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType);
 
 };
 

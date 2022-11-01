@@ -198,7 +198,24 @@ uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
    }
    pStream->print(F("\"Status\":"));
    pStream->print(Result);
+   pStream->print(F(",\"ID\":"));
+   pStream->print(pSensorDesc->SensorID);
    pStream->print(F("}}"));
+}
+
+void tSensorHub::callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType)
+{
+   // callbacks
+   tSensorHubEvent *pEventCallback = pSensorDesc->pFirstEventHander;
+   while (pEventCallback)
+   {
+      if (EV_TYPE_MEASUREMENT_ERROR != EventType)
+         pEventCallback->onEvent(pSensorDesc->SensorID, EventType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache);
+      else
+         pEventCallback->onEvent(pSensorDesc->SensorID, EventType, 0, NULL);
+
+      pEventCallback = pEventCallback->pNext;
+   }
 }
 
 void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob)
@@ -209,7 +226,15 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uin
       return;
    }
 
-   if (pSensorDesc->Status == tSensorDesc::STATUS_NO_DATA_RECIEVED)
+   if (EventType == EV_TYPE_MEASUREMENT_ERROR)
+   {
+      pSensorDesc->Status = tSensorDesc::STATUS_ERROR_REPORTED;
+      // callbacks
+      callAllCallbacks(pSensorDesc,EV_TYPE_MEASUREMENT_ERROR);
+      return;
+   }
+
+   if ((pSensorDesc->dataBlobSize == 0) && (dataBlobSize > 0))
    {
       pSensorDesc->dataBlobSize = dataBlobSize;
       pSensorDesc->pDataCache = malloc(dataBlobSize);
@@ -217,7 +242,8 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uin
 
    if (pSensorDesc->dataBlobSize != dataBlobSize)
    {
-      pSensorDesc->Status == tSensorDesc::STATUS_ERROR_INCORRECT_DATA_SIZE;
+      pSensorDesc->Status = tSensorDesc::STATUS_ERROR_INCORRECT_DATA_SIZE;
+      callAllCallbacks(pSensorDesc,EV_TYPE_MEASUREMENT_ERROR);
       return;
    }
 
@@ -225,10 +251,5 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uin
    memcpy(pSensorDesc->pDataCache,pDataBlob,dataBlobSize);
 
    // callbacks
-   tSensorHubEvent *pEventCallback = pSensorDesc->pFirstEventHander;
-   while (pEventCallback)
-   {
-      pEventCallback->onEvent(SensorID, EventType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache);
-      pEventCallback = pEventCallback->pNext;
-   }
+   callAllCallbacks(pSensorDesc,EventType);
 }
