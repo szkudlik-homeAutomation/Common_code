@@ -28,8 +28,10 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
    if (mNumOfDevices > MAX_DS1820_DEVICES_ON_BUS)
       mNumOfDevices  = MAX_DS1820_DEVICES_ON_BUS;
 
-   mCurrentMeasurementBlob = (void*) mCurrentMeasurement;
-   mMeasurementBlobSize = mAvg ? sizeof(tResult)  : sizeof(tResult) * pDs1820->getDS18Count();
+   mCurrentMeasurement.Avg = mAvg;
+   mCurrentMeasurement.NumOfDevices = mNumOfDevices;
+   mCurrentMeasurementBlob = (void*) &mCurrentMeasurement;
+   mMeasurementBlobSize = sizeof(tResult); //!!! FIX! real num of devices
 
    mConfigSet = true;
    return CREATE_SENSOR_STATUS_OK;
@@ -57,14 +59,14 @@ void tDS1820Sensor::doTimeTick()
          }
          else if (mAvg)
          {
-            mCurrentMeasurement[0].Temp = 0;
+            mCurrentMeasurement.Temp[0] = 0;
             uint8_t NumOfValidMeasurements = 0;
             for (uint8_t i = 0; i < mNumOfDevices ; i++)
             {
                int16_t temp = round(pDs1820->getTempCByIndex(i) * 10);
                if (temp > -1270)
                {
-                  mCurrentMeasurement[0].Temp += temp;
+                  mCurrentMeasurement.Temp[0] += temp;
                   NumOfValidMeasurements++;
                }
                else
@@ -72,7 +74,7 @@ void tDS1820Sensor::doTimeTick()
                   Success = false;  // error
                }
             }
-            mCurrentMeasurement[0].Temp /= NumOfValidMeasurements;
+            mCurrentMeasurement.Temp[0] /= NumOfValidMeasurements;
          }
          else  // mAvg
          {
@@ -82,7 +84,7 @@ void tDS1820Sensor::doTimeTick()
                int16_t temp = round(pDs1820->getTempCByIndex(i) * 10);
                if (temp > -1270)
                {
-                  mCurrentMeasurement[i].Temp = temp;
+                  mCurrentMeasurement.Temp[i] = temp;
                }
                else
                {

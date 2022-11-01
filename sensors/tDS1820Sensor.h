@@ -25,7 +25,12 @@ public:
 
    typedef struct
    {
-      int16_t Temp; // in celcius, 1 decimal position
+      uint8_t NumOfDevices;
+      uint8_t Avg;
+      int16_t Temp[MAX_DS1820_DEVICES_ON_BUS]; // in celcius, 1 decimal position
+                     // size of the array is 1 if Avg = 1
+                     // or NumOfDevices if Avg = 0
+         //!!! FIX! real num of devices
    } tResult;
 
    tDS1820Sensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DS1820,sensorID) {}
@@ -42,7 +47,7 @@ private:
    static const uint8_t NUM_TICKS_TO_MEASURE_COMPETE = (750 / SENSOR_PROCESS_SERVICE_TIME)+1;
    uint8_t mAvg;
    uint8_t mNumOfDevices;
-   tResult mCurrentMeasurement[MAX_DS1820_DEVICES_ON_BUS];
+   tResult mCurrentMeasurement;
    uint8_t mTicksToMeasurementCompete;
    DallasTemperature *pDs1820;
 };
