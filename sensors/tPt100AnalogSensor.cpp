@@ -109,7 +109,7 @@ void tPt100AnalogSensor::doTriggerMeasurement()
    }
 }
 
-void tPt100AnalogSensor::SetSpecificConfig(void *pBlob)
+uint8_t tPt100AnalogSensor::SetSpecificConfig(void *pBlob)
 {
    tConfig *pConfig = (tConfig *)pBlob;
    mPin = pConfig->Pin;
@@ -118,4 +118,5 @@ void tPt100AnalogSensor::SetSpecificConfig(void *pBlob)
    mMeasurementBlobSize = sizeof(mResult);
 
    mConfigSet = true;
+   return CREATE_SENSOR_STATUS_OK;
 }

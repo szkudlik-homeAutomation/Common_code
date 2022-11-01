@@ -30,7 +30,7 @@ public:
 
    tDS1820Sensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DS1820,sensorID) {}
 
-   virtual void SetSpecificConfig(void *pBlob);
+   virtual uint8_t SetSpecificConfig(void *pBlob);
 
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
 

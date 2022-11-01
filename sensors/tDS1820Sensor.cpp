@@ -15,7 +15,7 @@ uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCach
    return 0;
 }
 
-void tDS1820Sensor::SetSpecificConfig(void *pBlob)
+uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
 {
    tConfig *pConfig = (tConfig*) pBlob;
 
@@ -32,6 +32,7 @@ void tDS1820Sensor::SetSpecificConfig(void *pBlob)
    mMeasurementBlobSize = mAvg ? sizeof(tResult)  : sizeof(tResult) * pDs1820->getDS18Count();
 
    mConfigSet = true;
+   return CREATE_SENSOR_STATUS_OK;
 }
 
 void tDS1820Sensor::doTriggerMeasurement()

@@ -84,7 +84,12 @@ public:
       mpFirstEvent = pEvent;
    }
 
-   virtual void SetSpecificConfig(void *pBlob) {};
+   /*
+    * @retval CREATE_SENSOR_STATUS_CONFIG_SET_ERROR
+    */
+   virtual uint8_t SetSpecificConfig(void *pBlob) {return CREATE_SENSOR_STATUS_OK;}
+
+
    void TriggerMeasurement() { if (isRunning()) doTriggerMeasurement(); }
 
    bool isRunning() const { return mConfigSet; } // to be extended
