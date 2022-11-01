@@ -11,20 +11,12 @@
 #include "../../../global.h"
 #include "tSensor.h"
 
-class tSensorHubEvent: public tSensorEvent
+class tSensorHubEvent
 {
 public:
-   typedef enum
-   {
-      EV_TYPE_MEASUREMENT_ERROR,
-      EV_TYPE_MEASUREMENT_COMPLETED,
-      EV_TYPE_MEASUREMENT_CHANGE,
-      EV_TYPE_THOLD_EXCEEDED
-   } tEventType;
-
-
    tSensorHubEvent() {}
-   virtual void onEvent(uint8_t SensorID, tEventType EventType, uint8_t dataBlobSize, void *pDataBlob) = 0;
+   virtual void onEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob) = 0;
+
 private:
    void Connect(tSensorHubEvent **pFirst) { pNext = *pFirst; *pFirst = this; }
    tSensorHubEvent *pNext; friend class tSensorHub;
@@ -141,12 +133,12 @@ public:
    /*
     * to be called on sensor event, either remote or local
     */
-   void onSensorEvent(uint8_t SensorID, tEventType EventType, uint8_t dataBlobSize, void *pDataBlob);
+   void onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob);
 
    /*
     * handeler for local sensors
     */
-   virtual void onEvent(tSensor *pSensor, tEventType EventType)
+   virtual void onEvent(tSensor *pSensor, tSensorEventType EventType)
    {
       onSensorEvent(pSensor->getSensorID(), EventType, pSensor->getMeasurementBlobSize(), pSensor->getMeasurementBlob());
    }

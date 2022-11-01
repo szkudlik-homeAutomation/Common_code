@@ -82,11 +82,11 @@ void tSensor::onMeasurementCompleted(bool Status)
    {
    if (Status)
       {
-         pEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_COMPLETED);
+         pEvent->onEvent(this,EV_TYPE_MEASUREMENT_COMPLETED);
       }
    else
       {
-         pEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_ERROR);
+         pEvent->onEvent(this,EV_TYPE_MEASUREMENT_ERROR);
       }
 
    pEvent = pEvent->mpNext;

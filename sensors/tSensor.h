@@ -33,23 +33,22 @@
 
 #define SENSOR_NOT_FOUND 0xff   //!! clean it!
 
+typedef enum
+{
+   EV_TYPE_MEASUREMENT_ERROR,
+   EV_TYPE_MEASUREMENT_COMPLETED,
+   EV_TYPE_MEASUREMENT_CHANGE,
+   EV_TYPE_THOLD_EXCEEDED
+} tSensorEventType;
+
 class tSensor;
 class tSensorEvent	//TODO - events by sensorHub only
 {
 public:
-   typedef enum
-   {
-      EV_TYPE_MEASUREMENT_ERROR,
-      EV_TYPE_MEASUREMENT_COMPLETED,
-      EV_TYPE_MEASUREMENT_CHANGE,
-      EV_TYPE_THOLD_EXCEEDED
-   } tEventType;
-
-
    tSensorEvent() : mpNext(NULL) {}
    virtual ~tSensorEvent() {}
 
-   virtual void onEvent(tSensor *pSensor, tEventType EventType) = 0;
+   virtual void onEvent(tSensor *pSensor, tSensorEventType EventType) = 0;
 private:
    tSensorEvent *mpNext; friend class tSensor;
 };

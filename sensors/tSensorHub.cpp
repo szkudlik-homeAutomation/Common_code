@@ -110,6 +110,7 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
    tSensorDesc *pSensorDesc = new tSensorDesc;
    pSensorDesc->SensorID = SensorID;
    pSensorDesc->pDataCache = NULL;
+   pSensorDesc->pFirstEventHander = NULL;
    pSensorDesc->dataBlobSize = 0;
    pSensorDesc->pName = pSensorName;
    pSensorDesc->sensorType = SensorType;
@@ -198,7 +199,7 @@ uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
    pStream->print(F("}}"));
 }
 
-void tSensorHub::onSensorEvent(uint8_t SensorID, tEventType EventType, uint8_t dataBlobSize, void *pDataBlob)
+void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
    if (NULL == pSensorDesc)
@@ -220,4 +221,12 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tEventType EventType, uint8_t d
 
    pSensorDesc->Status = tSensorDesc::STATUS_OPERATIONAL;
    memcpy(pSensorDesc->pDataCache,pDataBlob,dataBlobSize);
+
+   // callbacks
+   tSensorHubEvent *pEventCallback = pSensorDesc->pFirstEventHander;
+   while (pEventCallback)
+   {
+      pEventCallback->onEvent(SensorID, EventType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache);
+      pEventCallback = pEventCallback->pNext;
+   }
 }
