@@ -89,7 +89,16 @@
 
 uint8_t tPt100AnalogSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
-   return 0;
+   if (dataBlobSize != sizeof(mResult))
+   {
+         return CREATE_SENSOR_STATUS_OTHER_ERROR;
+   }
+
+   tResult *pResult =(tResult *) pDataCache;
+   pStream->print(F("\"Temperature\":"));
+   pStream->print(pResult->Temperature);
+   pStream->print(F(","));
+   return CREATE_SENSOR_STATUS_OK;
 }
 
 void tPt100AnalogSensor::doTriggerMeasurement()

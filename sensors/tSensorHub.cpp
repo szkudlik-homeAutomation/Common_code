@@ -8,10 +8,10 @@
 #include "tSensorHub.h"
 #include "tSensor.h"
 
-tSensorDesc * tSensorDesc::pFirst = NULL;
+tSensorHub::tSensorDesc * tSensorHub::tSensorDesc::pFirst = NULL;
 
 
-tSensorDesc *tSensorDesc::getByID(uint8_t SensorID)
+tSensorHub::tSensorDesc *tSensorHub::tSensorDesc::getByID(uint8_t SensorID)
 {
    tSensorDesc *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
@@ -26,7 +26,7 @@ tSensorDesc *tSensorDesc::getByID(uint8_t SensorID)
    return pSensorDesc;
 }
 
-tSensorDesc *tSensorDesc::getByName(const char * pSensorName)
+tSensorHub::tSensorDesc *tSensorHub::tSensorDesc::getByName(const char * pSensorName)
 {
    tSensorDesc *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
@@ -50,6 +50,16 @@ uint8_t tSensorHub::getSensorID(const char * pSensorName)
    }
 
    return pSensorDesc->SensorID;
+}
+
+const char *tSensorHub::getSensorName(uint8_t SensorID)
+{
+   tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
+   if (NULL == pSensorDesc)
+   {
+      return NULL;
+   }
+   return (pSensorDesc->pName);
 }
 
 uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize, void **pDataBlob)
@@ -103,7 +113,9 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
    pSensorDesc->dataBlobSize = 0;
    pSensorDesc->pName = pSensorName;
    pSensorDesc->sensorType = SensorType;
+   pSensorDesc->Status = tSensorDesc::STATUS_NO_DATA_RECIEVED;
 
+   pSensor->SetEventCalback(this);
    // send response
    CreateSensorResponse(SensorID, CREATE_SENSOR_STATUS_OK);
 }
@@ -148,6 +160,64 @@ uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
    {
       return SENSOR_NOT_FOUND;
    }
+
+   return formatJSON(pSensorDesc,pStream);
+}
+
+uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
+{
+   tSensorDesc *pSensorDesc = tSensorDesc::getFirst();
+   while(NULL != pSensorDesc)
+   {
+      formatJSON(pSensorDesc,pStream);
+      pSensorDesc = pSensorDesc->getNext();
+      if (NULL!=pSensorDesc)
+      {
+         pStream->print(",");
+      }
+   }
+}
+
+uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
+{
+   uint8_t Result;
    // note that the sensor may be located on a remote machine, use cached data
-   return tSensor::TranslateBlobToJSON(pSensorDesc->sensorType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache, pStream);
+   pStream->print(F("{\""));
+   pStream->print(pSensorDesc->pName);
+   pStream->print(F("\":{"));
+   if (pSensorDesc->Status == tSensorDesc::STATUS_OPERATIONAL)
+   {
+      Result = tSensor::TranslateBlobToJSON(pSensorDesc->sensorType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache, pStream);
+   }
+   else
+   {
+      Result = pSensorDesc->Status; //!!! todo - statuses
+   }
+   pStream->print(F("\"Status\":"));
+   pStream->print(Result);
+   pStream->print(F("}}"));
+}
+
+void tSensorHub::onSensorEvent(uint8_t SensorID, tEventType EventType, uint8_t dataBlobSize, void *pDataBlob)
+{
+   tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
+   if (NULL == pSensorDesc)
+   {
+      return;
+   }
+
+   if (pSensorDesc->Status == tSensorDesc::STATUS_NO_DATA_RECIEVED)
+   {
+      pSensorDesc->dataBlobSize = dataBlobSize;
+      pSensorDesc->pDataCache = malloc(dataBlobSize);
+   }
+
+   if (pSensorDesc->dataBlobSize != dataBlobSize)
+   {
+      pSensorDesc->Status == tSensorDesc::STATUS_ERROR_INCORRECT_DATA_SIZE;
+      return;
+   }
+
+   pSensorDesc->Status = tSensorDesc::STATUS_OPERATIONAL;
+   memcpy(pSensorDesc->pDataCache,pDataBlob,dataBlobSize);
 }

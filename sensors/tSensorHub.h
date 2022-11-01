@@ -9,8 +9,9 @@
 #define SRC_COMMON_CODE_SENSORS_TSENSORHUB_H_
 
 #include "../../../global.h"
+#include "tSensor.h"
 
-class tSensorHubEvent
+class tSensorHubEvent: public tSensorEvent
 {
 public:
    typedef enum
@@ -30,29 +31,6 @@ private:
 };
 
 
-class tSensorDesc
-{
-public:
-   tSensorDesc() { pNext = pFirst; pFirst = this; }
-
-   uint8_t SensorID;
-   uint8_t sensorType;
-   uint8_t dataBlobSize;
-   void *pDataCache;
-   char * pName;
-   tSensorHubEvent *pFirstEventHander;
-
-   tSensorDesc *getFirst() { return pFirst; }
-   tSensorDesc *getNext() { return pNext; }
-
-   static tSensorDesc *getByID(uint8_t SensorID);
-   static tSensorDesc *getByName(const char * pSensorName);
-private:
-   tSensorDesc *pNext;
-   static tSensorDesc *pFirst;
-};
-
-
 /**
  * Sensor hub is an entity working on a central node, aggregating all sensor that may be on remote nodes
  *
@@ -60,7 +38,7 @@ private:
  *
  * Access to the sensor goes either directly or using CREATE_SENSOR etc. messages
  */
-class tSensorHub {
+class tSensorHub : tSensorEvent {
 public:
 
 	tSensorHub() {};
@@ -100,6 +78,11 @@ public:
 	 */
 	uint8_t getSensorID(const char * pSensorName);
 
+	/**
+	 * return a pointer to sensor name or NULL if the sensor does not exist
+	 */
+	const char *getSensorName(uint8_t SensorID);
+
 	/*
 	 * Get an ID of a sensor info (remote operation)
 	 * Status: SENSOR_NOT_FOUND
@@ -125,7 +108,7 @@ public:
 	uint8_t subscribeToEvents(uint8_t SensorID, tSensorHubEvent *pSensorEvent);
 
 	/**
-	 * Asyn get current sensor data
+	 * Asyn get current sensor data from remote node
 	 *
 	 * @retval SENSOR_STATUS_UNKNOWN_SENSOR
 	 * @retval SENSOR_STATUS_TIMEOUT
@@ -148,6 +131,59 @@ public:
 	 * @retval SENSOR_STATUS_UNKNOWN_SENSOR
 	 */
 	uint8_t getCachedSensorDataJson(uint8_t SensorID, Stream *pStream);
+
+   /**
+    * get all sensor data as JSON
+    * get data from a sensor stored locally, formatted in JSON, and stream them to provided (tcp)stream
+    */
+   uint8_t getCachedSensorsDataJson(Stream *pStream);
+
+   /*
+    * to be called on sensor event, either remote or local
+    */
+   void onSensorEvent(uint8_t SensorID, tEventType EventType, uint8_t dataBlobSize, void *pDataBlob);
+
+   /*
+    * handeler for local sensors
+    */
+   virtual void onEvent(tSensor *pSensor, tEventType EventType)
+   {
+      onSensorEvent(pSensor->getSensorID(), EventType, pSensor->getMeasurementBlobSize(), pSensor->getMeasurementBlob());
+   }
+
+private:
+
+	class tSensorDesc
+	{
+	public:
+	   tSensorDesc() { pNext = pFirst; pFirst = this; }
+
+	   uint8_t Status;
+	   static const uint8_t STATUS_OPERATIONAL = 1;
+	   static const uint8_t STATUS_NO_DATA_RECIEVED = 2;
+      static const uint8_t STATUS_ERROR_INCORRECT_DATA_SIZE = 3;
+	   uint8_t SensorID;
+	   uint8_t sensorType;
+	   uint8_t dataBlobSize;
+	   void *pDataCache;
+	   char * pName;
+	   tSensorHubEvent *pFirstEventHander;
+
+	   static tSensorDesc *getFirst() { return pFirst; }
+	   tSensorDesc *getNext() { return pNext; }
+
+	   static tSensorDesc *getByID(uint8_t SensorID);
+	   static tSensorDesc *getByName(const char * pSensorName);
+	private:
+	   tSensorDesc *pNext;
+	   static tSensorDesc *pFirst;
+	};
+
+	/*
+	 * Format JSON datra based on pSensor desc - called by getCachedSensorDataJson and getCachedSensorsDataJson
+	 */
+	uint8_t formatJSON(tSensorDesc *pSensorDesc, Stream *pStream);
+
 };
 
 extern tSensorHub SensorHub;

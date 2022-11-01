@@ -28,6 +28,10 @@
 // MESSAGE_TYPE_CREATE_SENSOR_STATUS_UNKNOWN_SENSOR
 #define CREATE_SENSOR_STATUS_OTHER_ERROR 3
 //MESSAGE_TYPE_CREATE_SENSOR_STATUS_OTHER_ERROR
+#define CREATE_SENSOR_STATUS_CONFIG_SET_ERROR 4
+
+
+#define SENSOR_NOT_FOUND 0xff   //!! clean it!
 
 class tSensor;
 class tSensorEvent	//TODO - events by sensorHub only
@@ -66,8 +70,15 @@ extern tSensorProcess SensorProcess;
 
 class tSensor {
 public:
-   // create a sensor. Return codes CREATE_SENSOR_STATUS*
-   // sensor pointer avaliable through getSensor
+   /*
+    * @brief create a sensor on local system
+    * sensor poiner is avaliable using getsensor
+    *
+    * @retval CREATE_SENSOR_STATUS_OK
+    * @retval CREATE_SENSOR_STATUS_DUPLICATE_ID
+    * @retval CREATE_SENSOR_STATUS_DUPLICATE_ID
+    * @retval CREATE_SENSOR_STATUS_OTHER_ERROR
+    */
    static uint8_t Create(uint8_t SensorType, uint8_t sensorID);
 
    void SetMeasurementPeriod(uint16_t period)   // time in number of calls to Run() A tick = SENSOR_PROCESS_SERVICE_TIME
@@ -104,7 +115,13 @@ public:
    uint8_t getSensorID() const { return mSensorID; }
    static tSensor* getSensor(uint8_t sensorID);
 
-   /* the sensor may be located on a remote node, controler has only data blobs and need to translate it to JSON */
+   /* the sensor may be located on a remote node, controler has only data blobs and need to translate it to JSON
+    * Sensors should put a simple string to pStream
+    * "MetricName": metric_value, "MetricName1": metric_value1,
+    *
+    * no braces etc.
+    * there MUST be a comma at the last character, unless there's no data at all
+    */
    static uint8_t TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
    /* shortcut to get json from local sensors */
    uint8_t GetJSON(uint8_t SensorType, Stream *pStream)
