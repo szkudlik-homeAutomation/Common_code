@@ -12,7 +12,36 @@
 
 uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
-   return 0;
+   if (dataBlobSize != sizeof(tResult))
+   {
+         return CREATE_SENSOR_STATUS_OTHER_ERROR;
+   }
+
+   tResult *pResult =(tResult *) pDataCache;
+   pStream->print(F("\"NumOfDevs\":"));
+   pStream->print(pResult->NumOfDevices);
+   pStream->print(F(",\"Avg\":"));
+   pStream->print(pResult->Avg);
+   pStream->print(F(","));
+   if (pResult->Avg)
+   {
+      pStream->print(F("\"Temp\":"));
+      pStream->print(pResult->Temp[0]);
+      pStream->print(F(","));
+   }
+   else
+   {
+      for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
+      {
+         pStream->print(F("\"Temperature"));
+         pStream->print(i);
+         pStream->print(F("\":"));
+         pStream->print((float)pResult->Temp[i] / 10);
+         pStream->print(F(","));
+      }
+   }
+
+   return CREATE_SENSOR_STATUS_OK;
 }
 
 uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
