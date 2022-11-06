@@ -178,6 +178,7 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
       {
          pStream->print(",");
       }
+      pStream->print("\r\n");
    }
 }
 
@@ -185,7 +186,7 @@ uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
 {
    uint8_t Result;
    // note that the sensor may be located on a remote machine, use cached data
-   pStream->print(F("{\""));
+   pStream->print(F("\""));
    pStream->print(pSensorDesc->pName);
    pStream->print(F("\":{"));
    if (pSensorDesc->Status == tSensorDesc::STATUS_OPERATIONAL)
@@ -200,7 +201,7 @@ uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
    pStream->print(Result);
    pStream->print(F(",\"ID\":"));
    pStream->print(pSensorDesc->SensorID);
-   pStream->print(F("}}"));
+   pStream->print(F("}"));
 }
 
 void tSensorHub::callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType)
