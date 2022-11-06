@@ -17,6 +17,9 @@ tTelnetSession::tTelnetSession(EthernetClient aEthernetClient,commandList_t *pTe
   cmd.errorMessages(ON); //error messages are enabled - it will tell us if we issue any unrecognised commands
   cmd.autoChain(ON);
   cmd.printCommandList();
+  uint16_t FreeRam = getFreeRam();
+  cmd.print("FreeRam: ");
+  cmd.println(FreeRam);
   pTelnetSession = this;
   DisableLogs();
 }
@@ -44,3 +47,4 @@ void tTelnetServer::DisableLogs()
 {
    if (pTelnetSession) pTelnetSession->DisableLogs();
 }
+

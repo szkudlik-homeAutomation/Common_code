@@ -82,15 +82,34 @@ void tSensor::onMeasurementCompleted(bool Status)
    {
    if (Status)
       {
-         pEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_COMPLETED);
+         pEvent->onEvent(this,EV_TYPE_MEASUREMENT_COMPLETED);
       }
    else
       {
-         pEvent->onEvent(this,tSensorEvent::EV_TYPE_MEASUREMENT_ERROR);
+         pEvent->onEvent(this,EV_TYPE_MEASUREMENT_ERROR);
       }
 
    pEvent = pEvent->mpNext;
    }
+}
+
+// static procedure, can't use virtual methods
+uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+{
+   uint8_t Result = CREATE_SENSOR_STATUS_UNKNOWN_SENSOR;
+   switch (SensorType)
+   {
+      case SENSOR_TYPE_DS1820:
+         Result = tDS1820Sensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+         break;
+      case SENSOR_TYPE_IMPULSE:
+         Result = tImpulseSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+         break;
+      case SENSOR_TYPE_PT100_ANALOG:
+         Result = tPt100AnalogSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+         break;
+   }
+   return Result;
 }
 
 void tSensor::Run()

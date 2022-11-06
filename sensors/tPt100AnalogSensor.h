@@ -26,7 +26,10 @@ public:
    tPt100AnalogSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_PT100_ANALOG,sensorID) {}
 
    virtual void doTriggerMeasurement();
-   virtual void SetSpecificConfig(void *pBlob);
+   virtual uint8_t SetSpecificConfig(void *pBlob);
+
+   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+
 private:
    tResult mResult;
    uint8_t mPin;
