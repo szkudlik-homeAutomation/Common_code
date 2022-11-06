@@ -12,6 +12,7 @@
 #include "tSensor.h"
 
 class DallasTemperature;
+typedef uint8_t DeviceAddress[8];
 
 class tDS1820Sensor: public tSensor {
 public:
@@ -25,9 +26,15 @@ public:
 
    typedef struct
    {
+      DeviceAddress Addr;
+      int16_t Temperature;        // in celcius, 1 decimal position
+   } tDs1820Data;
+
+   typedef struct
+   {
       uint8_t NumOfDevices;
       uint8_t Avg;
-      int16_t Temp[MAX_DS1820_DEVICES_ON_BUS]; // in celcius, 1 decimal position
+      tDs1820Data Dev[0];
                      // size of the array is 1 if Avg = 1
                      // or NumOfDevices if Avg = 0
          //!!! FIX! real num of devices
@@ -39,6 +46,10 @@ public:
 
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
 
+   static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
+
+   tResult *getCurrentMeasurement() { return (tResult *)mCurrentMeasurementBlob;}
+
 protected:
    virtual void doTriggerMeasurement();
    virtual void doTimeTick();
@@ -47,7 +58,6 @@ private:
    static const uint8_t NUM_TICKS_TO_MEASURE_COMPETE = (750 / SENSOR_PROCESS_SERVICE_TIME)+1;
    uint8_t mAvg;
    uint8_t mNumOfDevices;
-   tResult mCurrentMeasurement;
    uint8_t mTicksToMeasurementCompete;
    DallasTemperature *pDs1820;
 };

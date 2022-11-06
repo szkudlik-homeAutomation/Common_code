@@ -33,6 +33,8 @@
 
 #define SENSOR_NOT_FOUND 0xff   //!! clean it!
 
+// BIG mess with statuses - mixed with tSensorDesc statuses on JSON export
+
 typedef enum
 {
    EV_TYPE_MEASUREMENT_ERROR,

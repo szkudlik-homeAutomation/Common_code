@@ -12,11 +12,6 @@
 
 uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
-   if (dataBlobSize != sizeof(tResult))
-   {
-         return CREATE_SENSOR_STATUS_OTHER_ERROR;
-   }
-
    tResult *pResult =(tResult *) pDataCache;
    pStream->print(F("\"NumOfDevs\":"));
    pStream->print(pResult->NumOfDevices);
@@ -25,18 +20,18 @@ uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCach
    pStream->print(F(","));
    if (pResult->Avg)
    {
-      pStream->print(F("\"Temp\":"));
-      pStream->print(pResult->Temp[0]);
+      pStream->print(F("\"AvgTemperature\":"));
+      pStream->print((float)pResult->Dev[0].Temperature / 10);
       pStream->print(F(","));
    }
    else
    {
       for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
       {
-         pStream->print(F("\"Temperature"));
-         pStream->print(i);
+         pStream->print(F("\"Temperature_"));
+         printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
          pStream->print(F("\":"));
-         pStream->print((float)pResult->Temp[i] / 10);
+         pStream->print((float)pResult->Dev[i].Temperature / 10);
          pStream->print(F(","));
       }
    }
@@ -57,11 +52,25 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
    if (mNumOfDevices > MAX_DS1820_DEVICES_ON_BUS)
       mNumOfDevices  = MAX_DS1820_DEVICES_ON_BUS;
 
-   mCurrentMeasurement.Avg = mAvg;
-   mCurrentMeasurement.NumOfDevices = mNumOfDevices;
-   mCurrentMeasurementBlob = (void*) &mCurrentMeasurement;
-   mMeasurementBlobSize = sizeof(tResult); //!!! FIX! real num of devices
+   // calculate size of the result
+   mMeasurementBlobSize = sizeof(tResult) + (sizeof(tDs1820Data) * mNumOfDevices);
+   mCurrentMeasurementBlob = malloc(mMeasurementBlobSize);
 
+   getCurrentMeasurement()->Avg = mAvg;
+   getCurrentMeasurement()->NumOfDevices = mNumOfDevices;
+
+   if (! mAvg)
+   {
+      // set device IDs
+      for (uint8_t i = 0; i < mNumOfDevices; i++)
+      {
+         bool DevExist = pDs1820->getAddress(getCurrentMeasurement()->Dev[i].Addr,i);
+         if (! DevExist)
+         {
+            return CREATE_SENSOR_STATUS_CONFIG_SET_ERROR;
+         }
+      }
+   }
    mConfigSet = true;
    return CREATE_SENSOR_STATUS_OK;
 }
@@ -88,14 +97,14 @@ void tDS1820Sensor::doTimeTick()
          }
          else if (mAvg)
          {
-            mCurrentMeasurement.Temp[0] = 0;
+            getCurrentMeasurement()->Dev[0].Temperature = 0;
             uint8_t NumOfValidMeasurements = 0;
             for (uint8_t i = 0; i < mNumOfDevices ; i++)
             {
                int16_t temp = round(pDs1820->getTempCByIndex(i) * 10);
                if (temp > -1270)
                {
-                  mCurrentMeasurement.Temp[0] += temp;
+                  getCurrentMeasurement()->Dev[0].Temperature += temp;
                   NumOfValidMeasurements++;
                }
                else
@@ -103,7 +112,7 @@ void tDS1820Sensor::doTimeTick()
                   Success = false;  // error
                }
             }
-            mCurrentMeasurement.Temp[0] /= NumOfValidMeasurements;
+            getCurrentMeasurement()->Dev[0].Temperature /= NumOfValidMeasurements;
          }
          else  // mAvg
          {
@@ -113,7 +122,7 @@ void tDS1820Sensor::doTimeTick()
                int16_t temp = round(pDs1820->getTempCByIndex(i) * 10);
                if (temp > -1270)
                {
-                  mCurrentMeasurement.Temp[i] = temp;
+                  getCurrentMeasurement()->Dev[i].Temperature = temp;
                }
                else
                {
@@ -127,4 +136,12 @@ void tDS1820Sensor::doTimeTick()
       }
    }
 
+}
+void tDS1820Sensor::printAddress(uint8_t* pDeviceAddress, Stream *pStream)
+{
+  for (uint8_t i = 0; i < 8; i++)
+  {
+    if (pDeviceAddress[i] < 16) pStream->print("0");
+    pStream->print(pDeviceAddress[i], HEX);
+  }
 }
