@@ -21,3 +21,9 @@ manifest:
       path: src/lib/external/ds1820
       repo-path: Arduino-Temperature-Control-Library
       revision: a03035a85f730a6835019b1bc740caddf285b302
+      
+    - name: ArduinoProcessScheduler    
+      path: src/lib/external/ArduinoProcessScheduler
+      repo-path: ArduinoProcessScheduler.git
+      revision: 1bb8b676bd4c31d5f43c45ff326cb6af98559c33
+
