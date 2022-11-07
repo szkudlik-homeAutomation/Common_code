@@ -10,7 +10,7 @@ manifest:
     - name: TCP_Communication_lib
       path: src/lib/TCP_Communication_lib
       repo-path: TCP_Communication_lib
-      revision: ced9abd66e11d578cec213bf4fbb4718e5ff232b
+      revision: 7c77203013298cd9da4e53df59d590e211f59a14
 
     - name: TLE8457_serial_lib
       path: src/lib/TLE8457_serial_lib
@@ -26,4 +26,9 @@ manifest:
       path: src/lib/external/ArduinoProcessScheduler
       repo-path: ArduinoProcessScheduler.git
       revision: 1bb8b676bd4c31d5f43c45ff326cb6af98559c33
+
+    - name: Ethernet
+      path: src/lib/external/Ethernet
+      repo-path: EthernetLib.git
+      revision: 521aa9196df9685f7bcf0a8d5cb8f23bbcc4da68
 
