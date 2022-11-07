@@ -30,5 +30,5 @@ manifest:
     - name: Ethernet
       path: src/lib/external/Ethernet
       repo-path: EthernetLib.git
-      revision: 521aa9196df9685f7bcf0a8d5cb8f23bbcc4da68
+      revision: 775fe51397bbff9a259d36fe74d7a2646403421a
 
