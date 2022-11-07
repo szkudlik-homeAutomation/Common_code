@@ -1,6 +1,6 @@
 #include "WatchdogProcess.h"
 #include <Watchdog.h>
-
+#include "../lib/external/Ethernet/src/localEthernet.h"
 
 tWatchdogItem *tWatchdogItem::pFirst = NULL;
 
@@ -29,12 +29,15 @@ void tWatchdogProcess::service()
       pItem = pItem->pNext;
    }
 
+   watchdog.reset();
+
    if (doResetWatchdog)
    {
-      watchdog.reset();
+//      watchdog.reset();
    }
    else
    {
       DEBUG_PRINTLN_3("Watchdog goes off!");
+      Ethernet.clean();
    }
 }
