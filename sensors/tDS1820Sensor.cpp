@@ -145,3 +145,29 @@ void tDS1820Sensor::printAddress(uint8_t* pDeviceAddress, Stream *pStream)
     pStream->print(pDeviceAddress[i], HEX);
   }
 }
+
+uint8_t tDS1820Sensor::compareAddr(uint8_t* pDeviceAddress1, uint8_t* pDeviceAddress2)
+{
+   for (int i = 0; i < 8; i++)
+   {
+      if (pDeviceAddress1[i] != pDeviceAddress2[i])
+      {
+         return false;
+      }
+   }
+}
+
+uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
+{
+   if (! mConfigSet) return DS1820_INVALID_ID;
+
+   for (uint8_t i = 0; i < mNumOfDevices; i++)
+   {
+      if (compareAddr(pDeviceAddress,getCurrentMeasurement()->Dev[i].Addr))
+      {
+         return i;
+      }
+   }
+
+   return DS1820_INVALID_ID;
+}

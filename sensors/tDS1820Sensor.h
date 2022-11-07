@@ -12,11 +12,13 @@
 #include "tSensor.h"
 
 class DallasTemperature;
-typedef uint8_t DeviceAddress[8];
 
 class tDS1820Sensor: public tSensor {
 public:
    static const uint8_t MAX_DS1820_DEVICES_ON_BUS = 8;
+   static const uint8_t DS1820_INVALID_ID = 0xFF;
+
+   typedef uint8_t DeviceAddress[8];
    typedef struct
    {
       uint8_t Pin;   // pin the oneWire bus is connected to
@@ -49,6 +51,10 @@ public:
    static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
 
    tResult *getCurrentMeasurement() { return (tResult *)mCurrentMeasurementBlob;}
+
+   uint8_t compareAddr(uint8_t* pDeviceAddress1, uint8_t* pDeviceAddress2);
+
+   uint8_t findDevID(uint8_t* pDeviceAddress);
 
 protected:
    virtual void doTriggerMeasurement();
