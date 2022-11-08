@@ -2,7 +2,7 @@
 
 #include "../../global.h"
 
-#include "../lib/external/ArduinoProcessScheduler/src/ProcessScheduler.h"
+#include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include <Watchdog.h>
 
 /**

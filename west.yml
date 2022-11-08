@@ -13,17 +13,17 @@ manifest:
       revision: 5f7e75bb7b7cd2e54875e103279389eff37a7350
 
     - name: ds1820
-      path: src/lib/external/ds1820
+      path: src/lib/ds1820
       repo-path: Arduino-Temperature-Control-Library
       revision: a03035a85f730a6835019b1bc740caddf285b302
       
     - name: ArduinoProcessScheduler    
-      path: src/lib/external/ArduinoProcessScheduler
+      path: src/lib/ArduinoProcessScheduler
       repo-path: ArduinoProcessScheduler.git
       revision: 1bb8b676bd4c31d5f43c45ff326cb6af98559c33
 
     - name: Ethernet
-      path: src/lib/external/Ethernet
+      path: src/lib/Ethernet
       repo-path: EthernetLib.git
       revision: 521aa9196df9685f7bcf0a8d5cb8f23bbcc4da68
 

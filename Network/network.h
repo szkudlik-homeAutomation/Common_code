@@ -4,7 +4,7 @@
 #include "../../../global.h"
 #include <SPI.h>
 
-#include "../../lib/external/Ethernet/src/localEthernet.h"
+#include "../../lib/Ethernet/src/localEthernet.h"
 
 class tNetwork
 {
