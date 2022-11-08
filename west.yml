@@ -7,11 +7,6 @@ manifest:
       url-base: https://github.com/szkudlik-homeAutomation
 
   projects:
-    - name: TCP_Communication_lib
-      path: src/lib/TCP_Communication_lib
-      repo-path: TCP_Communication_lib
-      revision: 7c77203013298cd9da4e53df59d590e211f59a14
-
     - name: TLE8457_serial_lib
       path: src/lib/TLE8457_serial_lib
       repo-path: TLE8457_serial_lib
