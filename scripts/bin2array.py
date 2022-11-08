@@ -2,6 +2,7 @@
 import binascii
 import sys
 import argparse
+import os
 
 parser = argparse.ArgumentParser(description='Convert binary file to C-style array initializer.')
 parser.add_argument("filename", nargs='+', help="the file to be converted")
@@ -40,7 +41,8 @@ def convert(fname, out_c_file, out_h_file):
         file_content = f.read()
     ret = do_convension(file_content, to_uppercase=args.force_uppercase)
     
-    varName = fname.replace('.','_')
+    head_fname, tail_fname = os.path.split(fname)
+    varName = tail_fname.replace('.','_')
     varLen  = str(len(file_content))
     
     line = "const char "+varName+"["+varLen+"] PROGMEM ={"+ret+"};\n"
