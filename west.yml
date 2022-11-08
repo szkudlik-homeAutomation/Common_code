@@ -7,28 +7,23 @@ manifest:
       url-base: https://github.com/szkudlik-homeAutomation
 
   projects:
-    - name: TCP_Communication_lib
-      path: src/lib/TCP_Communication_lib
-      repo-path: TCP_Communication_lib
-      revision: 7c77203013298cd9da4e53df59d590e211f59a14
-
     - name: TLE8457_serial_lib
       path: src/lib/TLE8457_serial_lib
       repo-path: TLE8457_serial_lib
       revision: 5f7e75bb7b7cd2e54875e103279389eff37a7350
 
     - name: ds1820
-      path: src/lib/external/ds1820
+      path: src/lib/ds1820
       repo-path: Arduino-Temperature-Control-Library
       revision: a03035a85f730a6835019b1bc740caddf285b302
       
     - name: ArduinoProcessScheduler    
-      path: src/lib/external/ArduinoProcessScheduler
+      path: src/lib/ArduinoProcessScheduler
       repo-path: ArduinoProcessScheduler.git
       revision: 1bb8b676bd4c31d5f43c45ff326cb6af98559c33
 
     - name: Ethernet
-      path: src/lib/external/Ethernet
+      path: src/lib/Ethernet
       repo-path: EthernetLib.git
       revision: 775fe51397bbff9a259d36fe74d7a2646403421a
 

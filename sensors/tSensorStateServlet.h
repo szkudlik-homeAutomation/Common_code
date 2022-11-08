@@ -9,7 +9,7 @@
 #define SRC_COMMON_CODE_SENSORS_TSENSORSTATESERVLET_H_
 
 #include "../../../global.h"
-#include "../../lib/TCP_Communication_lib/httpServer.h"
+#include "../Network/httpServer.h"
 
 
 class tSensorStateServlet final : public tHttpServlet {

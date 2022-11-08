@@ -1,8 +1,8 @@
 #ifndef TELNET_SERVER
 #define TELNET_SERVER
-#include "../../global.h"
-#include "../lib/TCP_Communication_lib/tcpServer.h"
-#include "ResponseHandler.h"
+#include "../../../global.h"
+#include "tcpServer.h"
+#include "../ResponseHandler.h"
 
 class commandList_t;
 
