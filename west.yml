@@ -7,11 +7,6 @@ manifest:
       url-base: https://github.com/szkudlik-homeAutomation
 
   projects:
-    - name: TLE8457_serial_lib
-      path: src/lib/TLE8457_serial_lib
-      repo-path: TLE8457_serial_lib
-      revision: 5f7e75bb7b7cd2e54875e103279389eff37a7350
-
     - name: ds1820
       path: src/lib/ds1820
       repo-path: Arduino-Temperature-Control-Library
@@ -20,10 +15,20 @@ manifest:
     - name: ArduinoProcessScheduler    
       path: src/lib/ArduinoProcessScheduler
       repo-path: ArduinoProcessScheduler.git
-      revision: 1bb8b676bd4c31d5f43c45ff326cb6af98559c33
+      revision: 00ee94961e7825fd9d95972458670de8adc1ab0a
 
     - name: Ethernet
       path: src/lib/Ethernet
       repo-path: EthernetLib.git
       revision: 521aa9196df9685f7bcf0a8d5cb8f23bbcc4da68
+
+    - name: RingBuf
+      path: src/lib/RingBuf
+      repo-path: ArduinoRingBuffer.git
+      revision: 4c3c648fedf5e43b0007fd27cdb3806c5be9e32d
+
+    - name: AceCRC
+      path: src/lib/AceCRC
+      repo-path: AceCRC.git
+      revision: fd967e3a15648ff7dc1ac8191733032314ceec23
 
