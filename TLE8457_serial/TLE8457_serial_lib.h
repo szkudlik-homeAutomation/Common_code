@@ -3,6 +3,43 @@
 
 #include "../../../global.h"
 
+#ifndef COMMUNICATION_PAYLOAD_DATA_SIZE
+#define COMMUNICATION_PAYLOAD_DATA_SIZE 8
+#endif
+
+#ifndef COMM_SERIAL
+#define COMM_SERIAL Serial
+#endif
+
+#ifndef COMM_SERIAL_EVENT
+#define COMM_SERIAL_EVENT serialEvent
+#endif
+
+#ifndef DEVICE_ID_BROADCAST
+#define DEVICE_ID_BROADCAST 0xFF
+#endif
+
+#ifndef NUM_OF_RETRANSMISSIONS
+#define NUM_OF_RETRANSMISSIONS 1
+#endif
+
+#ifndef MAX_NUM_OF_RETRANSMISSIONS
+#define MAX_NUM_OF_RETRANSMISSIONS 20
+#endif
+
+#ifndef FRAME_TRANSMISSION_TIME
+#define FRAME_TRANSMISSION_TIME 10
+#endif
+
+#ifndef MAX_TRANSMIT_DELAY
+#define MAX_TRANSMIT_DELAY 100
+#endif
+
+#ifndef OUTPUT_QUEUE_SIZE
+#define OUTPUT_QUEUE_SIZE 3
+#endif
+
+
 /**
  * PROTOCOL
  *
