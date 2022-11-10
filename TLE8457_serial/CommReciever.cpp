@@ -1,7 +1,7 @@
 #include "../../../global.h"
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
-#include <AceCRC.h>
+#include "../../lib/AceCRC/src/AceCRC.h"
 
 #include "TLE8457_serial_lib.h"
 #include "CommReciever.h"

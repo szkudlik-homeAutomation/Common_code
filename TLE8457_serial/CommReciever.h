@@ -2,8 +2,7 @@
 #define COMM_RECIEVER
 
 #include "../../../global.h"
-
-#include <ProcessScheduler.h>
+#include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
 #define RECIEVE_CHECK_PERIOD FRAME_TRANSMISSION_TIME
 #define RECIEVE_IDLE_WAIT FRAME_TRANSMISSION_TIME*100

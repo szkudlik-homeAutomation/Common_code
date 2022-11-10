@@ -3,7 +3,7 @@
 
 #include "../../../global.h"
 
-#include <ProcessScheduler.h>
+#include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include <ArduinoQueue.h>
 
 #include "Random.h"
