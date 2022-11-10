@@ -27,3 +27,8 @@ manifest:
       repo-path: ArduinoRingBuffer.git
       revision: 4c3c648fedf5e43b0007fd27cdb3806c5be9e32d
 
+    - name: AceCRC
+      path: src/lib/AceCRC
+      repo-path: AceCRC.git
+      revision: fd967e3a15648ff7dc1ac8191733032314ceec23
+
