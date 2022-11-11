@@ -55,10 +55,8 @@ void tTcpServerProcess::setup()
     pServer = pServer->GetNext();
   }
 
-  #ifdef DEBUG_3
-  DEBUG_SERIAL.print(F("server address: "));
-  DEBUG_SERIAL.println(Ethernet.localIP());
-  #endif
+  DEBUG_PRINT_3("server address: ");
+  DEBUG_3(println(Ethernet.localIP()));
 }
 
 void tTcpServerProcess::service()
@@ -70,10 +68,8 @@ void tTcpServerProcess::service()
     if (newClient)
     {
       bool NotFound = true;
-      #ifdef DEBUG_3
-      DEBUG_SERIAL.print (F("New connection from "));
-      DEBUG_SERIAL.print (newClient.remoteIP());
-      #endif
+      DEBUG_PRINT_3("New connection from ");
+      DEBUG_3(print(newClient.remoteIP()));
 
       // reset watchdog.
       // as Arduino Ethershield likes to hang (HW issue), restart the system if there's no new tcp sessions in last TCP_WATCHDOG_TIMEOUT

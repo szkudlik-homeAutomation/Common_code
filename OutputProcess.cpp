@@ -46,13 +46,12 @@ void tOutput::Tick()
 
 void tOutput::SetState(uint8_t State)
 {
-  #ifdef DEBUG_2
-  DEBUG_SERIAL.print(F("========================>Setting output:"));
-  DEBUG_SERIAL.print(mPin,DEC);
-  DEBUG_SERIAL.print(F(" to state "));
-  if (State) DEBUG_SERIAL.println(F("ACTIVE"));
-        else DEBUG_SERIAL.println(F("INACTICVE"));
-  #endif
+  DEBUG_PRINT_2("========================>Setting output:");
+  DEBUG_2(print(mPin,DEC));
+  DEBUG_PRINT_2(" to state ");
+  if (State) DEBUG_PRINTLN_2("ACTIVE");
+        else DEBUG_PRINTLN_2("INACTICVE");
+
   mState = State;
   if (PIN_NOT_ASSIGNED != mPin)
   {
