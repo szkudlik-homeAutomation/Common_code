@@ -83,9 +83,19 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
 
    // create a sensor on a local node
 
+   DEBUG_PRINTLN_3("");
+   DEBUG_PRINT_3("==>Sensor create request. ID: ");
+   DEBUG_3(print(SensorID));
+   DEBUG_PRINT_3(" at node: ");
+   DEBUG_3(print(TargetNode));
+   DEBUG_PRINT_3(" name: ");
+   DEBUG_3(println(pSensorName));
+
    Status = tSensor::Create(SensorType, SensorID);
    if (Status != CREATE_SENSOR_STATUS_OK)
    {
+      DEBUG_PRINT_3("-----> tSensor::Create error, status: ");
+      DEBUG_3(println(Status));
       CreateSensorResponse(SensorID, Status);
       return;
    }
@@ -93,15 +103,19 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
    tSensor *pSensor = tSensor::getSensor(SensorID);
    if (pSensor == NULL)
    {
+      DEBUG_PRINTLN_3("-----> tSensor::getSensor error ");
       CreateSensorResponse(SensorID, CREATE_SENSOR_STATUS_OTHER_ERROR);
       return;
    }
 
    if (NULL != pConfigBlob)
    {
+      DEBUG_PRINTLN_3("Setting sensor config ");
       Status = pSensor->SetSpecificConfig(pConfigBlob);
       if (Status != CREATE_SENSOR_STATUS_OK)
       {
+         DEBUG_PRINT_3("-----> tSensor::SetSpecificConfig error, status:");
+         DEBUG_3(println(Status));
          CreateSensorResponse(SensorID, Status);
          return;
       }
@@ -120,6 +134,7 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
 
    pSensor->SetEventCalback(this);
    // send response
+   DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
    CreateSensorResponse(SensorID, CREATE_SENSOR_STATUS_OK);
 }
 

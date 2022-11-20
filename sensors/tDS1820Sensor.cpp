@@ -64,11 +64,23 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
       // set device IDs
       for (uint8_t i = 0; i < mNumOfDevices; i++)
       {
+         DEBUG_PRINT_3("tSensor - looking for device ");
+         DEBUG_3(println(i));
          bool DevExist = pDs1820->getAddress(getCurrentMeasurement()->Dev[i].Addr,i);
          if (! DevExist)
          {
+            DEBUG_PRINTLN_3("            ERROR device not found");
             return CREATE_SENSOR_STATUS_CONFIG_SET_ERROR;
          }
+#ifdef DEBUG_3
+         else
+         {
+            DEBUG_PRINT_3("             FOUND, serial: ");
+            // zonk, response_handeler is not a stream... so serial only
+            printAddress((uint8_t*)getCurrentMeasurement()->Dev[i].Addr, &DEBUG_SERIAL);
+            DEBUG_PRINTLN_3("");
+         }
+#endif
       }
    }
    mConfigSet = true;
@@ -102,7 +114,7 @@ void tDS1820Sensor::doTimeTick()
             for (uint8_t i = 0; i < mNumOfDevices ; i++)
             {
                int16_t temp = round(pDs1820->getTempCByIndex(i) * 10);
-               if (temp > -1270)
+               if (isTempValid(temp))
                {
                   getCurrentMeasurement()->Dev[0].Temperature += temp;
                   NumOfValidMeasurements++;
@@ -120,7 +132,7 @@ void tDS1820Sensor::doTimeTick()
             for (uint8_t i = 0; i < mNumOfDevices ; i++)
             {
                int16_t temp = round(pDs1820->getTempCByIndex(i) * 10);
-               if (temp > -1270)
+               if (isTempValid(temp))
                {
                   getCurrentMeasurement()->Dev[i].Temperature = temp;
                }
@@ -130,7 +142,6 @@ void tDS1820Sensor::doTimeTick()
                }
             }
          }
-
 
          onMeasurementCompleted(Success);
       }

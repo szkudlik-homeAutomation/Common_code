@@ -66,6 +66,8 @@ private:
    uint8_t mNumOfDevices;
    uint8_t mTicksToMeasurementCompete;
    DallasTemperature *pDs1820;
+
+   bool isTempValid(uint16_t temp) { return ((temp > -1200) && (temp < 799)); }
 };
 
 #endif /* SRC_TDS1820SENSOR_H_ */
