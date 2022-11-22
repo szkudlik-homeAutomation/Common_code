@@ -22,7 +22,6 @@ public:
    typedef struct
    {
       uint8_t Pin;   // pin the oneWire bus is connected to
-      uint8_t NumOfDevices; // desired number of DS1820 devices, init will fail if other number is found on the wire
       uint8_t Avg;   // if true, measurements from all valid devices on the wire will be taken as average
    } tConfig;
 
@@ -39,7 +38,6 @@ public:
       tDs1820Data Dev[0];
                      // size of the array is 1 if Avg = 1
                      // or NumOfDevices if Avg = 0
-         //!!! FIX! real num of devices
    } tResult;
 
    tDS1820Sensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DS1820,sensorID) {}

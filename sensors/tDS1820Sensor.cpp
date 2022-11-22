@@ -48,7 +48,7 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
    pDs1820->begin();
    pDs1820->setWaitForConversion(false);
    mAvg = pConfig->Avg;
-   mNumOfDevices = pConfig->NumOfDevices;
+   mNumOfDevices = pDs1820->getDeviceCount();
    if (mNumOfDevices > MAX_DS1820_DEVICES_ON_BUS)
       mNumOfDevices  = MAX_DS1820_DEVICES_ON_BUS;
 
