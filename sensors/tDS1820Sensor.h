@@ -5,8 +5,8 @@
  *      Author: szkud
  */
 
-#ifndef SRC_TDS1820SENSOR_H_
-#define SRC_TDS1820SENSOR_H_
+#pragma once
+
 
 #include "../../../global.h"
 #include "tSensor.h"
@@ -68,4 +68,3 @@ private:
    bool isTempValid(uint16_t temp) { return ((temp > -1200) && (temp < 799)); }
 };
 
-#endif /* SRC_TDS1820SENSOR_H_ */

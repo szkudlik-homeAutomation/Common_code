@@ -1,5 +1,5 @@
-#ifndef HTTP_SERVER
-#define HTTP_SERVER
+#pragma once
+
 #include "../../../global.h"
 #include "tcpServer.h"
 
@@ -62,5 +62,3 @@ protected:
 };
 
 tHttpServlet * ServletFactory(String *pRequestBuffer);
-
-#endif  // HTTP_SERVER

@@ -5,8 +5,7 @@
  *      Author: szkud
  */
 
-#ifndef SRC_DEBUG_H_
-#define SRC_DEBUG_H_
+#pragma once
 
 //TODO - move to app code, split
 
@@ -60,5 +59,3 @@
 
 int getFreeRam();
 
-
-#endif /* SRC_DEBUG_H_ */

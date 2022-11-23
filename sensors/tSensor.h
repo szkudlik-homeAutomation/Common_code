@@ -4,8 +4,8 @@
  * a generic class for all sensors in the system
  */
 
-#ifndef SRC_TSENSOR_H_
-#define SRC_TSENSOR_H_
+#pragma once
+
 
 #include "../../../global.h"
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
@@ -156,5 +156,3 @@ private:
 
    tSensorEvent *mpFirstEvent;
 };
-
-#endif /* SRC_TSENSOR_H_ */

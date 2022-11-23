@@ -1,5 +1,5 @@
-#ifndef TCP_SERVER
-#define TCP_SERVER
+#pragma once
+
 #include "../../../global.h"
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
@@ -85,6 +85,3 @@ private:
   tWatchdogItem mWatchdog;
 };
 
-
-
-#endif  // TCP_SERVER

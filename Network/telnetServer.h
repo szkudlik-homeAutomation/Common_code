@@ -1,5 +1,5 @@
-#ifndef TELNET_SERVER
-#define TELNET_SERVER
+#pragma once
+
 #include "../../../global.h"
 #include "tcpServer.h"
 #include "../ResponseHandler.h"
@@ -40,6 +40,3 @@ private:
   uint8_t mNumOfTelnetCommands;
 };
 
-
-
-#endif  // WORKER_PROCESS

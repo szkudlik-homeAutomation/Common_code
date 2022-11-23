@@ -5,8 +5,7 @@
  *      Author: mszkudli
  */
 
-#ifndef SRC_COMMON_CODE_SENSORS_TSENSORHUB_H_
-#define SRC_COMMON_CODE_SENSORS_TSENSORHUB_H_
+#pragma once
 
 #include "../../../global.h"
 #include "tSensor.h"
@@ -182,5 +181,3 @@ private:
 };
 
 extern tSensorHub SensorHub;
-
-#endif /* SRC_COMMON_CODE_SENSORS_TSENSORHUB_H_ */

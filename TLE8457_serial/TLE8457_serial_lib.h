@@ -1,5 +1,5 @@
-#ifndef TLE8457_SERIAL_LIB
-#define TLE8457_SERIAL_LIB
+#pragma once
+
 
 #include "../../../global.h"
 
@@ -74,5 +74,3 @@ typedef struct
 
 #include "CommSender.h"
 #include "CommReciever.h"
-
-#endif

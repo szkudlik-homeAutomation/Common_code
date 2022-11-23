@@ -1,5 +1,4 @@
-#ifndef RANDOM
-#define RANDOM
+#pragma once
 
 #include "../../../global.h"
 #include <Arduino.h>
@@ -27,5 +26,3 @@ class Random
   private:
     uint8_t a, b, c, x;
 };
-
-#endif

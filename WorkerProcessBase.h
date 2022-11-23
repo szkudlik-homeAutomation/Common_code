@@ -1,5 +1,5 @@
-#ifndef WORKER_PROCESS_BASE
-#define WORKER_PROCESS_BASE
+#pragma once
+
 #include "../../global.h"
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "ResponseHandler.h"
@@ -30,5 +30,3 @@ private:
 
 };
 
-
-#endif  // WORKER_PROCESS_BASE

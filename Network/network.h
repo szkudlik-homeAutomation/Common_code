@@ -1,5 +1,5 @@
-#ifndef NETWORK_H
-#define NETWORK_H
+#pragma once
+
 
 #include "../../../global.h"
 #include <SPI.h>
@@ -78,4 +78,3 @@ private:
   }
 };
 
-#endif // NETWORK_H

@@ -5,10 +5,7 @@
  *      Author: mszkudli
  */
 
-#ifndef SRC_COMMON_CODE_HELPERS_H_
-#define SRC_COMMON_CODE_HELPERS_H_
+#pragma once
 
 #define ATOMIC(CODE) {uint8_t sreg = SREG; noInterrupts(); {CODE} SREG = sreg;}
 
-
-#endif /* SRC_COMMON_CODE_HELPERS_H_ */

@@ -5,8 +5,8 @@
  *      Author: szkud
  */
 
-#ifndef SRC_COMMON_CODE_SENSORS_TANALOGINPUTSENSOR_H_
-#define SRC_COMMON_CODE_SENSORS_TANALOGINPUTSENSOR_H_
+#pragma once
+
 
 #include "../../../global.h"
 #include "tSensor.h"
@@ -34,5 +34,3 @@ private:
    tResult mResult;
    uint8_t mPin;
 };
-
-#endif /* SRC_COMMON_CODE_SENSORS_TANALOGINPUTSENSOR_H_ */

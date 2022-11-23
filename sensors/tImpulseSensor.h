@@ -5,8 +5,7 @@
  *      Author: szkud
  */
 
-#ifndef SRC_COMMON_CODE_SENSORS_TIMPULSESENSOR_H_
-#define SRC_COMMON_CODE_SENSORS_TIMPULSESENSOR_H_
+#pragma once
 
 #include "../../../global.h"
 #include "tSensor.h"
@@ -33,5 +32,3 @@ private:
    volatile uint16_t mCnt;
    tResult mResult;
 };
-
-#endif /* SRC_COMMON_CODE_SENSORS_TIMPULSESENSOR_H_ */

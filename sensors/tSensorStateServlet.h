@@ -5,8 +5,8 @@
  *      Author: szkud
  */
 
-#ifndef SRC_COMMON_CODE_SENSORS_TSENSORSTATESERVLET_H_
-#define SRC_COMMON_CODE_SENSORS_TSENSORSTATESERVLET_H_
+#pragma once
+
 
 #include "../../../global.h"
 #include "../Network/httpServer.h"
@@ -20,5 +20,3 @@ public:
    virtual bool ProcessAndResponse();
 
 };
-
-#endif /* SRC_COMMON_CODE_SENSORS_TSENSORSTATESERVLET_H_ */

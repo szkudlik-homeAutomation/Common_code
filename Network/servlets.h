@@ -1,5 +1,4 @@
-#ifndef SERVLETS
-#define SERVLETS
+#pragma once
 
 #include "../../../global.h"
 #include "../../http_binaries.h"
@@ -20,4 +19,3 @@ public:
 
 #endif
 
-#endif

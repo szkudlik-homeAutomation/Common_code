@@ -1,5 +1,5 @@
-#ifndef OUTPUT_PROCESS
-#define OUTPUT_PROCESS
+#pragma once
+
 
 #include "../../global.h"
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
@@ -106,5 +106,3 @@ class tOutputProcess : public  Process
 protected:
   tOutput Output[NUM_OF_OUTPUTS];
 };
-
-#endif  // OUTPUT_PROCESS

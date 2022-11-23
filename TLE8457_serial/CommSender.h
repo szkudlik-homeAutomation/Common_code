@@ -1,5 +1,5 @@
-#ifndef COMM_SENDER
-#define COMM_SENDER
+#pragma once
+
 
 #include "../../../global.h"
 
@@ -42,6 +42,3 @@ private:
 
 
 extern CommSenderProcess CommSender;
-
-
-#endif

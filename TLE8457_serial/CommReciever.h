@@ -1,5 +1,5 @@
-#ifndef COMM_RECIEVER
-#define COMM_RECIEVER
+#pragma once
+
 
 #include "../../../global.h"
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
@@ -54,5 +54,3 @@ class CommRecieverProcess : public  Process
 };
 
 extern CommRecieverProcess CommReciever;
-
-#endif
