@@ -19,6 +19,8 @@
 
 #define SENSOR_TYPE_PT100_ANALOG 3
 
+#define SENSOR_TYPE_DIGITAL_INPUT 4
+
 // error codes - equal to communication error codes
 #define CREATE_SENSOR_STATUS_OK 0
 //MESSAGE_TYPE_CREATE_SENSOR_STATUS_SUCCESS

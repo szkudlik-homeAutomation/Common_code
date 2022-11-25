@@ -10,6 +10,7 @@
 #include "tDS1820Sensor.h"
 #include "tImpulseSensor.h"
 #include "tPt100AnalogSensor.h"
+#include "tSimpleDigitalInputSensor.h"
 
 tSensor* tSensor::pFirst = NULL;
 
@@ -33,7 +34,9 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
       case SENSOR_TYPE_PT100_ANALOG:
          pNewSensor = new tPt100AnalogSensor(sensorID);
          break;
-
+      case SENSOR_TYPE_DIGITAL_INPUT:
+         pNewSensor = new tSimpleDigitalInputSensor(sensorID);
+         break;
       default:
          return CREATE_SENSOR_STATUS_UNKNOWN_SENSOR;
    }
@@ -93,7 +96,9 @@ void tSensor::onMeasurementCompleted(bool Status)
    }
 }
 
-// static procedure, can't use virtual methods
+// static procedures
+// executed on cetral node, not on nodes where sensors are actually created
+//can't use virtual methods
 uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    uint8_t Result = CREATE_SENSOR_STATUS_UNKNOWN_SENSOR;
@@ -107,6 +112,9 @@ uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, v
          break;
       case SENSOR_TYPE_PT100_ANALOG:
          Result = tPt100AnalogSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+         break;
+      case SENSOR_TYPE_DIGITAL_INPUT:
+         Result = tSimpleDigitalInputSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
    }
    return Result;
