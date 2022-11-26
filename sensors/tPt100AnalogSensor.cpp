@@ -101,15 +101,21 @@ uint8_t tPt100AnalogSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDat
    return CREATE_SENSOR_STATUS_OK;
 }
 
+void tPt100AnalogSensor::doTimeTick()
+{
+   int Read = analogRead(mConfig.Pin);
+
+   float ohm = ((float)Read * 0.529) - 3 - mConfig.Correction;
+
+   float Temp = (ohm-100) * 2.63;
+   TemperatureAvg = TemperatureAvg * 0.9 + Temp*0.1;
+}
+
 void tPt100AnalogSensor::doTriggerMeasurement()
 {
-   int Read = analogRead(mPin);
-
-   float ohm = ((float)Read * 0.529) - 3;
-   float Temp = (ohm-100) * 2.63;
-   if (Temp < 500)
+   if (TemperatureAvg < 500)
    {
-      mResult.Temperature = round (Temp);
+      mResult.Temperature = round (TemperatureAvg);
       onMeasurementCompleted(true);
    }
    else
@@ -121,11 +127,13 @@ void tPt100AnalogSensor::doTriggerMeasurement()
 uint8_t tPt100AnalogSensor::SetSpecificConfig(void *pBlob)
 {
    tConfig *pConfig = (tConfig *)pBlob;
-   mPin = pConfig->Pin;
+   mConfig.Pin = pConfig->Pin;
+   mConfig.Correction = pConfig->Correction;
 
    mCurrentMeasurementBlob = (void*) &mResult;
    mMeasurementBlobSize = sizeof(mResult);
 
+   TemperatureAvg = 0;
    mConfigSet = true;
    return CREATE_SENSOR_STATUS_OK;
 }
