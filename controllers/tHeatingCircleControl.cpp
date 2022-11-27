@@ -16,6 +16,14 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 {
    tDS1820Sensor::tResult *pDS1820Result =(tDS1820Sensor::tResult *) pDataBlob;
 
+   if (mState == STATE_DISABLED)
+   {
+      // do nothing
+      StopValve();
+      PumpOff();
+      return;
+   }
+
    if (EventType == EV_TYPE_MEASUREMENT_ERROR)
 	{
 		StopValve();
@@ -44,8 +52,9 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 
 	if ((mHeatSourceSensorDevID == 255) || (mHeatSourceSensorDevID == 255))
 	{
-      DEBUG_PRINT_3("Heating circle - device not found");
-	   return;
+      DEBUG_PRINT_3("Heating circle error - device not found");
+      Disable();
+      return;
 	}
 
 	int16_t CurrentTemperature = (pDS1820Result)->Dev[mValveTempSensorDevID].Temperature;
@@ -85,15 +94,6 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 		PumpOff();
 		return;
 	}
-
-	if (mState == STATE_DISABLED)
-	{
-		// do nothing
-		StopValve();
-		PumpOff();
-		return;
-	}
-
 
 	PumpOn();
 

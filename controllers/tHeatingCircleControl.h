@@ -28,6 +28,7 @@ public:
             uint16_t SlowValveTime)
       : mTargetTemp(0),
         mValveTempSensorDevID(255),
+        mHeatSourceSensorDevID(255),
         mValveTempSensorSerial(ValveTempSensorSerial),
         mHeatSourceSensorSerial(HeatSourceSensorSerial),
 		  mTolerance(0),
