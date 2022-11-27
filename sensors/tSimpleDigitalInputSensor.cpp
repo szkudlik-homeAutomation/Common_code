@@ -9,7 +9,7 @@
 
 uint8_t tSimpleDigitalInputSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
-   if (dataBlobSize != sizeof(mResult))
+   if (dataBlobSize != sizeof(tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }

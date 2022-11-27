@@ -12,7 +12,18 @@
 
 uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
+   if (dataBlobSize < sizeof(tResult))
+   {
+         return STATUS_JSON_ENCODE_ERROR;
+   }
+
    tResult *pResult =(tResult *) pDataCache;
+   uint8_t MeasurementBlobSize = sizeof(tResult) + (sizeof(tDs1820Data) * pResult->NumOfDevices);
+   if (dataBlobSize != MeasurementBlobSize)
+   {
+         return STATUS_JSON_ENCODE_ERROR;
+   }
+
    pStream->print(F("\"NumOfDevs\":"));
    pStream->print(pResult->NumOfDevices);
    pStream->print(F(",\"Avg\":"));

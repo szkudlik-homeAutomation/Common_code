@@ -40,5 +40,5 @@ void tImpulseSensor::CleanSum()
 
 uint8_t tImpulseSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
-   return 0;
+   return STATUS_SUCCESS;
 }
