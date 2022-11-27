@@ -11,6 +11,7 @@
 #include "tImpulseSensor.h"
 #include "tPt100AnalogSensor.h"
 #include "tSimpleDigitalInputSensor.h"
+#include "tOutputStateSensor.h"
 
 tSensor* tSensor::pFirst = NULL;
 
@@ -37,6 +38,10 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
       case SENSOR_TYPE_DIGITAL_INPUT:
          pNewSensor = new tSimpleDigitalInputSensor(sensorID);
          break;
+      case SENSOR_TYPE_OUTPUT_STATES:
+         pNewSensor = new tOutputStateSensor(sensorID);
+         break;
+
       default:
          return STATUS_UNKNOWN_SENSOR_TYPE;
    }
@@ -115,6 +120,8 @@ uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, v
          break;
       case SENSOR_TYPE_DIGITAL_INPUT:
          Result = tSimpleDigitalInputSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+      case SENSOR_TYPE_OUTPUT_STATES:
+         Result = tOutputStateSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
    }
    return Result;
