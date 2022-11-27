@@ -12,6 +12,7 @@
 #include "tPt100AnalogSensor.h"
 #include "tSimpleDigitalInputSensor.h"
 #include "tOutputStateSensor.h"
+#include "tHeatingCircleStatusSensor.h"
 
 tSensor* tSensor::pFirst = NULL;
 
@@ -40,6 +41,9 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
          break;
       case SENSOR_TYPE_OUTPUT_STATES:
          pNewSensor = new tOutputStateSensor(sensorID);
+         break;
+      case SENSOR_TYPE_HEATING_CIRCLE_STATE:
+         pNewSensor = new tHeatingCircleStatusSensor(sensorID);
          break;
 
       default:
@@ -122,6 +126,9 @@ uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, v
          Result = tSimpleDigitalInputSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
       case SENSOR_TYPE_OUTPUT_STATES:
          Result = tOutputStateSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+         break;
+      case SENSOR_TYPE_HEATING_CIRCLE_STATE:
+         Result = tHeatingCircleStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
    }
    return Result;
