@@ -11,14 +11,14 @@ uint8_t tSimpleDigitalInputSensor::TranslateBlobToJSON(uint8_t dataBlobSize, voi
 {
    if (dataBlobSize != sizeof(mResult))
    {
-         return CREATE_SENSOR_STATUS_OTHER_ERROR;
+         return STATUS_JSON_ENCODE_ERROR;
    }
 
    tResult *pResult =(tResult *) pDataCache;
    pStream->print(F("\"State\":"));
    pStream->print(pResult->State,DEC);
    pStream->print(F(","));
-   return CREATE_SENSOR_STATUS_OK;
+   return STATUS_SUCCESS;
 }
 
 void tSimpleDigitalInputSensor::doTriggerMeasurement()
@@ -38,5 +38,5 @@ uint8_t tSimpleDigitalInputSensor::SetSpecificConfig(void *pBlob)
    mMeasurementBlobSize = sizeof(mResult);
    mConfigSet = true;
 
-   return CREATE_SENSOR_STATUS_OK;
+   return STATUS_SUCCESS;
 }

@@ -46,7 +46,7 @@ uint8_t tSensorHub::getSensorID(const char * pSensorName)
    tSensorDesc *pSensorDesc = tSensorDesc::getByName(pSensorName);
    if (NULL == pSensorDesc)
    {
-      return SENSOR_NOT_FOUND;
+      return SENSOR_ID_NOT_FOUND;
    }
 
    return pSensorDesc->SensorID;
@@ -67,7 +67,7 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize
    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
    if (NULL == pSensorDesc)
    {
-      return SENSOR_NOT_FOUND;
+      return STATUS_UNKNOWN_SENSOR_ID;
    }
 
    *dataBlobSize = pSensorDesc->dataBlobSize;
@@ -92,7 +92,7 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
    DEBUG_3(println(pSensorName));
 
    Status = tSensor::Create(SensorType, SensorID);
-   if (Status != CREATE_SENSOR_STATUS_OK)
+   if (Status != STATUS_SUCCESS)
    {
       DEBUG_PRINT_3("-----> tSensor::Create error, status: ");
       DEBUG_3(println(Status));
@@ -104,7 +104,7 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
    if (pSensor == NULL)
    {
       DEBUG_PRINTLN_3("-----> tSensor::getSensor error ");
-      CreateSensorResponse(SensorID, CREATE_SENSOR_STATUS_OTHER_ERROR);
+      CreateSensorResponse(SensorID, STATUS_SENSOR_CREATE_ERROR);
       return;
    }
 
@@ -112,7 +112,7 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
    {
       DEBUG_PRINTLN_3("Setting sensor config ");
       Status = pSensor->SetSpecificConfig(pConfigBlob);
-      if (Status != CREATE_SENSOR_STATUS_OK)
+      if (Status != STATUS_SUCCESS)
       {
          DEBUG_PRINT_3("-----> tSensor::SetSpecificConfig error, status:");
          DEBUG_3(println(Status));
@@ -135,7 +135,7 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
    pSensor->SetEventCalback(this);
    // send response
    DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
-   CreateSensorResponse(SensorID, CREATE_SENSOR_STATUS_OK);
+   CreateSensorResponse(SensorID, STATUS_SUCCESS);
 }
 
 void tSensorHub::getSensorInfoRequest(uint8_t SensorID)
@@ -145,12 +145,12 @@ void tSensorHub::getSensorInfoRequest(uint8_t SensorID)
    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
    if ((NULL == pSensor) || (NULL == pSensorDesc))
    {
-      getSensorInfoResponse(SENSOR_NOT_FOUND, 0, 0, 0, 0, 0, NULL);
+      getSensorInfoResponse(STATUS_UNKNOWN_SENSOR_ID, 0, 0, 0, 0, 0, NULL);
       return;
    }
 
    getSensorInfoResponse(
-         CREATE_SENSOR_STATUS_OK,
+         STATUS_SUCCESS,
          pSensorDesc->SensorID,
          0, // deviceID TBD
          pSensorDesc->sensorType,
@@ -164,11 +164,11 @@ uint8_t tSensorHub::subscribeToEvents(uint8_t SensorID, tSensorHubEvent *pSensor
    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
    if (NULL == pSensorDesc)
    {
-      return SENSOR_NOT_FOUND;
+      return STATUS_UNKNOWN_SENSOR_ID;
    }
 
    pSensorEvent->Connect(&pSensorDesc->pFirstEventHander);
-   return CREATE_SENSOR_STATUS_OK;
+   return STATUS_SUCCESS;
 }
 
 uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
@@ -176,7 +176,7 @@ uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
    if (NULL == pSensorDesc)
    {
-      return SENSOR_NOT_FOUND;
+      return STATUS_UNKNOWN_SENSOR_ID;
    }
 
    return formatJSON(pSensorDesc,pStream);

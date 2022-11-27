@@ -19,7 +19,7 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
 {
    if (NULL != getSensor(sensorID))
    {
-      return CREATE_SENSOR_STATUS_DUPLICATE_ID;
+      return STATUS_DUPLICATE_ID;
    }
 
    tSensor *pNewSensor = NULL;
@@ -38,13 +38,13 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
          pNewSensor = new tSimpleDigitalInputSensor(sensorID);
          break;
       default:
-         return CREATE_SENSOR_STATUS_UNKNOWN_SENSOR;
+         return STATUS_UNKNOWN_SENSOR_TYPE;
    }
 
    if (pNewSensor == NULL)
-      return CREATE_SENSOR_STATUS_OTHER_ERROR;
+      return STATUS_SENSOR_CREATE_ERROR;
 
-   return CREATE_SENSOR_STATUS_OK;
+   return STATUS_SUCCESS;
 }
 
 tSensor::tSensor(uint8_t SensorType, uint8_t sensorID) :
@@ -101,7 +101,7 @@ void tSensor::onMeasurementCompleted(bool Status)
 //can't use virtual methods
 uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
-   uint8_t Result = CREATE_SENSOR_STATUS_UNKNOWN_SENSOR;
+   uint8_t Result = STATUS_UNKNOWN_SENSOR_TYPE;
    switch (SensorType)
    {
       case SENSOR_TYPE_DS1820:

@@ -36,7 +36,7 @@ uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCach
       }
    }
 
-   return CREATE_SENSOR_STATUS_OK;
+   return STATUS_SUCCESS;
 }
 
 uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
@@ -70,7 +70,7 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
          if (! DevExist)
          {
             DEBUG_PRINTLN_3("            ERROR device not found");
-            return CREATE_SENSOR_STATUS_CONFIG_SET_ERROR;
+            return STATUS_CONFIG_SET_ERROR;
          }
 #ifdef DEBUG_3
          else
@@ -84,7 +84,7 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
       }
    }
    mConfigSet = true;
-   return CREATE_SENSOR_STATUS_OK;
+   return STATUS_SUCCESS;
 }
 
 void tDS1820Sensor::doTriggerMeasurement()

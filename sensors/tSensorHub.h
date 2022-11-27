@@ -51,12 +51,6 @@ public:
 	 * Method called when a response to CreateSensorRequest arrives
 	 * when sensor is on the same node, it may be called before CreateSensorRequest returns
 	 *
-	 * Status 0 OK
-	 *  SENSOR_STATUS_DUPLICATE_ID
-	 *  SENSOR_STATUS_DUPLICATE_NAME
-	 *  SENSOR_STATUS_UNKNOWN_SENSOR
-	 *  SENSOR_STATUS_TIMEOUT
-	 *  CREATE_SENSOR_STATUS_CONFIG_SET_ERROR
 	 */
 	virtual void CreateSensorResponse(uint8_t SensorID, uint8_t Status) {};
 
@@ -64,7 +58,7 @@ public:
 	 * Get an ID of a sensor by name
 	 * Immediate response, local operation
 	 *
-	 * @retval SENSOR_NOT_FOUND
+	 * @retval SENSOR_ID_NOT_FOUND
 	 * or sensor ID
 	 */
 	uint8_t getSensorID(const char * pSensorName);
@@ -76,8 +70,6 @@ public:
 
 	/*
 	 * Get an ID of a sensor info (remote operation)
-	 * Status: SENSOR_NOT_FOUND
-	 *         SENSOR_STATUS_TIMEOUT
 	 */
 	void getSensorInfoRequest(uint8_t SensorID);
 	virtual void getSensorInfoResponse(
@@ -110,8 +102,6 @@ public:
 	/**
 	 * get cached sensor data
 	 * get data from a sensor stored locally
-	 *
-	 * @retval SENSOR_NOT_FOUND
 	 */
 	uint8_t getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize, void **pDataBlob);
 

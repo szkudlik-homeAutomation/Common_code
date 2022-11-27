@@ -21,19 +21,7 @@
 
 #define SENSOR_TYPE_DIGITAL_INPUT 4
 
-// error codes - equal to communication error codes
-#define CREATE_SENSOR_STATUS_OK 0
-//MESSAGE_TYPE_CREATE_SENSOR_STATUS_SUCCESS
-#define CREATE_SENSOR_STATUS_DUPLICATE_ID 1
-//MESSAGE_TYPE_CREATE_SENSOR_STATUS_DUPLICATE_ID
-#define CREATE_SENSOR_STATUS_UNKNOWN_SENSOR 2
-// MESSAGE_TYPE_CREATE_SENSOR_STATUS_UNKNOWN_SENSOR
-#define CREATE_SENSOR_STATUS_OTHER_ERROR 3
-//MESSAGE_TYPE_CREATE_SENSOR_STATUS_OTHER_ERROR
-#define CREATE_SENSOR_STATUS_CONFIG_SET_ERROR 4
-
-
-#define SENSOR_NOT_FOUND 0xff   //!! clean it!
+#define SENSOR_ID_NOT_FOUND 0xff
 
 // BIG mess with statuses - mixed with tSensorDesc statuses on JSON export
 
@@ -77,10 +65,6 @@ public:
     * @brief create a sensor on local system
     * sensor poiner is avaliable using getsensor
     *
-    * @retval CREATE_SENSOR_STATUS_OK
-    * @retval CREATE_SENSOR_STATUS_DUPLICATE_ID
-    * @retval CREATE_SENSOR_STATUS_DUPLICATE_ID
-    * @retval CREATE_SENSOR_STATUS_OTHER_ERROR
     */
    static uint8_t Create(uint8_t SensorType, uint8_t sensorID);
 
@@ -98,10 +82,7 @@ public:
       mpFirstEvent = pEvent;
    }
 
-   /*
-    * @retval CREATE_SENSOR_STATUS_CONFIG_SET_ERROR
-    */
-   virtual uint8_t SetSpecificConfig(void *pBlob) {return CREATE_SENSOR_STATUS_OK;}
+   virtual uint8_t SetSpecificConfig(void *pBlob) {return STATUS_SUCCESS;}
 
 
    void TriggerMeasurement() { if (isRunning()) doTriggerMeasurement(); }

@@ -91,14 +91,14 @@ uint8_t tPt100AnalogSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDat
 {
    if (dataBlobSize != sizeof(mResult))
    {
-         return CREATE_SENSOR_STATUS_OTHER_ERROR;
+         return STATUS_JSON_ENCODE_ERROR;
    }
 
    tResult *pResult =(tResult *) pDataCache;
    pStream->print(F("\"Temperature\":"));
    pStream->print(pResult->Temperature);
    pStream->print(F(","));
-   return CREATE_SENSOR_STATUS_OK;
+   return STATUS_SUCCESS;
 }
 
 void tPt100AnalogSensor::doTimeTick()
@@ -135,5 +135,5 @@ uint8_t tPt100AnalogSensor::SetSpecificConfig(void *pBlob)
 
    TemperatureAvg = 0;
    mConfigSet = true;
-   return CREATE_SENSOR_STATUS_OK;
+   return STATUS_SUCCESS;
 }
