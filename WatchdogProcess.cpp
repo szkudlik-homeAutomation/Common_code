@@ -12,8 +12,6 @@ bool tWatchdogItem::Tick() {
    }
    else
    {
-      Ethernet.clean();
-      Reset();
       return false;  // timeout
    }
    return true;
@@ -31,14 +29,13 @@ void tWatchdogProcess::service()
       pItem = pItem->pNext;
    }
 
-   watchdog.reset();
-
    if (doResetWatchdog)
    {
-//      watchdog.reset();
+      watchdog.reset();
    }
    else
    {
-      DEBUG_PRINTLN_3("Watchdog goes off!");
+      Ethernet.clean();
+      DEBUG_PRINTLN_3("=========>!!!!!!! Watchdog timeout");
    }
 }

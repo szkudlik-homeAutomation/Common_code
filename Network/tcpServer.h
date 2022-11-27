@@ -77,7 +77,7 @@ protected:
   virtual void setup();
   virtual void service();
 
-  static uint8_t const NUM_OF_CONCURRENT_SESSIONS = 6;
+  static uint8_t const NUM_OF_CONCURRENT_SESSIONS = 4;      // Ethershield can handle 4 session
   static uint8_t const TCP_SERVER_SHEDULER_PERIOD = 10;     //ms
   tTcpSession* clients[NUM_OF_CONCURRENT_SESSIONS];
 

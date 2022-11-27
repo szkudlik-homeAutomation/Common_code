@@ -40,7 +40,7 @@ class tWatchdogProcess : public  Process
   tWatchdogProcess(Scheduler &manager) : Process(manager, WATCHDOG_PRIORITY, SERVICE_SECONDLY, RUNTIME_FOREVER) {}
   virtual void setup()
   {
-    watchdog.enable(Watchdog::TIMEOUT_2S);
+    watchdog.enable(Watchdog::TIMEOUT_8S);
   }
   virtual void service();
 
