@@ -11,6 +11,8 @@
 #include "../sensors/tDS1820Sensor.h"
 
 
+int16_t tHeatingCircleControl::mPumpStopTempThold = 0;
+int16_t tHeatingCircleControl::mPumpStartTempThold = 0;
 
 void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
@@ -43,14 +45,20 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 	      {
 	         mValveTempSensorDevID = i;
 	      }
-         if (strncmp(mHeatSourceSensorSerial,pDS1820Result->Dev[i].Addr,sizeof(tDS1820Sensor::DeviceAddress)) == 0)
-         {
-            mHeatSourceSensorDevID = i;
-         }
+	      if (mHeatSourceSensorSerial)
+            if (strncmp(mHeatSourceSensorSerial,pDS1820Result->Dev[i].Addr,sizeof(tDS1820Sensor::DeviceAddress)) == 0)
+            {
+               mHeatSourceSensorDevID = i;
+            }
+	      if (mHeatStorageSensorSerial)
+            if (strncmp(mHeatStorageSensorSerial,pDS1820Result->Dev[i].Addr,sizeof(tDS1820Sensor::DeviceAddress)) == 0)
+            {
+               mHeatStorageSensorDevID = i;
+            }
 	   }
 	}
 
-	if ((mHeatSourceSensorDevID == 255) || (mHeatSourceSensorDevID == 255))
+	if (mValveTempSensorDevID == 255)
 	{
       DEBUG_PRINT_3("Heating circle error - device not found");
       Disable();
@@ -76,7 +84,7 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 	 *  	- set state to IDLE
 	 */
 
-	   DEBUG_PRINT_2("-->Temp: ");
+	   ("-->Temp: ");
 	   DEBUG_2(print((float)(CurrentTemperature) / 10));
 	   DEBUG_PRINT_2(" Target: ");
 	   DEBUG_2(print(getTargetTemp()));
@@ -95,7 +103,36 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 		return;
 	}
 
-	PumpOn();
+
+	if ((mHeatSourceSensorDevID != 255) && (mHeatStorageSensorDevID != 255))
+	{
+	   // shoud we pause the pump?
+	   int16_t HeatSourceTemperature = (pDS1820Result)->Dev[mHeatSourceSensorDevID].Temperature;
+      int16_t HeatStorageTemperature = (pDS1820Result)->Dev[mHeatStorageSensorDevID].Temperature;
+
+      if (HeatSourceTemperature < mPumpStopTempThold)
+      {
+         mState = STATE_PAUSED;
+      }
+      if (mState == STATE_PAUSED)
+	   {
+
+	      if (HeatStorageTemperature > mPumpStartTempThold)
+	      {
+	         mState = STATE_IDLE;
+	      }
+	      else
+	      {
+	         // do nothing - wait for heat source to warm up
+	         DEBUG_PRINT_2("PAUSE ");
+	         StopValve();
+	         PumpOff();
+	         return;
+	      }
+	   }
+	}
+
+   PumpOn();
 
 	if ( (Delta > mFastValveMoveThold) ||
 		((mState == STATE_IDLE) && (Delta > mHisteresis)) )

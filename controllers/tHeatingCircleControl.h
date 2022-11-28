@@ -11,6 +11,7 @@
 #include "../../tOutputProcessheatingControl.h"
 #include "../sensors/tSensorHub.h"
 
+
 // note that the events are triggered by a sensor thold
 // set sensor to proper time
 // than set the object as a callback to the se
@@ -22,6 +23,7 @@ public:
    tHeatingCircleControl(
             char* ValveTempSensorSerial,
             char* HeatSourceSensorSerial,
+            char* HeatStorageSensorSerial,
             uint8_t ValveOpenOutId,
             uint8_t ValveCloseOutId,
             uint8_t PumpOutId,
@@ -29,8 +31,10 @@ public:
       : mTargetTemp(0),
         mValveTempSensorDevID(255),
         mHeatSourceSensorDevID(255),
+        mHeatStorageSensorDevID(255),
         mValveTempSensorSerial(ValveTempSensorSerial),
         mHeatSourceSensorSerial(HeatSourceSensorSerial),
+        mHeatStorageSensorSerial(HeatStorageSensorSerial),
 		  mTolerance(0),
 		  mSlowValveTime(SlowValveTime),
 		  mFastValveMoveThold(0),
@@ -50,11 +54,15 @@ public:
    void setTolerance(float Tolerance)   { mTolerance = Tolerance * 10; }
    void setFastThold(float FastValveMoveThold) { mFastValveMoveThold = FastValveMoveThold * 10; }
    void setHisteresis(float Histeresis)   { mHisteresis = Histeresis * 10; }
+   static void setPumpStopTemp(float StopTemp) {mPumpStopTempThold = StopTemp * 10; }
+   static void setPumpStartTemp(float StartTemp) {mPumpStartTempThold = StartTemp * 10; }
 
    float getTargetTemp() const { return ((float)(mTargetTemp) / 10); }
    float getTolerance()  const { return ((float)(mTolerance) / 10); }
    float getFastThold()  const { return ((float)(mFastValveMoveThold) / 10); }
    float getHisteresis() const { return ((float)(mHisteresis) / 10); }
+   static float getPumpStopTemp() { return ((float)(mPumpStopTempThold) / 10); }
+   static float getPumpStartTemp() { return ((float)(mPumpStartTempThold) / 10); }
 
    bool isWorking() const { return ((mState != STATE_OFF) && (mState != STATE_DISABLED)); }
 
@@ -65,15 +73,20 @@ private:
 	   STATE_OFF,
 	   STATE_IDLE,
 	   STATE_OPENING,
-	   STATE_CLOSING
+	   STATE_CLOSING,
+	   STATE_PAUSED
    } tState;
 
+   static int16_t mPumpStopTempThold;
+   static int16_t mPumpStartTempThold;
    tState mState;
 
    char *mValveTempSensorSerial;
    char *mHeatSourceSensorSerial;
+   char *mHeatStorageSensorSerial;
    uint8_t mValveTempSensorDevID;
    uint8_t mHeatSourceSensorDevID;
+   uint8_t mHeatStorageSensorDevID;
    int16_t mTargetTemp;			   //< target temperature (*10)
    int16_t mFastValveMoveThold;	//< delta thold when the valve is triggered at full speed
    int16_t mTolerance;           //< delta thold when the temp correction stops
