@@ -13,6 +13,7 @@
 #include "tSimpleDigitalInputSensor.h"
 #include "tOutputStateSensor.h"
 #include "tHeatingCircleStatusSensor.h"
+#include "tSystemStatusSensor.h"
 
 tSensor* tSensor::pFirst = NULL;
 
@@ -45,7 +46,9 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
       case SENSOR_TYPE_HEATING_CIRCLE_STATE:
          pNewSensor = new tHeatingCircleStatusSensor();
          break;
-
+      case SENSOR_TYPE_SYSTEM_STATUS:
+          pNewSensor = new tSystemStatusSensor();
+          break;
       default:
          return STATUS_UNKNOWN_SENSOR_TYPE;
    }
@@ -130,6 +133,9 @@ uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, v
       case SENSOR_TYPE_HEATING_CIRCLE_STATE:
          Result = tHeatingCircleStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+      case SENSOR_TYPE_SYSTEM_STATUS:
+          Result = tSystemStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
+          break;
    }
    return Result;
 }
