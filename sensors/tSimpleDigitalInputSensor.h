@@ -23,7 +23,7 @@ public:
       uint8_t State;
    } tResult;
 
-   tSimpleDigitalInputSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DIGITAL_INPUT,sensorID) {}
+   tSimpleDigitalInputSensor() : tSensor(SENSOR_TYPE_DIGITAL_INPUT) {}
 
    virtual void doTriggerMeasurement();
    virtual uint8_t SetSpecificConfig(void *pBlob);

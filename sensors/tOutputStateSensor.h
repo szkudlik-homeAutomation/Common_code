@@ -12,7 +12,7 @@
 
 class tOutputStateSensor : public tSensor {
 public:
-   tOutputStateSensor(uint8_t sensorID);
+   tOutputStateSensor();
 
    typedef struct
    {

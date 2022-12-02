@@ -9,7 +9,7 @@
 #include "tImpulseSensor.h"
 
 
-tImpulseSensor::tImpulseSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_IMPULSE,sensorID)
+tImpulseSensor::tImpulseSensor() : tSensor(SENSOR_TYPE_IMPULSE)
 {
 	mResult.Count = 0;
 	mResult.Sum = 0;

@@ -18,7 +18,7 @@ public:
       uint16_t Sum;   // sum of all impulses
    } tResult;
 
-   tImpulseSensor(uint8_t sensorID);
+   tImpulseSensor();
    virtual ~tImpulseSensor() {}
 
    void CleanSum(); 			// clear Sum

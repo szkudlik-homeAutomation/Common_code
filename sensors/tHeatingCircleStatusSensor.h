@@ -14,7 +14,7 @@
 class tHeatingCircleControl;
 class tHeatingCircleStatusSensor : public tSensor {
 public:
-   tHeatingCircleStatusSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_OUTPUT_STATES,sensorID) {}
+   tHeatingCircleStatusSensor() : tSensor(SENSOR_TYPE_OUTPUT_STATES) {}
 
    typedef struct
    {

@@ -40,7 +40,7 @@ public:
                      // or NumOfDevices if Avg = 0
    } tResult;
 
-   tDS1820Sensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DS1820,sensorID) {}
+   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820) {}
 
    virtual uint8_t SetSpecificConfig(void *pBlob);
 

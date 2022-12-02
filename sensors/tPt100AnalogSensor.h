@@ -1,7 +1,7 @@
 /*
  * tPt100AnalogSensor.h
  *
- *  Created on: 21 paŸ 2022
+ *  Created on: 21 paï¿½ 2022
  *      Author: szkud
  */
 
@@ -24,7 +24,7 @@ public:
       int Temperature;
    } tResult;
 
-   tPt100AnalogSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_PT100_ANALOG,sensorID) {}
+   tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG) {}
 
    virtual uint8_t SetSpecificConfig(void *pBlob);
 

@@ -112,7 +112,7 @@ public:
    }
 
 protected:
-   tSensor(uint8_t SensorType, uint8_t sensorID);
+   tSensor(uint8_t SensorType);
 
 
    bool mConfigSet;

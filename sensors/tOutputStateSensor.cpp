@@ -8,7 +8,7 @@
 #include "tOutputStateSensor.h"
 #include "../OutputProcess.h"
 
-tOutputStateSensor::tOutputStateSensor(uint8_t sensorID)  : tSensor(SENSOR_TYPE_OUTPUT_STATES,sensorID)
+tOutputStateSensor::tOutputStateSensor()  : tSensor(SENSOR_TYPE_OUTPUT_STATES)
 {
    for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
    {

@@ -28,22 +28,22 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
    switch (SensorType)
    {
       case SENSOR_TYPE_DS1820:
-         pNewSensor = new tDS1820Sensor(sensorID);
+         pNewSensor = new tDS1820Sensor();
          break;
       case SENSOR_TYPE_IMPULSE:
-         pNewSensor = new tImpulseSensor(sensorID);
+         pNewSensor = new tImpulseSensor();
          break;
       case SENSOR_TYPE_PT100_ANALOG:
-         pNewSensor = new tPt100AnalogSensor(sensorID);
+         pNewSensor = new tPt100AnalogSensor();
          break;
       case SENSOR_TYPE_DIGITAL_INPUT:
-         pNewSensor = new tSimpleDigitalInputSensor(sensorID);
+         pNewSensor = new tSimpleDigitalInputSensor();
          break;
       case SENSOR_TYPE_OUTPUT_STATES:
-         pNewSensor = new tOutputStateSensor(sensorID);
+         pNewSensor = new tOutputStateSensor();
          break;
       case SENSOR_TYPE_HEATING_CIRCLE_STATE:
-         pNewSensor = new tHeatingCircleStatusSensor(sensorID);
+         pNewSensor = new tHeatingCircleStatusSensor();
          break;
 
       default:
@@ -53,17 +53,17 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
    if (pNewSensor == NULL)
       return STATUS_SENSOR_CREATE_ERROR;
 
+   pNewSensor->mSensorID = sensorID;
    return STATUS_SUCCESS;
 }
 
-tSensor::tSensor(uint8_t SensorType, uint8_t sensorID) :
+tSensor::tSensor(uint8_t SensorType) :
       mCurrentMeasurementBlob(NULL),
       mMeasurementBlobSize(0),
       mSensorType(SensorType),
       mConfigSet(false),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mSensorID(sensorID),
       mpFirstEvent(NULL)
 {
    pNext = pFirst;
