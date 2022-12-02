@@ -137,13 +137,19 @@ private:
 	class tSensorDesc
 	{
 	public:
-	   tSensorDesc() { pNext = pFirst; pFirst = this; }
+	   tSensorDesc(uint8_t aSensorType, uint8_t aSensorID, char * apSensorName) :
+		   SensorID(aSensorID),
+		   sensorType(aSensorType),
+		   pName(apSensorName),
+		   pDataCache(NULL),
+		   pFirstEventHander(NULL),
+		   dataBlobSize(0),
+		   Status(STATUS_NO_DATA_RECIEVED)
+	   {
+		   pNext = pFirst; pFirst = this;
+	   }
 
 	   uint8_t Status;
-	   static const uint8_t STATUS_OPERATIONAL = 1;
-	   static const uint8_t STATUS_NO_DATA_RECIEVED = 2;
-      static const uint8_t STATUS_ERROR_INCORRECT_DATA_SIZE = 3;
-      static const uint8_t STATUS_ERROR_REPORTED = 4;
 	   uint8_t SensorID;
 	   uint8_t sensorType;
 	   uint8_t dataBlobSize;

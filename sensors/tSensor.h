@@ -21,8 +21,6 @@
 
 #define SENSOR_ID_NOT_FOUND 0xff
 
-// BIG mess with statuses - mixed with tSensorDesc statuses on JSON export
-
 typedef enum
 {
    EV_TYPE_MEASUREMENT_ERROR,

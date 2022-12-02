@@ -123,14 +123,11 @@ void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uin
    pSensor->SetMeasurementPeriod(MeasurementPeriod);
 
    // add sensor to repository
-   tSensorDesc *pSensorDesc = new tSensorDesc;
-   pSensorDesc->SensorID = SensorID;
-   pSensorDesc->pDataCache = NULL;
-   pSensorDesc->pFirstEventHander = NULL;
-   pSensorDesc->dataBlobSize = 0;
-   pSensorDesc->pName = pSensorName;
-   pSensorDesc->sensorType = SensorType;
-   pSensorDesc->Status = tSensorDesc::STATUS_NO_DATA_RECIEVED;
+   tSensorDesc *pSensorDesc = new tSensorDesc(
+		   SensorType,
+		   SensorID,
+		   pSensorName
+		   );
 
    pSensor->SetEventCalback(this);
    // send response
@@ -204,7 +201,7 @@ uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
    pStream->print(F("\""));
    pStream->print(pSensorDesc->pName);
    pStream->print(F("\":{"));
-   if (pSensorDesc->Status == tSensorDesc::STATUS_OPERATIONAL)
+   if (pSensorDesc->Status == STATUS_SUCCESS)
    {
       Result = tSensor::TranslateBlobToJSON(pSensorDesc->sensorType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache, pStream);
    }
@@ -244,7 +241,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uin
 
    if (EventType == EV_TYPE_MEASUREMENT_ERROR)
    {
-      pSensorDesc->Status = tSensorDesc::STATUS_ERROR_REPORTED;
+      pSensorDesc->Status = STATUS_SENSOR_ERROR_REPORTED;
       // callbacks
       callAllCallbacks(pSensorDesc,EV_TYPE_MEASUREMENT_ERROR);
       return;
@@ -258,12 +255,12 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uin
 
    if (pSensorDesc->dataBlobSize != dataBlobSize)
    {
-      pSensorDesc->Status = tSensorDesc::STATUS_ERROR_INCORRECT_DATA_SIZE;
+      pSensorDesc->Status = STATUS_INCORRECT_DATA_SIZE;
       callAllCallbacks(pSensorDesc,EV_TYPE_MEASUREMENT_ERROR);
       return;
    }
 
-   pSensorDesc->Status = tSensorDesc::STATUS_OPERATIONAL;
+   pSensorDesc->Status = STATUS_SUCCESS;
    memcpy(pSensorDesc->pDataCache,pDataBlob,dataBlobSize);
 
    // callbacks
