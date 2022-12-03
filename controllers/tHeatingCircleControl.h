@@ -20,6 +20,8 @@ public:
 	static const uint16_t MAX_VALVE_TIME = 100;
 	static const uint16_t MAX_PUMP_TIME = 100;
 
+	static const uint8_t PAUSE_PREVENTION_CYCLES = 5;  // TODO - provide! 25sec now
+
    tHeatingCircleControl(
             char* ValveTempSensorSerial,
             char* HeatSourceSensorSerial,
@@ -42,11 +44,12 @@ public:
 		  mValveCloseOutId(ValveCloseOutId),
 		  mHisteresis(0),
 		  mPumpOutId(PumpOutId),
+		  mPausePreventionCycles(0),
 		  mState(STATE_DISABLED) {}
 
    void Disable() { mState = STATE_DISABLED; }
    void Stop()  { mState = STATE_OFF; }
-   void Start()  { mState = STATE_IDLE; }
+   void Start()  { mState = STATE_IDLE; mPausePreventionCycles = PAUSE_PREVENTION_CYCLES; }
 
    virtual void onEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob);
 
@@ -79,6 +82,7 @@ private:
 
    static int16_t mPumpStopTempThold;
    static int16_t mPumpStartTempThold;
+   uint8_t mPausePreventionCycles;
    tState mState;
 
    char *mValveTempSensorSerial;

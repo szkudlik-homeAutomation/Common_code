@@ -114,7 +114,7 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 	   int16_t HeatSourceTemperature = (pDS1820Result)->Dev[mHeatSourceSensorDevID].Temperature;
       int16_t HeatStorageTemperature = (pDS1820Result)->Dev[mHeatStorageSensorDevID].Temperature;
 
-      if (HeatSourceTemperature < mPumpStopTempThold)
+      if ((HeatSourceTemperature < mPumpStopTempThold) && (mPausePreventionCycles == 0))
       {
          mState = STATE_PAUSED;
       }
@@ -124,6 +124,7 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 	      if (HeatStorageTemperature > mPumpStartTempThold)
 	      {
 	         mState = STATE_IDLE;
+	         mPausePreventionCycles = PAUSE_PREVENTION_CYCLES;
 	      }
 	      else
 	      {
@@ -135,6 +136,8 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 	      }
 	   }
 	}
+
+	if (mPausePreventionCycles) { mPausePreventionCycles--; }
 
    PumpOn();
 
