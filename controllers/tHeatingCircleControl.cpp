@@ -93,7 +93,11 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 	   DEBUG_PRINT_2(" Tolerance: ");
 	   DEBUG_2(print(getTolerance()));
       DEBUG_PRINT_2(" Histeresis: ");
-      DEBUG_2(println(getHisteresis()));
+      DEBUG_2(print(getHisteresis()));
+      DEBUG_PRINT_2(" PumpStopTempThold: ");
+      DEBUG_2(print(mPumpStopTempThold));
+      DEBUG_PRINT_2(" PumpStartTempThold: ");
+      DEBUG_2(println(mPumpStartTempThold));
 
 	if (mState == STATE_OFF)
 	{
