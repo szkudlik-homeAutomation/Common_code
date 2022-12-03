@@ -40,5 +40,18 @@ void tImpulseSensor::CleanSum()
 
 uint8_t tImpulseSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
+   if (dataBlobSize != sizeof(tResult))
+   {
+         return STATUS_JSON_ENCODE_ERROR;
+   }
+
+   tResult *pResult =(tResult *) pDataCache;
+   pStream->print(F("\"NumOfImpulses\":"));
+   pStream->print(pResult->Count);
+   pStream->print(F(","));
+   pStream->print(F("\"SumOfImpulses\":"));
+   pStream->print(pResult->Sum);
+   pStream->print(F(","));
+
    return STATUS_SUCCESS;
 }
