@@ -43,9 +43,11 @@ uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
       case SENSOR_TYPE_OUTPUT_STATES:
          pNewSensor = new tOutputStateSensor();
          break;
+#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
       case SENSOR_TYPE_HEATING_CIRCLE_STATE:
          pNewSensor = new tHeatingCircleStatusSensor();
          break;
+#endif
       case SENSOR_TYPE_SYSTEM_STATUS:
           pNewSensor = new tSystemStatusSensor();
           break;
@@ -130,9 +132,11 @@ uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, v
       case SENSOR_TYPE_OUTPUT_STATES:
          Result = tOutputStateSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
       case SENSOR_TYPE_HEATING_CIRCLE_STATE:
          Result = tHeatingCircleStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+#endif
       case SENSOR_TYPE_SYSTEM_STATUS:
           Result = tSystemStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
           break;
