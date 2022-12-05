@@ -8,6 +8,9 @@
 #pragma once
 
 #include "../../../global.h"
+
+#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
+
 #include "tSensor.h"
 
 
@@ -35,3 +38,4 @@ private:
    tHeatingCircleControl *mHeatingControl;
 };
 
+#endif // CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR

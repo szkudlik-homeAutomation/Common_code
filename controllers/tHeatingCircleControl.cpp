@@ -5,6 +5,9 @@
  *      Author: szkud
  */
 
+#include "../../../global.h"
+#if CONFIG_HEATING_CIRCLE_CONTROL
+
 #define DEBUG_2
 
 #include "tHeatingCircleControl.h"
@@ -180,3 +183,5 @@ void tHeatingCircleControl::onEvent(uint8_t SensorID, tSensorEventType EventType
 	StopValve();
 	mState = STATE_IDLE;
 }
+
+#endif

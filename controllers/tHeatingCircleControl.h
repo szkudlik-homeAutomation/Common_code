@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_HEATING_CIRCLE_CONTROL
+
 #include "../../tOutputProcessheatingControl.h"
 #include "../sensors/tSensorHub.h"
 
@@ -114,3 +116,5 @@ private:
    void PumpOn()  { DEBUG_PRINTLN_3("==>PUMP ON"); OutputProcess.SetOutput(mPumpOutId, 1, MAX_VALVE_TIME); }
    void PumpOff() { DEBUG_PRINTLN_3("==>PUMP OFF"); OutputProcess.SetOutput(mPumpOutId, 0); }
 };
+
+#endif
