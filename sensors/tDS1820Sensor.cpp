@@ -83,7 +83,7 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
             DEBUG_PRINTLN_3("            ERROR device not found");
             return STATUS_CONFIG_SET_ERROR;
          }
-#ifdef DEBUG_3
+#ifdef DEBUG_3_ENABLE
          else
          {
             DEBUG_PRINT_3("             FOUND, serial: ");

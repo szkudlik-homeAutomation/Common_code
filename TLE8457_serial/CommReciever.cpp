@@ -116,7 +116,7 @@ void CommRecieverProcess::ProcessFrame()
   }
 
 
-  #ifdef DEBUG_1
+  #ifdef DEBUG_1_ENABLE
     // printout frame
     DEBUG_SERIAL.print(F("SenderDevId = 0x"));
     DEBUG_SERIAL.print(mFrame.SenderDevId,HEX);

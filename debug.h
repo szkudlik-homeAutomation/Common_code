@@ -13,9 +13,9 @@
 
 #ifdef CONTROLLER
 
-//#define DEBUG_1
-//#define DEBUG_2
-#define DEBUG_3
+//#define DEBUG_1_ENABLE
+//#define DEBUG_2_ENABLE
+#define DEBUG_3_ENABLE
 
 #define DEBUG_SERIAL Serial
 #define DEBUG_SERIAL_EVENT serialEvent
@@ -27,7 +27,7 @@
 
 
 
-#ifdef DEBUG_1
+#ifdef DEBUG_1_ENABLE
 #define DEBUG_PRINTLN_1(x) RespHandler.println(F(x));
 #define DEBUG_PRINT_1(x) RespHandler.print(F(x));
 #define DEBUG_1(x) RespHandler.x
@@ -37,7 +37,7 @@
 #define DEBUG_1(x)
 #endif
 
-#ifdef DEBUG_2
+#ifdef DEBUG_2_ENABLE
 #define DEBUG_PRINTLN_2(x) RespHandler.println(F(x));
 #define DEBUG_PRINT_2(x) RespHandler.print(F(x));
 #define DEBUG_2(x) RespHandler.x
@@ -47,7 +47,7 @@
 #define DEBUG_2(x)
 #endif
 
-#ifdef DEBUG_3
+#ifdef DEBUG_3_ENABLE
 #define DEBUG_PRINTLN_3(x) RespHandler.println(F(x));
 #define DEBUG_PRINT_3(x) RespHandler.print(F(x));
 #define DEBUG_3(x) RespHandler.x
