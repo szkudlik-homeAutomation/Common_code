@@ -11,7 +11,7 @@
 
 #include "../../global.h"
 
-#ifdef CONTROLLER
+#if CONFIG_CENTRAL_NODE
 
 //#define DEBUG_1_ENABLE
 //#define DEBUG_2_ENABLE
@@ -22,7 +22,7 @@
 
 #include "ResponseHandler.h"
 
-#endif //ifdef CONTROLLER
+#endif CONFIG_CENTRAL_NODE
 
 
 

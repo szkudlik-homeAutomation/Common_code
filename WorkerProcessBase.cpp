@@ -7,7 +7,7 @@
 void WorkerProcessBase::service()
 {
    //TODO - split worker to worker and frame helper (for light control)
-  #ifdef CONTROLLER
+#if CONFIG_CENTRAL_NODE
    if (NULL == pCurrentWorkerTask)
    {
       if (mQueue.isEmpty())
@@ -36,7 +36,7 @@ void WorkerProcessBase::service()
    setPeriod(SERVICE_CONSTANTLY);   // next iteration will go for next queue item or disable the task if the queue is empty
 #else
    disable();
-#endif
+#endif //CONFIG_CENTRAL_NODE
 }
 
 void WorkerProcessBase::Enqueue(WorkerTask *pWorkerTask)
