@@ -14,6 +14,7 @@
 #include "tOutputStateSensor.h"
 #include "tHeatingCircleStatusSensor.h"
 #include "tSystemStatusSensor.h"
+#include "tSensorHub.h"
 
 tSensor* tSensor::pFirst = NULL;
 
