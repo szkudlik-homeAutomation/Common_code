@@ -18,45 +18,19 @@
 tSensor* tSensor::pFirst = NULL;
 
 
-uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
+uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
 {
    if (NULL != getSensor(sensorID))
    {
       return STATUS_DUPLICATE_ID;
    }
 
-   tSensor *pNewSensor = NULL;
-   switch (SensorType)
-   {
-      case SENSOR_TYPE_DS1820:
-         pNewSensor = new tDS1820Sensor();
-         break;
-      case SENSOR_TYPE_IMPULSE:
-         pNewSensor = new tImpulseSensor();
-         break;
-      case SENSOR_TYPE_PT100_ANALOG:
-         pNewSensor = new tPt100AnalogSensor();
-         break;
-      case SENSOR_TYPE_DIGITAL_INPUT:
-         pNewSensor = new tSimpleDigitalInputSensor();
-         break;
-      case SENSOR_TYPE_OUTPUT_STATES:
-         pNewSensor = new tOutputStateSensor();
-         break;
-      case SENSOR_TYPE_HEATING_CIRCLE_STATE:
-         pNewSensor = new tHeatingCircleStatusSensor();
-         break;
-      case SENSOR_TYPE_SYSTEM_STATUS:
-          pNewSensor = new tSystemStatusSensor();
-          break;
-      default:
-         return STATUS_UNKNOWN_SENSOR_TYPE;
-   }
+   mSensorID = sensorID;
+#if CONFIG_CENTRAL_NODE
+   SensorHub.RegisterLocalSensor(mSensorID, pSensorName);
+#endif //CONFIG_CENTRAL_NODE
+		   //TODO: send a message to central node in case of remote sensor
 
-   if (pNewSensor == NULL)
-      return STATUS_SENSOR_CREATE_ERROR;
-
-   pNewSensor->mSensorID = sensorID;
    return STATUS_SUCCESS;
 }
 

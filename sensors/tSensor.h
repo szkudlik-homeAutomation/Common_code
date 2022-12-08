@@ -59,11 +59,15 @@ extern tSensorProcess SensorProcess;
 class tSensor {
 public:
    /*
-    * @brief create a sensor on local system
-    * sensor poiner is avaliable using getsensor
+    * @brief register a sensor to a local system with a given ID
+    * check if sensor ID is duplicated on LOCAL SYSTEM ONLY
+    * in case duplication on central node the sensor simply won't be registerd
+    * send a register message to central system (if neccessary)
     *
+    * @retval STATUS_SUCCESS
+    * @retval STATUS_DUPLICATE_ID
     */
-   static uint8_t Create(uint8_t SensorType, uint8_t sensorID);
+   uint8_t Register(uint8_t sensorID, char * pSensorName);
 
    void SetMeasurementPeriod(uint16_t period)   // time in number of calls to Run() A tick = SENSOR_PROCESS_SERVICE_TIME
    {

@@ -26,33 +26,14 @@ private:
  * Sensor hub is an entity working on a central node, aggregating all sensor that may be on remote nodes
  *
  * As the sensors may be on remote nodes, the app has no direct access to tSensor class.
- *
- * Access to the sensor goes either directly or using CREATE_SENSOR etc. messages
  */
 class tSensorHub : tSensorEvent {
 public:
 
 	tSensorHub() {};
 
-	/*
-	 * Send a create sensor message / create a local sensor
-	 * virtual CreateSensorResponse will be called when operation is done
-	 *
-	 * @param TargetNode (TBD) a remote target ID where the sensor is to be created
-	 * @SensorType type of the sensor
-	 * @SensorID unqique ID of the sensor
-	 * @pSensorName poiner to sensor name in RAM (not in progmem), the name must be static, won't be copied to repo
-	 * @pConfigBlob pointer to sensor specific config structure
-	 * @MeasurementPeriod period of measurement (100ms unit)
-	 */
-	void CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uint8_t SensorID, char * pSensorName, void* pConfigBlob, uint8_t MeasurementPeriod);
-
-	/*
-	 * Method called when a response to CreateSensorRequest arrives
-	 * when sensor is on the same node, it may be called before CreateSensorRequest returns
-	 *
-	 */
-	virtual void CreateSensorResponse(uint8_t SensorID, uint8_t Status) {};
+	uint8_t RegisterLocalSensor(uint8_t SensorID, char * pSensorName);
+	uint8_t RegisterRemoteSensor(uint8_t SensorID, char * pSensorName) {}
 
 	/*
 	 * Get an ID of a sensor by name

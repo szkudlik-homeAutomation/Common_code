@@ -74,65 +74,34 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize
    *pDataBlob = pSensorDesc->pDataCache;
 }
 
-void tSensorHub::CreateSensorRequest(uint8_t TargetNode, uint8_t SensorType, uint8_t SensorID, char * pSensorName, void* pConfigBlob, uint8_t MeasurementPeriod)
+
+uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 {
-   //TODO: async sensor creation on external nodes
+	   DEBUG_PRINTLN_3("");
+	   DEBUG_PRINT_3("==>Sensor register request. ID: ");
+	   DEBUG_3(print(SensorID));
+	   DEBUG_PRINT_3(" name: ");
+	   DEBUG_3(println(pSensorName));
 
-   uint8_t Status;
-   (void) TargetNode; // not yet implemented
+	   tSensor *pSensor = tSensor::getSensor(SensorID);
+	   if (pSensor == NULL)
+	   {
+	      DEBUG_PRINTLN_3("-----> tSensor::getSensor error ");
+	      return STATUS_UNKNOWN_SENSOR_ID;
+	   }
 
-   // create a sensor on a local node
+	   // add sensor to repository
+	   tSensorDesc *pSensorDesc = new tSensorDesc(
+			   pSensor->getSensorType(),
+			   SensorID,
+			   pSensorName
+			   );
 
-   DEBUG_PRINTLN_3("");
-   DEBUG_PRINT_3("==>Sensor create request. ID: ");
-   DEBUG_3(print(SensorID));
-   DEBUG_PRINT_3(" at node: ");
-   DEBUG_3(print(TargetNode));
-   DEBUG_PRINT_3(" name: ");
-   DEBUG_3(println(pSensorName));
+	   pSensor->SetEventCalback(this);
+	   // send response
+	   DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
+	   return STATUS_SUCCESS;
 
-   Status = tSensor::Create(SensorType, SensorID);
-   if (Status != STATUS_SUCCESS)
-   {
-      DEBUG_PRINT_3("-----> tSensor::Create error, status: ");
-      DEBUG_3(println(Status));
-      CreateSensorResponse(SensorID, Status);
-      return;
-   }
-
-   tSensor *pSensor = tSensor::getSensor(SensorID);
-   if (pSensor == NULL)
-   {
-      DEBUG_PRINTLN_3("-----> tSensor::getSensor error ");
-      CreateSensorResponse(SensorID, STATUS_SENSOR_CREATE_ERROR);
-      return;
-   }
-
-   if (NULL != pConfigBlob)
-   {
-      DEBUG_PRINTLN_3("Setting sensor config ");
-      Status = pSensor->SetSpecificConfig(pConfigBlob);
-      if (Status != STATUS_SUCCESS)
-      {
-         DEBUG_PRINT_3("-----> tSensor::SetSpecificConfig error, status:");
-         DEBUG_3(println(Status));
-         CreateSensorResponse(SensorID, Status);
-         return;
-      }
-   }
-   pSensor->SetMeasurementPeriod(MeasurementPeriod);
-
-   // add sensor to repository
-   tSensorDesc *pSensorDesc = new tSensorDesc(
-		   SensorType,
-		   SensorID,
-		   pSensorName
-		   );
-
-   pSensor->SetEventCalback(this);
-   // send response
-   DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
-   CreateSensorResponse(SensorID, STATUS_SUCCESS);
 }
 
 void tSensorHub::getSensorInfoRequest(uint8_t SensorID)
