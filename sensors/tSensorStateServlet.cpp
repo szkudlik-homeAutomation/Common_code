@@ -5,8 +5,12 @@
  *      Author: szkud
  */
 
+#include "../../../global.h"
+#if CONFIG_SENSOR_STATE_SERVLET
+
 #include "tSensorStateServlet.h"
 #include "tSensorHub.h"
+
 
 bool tSensorStateServlet::ProcessAndResponse()
 {
@@ -18,3 +22,5 @@ bool tSensorStateServlet::ProcessAndResponse()
 
    return false;
 }
+
+#endif //CONFIG_SENSOR_STATE_SERVLET

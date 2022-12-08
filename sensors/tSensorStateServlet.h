@@ -9,6 +9,8 @@
 
 
 #include "../../../global.h"
+
+#if CONFIG_SENSOR_STATE_SERVLET
 #include "../Network/httpServer.h"
 
 
@@ -20,3 +22,5 @@ public:
    virtual bool ProcessAndResponse();
 
 };
+
+#endif //CONFIG_SENSOR_STATE_SERVLET
