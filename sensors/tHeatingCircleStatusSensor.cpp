@@ -5,6 +5,9 @@
  *      Author: szkud
  */
 
+#include "../../../global.h"
+#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
+
 #include "tHeatingCircleStatusSensor.h"
 #include "../controllers/tHeatingCircleControl.h"
 
@@ -46,3 +49,5 @@ uint8_t tHeatingCircleStatusSensor::TranslateBlobToJSON(uint8_t dataBlobSize, vo
    return STATUS_SUCCESS;
 }
 #endif //CONFIG_SENSORS_JSON_OUTPUT
+
+#endif // CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
