@@ -84,7 +84,8 @@ void tSensor::onMeasurementCompleted(bool Status)
 
 // static procedures
 // executed on cetral node, not on nodes where sensors are actually created
-//can't use virtual methods
+// can't use virtual methods - all static
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    uint8_t Result = STATUS_UNKNOWN_SENSOR_TYPE;
@@ -113,6 +114,7 @@ uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, v
    }
    return Result;
 }
+#endif // CONFIG_SENSORS_JSON_OUTPUT
 
 void tSensor::Run()
 {

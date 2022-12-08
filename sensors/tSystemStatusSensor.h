@@ -28,7 +28,9 @@ public:
    }
 
    virtual void doTriggerMeasurement();
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 private:
    tResult mResult;

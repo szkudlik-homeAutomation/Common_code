@@ -44,7 +44,9 @@ public:
 
    virtual uint8_t SetSpecificConfig(void *pBlob);
 
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
    static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
 

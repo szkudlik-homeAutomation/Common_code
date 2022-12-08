@@ -38,6 +38,7 @@ void tImpulseSensor::CleanSum()
 	);
 }
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tImpulseSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    if (dataBlobSize != sizeof(tResult))
@@ -55,3 +56,4 @@ uint8_t tImpulseSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCac
 
    return STATUS_SUCCESS;
 }
+#endif //CONFIG_SENSORS_JSON_OUTPUT

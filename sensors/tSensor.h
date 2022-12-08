@@ -107,12 +107,10 @@ public:
     * no braces etc.
     * there MUST be a comma at the last character, unless there's no data at all
     */
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
    /* shortcut to get json from local sensors */
-   uint8_t GetJSON(uint8_t SensorType, Stream *pStream)
-   {
-      return TranslateBlobToJSON(SensorType, getMeasurementBlobSize(), getMeasurementBlob(), pStream);
-   }
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 protected:
    tSensor(uint8_t SensorType);

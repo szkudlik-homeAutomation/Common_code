@@ -1,7 +1,7 @@
 /*
  * tPt100AnalogSensor.cpp
  *
- *  Created on: 21 paŸ 2022
+ *  Created on: 21 paï¿½ 2022
  *      Author: szkud
  */
 
@@ -87,6 +87,7 @@
 
 
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tPt100AnalogSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    if (dataBlobSize != sizeof(tResult))
@@ -100,6 +101,7 @@ uint8_t tPt100AnalogSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDat
    pStream->print(F(","));
    return STATUS_SUCCESS;
 }
+#endif CONFIG_SENSORS_JSON_OUTPUT
 
 void tPt100AnalogSensor::doTimeTick()
 {
