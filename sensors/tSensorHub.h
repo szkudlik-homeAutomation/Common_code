@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_SENSOR_HUB
+
 #include "tSensor.h"
 
 class tSensorHubEvent
@@ -158,3 +160,4 @@ private:
 };
 
 extern tSensorHub SensorHub;
+#endif //CONFIG_SENSOR_HUB

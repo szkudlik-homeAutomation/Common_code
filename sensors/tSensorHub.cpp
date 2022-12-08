@@ -5,6 +5,9 @@
  *      Author: mszkudli
  */
 
+#include "../../../global.h"
+#if CONFIG_SENSOR_HUB
+
 #include "tSensorHub.h"
 #include "tSensor.h"
 
@@ -235,3 +238,4 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uin
    // callbacks
    callAllCallbacks(pSensorDesc,EventType);
 }
+#endif //CONFIG_SENSOR_HUB
