@@ -1,4 +1,5 @@
 #include "../../../global.h"
+#if CONFIG_HTTP_SERVER
 #include "httpServer.h"
 
 
@@ -150,3 +151,4 @@ void tHttpServlet::SendVersionAndPageClose()
    pOwner->SendFlashString(PSTR(FW_VERSION));
    pOwner->SendFlashString(PSTR("</body></html>"));
 }
+#endif //CONFIG_HTTP_SERVER

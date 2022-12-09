@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_HTTP_SERVLET_OUTCONTROL_JS
+
 #include "../../http_binaries.h"
 
 #include "httpServer.h"
@@ -19,3 +21,4 @@ public:
 
 #endif
 
+#endif //CONFIG_HTTP_SERVLET_OUTCONTROL_JS
