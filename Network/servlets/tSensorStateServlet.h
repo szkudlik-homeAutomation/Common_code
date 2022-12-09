@@ -8,10 +8,10 @@
 #pragma once
 
 
-#include "../../../global.h"
+#include "../../../../global.h"
 
 #if CONFIG_SENSOR_STATE_SERVLET
-#include "../Network/httpServer.h"
+#include "../httpServer.h"
 
 
 class tSensorStateServlet final : public tHttpServlet {

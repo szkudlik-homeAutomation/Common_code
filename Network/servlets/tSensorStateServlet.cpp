@@ -5,11 +5,11 @@
  *      Author: szkud
  */
 
-#include "../../../global.h"
+#include "../../../../global.h"
 #if CONFIG_SENSOR_STATE_SERVLET
 
 #include "tSensorStateServlet.h"
-#include "tSensorHub.h"
+#include "../../sensors/tSensorHub.h"
 
 
 bool tSensorStateServlet::ProcessAndResponse()
