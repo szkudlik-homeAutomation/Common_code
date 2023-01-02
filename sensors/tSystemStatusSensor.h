@@ -20,12 +20,7 @@ public:
    	   uint16_t Uptime;
    } tResult;
 
-   tSystemStatusSensor() : tSensor(SENSOR_TYPE_SYSTEM_STATUS)
-   {
-	   mCurrentMeasurementBlob = (void*) &mResult;
-	   mMeasurementBlobSize = sizeof(mResult);
-	   mConfigSet = true;
-   }
+   tSystemStatusSensor();
 
    virtual void doTriggerMeasurement();
 #if CONFIG_SENSORS_JSON_OUTPUT
