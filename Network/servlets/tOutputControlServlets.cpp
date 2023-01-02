@@ -7,6 +7,8 @@
 
 #include "../../../../global.h"
 
+#if CONFIG_OUTPUT_CONTROL_SERVLET
+
 #include "tOutputControlServlets.h"
 
 bool tOutputSetServlet::ProcessAndResponse()
@@ -85,3 +87,4 @@ bool tOutputStateServlet::ProcessAndResponse()
    return false;
 }
 
+#endif // CONFIG_OUTPUT_CONTROL_SERVLET

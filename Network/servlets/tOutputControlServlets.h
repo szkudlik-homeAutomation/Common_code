@@ -8,6 +8,9 @@
 #pragma once
 
 #include "../../../../global.h"
+
+#if CONFIG_OUTPUT_CONTROL_SERVLET
+
 #include "servlets.h"
 #include "../../OutputProcess.h"
 
@@ -41,3 +44,4 @@ class tOutputStateServlet : public tHttpServlet
     tOutputProcess *pOutputProcess;
 };
 
+#endif CONFIG_OUTPUT_CONTROL_SERVLET
