@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_NETWORK
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../WatchdogProcess.h"
@@ -85,3 +86,4 @@ private:
   tWatchdogItem mWatchdog;
 };
 
+#endif //CONFIG_NETWORK

@@ -1,7 +1,9 @@
 #pragma once
 
-
 #include "../../../global.h"
+
+#if CONFIG_NETWORK
+
 #include <SPI.h>
 
 #include "../../lib/Ethernet/src/localEthernet.h"
@@ -78,3 +80,4 @@ private:
   }
 };
 
+#endif // CONFIG_NETWORK
