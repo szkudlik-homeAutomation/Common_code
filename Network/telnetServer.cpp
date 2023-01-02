@@ -1,4 +1,6 @@
 #include "telnetServer.h"
+
+#if CONFIG_TELNET_SERVER
 #include <Commander.h>
 
 // must be static-global (why? - only 1 telnet session may be active)
@@ -47,3 +49,4 @@ void tTelnetServer::DisableLogs()
    if (pTelnetSession) pTelnetSession->DisableLogs();
 }
 
+#endif // CONFIG_TELNET_SERVER

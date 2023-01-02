@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_TELNET_SERVER
+
 #include "tcpServer.h"
 #include "../ResponseHandler.h"
 
@@ -40,3 +42,4 @@ private:
   uint8_t mNumOfTelnetCommands;
 };
 
+#endif //CONFIG_TELNET_SERVER
