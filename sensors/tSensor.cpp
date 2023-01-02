@@ -23,6 +23,8 @@ uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
 {
    if (NULL != getSensor(sensorID))
    {
+      DEBUG_PRINT_3("Register duplicate ID: ");
+      DEBUG_3(println(mSensorID,DEC));
       return STATUS_DUPLICATE_ID;
    }
 
@@ -42,7 +44,8 @@ tSensor::tSensor(uint8_t SensorType) :
       mConfigSet(false),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mpFirstEvent(NULL)
+      mpFirstEvent(NULL),
+      mSensorID(0xFF)
 {
    pNext = pFirst;
    pFirst = this;

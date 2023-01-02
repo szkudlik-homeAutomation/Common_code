@@ -68,6 +68,14 @@ public:
     * @retval STATUS_DUPLICATE_ID
     */
    uint8_t Register(uint8_t sensorID, char * pSensorName);
+   uint8_t Register(uint8_t sensorID, char * pSensorName, void *pConfigBlob, uint16_t measurementPeriod)
+   {
+      SetMeasurementPeriod(measurementPeriod);
+      if (pConfigBlob)
+         SetSpecificConfig(pConfigBlob);
+      uint8_t result = Register(sensorID,pSensorName);
+      return result;
+   }
 
    void SetMeasurementPeriod(uint16_t period)   // time in number of calls to Run() A tick = SENSOR_PROCESS_SERVICE_TIME
    {
