@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_OUTPUT_STATE_SENSOR
 #include "tSensor.h"
 
 class tOutputStateSensor : public tSensor {
@@ -29,3 +30,4 @@ private:
    tResult mResult;
 };
 
+#endif //CONFIG_OUTPUT_STATE_SENSOR

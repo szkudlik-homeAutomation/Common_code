@@ -9,6 +9,7 @@
 
 
 #include "../../../global.h"
+#if CONFIG_PT100_ANALOG_SENSOR
 #include "tSensor.h"
 
 class tPt100AnalogSensor : public tSensor {
@@ -40,3 +41,4 @@ private:
    tConfig mConfig;
    float TemperatureAvg;
 };
+#endif // CONFIG_PT100_ANALOG_SENSOR

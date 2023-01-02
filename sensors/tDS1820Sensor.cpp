@@ -6,6 +6,9 @@
  */
 
 #include "../../../global.h"
+
+#if CONFIG_DS1820_SENSOR
+
 #include "tDS1820Sensor.h"
 #include <OneWire.h>
 #include "../../lib/ds1820/DallasTemperature.h"
@@ -195,3 +198,4 @@ uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
 
    return DS1820_INVALID_ID;
 }
+#endif // CONFIG_DS1820_SENSOR

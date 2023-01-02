@@ -5,8 +5,10 @@
  *      Author: szkud
  */
 
-#include "tPt100AnalogSensor.h"
 #include "../../../global.h"
+#if CONFIG_PT100_ANALOG_SENSOR
+
+#include "tPt100AnalogSensor.h"
 
 //const float pt100Table[] PROGMEM = {
 ///*0,*/100.000,100.391,100.781,101.172,101.562,101.953,102.343,102.733,103.123,103.513,
@@ -139,3 +141,4 @@ uint8_t tPt100AnalogSensor::SetSpecificConfig(void *pBlob)
    mConfigSet = true;
    return STATUS_SUCCESS;
 }
+#endif //CONFIG_PT100_ANALOG_SENSOR

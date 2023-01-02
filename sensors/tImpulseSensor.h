@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_IMPULSE_SENSOR
+
 #include "tSensor.h"
 
 class tImpulseSensor final : public tSensor {
@@ -34,3 +36,5 @@ private:
    volatile uint16_t mCnt;
    tResult mResult;
 };
+
+#endif //CONFIG_IMPULSE_SENSOR

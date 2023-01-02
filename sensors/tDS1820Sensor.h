@@ -9,6 +9,8 @@
 
 
 #include "../../../global.h"
+#if CONFIG_DS1820_SENSOR
+
 #include "tSensor.h"
 
 class DallasTemperature;
@@ -70,3 +72,4 @@ private:
    bool isTempValid(int16_t temp) { return ((temp > -1200) && (temp < 799)); }
 };
 
+#endif // CONFIG_DS1820_SENSOR

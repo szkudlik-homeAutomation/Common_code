@@ -7,9 +7,9 @@
 
 #pragma once
 
-#define SRC_COMMON_CODE_SENSORS_TSYSTEMSTATUSSENSOR_H_
-
 #include "../../../global.h"
+#if CONFIG_SYSTEM_STATUS_SENSOR
+
 #include "tSensor.h"
 
 class tSystemStatusSensor: public tSensor {
@@ -30,3 +30,4 @@ public:
 private:
    tResult mResult;
 };
+#endif //CONFIG_SYSTEM_STATUS_SENSOR

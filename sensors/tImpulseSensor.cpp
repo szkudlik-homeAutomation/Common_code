@@ -6,6 +6,8 @@
  */
 
 #include "../../../global.h"
+
+#if CONFIG_IMPULSE_SENSOR
 #include "tImpulseSensor.h"
 
 
@@ -57,3 +59,5 @@ uint8_t tImpulseSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCac
    return STATUS_SUCCESS;
 }
 #endif //CONFIG_SENSORS_JSON_OUTPUT
+
+#endif // CONFIG_IMPULSE_SENSOR

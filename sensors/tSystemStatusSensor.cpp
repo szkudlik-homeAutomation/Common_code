@@ -5,6 +5,9 @@
  *      Author: mszkudli
  */
 
+#include "../../../global.h"
+#if CONFIG_SYSTEM_STATUS_SENSOR
+
 #include "tSystemStatusSensor.h"
 
 tSystemStatusSensor::tSystemStatusSensor() : tSensor(SENSOR_TYPE_SYSTEM_STATUS)
@@ -41,3 +44,4 @@ uint8_t tSystemStatusSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDa
    return STATUS_SUCCESS;
 }
 #endif //CONFIG_SENSORS_JSON_OUTPUT
+#endif //CONFIG_SYSTEM_STATUS_SENSOR

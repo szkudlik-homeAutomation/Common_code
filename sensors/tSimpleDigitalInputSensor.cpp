@@ -5,6 +5,9 @@
  *      Author: mszkudli
  */
 
+#include "../../../global.h"
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+
 #include "tSimpleDigitalInputSensor.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT
@@ -42,3 +45,4 @@ uint8_t tSimpleDigitalInputSensor::SetSpecificConfig(void *pBlob)
 
    return STATUS_SUCCESS;
 }
+#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR

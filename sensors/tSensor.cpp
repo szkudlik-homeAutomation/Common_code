@@ -95,26 +95,47 @@ uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, v
    uint8_t Result = STATUS_UNKNOWN_SENSOR_TYPE;
    switch (SensorType)
    {
+#if CONFIG_DS1820_SENSOR
       case SENSOR_TYPE_DS1820:
          Result = tDS1820Sensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+#endif // CONFIG_DS1820_SENSOR
+
+#if CONFIG_IMPULSE_SENSOR
       case SENSOR_TYPE_IMPULSE:
          Result = tImpulseSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
-      case SENSOR_TYPE_PT100_ANALOG:
+#endif //CONFIG_IMPULSE_SENSOR
+
+#if CONFIG_PT100_ANALOG_SENSOR
+         case SENSOR_TYPE_PT100_ANALOG:
          Result = tPt100AnalogSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+#endif
+
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
       case SENSOR_TYPE_DIGITAL_INPUT:
          Result = tSimpleDigitalInputSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-      case SENSOR_TYPE_OUTPUT_STATES:
+         break;
+#endif
+
+#if CONFIG_OUTPUT_STATE_SENSOR
+     case SENSOR_TYPE_OUTPUT_STATES:
          Result = tOutputStateSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
-      case SENSOR_TYPE_HEATING_CIRCLE_STATE:
+#endif
+
+#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
+	  case SENSOR_TYPE_HEATING_CIRCLE_STATE:
          Result = tHeatingCircleStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+#endif
+
+#if CONFIG_SYSTEM_STATUS_SENSOR
       case SENSOR_TYPE_SYSTEM_STATUS:
           Result = tSystemStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
           break;
+#endif //CONFIG_SYSTEM_STATUS_SENSOR
    }
    return Result;
 }

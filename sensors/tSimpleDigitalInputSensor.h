@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+
 #include "tSensor.h"
 
 class tSimpleDigitalInputSensor: public tSensor {
@@ -37,3 +39,4 @@ private:
    tConfig mConfig;
 };
 
+#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
