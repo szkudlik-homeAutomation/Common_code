@@ -31,8 +31,3 @@ manifest:
       path: src/TCP_Communication_lib
       repo-path: TCP_Communication_lib.git
       revision: 6f89cce62e901a41eefc188df41018aa1a93ed8a
-
-    - name: TLE8457_serial_lib
-      path: src/TLE8457_serial_lib
-      repo-path: TLE8457_serial_lib.git
-      revision: 9e83e21f04e7647861b2a63b6989c8f6717e96fe
