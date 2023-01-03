@@ -7,11 +7,6 @@ manifest:
       url-base: https://github.com/szkudlik-homeAutomation
 
   projects:
-    - name: ds1820
-      path: src/lib/ds1820
-      repo-path: Arduino-Temperature-Control-Library
-      revision: a03035a85f730a6835019b1bc740caddf285b302
-      
     - name: ArduinoProcessScheduler    
       path: src/lib/ArduinoProcessScheduler
       repo-path: ArduinoProcessScheduler.git
