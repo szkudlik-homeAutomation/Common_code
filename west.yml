@@ -30,9 +30,9 @@ manifest:
     - name: TCP_Communication_lib
       path: src/TCP_Communication_lib
       repo-path: TCP_Communication_lib.git
-      revision: d77f8fa6031789e9c35c55c87a63eae79b06ab4b
+      revision: 6f89cce62e901a41eefc188df41018aa1a93ed8a
 
     - name: TLE8457_serial_lib
       path: src/TLE8457_serial_lib
       repo-path: TLE8457_serial_lib.git
-      revision: 004f75db578967880e93749fe4c8e1ae8fe951e4
+      revision: 9e83e21f04e7647861b2a63b6989c8f6717e96fe
