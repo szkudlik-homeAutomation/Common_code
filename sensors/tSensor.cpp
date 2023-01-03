@@ -6,6 +6,9 @@
  */
 
 #include "../../../global.h"
+
+#if CONFIG_SENSORS
+
 #include "tSensor.h"
 #include "tDS1820Sensor.h"
 #include "tImpulseSensor.h"
@@ -175,3 +178,4 @@ void tSensorProcess::service()
 }
 
 void tSensorProcess::setup() {}
+#endif //CONFIG_SENSORS

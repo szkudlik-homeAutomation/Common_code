@@ -8,6 +8,8 @@
 
 
 #include "../../../global.h"
+#if CONFIG_SENSORS
+
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
 #define SENSOR_PROCESS_SERVICE_TIME 100
@@ -146,3 +148,4 @@ private:
 
    tSensorEvent *mpFirstEvent;
 };
+#endif // CONFIG_SENSORS
