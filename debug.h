@@ -20,7 +20,7 @@
 #define DEBUG_SERIAL Serial
 #define DEBUG_SERIAL_EVENT serialEvent
 
-#include "ResponseHandler.h"
+#include "../ResponseHandler.h"
 
 #endif CONFIG_CENTRAL_NODE
 
