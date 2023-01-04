@@ -30,4 +30,4 @@ manifest:
     - name: TCP_Communication_lib
       path: src/TCP_Communication_lib
       repo-path: TCP_Communication_lib.git
-      revision: 6f89cce62e901a41eefc188df41018aa1a93ed8a
+      revision: 800df04a28fe17f67d73e5d0b3a9883c722a5228
