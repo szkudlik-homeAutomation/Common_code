@@ -26,8 +26,3 @@ manifest:
       path: src/lib/AceCRC
       repo-path: AceCRC.git
       revision: fd967e3a15648ff7dc1ac8191733032314ceec23
-
-    - name: TCP_Communication_lib
-      path: src/TCP_Communication_lib
-      repo-path: TCP_Communication_lib.git
-      revision: 8be1632e2a70a9d8608b5163829fc3956322834b
