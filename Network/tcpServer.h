@@ -68,6 +68,17 @@ private:
 
 class tTcpServerProcess : public Process
 {
+private:
+   class tWatchdogNetwork : public tWatchdogItem
+   {
+   public:
+      tWatchdogNetwork(uint16_t NumOfSeconds) : tWatchdogItem(NumOfSeconds) {}
+      virtual void doRecovery()
+      {
+         Ethernet.clean();
+         DEBUG_PRINTLN_3("=========>!!!!!!! Watchdog for tTcpServerProcess timeout");
+      }
+   };
 public:
   tTcpServerProcess(Scheduler &manager, uint16_t WatchdogTimeout) :
     Process(manager,LOW_PRIORITY,TCP_SERVER_SHEDULER_PERIOD),
@@ -83,7 +94,7 @@ protected:
   tTcpSession* clients[NUM_OF_CONCURRENT_SESSIONS];
 
 private:
-  tWatchdogItem mWatchdog;
+  tWatchdogNetwork mWatchdog;
 };
 
 #endif //CONFIG_NETWORK
