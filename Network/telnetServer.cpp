@@ -1,7 +1,8 @@
 #include "telnetServer.h"
 
+#include "../../../global.h"
 #if CONFIG_TELNET_SERVER
-#include <Commander.h>
+
 
 // must be static-global (why? - only 1 telnet session may be active)
 Commander cmd;
@@ -9,7 +10,7 @@ Commander cmd;
 tTelnetSession *pTelnetSession = NULL;
 
 tTelnetSession::tTelnetSession(EthernetClient aEthernetClient,commandList_t *pTelnetCommands, uint8_t NumOfTelnetCommands)
-   : tTcpSession(aEthernetClient, TELNET_SESSION_TIMEOUT), ResponseHandler()
+   : tTcpSession(aEthernetClient, TELNET_SESSION_TIMEOUT), tLogTransport()
 {
   DEBUG_PRINTLN_3("TELNET Session started");
   cmd.begin(&mEthernetClient, pTelnetCommands, NumOfTelnetCommands);
@@ -33,20 +34,22 @@ bool tTelnetSession::doProcess()
 
 tTelnetSession::~tTelnetSession() { pTelnetSession = NULL; }
 
-void tTelnetSession::vLog(uint8_t str)
+void tTelnetSession::Log(uint8_t str)
 {
     if (NULL != cmd.getOutputPort())
       cmd.getOutputPort()->write(str);
 }
 
-void tTelnetServer::EnableLogs()
+bool TelnetEnableLogs(Commander &Cmdr)
 {
    if (pTelnetSession) pTelnetSession->EnableLogs();
+   return true;
 }
 
-void tTelnetServer::DisableLogs()
+bool  TelnetDisableLogs(Commander &Cmdr)
 {
    if (pTelnetSession) pTelnetSession->DisableLogs();
+   return true;
 }
 
 #endif // CONFIG_TELNET_SERVER
