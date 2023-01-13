@@ -1,3 +1,7 @@
+#include "../../global.h"
+
+#if CONFIG_WATCHDOG
+
 #include "WatchdogProcess.h"
 #include <Watchdog.h>
 #include "../lib/Ethernet/src/localEthernet.h"
@@ -42,3 +46,4 @@ void tWatchdogProcess::service()
       watchdog.reset();
    }
 }
+#endif //CONFIG_WATCHDOG

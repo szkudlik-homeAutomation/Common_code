@@ -1,6 +1,9 @@
 //TODO - split worker to common/sepcific
 
 #include "../../global.h"
+
+#if CONFIG_WORKER_PROCESS
+
 #include "WorkerProcessBase.h"
 
 void WorkerProcessBase::service()
@@ -49,3 +52,4 @@ void WorkerProcessBase::Enqueue(WorkerTask *pWorkerTask)
      enable();
    }
 }
+#endif //CONFIG_WORKER_PROCESS

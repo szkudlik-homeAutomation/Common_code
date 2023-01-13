@@ -2,6 +2,7 @@
 
 #include "../../global.h"
 
+#if CONFIG_WATCHDOG
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include <Watchdog.h>
 
@@ -49,3 +50,4 @@ class tWatchdogProcess : public  Process
   private:
   Watchdog watchdog;
 };
+#endif // CONFIG_WATCHDOG

@@ -1,6 +1,10 @@
 #pragma once
 
 #include "../../global.h"
+
+#if CONFIG_WORKER_PROCESS
+
+
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include <ArduinoQueue.h>
 
@@ -29,3 +33,4 @@ private:
 
 };
 
+#endif CONFIG_WORKER_PROCESS
