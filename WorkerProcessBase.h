@@ -2,7 +2,6 @@
 
 #include "../../global.h"
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
-#include "ResponseHandler.h"
 #include <ArduinoQueue.h>
 
 class WorkerTask
@@ -15,7 +14,7 @@ public:
 };
 
 
-class WorkerProcessBase: public Process, public ResponseHandler
+class WorkerProcessBase: public Process
 {
 public:
    WorkerProcessBase(Scheduler &manager) : Process(manager,LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) {}

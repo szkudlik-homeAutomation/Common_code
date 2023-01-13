@@ -2,7 +2,6 @@
 
 #include "../../global.h"
 #include "WorkerProcessBase.h"
-#include "ResponseHandler.h"
 
 void WorkerProcessBase::service()
 {
