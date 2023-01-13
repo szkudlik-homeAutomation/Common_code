@@ -6,10 +6,14 @@
  */
 
 #include "../../../global.h"
+
+#if CONFIG_DS1820_SENSOR
+
 #include "tDS1820Sensor.h"
 #include <OneWire.h>
 #include "../../lib/ds1820/DallasTemperature.h"
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    if (dataBlobSize < sizeof(tResult))
@@ -49,6 +53,7 @@ uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCach
 
    return STATUS_SUCCESS;
 }
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
 {
@@ -193,3 +198,4 @@ uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
 
    return DS1820_INVALID_ID;
 }
+#endif // CONFIG_DS1820_SENSOR

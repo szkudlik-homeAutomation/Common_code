@@ -1,12 +1,15 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_TELNET_SERVER
+
 #include "tcpServer.h"
-#include "../ResponseHandler.h"
+#include "../Logger.h"
+#include <Commander.h>
 
 class commandList_t;
 
-class tTelnetSession : public tTcpSession, public ResponseHandler
+class tTelnetSession : public tTcpSession, public tLogTransport
 {
 public:
   tTelnetSession(EthernetClient aEthernetClient,commandList_t *pTelnetCommands, uint8_t NumOfTelnetCommands);
@@ -15,7 +18,7 @@ public:
 protected:
   virtual bool doProcess();
 
-  virtual void vLog(uint8_t str);
+  virtual void Log(uint8_t str);
 private:
   static const uint16_t TELNET_SESSION_TIMEOUT = 65535; // 10 minutes
 };
@@ -40,3 +43,8 @@ private:
   uint8_t mNumOfTelnetCommands;
 };
 
+bool TelnetEnableLogs(Commander &Cmdr);
+bool TelnetDisableLogs(Commander &Cmdr);
+
+
+#endif //CONFIG_TELNET_SERVER

@@ -8,8 +8,10 @@
 #pragma once
 
 
-#include "../../../global.h"
-#include "../Network/httpServer.h"
+#include "../../../../global.h"
+
+#if CONFIG_SENSOR_STATE_SERVLET
+#include "../httpServer.h"
 
 
 class tSensorStateServlet final : public tHttpServlet {
@@ -20,3 +22,5 @@ public:
    virtual bool ProcessAndResponse();
 
 };
+
+#endif //CONFIG_SENSOR_STATE_SERVLET

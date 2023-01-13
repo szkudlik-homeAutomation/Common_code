@@ -1,9 +1,11 @@
 #pragma once
 
-#include "../../../global.h"
-#include "../../http_binaries.h"
+#include "../../../../global.h"
+#if CONFIG_HTTP_SERVLET_OUTCONTROL_JS
 
-#include "httpServer.h"
+#include "../../../http_binaries.h"
+
+#include "../httpServer.h"
 
 
 #ifdef OutputControl_js_raw_len
@@ -19,3 +21,4 @@ public:
 
 #endif
 
+#endif //CONFIG_HTTP_SERVLET_OUTCONTROL_JS

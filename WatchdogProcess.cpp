@@ -1,3 +1,7 @@
+#include "../../global.h"
+
+#if CONFIG_WATCHDOG
+
 #include "WatchdogProcess.h"
 #include <Watchdog.h>
 #include "../lib/Ethernet/src/localEthernet.h"
@@ -25,17 +29,21 @@ void tWatchdogProcess::service()
 
    while (NULL != pItem)
    {
-      doResetWatchdog &= pItem->Tick();
+      bool isOK = pItem->Tick();
+      doResetWatchdog &= isOK;
+      if (! isOK)
+      {
+         // an item has not been reset in required time
+         // try reset...
+         pItem->doRecovery();
+      }
       pItem = pItem->pNext;
    }
 
    if (doResetWatchdog)
    {
+      // set in HW that everything is fine
       watchdog.reset();
    }
-   else
-   {
-      Ethernet.clean();
-      DEBUG_PRINTLN_3("=========>!!!!!!! Watchdog timeout");
-   }
 }
+#endif //CONFIG_WATCHDOG

@@ -8,6 +8,8 @@
 
 
 #include "../../../global.h"
+#if CONFIG_SENSORS
+
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
 #define SENSOR_PROCESS_SERVICE_TIME 100
@@ -59,11 +61,23 @@ extern tSensorProcess SensorProcess;
 class tSensor {
 public:
    /*
-    * @brief create a sensor on local system
-    * sensor poiner is avaliable using getsensor
+    * @brief register a sensor to a local system with a given ID
+    * check if sensor ID is duplicated on LOCAL SYSTEM ONLY
+    * in case duplication on central node the sensor simply won't be registerd
+    * send a register message to central system (if neccessary)
     *
+    * @retval STATUS_SUCCESS
+    * @retval STATUS_DUPLICATE_ID
     */
-   static uint8_t Create(uint8_t SensorType, uint8_t sensorID);
+   uint8_t Register(uint8_t sensorID, char * pSensorName);
+   uint8_t Register(uint8_t sensorID, char * pSensorName, void *pConfigBlob, uint16_t measurementPeriod)
+   {
+      SetMeasurementPeriod(measurementPeriod);
+      if (pConfigBlob)
+         SetSpecificConfig(pConfigBlob);
+      uint8_t result = Register(sensorID,pSensorName);
+      return result;
+   }
 
    void SetMeasurementPeriod(uint16_t period)   // time in number of calls to Run() A tick = SENSOR_PROCESS_SERVICE_TIME
    {
@@ -103,12 +117,10 @@ public:
     * no braces etc.
     * there MUST be a comma at the last character, unless there's no data at all
     */
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
    /* shortcut to get json from local sensors */
-   uint8_t GetJSON(uint8_t SensorType, Stream *pStream)
-   {
-      return TranslateBlobToJSON(SensorType, getMeasurementBlobSize(), getMeasurementBlob(), pStream);
-   }
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 protected:
    tSensor(uint8_t SensorType);
@@ -136,3 +148,4 @@ private:
 
    tSensorEvent *mpFirstEvent;
 };
+#endif // CONFIG_SENSORS

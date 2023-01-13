@@ -9,6 +9,8 @@
 
 
 #include "../../../global.h"
+#if CONFIG_DS1820_SENSOR
+
 #include "tSensor.h"
 
 class DallasTemperature;
@@ -44,7 +46,9 @@ public:
 
    virtual uint8_t SetSpecificConfig(void *pBlob);
 
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
    static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
 
@@ -68,3 +72,4 @@ private:
    bool isTempValid(int16_t temp) { return ((temp > -1200) && (temp < 799)); }
 };
 
+#endif // CONFIG_DS1820_SENSOR

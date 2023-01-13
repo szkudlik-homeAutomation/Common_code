@@ -6,6 +6,9 @@
  */
 
 #include "../../../global.h"
+
+#if CONFIG_SENSORS
+
 #include "tSensor.h"
 #include "tDS1820Sensor.h"
 #include "tImpulseSensor.h"
@@ -14,49 +17,26 @@
 #include "tOutputStateSensor.h"
 #include "tHeatingCircleStatusSensor.h"
 #include "tSystemStatusSensor.h"
+#include "tSensorHub.h"
 
 tSensor* tSensor::pFirst = NULL;
 
 
-uint8_t tSensor::Create(uint8_t SensorType, uint8_t sensorID)
+uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
 {
    if (NULL != getSensor(sensorID))
    {
+      DEBUG_PRINT_3("Register duplicate ID: ");
+      DEBUG_3(println(mSensorID,DEC));
       return STATUS_DUPLICATE_ID;
    }
 
-   tSensor *pNewSensor = NULL;
-   switch (SensorType)
-   {
-      case SENSOR_TYPE_DS1820:
-         pNewSensor = new tDS1820Sensor();
-         break;
-      case SENSOR_TYPE_IMPULSE:
-         pNewSensor = new tImpulseSensor();
-         break;
-      case SENSOR_TYPE_PT100_ANALOG:
-         pNewSensor = new tPt100AnalogSensor();
-         break;
-      case SENSOR_TYPE_DIGITAL_INPUT:
-         pNewSensor = new tSimpleDigitalInputSensor();
-         break;
-      case SENSOR_TYPE_OUTPUT_STATES:
-         pNewSensor = new tOutputStateSensor();
-         break;
-      case SENSOR_TYPE_HEATING_CIRCLE_STATE:
-         pNewSensor = new tHeatingCircleStatusSensor();
-         break;
-      case SENSOR_TYPE_SYSTEM_STATUS:
-          pNewSensor = new tSystemStatusSensor();
-          break;
-      default:
-         return STATUS_UNKNOWN_SENSOR_TYPE;
-   }
+   mSensorID = sensorID;
+#if CONFIG_CENTRAL_NODE
+   SensorHub.RegisterLocalSensor(mSensorID, pSensorName);
+#endif //CONFIG_CENTRAL_NODE
+		   //TODO: send a message to central node in case of remote sensor
 
-   if (pNewSensor == NULL)
-      return STATUS_SENSOR_CREATE_ERROR;
-
-   pNewSensor->mSensorID = sensorID;
    return STATUS_SUCCESS;
 }
 
@@ -67,7 +47,8 @@ tSensor::tSensor(uint8_t SensorType) :
       mConfigSet(false),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mpFirstEvent(NULL)
+      mpFirstEvent(NULL),
+      mSensorID(0xFF)
 {
    pNext = pFirst;
    pFirst = this;
@@ -110,35 +91,58 @@ void tSensor::onMeasurementCompleted(bool Status)
 
 // static procedures
 // executed on cetral node, not on nodes where sensors are actually created
-//can't use virtual methods
+// can't use virtual methods - all static
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    uint8_t Result = STATUS_UNKNOWN_SENSOR_TYPE;
    switch (SensorType)
    {
+#if CONFIG_DS1820_SENSOR
       case SENSOR_TYPE_DS1820:
          Result = tDS1820Sensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+#endif // CONFIG_DS1820_SENSOR
+
+#if CONFIG_IMPULSE_SENSOR
       case SENSOR_TYPE_IMPULSE:
          Result = tImpulseSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
-      case SENSOR_TYPE_PT100_ANALOG:
+#endif //CONFIG_IMPULSE_SENSOR
+
+#if CONFIG_PT100_ANALOG_SENSOR
+         case SENSOR_TYPE_PT100_ANALOG:
          Result = tPt100AnalogSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+#endif
+
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
       case SENSOR_TYPE_DIGITAL_INPUT:
          Result = tSimpleDigitalInputSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-      case SENSOR_TYPE_OUTPUT_STATES:
+         break;
+#endif
+
+#if CONFIG_OUTPUT_STATE_SENSOR
+     case SENSOR_TYPE_OUTPUT_STATES:
          Result = tOutputStateSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
-      case SENSOR_TYPE_HEATING_CIRCLE_STATE:
+#endif
+
+#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
+	  case SENSOR_TYPE_HEATING_CIRCLE_STATE:
          Result = tHeatingCircleStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
          break;
+#endif
+
+#if CONFIG_SYSTEM_STATUS_SENSOR
       case SENSOR_TYPE_SYSTEM_STATUS:
           Result = tSystemStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
           break;
+#endif //CONFIG_SYSTEM_STATUS_SENSOR
    }
    return Result;
 }
+#endif // CONFIG_SENSORS_JSON_OUTPUT
 
 void tSensor::Run()
 {
@@ -174,3 +178,4 @@ void tSensorProcess::service()
 }
 
 void tSensorProcess::setup() {}
+#endif //CONFIG_SENSORS

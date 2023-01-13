@@ -7,9 +7,9 @@
 
 #pragma once
 
-#define SRC_COMMON_CODE_SENSORS_TSYSTEMSTATUSSENSOR_H_
-
 #include "../../../global.h"
+#if CONFIG_SYSTEM_STATUS_SENSOR
+
 #include "tSensor.h"
 
 class tSystemStatusSensor: public tSensor {
@@ -20,16 +20,14 @@ public:
    	   uint16_t Uptime;
    } tResult;
 
-   tSystemStatusSensor() : tSensor(SENSOR_TYPE_SYSTEM_STATUS)
-   {
-	   mCurrentMeasurementBlob = (void*) &mResult;
-	   mMeasurementBlobSize = sizeof(mResult);
-	   mConfigSet = true;
-   }
+   tSystemStatusSensor();
 
    virtual void doTriggerMeasurement();
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 private:
    tResult mResult;
 };
+#endif //CONFIG_SYSTEM_STATUS_SENSOR

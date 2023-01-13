@@ -5,7 +5,18 @@
  *      Author: mszkudli
  */
 
+#include "../../../global.h"
+#if CONFIG_SYSTEM_STATUS_SENSOR
+
 #include "tSystemStatusSensor.h"
+
+tSystemStatusSensor::tSystemStatusSensor() : tSensor(SENSOR_TYPE_SYSTEM_STATUS)
+{
+   mCurrentMeasurementBlob = (void*) &mResult;
+   mMeasurementBlobSize = sizeof(mResult);
+   mConfigSet = true;
+   mResult.Uptime = 0;
+}
 
 void tSystemStatusSensor::doTriggerMeasurement()
 {
@@ -15,6 +26,7 @@ void tSystemStatusSensor::doTriggerMeasurement()
 	onMeasurementCompleted(true);
 }
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSystemStatusSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    if (dataBlobSize != sizeof(tResult))
@@ -31,3 +43,5 @@ uint8_t tSystemStatusSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDa
 
    return STATUS_SUCCESS;
 }
+#endif //CONFIG_SENSORS_JSON_OUTPUT
+#endif //CONFIG_SYSTEM_STATUS_SENSOR

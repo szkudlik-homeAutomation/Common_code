@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+
 #include "tSensor.h"
 
 class tSimpleDigitalInputSensor: public tSensor {
@@ -28,10 +30,13 @@ public:
    virtual void doTriggerMeasurement();
    virtual uint8_t SetSpecificConfig(void *pBlob);
 
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+#endif CONFIG_SENSORS_JSON_OUTPUT
 
 private:
    tResult mResult;
    tConfig mConfig;
 };
 
+#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR

@@ -2,6 +2,7 @@
 
 #include "../../global.h"
 
+#if CONFIG_WATCHDOG
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include <Watchdog.h>
 
@@ -22,6 +23,8 @@ public:
    }
 
    void Reset() {mCurrentTimeoutCnt = mNumOfSeconds;}
+
+   virtual void doRecovery() {}
 
 private:
    bool Tick(); friend class tWatchdogProcess;
@@ -47,3 +50,4 @@ class tWatchdogProcess : public  Process
   private:
   Watchdog watchdog;
 };
+#endif // CONFIG_WATCHDOG

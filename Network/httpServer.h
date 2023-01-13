@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_HTTP_SERVER
+
 #include "tcpServer.h"
 
 class tHttpSession;
@@ -62,3 +64,5 @@ protected:
 };
 
 tHttpServlet * ServletFactory(String *pRequestBuffer);
+
+#endif //CONFIG_HTTP_SERVER

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_OUTPUT_STATE_SENSOR
 #include "tSensor.h"
 
 class tOutputStateSensor : public tSensor {
@@ -21,8 +22,12 @@ public:
    } tResult;
 
    virtual void doTriggerMeasurement();
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
+
 private:
    tResult mResult;
 };
 
+#endif //CONFIG_OUTPUT_STATE_SENSOR

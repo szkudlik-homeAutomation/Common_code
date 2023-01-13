@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
+
 #include "tSensor.h"
 
 
@@ -29,9 +31,13 @@ public:
 
    virtual void doTriggerMeasurement();
    virtual uint8_t SetSpecificConfig(void *pBlob);
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
+
 private:
    tResult mResult;
    tHeatingCircleControl *mHeatingControl;
 };
 
+#endif //CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR

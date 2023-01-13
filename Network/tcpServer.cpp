@@ -1,4 +1,7 @@
 #include "../../../global.h"
+
+#if CONFIG_NETWORK
+
 #include "tcpServer.h"
 
 tTcpServer* tTcpServer::pFirst = NULL;
@@ -109,3 +112,4 @@ void tTcpServerProcess::service()
     }
   }
 }
+#endif //CONFIG_NETWORK

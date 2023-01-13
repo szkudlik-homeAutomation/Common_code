@@ -4,6 +4,8 @@
  *  Created on: 27 lis 2022
  *      Author: szkud
  */
+#include "../../../global.h"
+#if CONFIG_OUTPUT_STATE_SENSOR
 
 #include "tOutputStateSensor.h"
 #include "../OutputProcess.h"
@@ -33,6 +35,7 @@ void tOutputStateSensor::doTriggerMeasurement()
    onMeasurementCompleted(true);
 }
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tOutputStateSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    if (dataBlobSize != sizeof(tResult))
@@ -59,3 +62,5 @@ uint8_t tOutputStateSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDat
 
    return STATUS_SUCCESS;
 }
+#endif //CONFIG_SENSORS_JSON_OUTPUT
+#endif //CONFIG_OUTPUT_STATE_SENSOR

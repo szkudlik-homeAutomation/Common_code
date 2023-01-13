@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_IMPULSE_SENSOR
+
 #include "tSensor.h"
 
 class tImpulseSensor final : public tSensor {
@@ -24,7 +26,9 @@ public:
    void CleanSum(); 			// clear Sum
    void Impulse() { mCnt++;	}	// COUNTER TRIGGER - interrupt safe, may be called in interrupt handler
 
+#if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 protected:
    virtual void doTriggerMeasurement();
@@ -32,3 +36,5 @@ private:
    volatile uint16_t mCnt;
    tResult mResult;
 };
+
+#endif //CONFIG_IMPULSE_SENSOR
