@@ -23,6 +23,8 @@ public:
 
    void Reset() {mCurrentTimeoutCnt = mNumOfSeconds;}
 
+   virtual void doRecovery() {}
+
 private:
    bool Tick(); friend class tWatchdogProcess;
 

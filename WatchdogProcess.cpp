@@ -25,17 +25,20 @@ void tWatchdogProcess::service()
 
    while (NULL != pItem)
    {
-      doResetWatchdog &= pItem->Tick();
+      bool isOK = pItem->Tick();
+      doResetWatchdog &= isOK;
+      if (! isOK)
+      {
+         // an item has not been reset in required time
+         // try reset...
+         pItem->doRecovery();
+      }
       pItem = pItem->pNext;
    }
 
    if (doResetWatchdog)
    {
+      // set in HW that everything is fine
       watchdog.reset();
-   }
-   else
-   {
-      Ethernet.clean();
-      DEBUG_PRINTLN_3("=========>!!!!!!! Watchdog timeout");
    }
 }
