@@ -18,19 +18,22 @@ public:
 };
 
 
-class WorkerProcessBase: public Process
+class WorkerProcess: public Process, public ResponseHandler
 {
-public:
-   WorkerProcessBase(Scheduler &manager) : Process(manager,LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) {}
-protected:
-  virtual void service();
+  public:
+  WorkerProcess(Scheduler &manager) : Process(manager,LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) {}
 
   void Enqueue(WorkerTask *pWorkerTask);
+
+protected:
+  virtual void service();
 private:
 
   ArduinoQueue<WorkerTask *> mQueue;
   WorkerTask *pCurrentWorkerTask;
 
 };
+
+extern WorkerProcess Worker;
 
 #endif CONFIG_WORKER_PROCESS

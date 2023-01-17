@@ -4,12 +4,11 @@
 
 #if CONFIG_WORKER_PROCESS
 
-#include "WorkerProcessBase.h"
+#include "WorkerProcess.h"
 
-void WorkerProcessBase::service()
+void WorkerProcess::service()
 {
-   //TODO - split worker to worker and frame helper (for light control)
-#if CONFIG_CENTRAL_NODE
+  #ifdef CONTROLLER
    if (NULL == pCurrentWorkerTask)
    {
       if (mQueue.isEmpty())
@@ -38,10 +37,10 @@ void WorkerProcessBase::service()
    setPeriod(SERVICE_CONSTANTLY);   // next iteration will go for next queue item or disable the task if the queue is empty
 #else
    disable();
-#endif //CONFIG_CENTRAL_NODE
+#endif
 }
 
-void WorkerProcessBase::Enqueue(WorkerTask *pWorkerTask)
+void WorkerProcess::Enqueue(WorkerTask *pWorkerTask)
 {
    mQueue.enqueue(pWorkerTask);
 
@@ -52,4 +51,5 @@ void WorkerProcessBase::Enqueue(WorkerTask *pWorkerTask)
      enable();
    }
 }
+
 #endif //CONFIG_WORKER_PROCESS
