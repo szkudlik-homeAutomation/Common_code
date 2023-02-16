@@ -7,7 +7,7 @@
 
 #include "../../../global.h"
 #include "tDS1820Sensor.h"
-#include <OneWire.h>
+#include "../../lib/OneWire/OneWire.h"
 #include "../../lib/ds1820/DallasTemperature.h"
 
 uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)

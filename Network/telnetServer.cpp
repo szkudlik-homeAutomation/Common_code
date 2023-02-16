@@ -1,5 +1,5 @@
 #include "telnetServer.h"
-#include <Commander.h>
+#include "../../lib/Commander/src/Commander.h"
 
 // must be static-global (why? - only 1 telnet session may be active)
 Commander cmd;

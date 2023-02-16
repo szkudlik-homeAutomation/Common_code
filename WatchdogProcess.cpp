@@ -1,5 +1,4 @@
 #include "WatchdogProcess.h"
-#include <Watchdog.h>
 #include "../lib/Ethernet/src/localEthernet.h"
 
 tWatchdogItem *tWatchdogItem::pFirst = NULL;
