@@ -4,7 +4,7 @@
 
 #if CONFIG_WATCHDOG
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
-#include <Watchdog.h>
+#include "../lib/Watchdog/src/Watchdog.h"
 
 /**
  * a base class for watchdog item that need to be triggered periodically

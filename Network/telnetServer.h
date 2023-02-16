@@ -5,7 +5,7 @@
 
 #include "tcpServer.h"
 #include "../Logger.h"
-#include <Commander.h>
+#include "../../lib/Commander/src/Commander.h"
 
 class commandList_t;
 

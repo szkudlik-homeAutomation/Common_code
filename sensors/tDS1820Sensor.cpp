@@ -10,7 +10,7 @@
 #if CONFIG_DS1820_SENSOR
 
 #include "tDS1820Sensor.h"
-#include <OneWire.h>
+#include "../../lib/OneWire/OneWire.h"
 #include "../../lib/ds1820/DallasTemperature.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT

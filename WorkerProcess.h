@@ -6,7 +6,7 @@
 
 
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
-#include <ArduinoQueue.h>
+#include "../lib/ArduinoQueue/ArduinoQueue.h"
 
 class WorkerTask
 {
