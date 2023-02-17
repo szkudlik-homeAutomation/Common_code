@@ -8,7 +8,6 @@
 
 void WorkerProcess::service()
 {
-  #ifdef CONTROLLER
    if (NULL == pCurrentWorkerTask)
    {
       if (mQueue.isEmpty())
@@ -35,9 +34,6 @@ void WorkerProcess::service()
    delete (pCurrentWorkerTask);
    pCurrentWorkerTask = NULL;
    setPeriod(SERVICE_CONSTANTLY);   // next iteration will go for next queue item or disable the task if the queue is empty
-#else
-   disable();
-#endif
 }
 
 void WorkerProcess::Enqueue(WorkerTask *pWorkerTask)

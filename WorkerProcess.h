@@ -4,7 +4,6 @@
 
 #if CONFIG_WORKER_PROCESS
 
-
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../lib/ArduinoQueue/ArduinoQueue.h"
 
@@ -18,7 +17,7 @@ public:
 };
 
 
-class WorkerProcess: public Process, public ResponseHandler
+class WorkerProcess: public Process
 {
   public:
   WorkerProcess(Scheduler &manager) : Process(manager,LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) {}
