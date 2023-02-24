@@ -32,7 +32,7 @@
 #endif
 
 #if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
-#include "tHeatingCircleStatusSensor.h"
+#include "../../sensors/tHeatingCircleStatusSensor.h"	//TODO - get rid of this external include
 #endif
 
 #if CONFIG_SYSTEM_STATUS_SENSOR
