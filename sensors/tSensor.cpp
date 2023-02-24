@@ -10,13 +10,35 @@
 #if CONFIG_SENSORS
 
 #include "tSensor.h"
+
+#if CONFIG_DS1820_SENSOR
 #include "tDS1820Sensor.h"
+#endif
+
+#if CONFIG_IMPULSE_SENSOR
 #include "tImpulseSensor.h"
+#endif
+
+#if CONFIG_PT100_ANALOG_SENSOR
 #include "tPt100AnalogSensor.h"
+#endif
+
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
 #include "tSimpleDigitalInputSensor.h"
+#endif
+
+#if CONFIG_OUTPUT_STATE_SENSOR
 #include "tOutputStateSensor.h"
+#endif
+
+#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
 #include "tHeatingCircleStatusSensor.h"
+#endif
+
+#if CONFIG_SYSTEM_STATUS_SENSOR
 #include "tSystemStatusSensor.h"
+#endif
+
 #include "tSensorHub.h"
 
 tSensor* tSensor::pFirst = NULL;
