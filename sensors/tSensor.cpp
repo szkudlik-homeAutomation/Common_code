@@ -31,10 +31,6 @@
 #include "tOutputStateSensor.h"
 #endif
 
-#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
-#include "tHeatingCircleStatusSensor.h"
-#endif
-
 #if CONFIG_SYSTEM_STATUS_SENSOR
 #include "tSystemStatusSensor.h"
 #endif
@@ -115,7 +111,13 @@ void tSensor::onMeasurementCompleted(bool Status)
 // executed on cetral node, not on nodes where sensors are actually created
 // can't use virtual methods - all static
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+
+__attribute__((weak)) uint8_t appTranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+{
+	return STATUS_UNKNOWN_SENSOR_TYPE;
+}
+
+uint8_t TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
 {
    uint8_t Result = STATUS_UNKNOWN_SENSOR_TYPE;
    switch (SensorType)
@@ -150,17 +152,15 @@ uint8_t tSensor::TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, v
          break;
 #endif
 
-#if CONFIG_HEATING_CIRCLE_CONTROL_STATUS_SENSOR
-	  case SENSOR_TYPE_HEATING_CIRCLE_STATE:
-         Result = tHeatingCircleStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-         break;
-#endif
-
 #if CONFIG_SYSTEM_STATUS_SENSOR
       case SENSOR_TYPE_SYSTEM_STATUS:
           Result = tSystemStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
           break;
 #endif //CONFIG_SYSTEM_STATUS_SENSOR
+
+      default:
+    	  Result = appTranslateBlobToJSON(SensorType,dataBlobSize,pDataCache,pStream);
+          break;
    }
    return Result;
 }
