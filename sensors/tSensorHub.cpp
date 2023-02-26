@@ -175,11 +175,18 @@ uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
    pStream->print(F("\":{"));
    if (pSensorDesc->Status == STATUS_SUCCESS)
    {
-      Result = tSensor::TranslateBlobToJSON(pSensorDesc->sensorType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache, pStream);
+      Result = TranslateBlobToJSON(pSensorDesc->sensorType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache, pStream);
+   }
+   else if (pSensorDesc->Status == STATUS_NO_DATA_RECIEVED)
+   {
+	   Result = STATUS_NO_DATA_RECIEVED;
    }
    else
    {
-      Result = pSensorDesc->Status; //!!! todo - statuses
+	   Result = STATUS_SENSOR_ERROR_REPORTED;
+	   pStream->print(F("\"SensorStatus\":"));
+	   pStream->print(pSensorDesc->Status);
+	   pStream->print(F(","));
    }
    pStream->print(F("\"Status\":"));
    pStream->print(Result);
