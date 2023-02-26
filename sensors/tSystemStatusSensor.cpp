@@ -39,7 +39,9 @@ uint8_t tSystemStatusSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDa
    pStream->print(pResult->Uptime);
    pStream->print(F(", \"FreeMem\":"));
    pStream->print(pResult->FreeMemory);
-   pStream->print(F(","));
+   pStream->print(F(", \"Version\":\""));
+   pStream->print(F(FW_VERSION));
+   pStream->print(F("\","));
 
    return STATUS_SUCCESS;
 }

@@ -5,12 +5,16 @@
 
 void tHttpServlet::SendResponse400()
 {
-   pOwner->SendFlashString(PSTR("HTTP/1.1 400 Bad Request\r\nContent-Type: text/plain\r\n\r\n400 Bad request\r\n"));
+   pOwner->SendFlashString(PSTR("HTTP/1.1 400 Bad Request\r\nContent-Type: text/plain\r\n\r\n400 Bad request\r\nVersion: "));
+   pOwner->SendFlashString(PSTR(FW_VERSION));
+   pOwner->SendFlashString(PSTR("\r\n"));
 }
 
 void tHttpServlet::SendResponse200()
 {
-  pOwner->SendFlashString(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nOK\r\n"));
+  pOwner->SendFlashString(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nOK\r\nVersion: "));
+  pOwner->SendFlashString(PSTR(FW_VERSION));
+  pOwner->SendFlashString(PSTR("\r\n"));
 }
 
 bool tHttpServlet::GetParameter(const char * Param, uint16_t *pValue)
@@ -129,6 +133,9 @@ bool tHttpSession::doProcess()
 
     SendFlashString(PSTR("HTTP/1.1 404 Not found\r\nContent-Type: text/plain\r\n\r\n404 Not found\r\n"));
     mEthernetClient.println(RequestBuffer);
+    SendFlashString(PSTR("\r\n\r\nVersion: "));
+    SendFlashString(PSTR(FW_VERSION));
+    SendFlashString(PSTR("\r\n"));
     return false; // close the session
   }
 

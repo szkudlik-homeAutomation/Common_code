@@ -20,7 +20,9 @@ tTelnetSession::tTelnetSession(EthernetClient aEthernetClient,commandList_t *pTe
   cmd.autoChain(ON);
   cmd.printCommandList();
   uint16_t FreeRam = getFreeRam();
-  cmd.print("FreeRam: ");
+  cmd.print(F("Version: "));
+  cmd.print(F(FW_VERSION));
+  cmd.print(F(" FreeRam: "));
   cmd.println(FreeRam);
   pTelnetSession = this;
   DisableLogs();
