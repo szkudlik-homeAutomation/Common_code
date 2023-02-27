@@ -140,6 +140,7 @@ uint8_t tSensorHub::subscribeToEvents(uint8_t SensorID, tSensorHubEvent *pSensor
    return STATUS_SUCCESS;
 }
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
 {
    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
@@ -194,6 +195,7 @@ uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
    pStream->print(pSensorDesc->SensorID);
    pStream->print(F("}"));
 }
+#endif // CONFIG_SENSORS_JSON_OUTPUT
 
 void tSensorHub::callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType)
 {

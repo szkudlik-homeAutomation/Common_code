@@ -88,6 +88,7 @@ public:
 	 */
 	uint8_t getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize, void **pDataBlob);
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 	/**
 	 * get cached sensor data as JSON
 	 * get data from a sensor stored locally, formatted in JSON, and stream them to provided (tcp)stream
@@ -101,6 +102,7 @@ public:
     * get data from a sensor stored locally, formatted in JSON, and stream them to provided (tcp)stream
     */
    uint8_t getCachedSensorsDataJson(Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
 
    /*
     * to be called on sensor event, either remote or local
@@ -150,10 +152,12 @@ private:
 	   static tSensorDesc *pFirst;
 	};
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 	/*
 	 * Format JSON datra based on pSensor desc - called by getCachedSensorDataJson and getCachedSensorsDataJson
 	 */
 	uint8_t formatJSON(tSensorDesc *pSensorDesc, Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
 
 	void callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType);
 
