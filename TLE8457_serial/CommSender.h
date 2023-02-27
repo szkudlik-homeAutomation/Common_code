@@ -8,7 +8,7 @@
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../../lib/ArduinoQueue/ArduinoQueue.h"
 
-#include "Random.h"
+#include "../lib/Random.h"
 
 class CommSenderProcess : public Process
 {
