@@ -2,6 +2,8 @@
 
 
 #include "../../../global.h"
+#if CONFIG_TLE8457_COMM_LIB
+
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
 #define RECIEVE_CHECK_PERIOD FRAME_TRANSMISSION_TIME
@@ -54,3 +56,5 @@ class CommRecieverProcess : public  Process
 };
 
 extern CommRecieverProcess CommReciever;
+
+#endif // CONFIG_TLE8457_COMM_LIB

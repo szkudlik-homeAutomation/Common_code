@@ -1,5 +1,7 @@
 #include "../../../global.h"
 
+#if CONFIG_TLE8457_COMM_LIB
+
 #include "TLE8457_serial_lib.h"
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../../lib/AceCRC/src/AceCRC.h"
@@ -113,3 +115,4 @@ bool CommSenderProcess::DequeueFrame()
     // trigger
     return true;
 }
+#endif // CONFIG_TLE8457_COMM_LIB

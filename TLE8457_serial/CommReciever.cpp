@@ -1,5 +1,7 @@
 #include "../../../global.h"
 
+#if CONFIG_TLE8457_COMM_LIB
+
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../../lib/AceCRC/src/AceCRC.h"
 
@@ -171,3 +173,5 @@ void CommRecieverProcess::ProcessFrame()
    //  trigger an action
    mCallback->onFrame(mFrame.Data,mFrame.MessageType,mFrame.SenderDevId);
 }
+
+#endif // CONFIG_TLE8457_COMM_LIB

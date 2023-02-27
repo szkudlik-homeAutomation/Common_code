@@ -3,6 +3,9 @@
 
 #include "../../../global.h"
 
+#if CONFIG_TLE8457_COMM_LIB
+
+
 #ifndef COMMUNICATION_PAYLOAD_DATA_SIZE
 #define COMMUNICATION_PAYLOAD_DATA_SIZE 8
 #endif
@@ -74,3 +77,5 @@ typedef struct
 
 #include "CommSender.h"
 #include "CommReciever.h"
+
+#endif // CONFIG_TLE8457_COMM_LIB

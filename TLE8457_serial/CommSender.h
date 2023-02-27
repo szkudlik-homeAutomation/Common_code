@@ -3,6 +3,8 @@
 
 #include "../../../global.h"
 
+#if CONFIG_TLE8457_COMM_LIB
+
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../../lib/ArduinoQueue/ArduinoQueue.h"
 
@@ -39,6 +41,6 @@ private:
 };
 
 
-
-
 extern CommSenderProcess CommSender;
+
+#endif // CONFIG_TLE8457_COMM_LIB
