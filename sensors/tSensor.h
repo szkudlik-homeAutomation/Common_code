@@ -33,16 +33,6 @@ typedef enum
 } tSensorEventType;
 
 class tSensor;
-class tSensorEvent	//TODO - events by sensorHub only
-{
-public:
-   tSensorEvent() : mpNext(NULL) {}
-   virtual ~tSensorEvent() {}
-
-   virtual void onEvent(tSensor *pSensor, tSensorEventType EventType) = 0;
-private:
-   tSensorEvent *mpNext; friend class tSensor;
-};
 
 class tSensorProcess : public Process
 {
@@ -95,12 +85,6 @@ public:
 
    uint16_t GetMeasurementPeriod() const { return mMeasurementPeriod; }
 
-   void SetEventCalback(tSensorEvent *pEvent)
-   {
-      pEvent->mpNext = mpFirstEvent;
-      mpFirstEvent = pEvent;
-   }
-
    virtual uint8_t SetSpecificConfig(void *pBlob) {return STATUS_SUCCESS;}
 
 
@@ -112,8 +96,6 @@ public:
 
    uint8_t getSensorType() const { return mSensorType; }
    const bool isMeasurementValid() { return misMeasurementValid; }   // false if not triggered or measurement error
-   const void* getMeasurementBlob() const { return mCurrentMeasurementBlob; }
-   uint8_t getMeasurementBlobSize() const { return mMeasurementBlobSize; }
 
    uint8_t getSensorID() const { return mSensorID; }
    static tSensor* getSensor(uint8_t sensorID);
@@ -148,7 +130,5 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
-
-   tSensorEvent *mpFirstEvent;
 };
 #endif // CONFIG_SENSORS

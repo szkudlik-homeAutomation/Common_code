@@ -100,11 +100,9 @@ uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 			   pSensorName
 			   );
 
-	   pSensor->SetEventCalback(this);
 	   // send response
 	   DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
 	   return STATUS_SUCCESS;
-
 }
 
 void tSensorHub::getSensorInfoRequest(uint8_t SensorID)
