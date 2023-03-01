@@ -14,8 +14,8 @@ public:
 	tMessageReciever()  { pNext = pFirst ; pFirst = this; }
 	~tMessageReciever();
 
-	void RegisterMessageType(uint8_t type)   { mMessageMask |= 1 << (type - 1); }
-	void UnRegisterMessageType(uint8_t type) { mMessageMask &=  ~(uint32_t)(1 << (type - 1)); }
+	void RegisterMessageType(uint8_t type)   { mMessageMask |= 1 << type ; }
+	void UnRegisterMessageType(uint8_t type) { mMessageMask &=  ~(uint32_t)(1 << type); }
 
 	static void Dispatch(uint8_t type, void *data);
 protected:
