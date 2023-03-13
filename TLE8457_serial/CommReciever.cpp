@@ -4,6 +4,7 @@
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../../lib/AceCRC/src/AceCRC.h"
+#include "../tMessageReciever.h"
 
 #include "TLE8457_serial_lib.h"
 #include "CommReciever.h"
@@ -11,11 +12,10 @@
 
 using namespace ace_crc::crc16ccitt_nibble;
 
-CommRecieverProcess::CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId, CommRecieverProcessCallback* Callback)
+CommRecieverProcess::CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId)
    : Process(manager,LOW_PRIORITY,RECIEVE_CHECK_PERIOD),
      mRetransTableHead(0),
-     mSelfDevId(SelfDevId),
-     mCallback(Callback)
+     mSelfDevId(SelfDevId)
 {
   SetState(STATE_IDLE);
 }
@@ -170,8 +170,9 @@ void CommRecieverProcess::ProcessFrame()
    mRetransTable[mRetransTableHead].Seq = mFrame.Seq;
    mRetransTableHead++;
    mRetransTableHead %= RECIEVE_NUMBER_OF_RETRANS_TABLE;
-   //  trigger an action
-   mCallback->onFrame(mFrame.Data,mFrame.MessageType,mFrame.SenderDevId);
+
+   //  dispatch message
+   tMessageReciever::Dispatch(tMessageReciever::MessageType_frameRecieved, mFrame.MessageType, &mFrame);
 }
 
 #endif // CONFIG_TLE8457_COMM_LIB
