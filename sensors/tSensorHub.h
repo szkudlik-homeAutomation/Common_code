@@ -29,7 +29,7 @@ private:
  *
  * As the sensors may be on remote nodes, the app has no direct access to tSensor class.
  */
-class tSensorHub : tSensorEvent {
+class tSensorHub {
 public:
 
 	tSensorHub() {};
@@ -108,14 +108,6 @@ public:
     * to be called on sensor event, either remote or local
     */
    void onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob);
-
-   /*
-    * handeler for local sensors
-    */
-   virtual void onEvent(tSensor *pSensor, tSensorEventType EventType)
-   {
-      onSensorEvent(pSensor->getSensorID(), EventType, pSensor->getMeasurementBlobSize(), pSensor->getMeasurementBlob());
-   }
 
 private:
 

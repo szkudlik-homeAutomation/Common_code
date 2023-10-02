@@ -11,18 +11,10 @@
 
 #define RECIEVE_NUMBER_OF_RETRANS_TABLE 10  // number of pairs senderId-seq kept to recognize retransmissions
 
-class CommRecieverProcessCallback
-{
-public:
-   CommRecieverProcessCallback() {};
-
-   virtual void onFrame(void *pData, uint8_t MessageType, uint8_t SenderDevId) = 0;
-};
-
 class CommRecieverProcess : public  Process
 {
  public:
-  CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId, CommRecieverProcessCallback* Callback);
+  CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId);
 
   void clearSelfFrameMark() { mSelfFrameMark = false; }
   bool getSelfFrameMark() { return mSelfFrameMark; }
@@ -31,7 +23,6 @@ class CommRecieverProcess : public  Process
   virtual void service();
 
   private:
-    CommRecieverProcessCallback* mCallback;
     tCommunicationFrame mFrame;
     static const uint8_t STATE_IDLE = 0;          // completely stopped, RetransTable clean
     static const uint8_t STATE_NEW_TRIGGER = 1;   // new data arrived when state was idle

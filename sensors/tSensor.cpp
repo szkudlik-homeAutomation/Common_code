@@ -65,7 +65,6 @@ tSensor::tSensor(uint8_t SensorType) :
       mConfigSet(false),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mpFirstEvent(NULL),
       mSensorID(0xFF)
 {
    pNext = pFirst;
@@ -90,21 +89,19 @@ tSensor* tSensor::getSensor(uint8_t sensorID)
 
 void tSensor::onMeasurementCompleted(bool Status)
 {
-   misMeasurementValid = Status;
-   tSensorEvent *pEvent = mpFirstEvent;
-   while (NULL != pEvent)
-   {
-   if (Status)
-      {
-         pEvent->onEvent(this,EV_TYPE_MEASUREMENT_COMPLETED);
-      }
-   else
-      {
-         pEvent->onEvent(this,EV_TYPE_MEASUREMENT_ERROR);
-      }
+  misMeasurementValid = Status;
 
-   pEvent = pEvent->mpNext;
-   }
+#if CONFIG_SENSOR_HUB
+  if (Status)
+  {
+	  SensorHub.onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
+  }
+  else
+  {
+	  SensorHub.onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
+  }
+#endif //CONFIG_SENSOR_HUB
+  //TODO: remote sensors
 }
 
 // static procedures
