@@ -58,14 +58,15 @@ uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
    return STATUS_SUCCESS;
 }
 
-tSensor::tSensor(uint8_t SensorType) :
+tSensor::tSensor(uint8_t SensorType, uint8_t ApiVersion) :
       mCurrentMeasurementBlob(NULL),
       mMeasurementBlobSize(0),
       mSensorType(SensorType),
       mConfigSet(false),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mSensorID(0xFF)
+      mSensorID(0xFF),
+      mApiVersion(ApiVersion)
 {
    pNext = pFirst;
    pFirst = this;

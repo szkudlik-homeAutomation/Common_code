@@ -14,6 +14,8 @@
 
 class tSimpleDigitalInputSensor: public tSensor {
 public:
+   static const uint8_t API_VERSION = 1;
+
    typedef struct
    {
       uint8_t Pin;
@@ -25,7 +27,7 @@ public:
       uint8_t State;
    } tResult;
 
-   tSimpleDigitalInputSensor() : tSensor(SENSOR_TYPE_DIGITAL_INPUT) {}
+   tSimpleDigitalInputSensor() : tSensor(SENSOR_TYPE_DIGITAL_INPUT, API_VERSION) {}
 
    virtual void doTriggerMeasurement();
    virtual uint8_t SetSpecificConfig(void *pBlob);

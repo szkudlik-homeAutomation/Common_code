@@ -14,6 +14,8 @@
 
 class tSystemStatusSensor: public tSensor {
 public:
+	static const uint8_t API_VERSION = 1;
+
    typedef struct
    {
    	   uint16_t FreeMemory;

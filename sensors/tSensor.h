@@ -100,16 +100,12 @@ public:
    uint8_t getSensorID() const { return mSensorID; }
    static tSensor* getSensor(uint8_t sensorID);
 
-   /* the sensor may be located on a remote node, controler has only data blobs and need to translate it to JSON
-    * Sensors should put a simple string to pStream
-    * "MetricName": metric_value, "MetricName1": metric_value1,
-    *
-    * no braces etc.
-    * there MUST be a comma at the last character, unless there's no data at all
-    */
-protected:
-   tSensor(uint8_t SensorType);
 
+protected:
+   /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
+    * For identification, API version must be increased every time the config OR the result data format changes
+    */
+   tSensor(uint8_t SensorType, uint8_t ApiVersion);
 
    bool mConfigSet;
    void *mCurrentMeasurementBlob;
@@ -126,6 +122,7 @@ private:
    uint8_t mSensorID;
 
    uint8_t mSensorType;
+   uint8_t mApiVersion;
 
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;

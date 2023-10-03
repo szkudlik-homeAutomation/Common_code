@@ -13,6 +13,8 @@
 
 class tOutputStateSensor : public tSensor {
 public:
+   static const uint8_t API_VERSION = 1;
+
    tOutputStateSensor();
 
    typedef struct

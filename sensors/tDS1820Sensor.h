@@ -42,7 +42,9 @@ public:
                      // or NumOfDevices if Avg = 0
    } tResult;
 
-   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820) {}
+   static const uint8_t API_VERSION = 1;
+
+   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820, API_VERSION) {}
 
    virtual uint8_t SetSpecificConfig(void *pBlob);
 

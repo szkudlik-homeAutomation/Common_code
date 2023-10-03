@@ -11,7 +11,7 @@
 #include "tImpulseSensor.h"
 
 
-tImpulseSensor::tImpulseSensor() : tSensor(SENSOR_TYPE_IMPULSE)
+tImpulseSensor::tImpulseSensor() : tSensor(SENSOR_TYPE_IMPULSE, API_VERSION)
 {
 	mResult.Count = 0;
 	mResult.Sum = 0;

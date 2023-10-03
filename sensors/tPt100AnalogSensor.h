@@ -14,6 +14,8 @@
 
 class tPt100AnalogSensor : public tSensor {
 public:
+   static const uint8_t API_VERSION = 1;
+
    typedef struct
    {
       uint8_t Pin;
@@ -25,7 +27,7 @@ public:
       int Temperature;
    } tResult;
 
-   tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG) {}
+   tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG, API_VERSION) {}
 
    virtual uint8_t SetSpecificConfig(void *pBlob);
 
