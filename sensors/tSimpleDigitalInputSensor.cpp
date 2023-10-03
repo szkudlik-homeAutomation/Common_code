@@ -28,20 +28,18 @@ uint8_t tSimpleDigitalInputSensor::TranslateBlobToJSON(uint8_t dataBlobSize, voi
 
 void tSimpleDigitalInputSensor::doTriggerMeasurement()
 {
-   mResult.State = (digitalRead(mConfig.Pin) == mConfig.ActiveState);
+   mResult.State = (digitalRead(Config.Pin) == Config.ActiveState);
 
    onMeasurementCompleted(true);
 }
 
-uint8_t tSimpleDigitalInputSensor::SetSpecificConfig(void *pBlob)
+uint8_t tSimpleDigitalInputSensor::doSetConfig()
 {
-   mConfig = *(tConfig *)pBlob;
-   pinMode(mConfig.Pin, INPUT_PULLUP);
+   pinMode(Config.Pin, INPUT_PULLUP);
 
    mResult.State = 0;
    mCurrentMeasurementBlob = (void*) &mResult;
    mMeasurementBlobSize = sizeof(mResult);
-   mConfigSet = true;
 
    return STATUS_SUCCESS;
 }

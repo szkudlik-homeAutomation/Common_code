@@ -6,6 +6,19 @@
 
 #pragma once
 
+/*
+ * Sensor creation sequence
+ * 1) create an object - dyn or static
+ * 2) fill the config - specific to the sensor
+ * 		2a) generic "getConfigBlob" may be used in case of dynamic creation of sensors i.e. from eeprom
+ * 3) call "setConfig" with measurementPeriod
+ * 4) optional: call "register" with sensor ID and name
+ * 5) call "Start"
+ *
+ * register may be called multiple times, especially in case of remote sensors
+ *
+ * the sensor should be running at this point
+ */
 
 #include "../../../global.h"
 #if CONFIG_SENSORS
@@ -58,48 +71,51 @@ uint8_t appTranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *p
 
 class tSensor {
 public:
-   /*
-    * @brief register a sensor to a local system with a given ID
-    * check if sensor ID is duplicated on LOCAL SYSTEM ONLY
-    * in case duplication on central node the sensor simply won't be registerd
-    * send a register message to central system (if neccessary)
-    *
-    * @retval STATUS_SUCCESS
-    * @retval STATUS_DUPLICATE_ID
+
+	/* process and set config. The config must be set before either by sensor's specific functions
+	 * setConfig MUST be called once
+	 */
+	uint8_t setConfig(uint16_t measurementPeriod);
+
+	/* make the sensor running */
+	uint8_t Start()
+	{
+		if (SENSOR_PAUSED == mState)
+		{
+			mState = SENSOR_RUNNING;
+			return doRun();
+		}
+		return STATUS_SENSOR_INCORRECT_STATE;
+	}
+
+	/* pause the sensor */
+	uint8_t Pause()
+	{
+		if (SENSOR_RUNNING == mState)
+		{
+			mState = SENSOR_PAUSED;
+			return doPause();
+		}
+		return STATUS_SENSOR_INCORRECT_STATE;
+	}
+
+   /* register the sensor in sensor hub.
+    * either local or remote in case of remote nodes
     */
    uint8_t Register(uint8_t sensorID, char * pSensorName);
-   uint8_t Register(uint8_t sensorID, char * pSensorName, void *pConfigBlob, uint16_t measurementPeriod)
-   {
-      SetMeasurementPeriod(measurementPeriod);
-      if (pConfigBlob)
-         SetSpecificConfig(pConfigBlob);
-      uint8_t result = Register(sensorID,pSensorName);
-      return result;
-   }
-
-   void SetMeasurementPeriod(uint16_t period)   // time in number of calls to Run() A tick = SENSOR_PROCESS_SERVICE_TIME
-   {
-      mMeasurementPeriod = period;
-      mCurrMeasurementPeriod = period;
-   }
 
    uint16_t GetMeasurementPeriod() const { return mMeasurementPeriod; }
-
-   virtual uint8_t SetSpecificConfig(void *pBlob) {return STATUS_SUCCESS;}
-
-
    void TriggerMeasurement() { if (isRunning()) doTriggerMeasurement(); }
-
-   bool isRunning() const { return mConfigSet; } // to be extended
-
-   static void Run();
-
+   bool isRunning() const { return (mState == SENSOR_RUNNING); }
+   bool isConfigured() const { return (mState > SENSOR_CREATED); }
    uint8_t getSensorType() const { return mSensorType; }
    const bool isMeasurementValid() { return misMeasurementValid; }   // false if not triggered or measurement error
-
    uint8_t getSensorID() const { return mSensorID; }
+   uint8_t getSensorApiVersion() const { return mApiVersion; }
+
    static tSensor* getSensor(uint8_t sensorID);
 
+   static void Run();
 
 protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
@@ -107,17 +123,23 @@ protected:
     */
    tSensor(uint8_t SensorType, uint8_t ApiVersion);
 
-   bool mConfigSet;
    void *mCurrentMeasurementBlob;
    uint8_t mMeasurementBlobSize;
 
    void onMeasurementCompleted(bool Status);
+
    virtual void doTriggerMeasurement() = 0;
+   virtual uint8_t doSetConfig() { return STATUS_SUCCESS; }
+   virtual uint8_t doRun() { return STATUS_SUCCESS; }
+   virtual uint8_t doPause() { return STATUS_SUCCESS; }
    virtual void doTimeTick() {};
 
 private:
-   static tSensor* pFirst;
-   tSensor* pNext;
+   static const uint8_t SENSOR_CREATED = 0;
+   static const uint8_t SENSOR_PAUSED = 1;
+   static const uint8_t SENSOR_RUNNING = 2;
+
+   uint8_t mState;
 
    uint8_t mSensorID;
 
@@ -127,5 +149,8 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
+
+   static tSensor* pFirst;
+   tSensor* pNext;
 };
 #endif // CONFIG_SENSORS

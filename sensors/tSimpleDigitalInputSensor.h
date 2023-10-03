@@ -22,6 +22,8 @@ public:
       uint8_t ActiveState;
    } tConfig;
 
+   tConfig Config;
+
    typedef struct
    {
       uint8_t State;
@@ -30,15 +32,14 @@ public:
    tSimpleDigitalInputSensor() : tSensor(SENSOR_TYPE_DIGITAL_INPUT, API_VERSION) {}
 
    virtual void doTriggerMeasurement();
-   virtual uint8_t SetSpecificConfig(void *pBlob);
 
 #if CONFIG_SENSORS_JSON_OUTPUT
    static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
 #endif CONFIG_SENSORS_JSON_OUTPUT
-
+protected:
+   virtual uint8_t doSetConfig();
 private:
    tResult mResult;
-   tConfig mConfig;
 };
 
 #endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR

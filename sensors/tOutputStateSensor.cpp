@@ -19,7 +19,6 @@ tOutputStateSensor::tOutputStateSensor() : tSensor(SENSOR_TYPE_OUTPUT_STATES, AP
 
    mCurrentMeasurementBlob = (void*) &mResult;
    mMeasurementBlobSize = sizeof(mResult);
-   mConfigSet = true;
 }
 
 extern tOutputProcess OutputProcess;

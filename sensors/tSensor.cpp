@@ -11,34 +11,24 @@
 
 #include "tSensor.h"
 
-#if CONFIG_DS1820_SENSOR
-#include "tDS1820Sensor.h"
-#endif
-
-#if CONFIG_IMPULSE_SENSOR
-#include "tImpulseSensor.h"
-#endif
-
-#if CONFIG_PT100_ANALOG_SENSOR
-#include "tPt100AnalogSensor.h"
-#endif
-
-#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
-#include "tSimpleDigitalInputSensor.h"
-#endif
-
-#if CONFIG_OUTPUT_STATE_SENSOR
-#include "tOutputStateSensor.h"
-#endif
-
-#if CONFIG_SYSTEM_STATUS_SENSOR
-#include "tSystemStatusSensor.h"
-#endif
-
 #include "tSensorHub.h"
 
 tSensor* tSensor::pFirst = NULL;
 
+uint8_t tSensor::setConfig(uint16_t measurementPeriod)
+{
+	if (mState != SENSOR_CREATED)
+	{
+		return STATUS_CONFIG_SET_ERROR;
+	}
+    mMeasurementPeriod = measurementPeriod;
+    mCurrMeasurementPeriod = measurementPeriod;
+    uint8_t status = doSetConfig();
+    if (STATUS_SUCCESS == status)
+    {
+    	mState = SENSOR_PAUSED;
+    }
+}
 
 uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
 {
@@ -62,11 +52,11 @@ tSensor::tSensor(uint8_t SensorType, uint8_t ApiVersion) :
       mCurrentMeasurementBlob(NULL),
       mMeasurementBlobSize(0),
       mSensorType(SensorType),
-      mConfigSet(false),
+      mState(SENSOR_CREATED),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
       mSensorID(0xFF),
-      mApiVersion(ApiVersion)
+	  mApiVersion(ApiVersion)
 {
    pNext = pFirst;
    pFirst = this;
@@ -104,6 +94,81 @@ void tSensor::onMeasurementCompleted(bool Status)
 #endif //CONFIG_SENSOR_HUB
   //TODO: remote sensors
 }
+
+void tSensor::Run()
+{
+   tSensor *i = pFirst;
+   while(i != NULL)
+   {
+      if (i->isRunning())
+      {
+         // do the sensor job
+         i->doTimeTick();
+
+         // is it a time to trigger measurement?
+         if (i->mMeasurementPeriod)
+         {
+            if (i->mCurrMeasurementPeriod == 0)
+            {
+               i->mCurrMeasurementPeriod = i->mMeasurementPeriod;
+               i->TriggerMeasurement();
+            }
+            else
+            {
+               i->mCurrMeasurementPeriod--;
+            }
+         }
+      }
+      i = i->pNext;
+   }
+}
+
+void tSensorProcess::service()
+{
+   tSensor::Run();
+}
+
+void tSensorProcess::setup() {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if CONFIG_DS1820_SENSOR
+#include "tDS1820Sensor.h"
+#endif
+
+#if CONFIG_IMPULSE_SENSOR
+#include "tImpulseSensor.h"
+#endif
+
+#if CONFIG_PT100_ANALOG_SENSOR
+#include "tPt100AnalogSensor.h"
+#endif
+
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+#include "tSimpleDigitalInputSensor.h"
+#endif
+
+#if CONFIG_OUTPUT_STATE_SENSOR
+#include "tOutputStateSensor.h"
+#endif
+
+#if CONFIG_SYSTEM_STATUS_SENSOR
+#include "tSystemStatusSensor.h"
+#endif
+
+
 
 // static procedures
 // executed on cetral node, not on nodes where sensors are actually created
@@ -164,38 +229,13 @@ uint8_t TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDat
 }
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
-void tSensor::Run()
-{
-   tSensor *i = pFirst;
-   while(i != NULL)
-   {
-      if (i->isRunning())
-      {
-         // do the sensor job
-         i->doTimeTick();
 
-         // is it a time to trigger measurement?
-         if (i->mMeasurementPeriod)
-         {
-            if (i->mCurrMeasurementPeriod == 0)
-            {
-               i->mCurrMeasurementPeriod = i->mMeasurementPeriod;
-               i->TriggerMeasurement();
-            }
-            else
-            {
-               i->mCurrMeasurementPeriod--;
-            }
-         }
-      }
-      i = i->pNext;
-   }
-}
 
-void tSensorProcess::service()
-{
-   tSensor::Run();
-}
 
-void tSensorProcess::setup() {}
+
+
+
+
+
+
 #endif //CONFIG_SENSORS

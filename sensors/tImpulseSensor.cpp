@@ -18,7 +18,6 @@ tImpulseSensor::tImpulseSensor() : tSensor(SENSOR_TYPE_IMPULSE, API_VERSION)
 	mCnt = 0;
 	mCurrentMeasurementBlob = &mResult;
 	mMeasurementBlobSize = sizeof(mResult);
-	mConfigSet = true;   // no config needed
 }
 
 void tImpulseSensor::doTriggerMeasurement()

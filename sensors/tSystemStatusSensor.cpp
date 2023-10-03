@@ -14,7 +14,6 @@ tSystemStatusSensor::tSystemStatusSensor() : tSensor(SENSOR_TYPE_SYSTEM_STATUS, 
 {
    mCurrentMeasurementBlob = (void*) &mResult;
    mMeasurementBlobSize = sizeof(mResult);
-   mConfigSet = true;
    mResult.Uptime = 0;
 }
 

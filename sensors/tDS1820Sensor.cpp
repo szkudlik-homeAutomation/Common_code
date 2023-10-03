@@ -55,15 +55,12 @@ uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCach
 }
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
-uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
+uint8_t tDS1820Sensor::doSetConfig()
 {
-   tConfig *pConfig = (tConfig*) pBlob;
-
-   OneWire * pOneWire = new OneWire(pConfig->Pin);
+   OneWire * pOneWire = new OneWire(Config.Pin);
    pDs1820 = new DallasTemperature(pOneWire);
    pDs1820->begin();
    pDs1820->setWaitForConversion(false);
-   mAvg = pConfig->Avg;
    mNumOfDevices = pDs1820->getDeviceCount();
    if (mNumOfDevices > MAX_DS1820_DEVICES_ON_BUS)
       mNumOfDevices  = MAX_DS1820_DEVICES_ON_BUS;
@@ -72,10 +69,10 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
    mMeasurementBlobSize = sizeof(tResult) + (sizeof(tDs1820Data) * mNumOfDevices);
    mCurrentMeasurementBlob = malloc(mMeasurementBlobSize);
 
-   getCurrentMeasurement()->Avg = mAvg;
+   getCurrentMeasurement()->Avg = Config.Avg;
    getCurrentMeasurement()->NumOfDevices = mNumOfDevices;
 
-   if (! mAvg)
+   if (!Config.Avg)
    {
       // set device IDs
       for (uint8_t i = 0; i < mNumOfDevices; i++)
@@ -99,7 +96,6 @@ uint8_t tDS1820Sensor::SetSpecificConfig(void *pBlob)
 #endif
       }
    }
-   mConfigSet = true;
    return STATUS_SUCCESS;
 }
 
@@ -123,7 +119,7 @@ void tDS1820Sensor::doTimeTick()
          {
             Success = false;
          }
-         else if (mAvg)
+         else if (Config.Avg)
          {
             getCurrentMeasurement()->Dev[0].Temperature = 0;
             uint8_t NumOfValidMeasurements = 0;
@@ -142,7 +138,7 @@ void tDS1820Sensor::doTimeTick()
             }
             getCurrentMeasurement()->Dev[0].Temperature /= NumOfValidMeasurements;
          }
-         else  // mAvg
+         else  // is !Config.Avg
          {
             Success = true;
             for (uint8_t i = 0; i < mNumOfDevices ; i++)
@@ -186,7 +182,7 @@ uint8_t tDS1820Sensor::compareAddr(uint8_t* pDeviceAddress1, uint8_t* pDeviceAdd
 
 uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
 {
-   if (! mConfigSet) return DS1820_INVALID_ID;
+   if (!isConfigured()) return DS1820_INVALID_ID;
 
    for (uint8_t i = 0; i < mNumOfDevices; i++)
    {
