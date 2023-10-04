@@ -11,10 +11,10 @@
 #include "tSensorHub.h"
 #include "tSensor.h"
 
-tSensorHub::tSensorDesc * tSensorHub::tSensorDesc::pFirst = NULL;
+tSensorDesc * tSensorDesc::pFirst = NULL;
 
 
-tSensorHub::tSensorDesc *tSensorHub::tSensorDesc::getByID(uint8_t SensorID)
+tSensorDesc *tSensorDesc::getByID(uint8_t SensorID)
 {
    tSensorDesc *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
@@ -29,7 +29,7 @@ tSensorHub::tSensorDesc *tSensorHub::tSensorDesc::getByID(uint8_t SensorID)
    return pSensorDesc;
 }
 
-tSensorHub::tSensorDesc *tSensorHub::tSensorDesc::getByName(const char * pSensorName)
+tSensorDesc *tSensorDesc::getByName(const char * pSensorName)
 {
    tSensorDesc *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
@@ -42,6 +42,35 @@ tSensorHub::tSensorDesc *tSensorHub::tSensorDesc::getByName(const char * pSensor
    }
 
    return pSensorDesc;
+}
+
+uint8_t tSensorDesc::formatJSON(Stream *pStream)
+{
+   uint8_t Result;
+   // note that the sensor may be located on a remote machine, use cached data
+   pStream->print(F("\""));
+   pStream->print(pName);
+   pStream->print(F("\":{"));
+   if (Status == STATUS_SUCCESS)
+   {
+      Result = TranslateBlobToJSON(sensorType, dataBlobSize, pDataCache, pStream);
+   }
+   else if (Status == STATUS_NO_DATA_RECIEVED)
+   {
+	   Result = STATUS_NO_DATA_RECIEVED;
+   }
+   else
+   {
+	   Result = STATUS_SENSOR_ERROR_REPORTED;
+	   pStream->print(F("\"SensorStatus\":"));
+	   pStream->print(Status);
+	   pStream->print(F(","));
+   }
+   pStream->print(F("\"Status\":"));
+   pStream->print(Result);
+   pStream->print(F(",\"ID\":"));
+   pStream->print(SensorID);
+   pStream->print(F("}"));
 }
 
 uint8_t tSensorHub::getSensorID(const char * pSensorName)
@@ -147,7 +176,7 @@ uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
       return STATUS_UNKNOWN_SENSOR_ID;
    }
 
-   return formatJSON(pSensorDesc,pStream);
+   return pSensorDesc->formatJSON(pStream);
 }
 
 uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
@@ -155,7 +184,7 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
    tSensorDesc *pSensorDesc = tSensorDesc::getFirst();
    while(NULL != pSensorDesc)
    {
-      formatJSON(pSensorDesc,pStream);
+      pSensorDesc->formatJSON(pStream);
       pSensorDesc = pSensorDesc->getNext();
       if (NULL!=pSensorDesc)
       {
@@ -165,34 +194,6 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
    }
 }
 
-uint8_t tSensorHub::formatJSON(tSensorDesc *pSensorDesc, Stream *pStream)
-{
-   uint8_t Result;
-   // note that the sensor may be located on a remote machine, use cached data
-   pStream->print(F("\""));
-   pStream->print(pSensorDesc->pName);
-   pStream->print(F("\":{"));
-   if (pSensorDesc->Status == STATUS_SUCCESS)
-   {
-      Result = TranslateBlobToJSON(pSensorDesc->sensorType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache, pStream);
-   }
-   else if (pSensorDesc->Status == STATUS_NO_DATA_RECIEVED)
-   {
-	   Result = STATUS_NO_DATA_RECIEVED;
-   }
-   else
-   {
-	   Result = STATUS_SENSOR_ERROR_REPORTED;
-	   pStream->print(F("\"SensorStatus\":"));
-	   pStream->print(pSensorDesc->Status);
-	   pStream->print(F(","));
-   }
-   pStream->print(F("\"Status\":"));
-   pStream->print(Result);
-   pStream->print(F(",\"ID\":"));
-   pStream->print(pSensorDesc->SensorID);
-   pStream->print(F("}"));
-}
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
 void tSensorHub::callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType)

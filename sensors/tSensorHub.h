@@ -12,6 +12,7 @@
 
 #include "tSensor.h"
 
+
 class tSensorHubEvent
 {
 public:
@@ -21,6 +22,46 @@ public:
 private:
    void Connect(tSensorHubEvent **pFirst) { pNext = *pFirst; *pFirst = this; }
    tSensorHubEvent *pNext; friend class tSensorHub;
+};
+
+class tSensorHub;
+class tSensorDesc
+{
+public:
+   tSensorDesc(uint8_t aSensorType, uint8_t aSensorID, char * apSensorName) :
+	   SensorID(aSensorID),
+	   sensorType(aSensorType),
+	   pName(apSensorName),
+	   pDataCache(NULL),
+	   pFirstEventHander(NULL),
+	   dataBlobSize(0),
+	   Status(STATUS_NO_DATA_RECIEVED)
+   {
+	   pNext = pFirst; pFirst = this;
+   }
+
+   uint8_t Status;
+   uint8_t SensorID;
+   uint8_t sensorType;
+   uint8_t dataBlobSize;
+   void *pDataCache;
+   char * pName;
+   tSensorHubEvent *pFirstEventHander;
+
+	/*
+	 * Format cached data as JSON
+	 */
+   uint8_t formatJSON(Stream *pStream);
+
+   static tSensorDesc *getFirst() { return pFirst; }
+   tSensorDesc *getNext() { return pNext; }
+
+   static tSensorDesc *getByID(uint8_t SensorID);
+   static tSensorDesc *getByName(const char * pSensorName);
+
+private:
+   tSensorDesc *pNext;
+   static tSensorDesc *pFirst;
 };
 
 
@@ -110,46 +151,6 @@ public:
    void onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob);
 
 private:
-
-	class tSensorDesc
-	{
-	public:
-	   tSensorDesc(uint8_t aSensorType, uint8_t aSensorID, char * apSensorName) :
-		   SensorID(aSensorID),
-		   sensorType(aSensorType),
-		   pName(apSensorName),
-		   pDataCache(NULL),
-		   pFirstEventHander(NULL),
-		   dataBlobSize(0),
-		   Status(STATUS_NO_DATA_RECIEVED)
-	   {
-		   pNext = pFirst; pFirst = this;
-	   }
-
-	   uint8_t Status;
-	   uint8_t SensorID;
-	   uint8_t sensorType;
-	   uint8_t dataBlobSize;
-	   void *pDataCache;
-	   char * pName;
-	   tSensorHubEvent *pFirstEventHander;
-
-	   static tSensorDesc *getFirst() { return pFirst; }
-	   tSensorDesc *getNext() { return pNext; }
-
-	   static tSensorDesc *getByID(uint8_t SensorID);
-	   static tSensorDesc *getByName(const char * pSensorName);
-	private:
-	   tSensorDesc *pNext;
-	   static tSensorDesc *pFirst;
-	};
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-	/*
-	 * Format JSON datra based on pSensor desc - called by getCachedSensorDataJson and getCachedSensorsDataJson
-	 */
-	uint8_t formatJSON(tSensorDesc *pSensorDesc, Stream *pStream);
-#endif // CONFIG_SENSORS_JSON_OUTPUT
 
 	void callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType);
 
