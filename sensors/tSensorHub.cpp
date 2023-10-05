@@ -12,6 +12,8 @@
 #include "tSensor.h"
 #include "tSensorDesc.h"
 
+static tSensorHub *tSensorHub::Instance = NULL;
+
 uint8_t tSensorHub::getSensorID(const char * pSensorName)
 {
    tSensorDesc *pSensorDesc = tSensorDesc::getByName(pSensorName);

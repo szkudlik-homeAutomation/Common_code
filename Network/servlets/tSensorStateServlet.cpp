@@ -16,7 +16,7 @@ bool tSensorStateServlet::ProcessAndResponse()
 {
    pOwner->SendFlashString(PSTR("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n{\"Sensors\":{\r\n"));
 
-   SensorHub.getCachedSensorsDataJson(&pOwner->mEthernetClient);
+   tSensorHub::Instance->getCachedSensorsDataJson(&pOwner->mEthernetClient);
 
    pOwner->SendFlashString(PSTR("}}\r\n"));
 

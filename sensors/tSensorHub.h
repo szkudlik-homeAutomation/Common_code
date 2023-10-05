@@ -33,7 +33,8 @@ private:
 class tSensorHub {
 public:
 
-	tSensorHub() {};
+	tSensorHub() { Instance = this; }
+	static tSensorHub *Instance;
 
 	uint8_t RegisterLocalSensor(uint8_t SensorID, char * pSensorName);
 	uint8_t RegisterRemoteSensor(uint8_t SensorID, char * pSensorName) {}
@@ -104,12 +105,14 @@ public:
     */
    uint8_t getCachedSensorsDataJson(Stream *pStream);
 
+protected:
    /**
     * Application callback for app specific sensors factory, called when sensor has not been found by SensorDescFactory
     */
    virtual tSensorDesc *appSpecificSenorDescFactory(uint8_t SensorType, uint8_t SensorID, char * pSensorName) {}
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
+public:
    /*
     * to be called on sensor event, either remote or local
     */
@@ -125,5 +128,4 @@ private:
 
 };
 
-extern tSensorHub SensorHub;
 #endif //CONFIG_SENSOR_HUB

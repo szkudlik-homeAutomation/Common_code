@@ -41,7 +41,7 @@ uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
 
    mSensorID = sensorID;
 #if CONFIG_CENTRAL_NODE
-   SensorHub.RegisterLocalSensor(mSensorID, pSensorName);
+   tSensorHub::Instance->RegisterLocalSensor(mSensorID, pSensorName);
 #endif //CONFIG_CENTRAL_NODE
 		   //TODO: send a message to central node in case of remote sensor
 
@@ -85,11 +85,11 @@ void tSensor::onMeasurementCompleted(bool Status)
 #if CONFIG_SENSOR_HUB
   if (Status)
   {
-	  SensorHub.onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
   else
   {
-	  SensorHub.onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
 #endif //CONFIG_SENSOR_HUB
   //TODO: remote sensors
