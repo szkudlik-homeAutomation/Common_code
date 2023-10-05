@@ -90,14 +90,14 @@
 
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tPt100AnalogSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+uint8_t tPt100AnalogSensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize != sizeof(tResult))
+   if (dataBlobSize != sizeof(tPt100AnalogSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tResult *pResult =(tResult *) pDataCache;
+   tPt100AnalogSensor::tResult *pResult =(tPt100AnalogSensor::tResult *) pDataCache;
    pStream->print(F("\"Temperature\":"));
    pStream->print(pResult->Temperature);
    pStream->print(F(","));

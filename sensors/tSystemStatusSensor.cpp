@@ -26,14 +26,14 @@ void tSystemStatusSensor::doTriggerMeasurement()
 }
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tSystemStatusSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+uint8_t tSystemStatusSensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize != sizeof(tResult))
+   if (dataBlobSize != sizeof(tSystemStatusSensor::tResult))
    {
 		 return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tResult *pResult =(tResult *) pDataCache;
+   tSystemStatusSensor::tResult *pResult =(tSystemStatusSensor::tResult *) pDataCache;
    pStream->print(F("\"Uptime\":"));
    pStream->print(pResult->Uptime);
    pStream->print(F(", \"FreeMem\":"));

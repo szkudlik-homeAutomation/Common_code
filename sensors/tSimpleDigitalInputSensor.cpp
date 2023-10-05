@@ -9,16 +9,15 @@
 #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
 
 #include "tSimpleDigitalInputSensor.h"
-
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tSimpleDigitalInputSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+uint8_t tSimpleDigitalInputSensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize != sizeof(tResult))
+   if (dataBlobSize != sizeof(tSimpleDigitalInputSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tResult *pResult =(tResult *) pDataCache;
+   tSimpleDigitalInputSensor::tResult *pResult =(tSimpleDigitalInputSensor::tResult *) pDataCache;
    pStream->print(F("\"State\":"));
    pStream->print(pResult->State,DEC);
    pStream->print(F(","));

@@ -10,68 +10,7 @@
 
 #include "tSensorHub.h"
 #include "tSensor.h"
-
-tSensorDesc * tSensorDesc::pFirst = NULL;
-
-
-tSensorDesc *tSensorDesc::getByID(uint8_t SensorID)
-{
-   tSensorDesc *pSensorDesc = pFirst;
-   while (pSensorDesc != NULL)
-   {
-      if (pSensorDesc->SensorID == SensorID)
-      {
-         return pSensorDesc;
-      }
-      pSensorDesc=pSensorDesc->pNext;
-   }
-
-   return pSensorDesc;
-}
-
-tSensorDesc *tSensorDesc::getByName(const char * pSensorName)
-{
-   tSensorDesc *pSensorDesc = pFirst;
-   while (pSensorDesc != NULL)
-   {
-      if (strcmp(pSensorDesc->pName, pSensorName) == 0)
-      {
-         return pSensorDesc;
-      }
-      pSensorDesc=pSensorDesc->pNext;
-   }
-
-   return pSensorDesc;
-}
-
-uint8_t tSensorDesc::formatJSON(Stream *pStream)
-{
-   uint8_t Result;
-   // note that the sensor may be located on a remote machine, use cached data
-   pStream->print(F("\""));
-   pStream->print(pName);
-   pStream->print(F("\":{"));
-   if (Status == STATUS_SUCCESS)
-   {
-      Result = TranslateBlobToJSON(sensorType, dataBlobSize, pDataCache, pStream);
-   }
-   else if (Status == STATUS_NO_DATA_RECIEVED)
-   {
-	   Result = STATUS_NO_DATA_RECIEVED;
-   }
-   else
-   {
-	   Result = STATUS_SENSOR_ERROR_REPORTED;
-	   pStream->print(F("\"SensorStatus\":"));
-	   pStream->print(Status);
-	   pStream->print(F(","));
-   }
-   pStream->print(F("\"Status\":"));
-   pStream->print(Result);
-   pStream->print(F(",\"ID\":"));
-   pStream->print(SensorID);
-   pStream->print(F("}"));
-}
+#include "tSensorDesc.h"
 
 uint8_t tSensorHub::getSensorID(const char * pSensorName)
 {
@@ -123,11 +62,10 @@ uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 	   }
 
 	   // add sensor to repository
-	   tSensorDesc *pSensorDesc = new tSensorDesc(
+	   tSensorDesc *pSensorDesc = sensorDescFactory(
 			   pSensor->getSensorType(),
 			   SensorID,
-			   pSensorName
-			   );
+			   pSensorName);
 
 	   // send response
 	   DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
@@ -246,4 +184,82 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uin
    // callbacks
    callAllCallbacks(pSensorDesc,EventType);
 }
+
+#if CONFIG_DS1820_SENSOR
+#include "tDS1820Sensor.h"
+#endif
+
+#if CONFIG_IMPULSE_SENSOR
+#include "tImpulseSensor.h"
+#endif
+
+#if CONFIG_PT100_ANALOG_SENSOR
+#include "tPt100AnalogSensor.h"
+#endif
+
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+#include "tSimpleDigitalInputSensor.h"
+#endif
+
+#if CONFIG_OUTPUT_STATE_SENSOR
+#include "tOutputStateSensor.h"
+#endif
+
+#if CONFIG_SYSTEM_STATUS_SENSOR
+#include "tSystemStatusSensor.h"
+#endif
+
+
+tSensorDesc *tSensorHub::sensorDescFactory(uint8_t SensorType, uint8_t SensorID, char * pSensorName)
+{
+    tSensorDesc *newSensorDesc = NULL;
+    switch (SensorType)
+    {
+    #if CONFIG_DS1820_SENSOR
+          case SENSOR_TYPE_DS1820:
+              newSensorDesc = new tDs1820SensorDesc(SensorID, pSensorName);
+              break;
+    #endif // CONFIG_DS1820_SENSOR
+
+    #if CONFIG_IMPULSE_SENSOR
+          case SENSOR_TYPE_IMPULSE:
+             newSensorDesc = new tImpulseSensorDesc(SensorID, pSensorName);
+             break;
+    #endif //CONFIG_IMPULSE_SENSOR
+
+    #if CONFIG_PT100_ANALOG_SENSOR
+             case SENSOR_TYPE_PT100_ANALOG:
+                 newSensorDesc = new tPt100AnalogSensorDesc(SensorID, pSensorName);
+                 break;
+    #endif
+
+    #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+          case SENSOR_TYPE_DIGITAL_INPUT:
+             newSensorDesc = new tSimpleDigitalInputSensorDesc(SensorID, pSensorName);
+             break;
+    #endif
+
+    #if CONFIG_OUTPUT_STATE_SENSOR
+         case SENSOR_TYPE_OUTPUT_STATES:
+             newSensorDesc = new tOutputStateSensorDesc(SensorID, pSensorName);
+             break;
+    #endif
+
+    #if CONFIG_SYSTEM_STATUS_SENSOR
+          case SENSOR_TYPE_SYSTEM_STATUS:
+              newSensorDesc = new tSystemStatusSensorDesc(SensorID, pSensorName);
+              break;
+    #endif //CONFIG_SYSTEM_STATUS_SENSOR
+
+          default:
+              newSensorDesc = appSpecificSenorDescFactory(SensorType, SensorID, pSensorName);
+    }
+
+    if (NULL == newSensorDesc)
+        newSensorDesc = new tSensorDesc(SensorType, SensorID, pSensorName); /* generic, no JSON output */
+
+    return newSensorDesc;
+}
+
+
 #endif //CONFIG_SENSOR_HUB

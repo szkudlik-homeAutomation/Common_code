@@ -12,8 +12,22 @@
 #if CONFIG_DS1820_SENSOR
 
 #include "tSensor.h"
+#include "tSensorDesc.h"
 
 class DallasTemperature;
+
+class tDs1820SensorDesc : public tSensorDesc
+{
+public:
+	tDs1820SensorDesc(uint8_t aSensorID, char * apSensorName) :
+		tSensorDesc(SENSOR_TYPE_DS1820, aSensorID, apSensorName) {}
+
+protected:
+#if CONFIG_SENSORS_JSON_OUTPUT
+   /* sensor specific JSON formatter */
+    virtual uint8_t doFormatJSON(Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
+};
 
 class tDS1820Sensor: public tSensor {
 public:
@@ -48,10 +62,6 @@ public:
    static const uint8_t API_VERSION = 1;
 
    tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820, API_VERSION) {}
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
 
    static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
 

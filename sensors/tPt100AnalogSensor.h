@@ -11,6 +11,20 @@
 #include "../../../global.h"
 #if CONFIG_PT100_ANALOG_SENSOR
 #include "tSensor.h"
+#include "tSensorDesc.h"
+
+class tPt100AnalogSensorDesc : public tSensorDesc
+{
+public:
+    tPt100AnalogSensorDesc(uint8_t aSensorID, char * apSensorName) :
+        tSensorDesc(SENSOR_TYPE_PT100_ANALOG, aSensorID, apSensorName) {}
+
+protected:
+#if CONFIG_SENSORS_JSON_OUTPUT
+   /* sensor specific JSON formatter */
+    virtual uint8_t doFormatJSON(Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
+};
 
 class tPt100AnalogSensor : public tSensor {
 public:
@@ -35,10 +49,6 @@ public:
 	   mMeasurementBlobSize = sizeof(mResult);
 	   TemperatureAvg = 0;
    }
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-#endif CONFIG_SENSORS_JSON_OUTPUT
 
 protected:
    virtual void doTimeTick();

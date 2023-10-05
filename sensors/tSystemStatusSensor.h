@@ -11,6 +11,20 @@
 #if CONFIG_SYSTEM_STATUS_SENSOR
 
 #include "tSensor.h"
+#include "tSensorDesc.h"
+
+class tSystemStatusSensorDesc : public tSensorDesc
+{
+public:
+    tSystemStatusSensorDesc(uint8_t aSensorID, char * apSensorName) :
+        tSensorDesc(SENSOR_TYPE_SYSTEM_STATUS, aSensorID, apSensorName) {}
+
+protected:
+#if CONFIG_SENSORS_JSON_OUTPUT
+   /* sensor specific JSON formatter */
+    virtual uint8_t doFormatJSON(Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
+};
 
 class tSystemStatusSensor: public tSensor {
 public:
@@ -23,10 +37,6 @@ public:
    } tResult;
 
    tSystemStatusSensor();
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 protected:
    virtual void doTriggerMeasurement();

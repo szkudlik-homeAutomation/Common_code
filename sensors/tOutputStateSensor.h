@@ -10,6 +10,20 @@
 #include "../../../global.h"
 #if CONFIG_OUTPUT_STATE_SENSOR
 #include "tSensor.h"
+#include "tSensorDesc.h"
+
+class tOutputStateSensorDesc : public tSensorDesc
+{
+public:
+    tOutputStateSensorDesc(uint8_t aSensorID, char * apSensorName) :
+        tSensorDesc(SENSOR_TYPE_OUTPUT_STATES, aSensorID, apSensorName) {}
+
+protected:
+#if CONFIG_SENSORS_JSON_OUTPUT
+   /* sensor specific JSON formatter */
+    virtual uint8_t doFormatJSON(Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
+};
 
 class tOutputStateSensor : public tSensor {
 public:
@@ -22,10 +36,6 @@ public:
       uint8_t State[NUM_OF_OUTPUTS];
       uint16_t Timer[NUM_OF_OUTPUTS];
    } tResult;
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 protected:
    virtual void doTriggerMeasurement();

@@ -14,15 +14,16 @@
 #include "../../lib/ds1820/DallasTemperature.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+uint8_t tDs1820SensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize < sizeof(tResult))
+   if (dataBlobSize < sizeof(tDS1820Sensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tResult *pResult =(tResult *) pDataCache;
-   uint8_t MeasurementBlobSize = sizeof(tResult) + (sizeof(tDs1820Data) * pResult->NumOfDevices);
+   tDS1820Sensor::tResult *pResult =(tDS1820Sensor::tResult *) pDataCache;
+   uint8_t MeasurementBlobSize = sizeof(tDS1820Sensor::tResult) +
+		   (sizeof(tDS1820Sensor::tDs1820Data) * pResult->NumOfDevices);
    if (dataBlobSize != MeasurementBlobSize)
    {
          return STATUS_JSON_ENCODE_ERROR;
@@ -44,7 +45,7 @@ uint8_t tDS1820Sensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCach
       for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
       {
          pStream->print(F("\"Temperature_"));
-         printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
+         tDS1820Sensor::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
          pStream->print(F("\":"));
          pStream->print((float)pResult->Dev[i].Temperature / 10);
          pStream->print(F(","));

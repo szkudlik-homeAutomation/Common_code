@@ -10,7 +10,6 @@
 #if CONFIG_IMPULSE_SENSOR
 #include "tImpulseSensor.h"
 
-
 tImpulseSensor::tImpulseSensor() : tSensor(SENSOR_TYPE_IMPULSE, API_VERSION)
 {
 	mResult.Count = 0;
@@ -40,14 +39,14 @@ void tImpulseSensor::CleanSum()
 }
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tImpulseSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+uint8_t tImpulseSensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize != sizeof(tResult))
+   if (dataBlobSize != sizeof(tImpulseSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tResult *pResult =(tResult *) pDataCache;
+   tImpulseSensor::tResult *pResult =(tImpulseSensor::tResult *) pDataCache;
    pStream->print(F("\"NumOfImpulses\":"));
    pStream->print(pResult->Count);
    pStream->print(F(","));

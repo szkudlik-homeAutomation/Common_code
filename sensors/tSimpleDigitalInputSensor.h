@@ -11,6 +11,20 @@
 #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
 
 #include "tSensor.h"
+#include "tSensorDesc.h"
+
+class tSimpleDigitalInputSensorDesc : public tSensorDesc
+{
+public:
+    tSimpleDigitalInputSensorDesc(uint8_t aSensorID, char * apSensorName) :
+        tSensorDesc(SENSOR_TYPE_DIGITAL_INPUT, aSensorID, apSensorName) {}
+
+protected:
+#if CONFIG_SENSORS_JSON_OUTPUT
+   /* sensor specific JSON formatter */
+    virtual uint8_t doFormatJSON(Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
+};
 
 class tSimpleDigitalInputSensor: public tSensor {
 public:
@@ -33,9 +47,6 @@ public:
 
    virtual void doTriggerMeasurement();
 
-#if CONFIG_SENSORS_JSON_OUTPUT
-   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-#endif CONFIG_SENSORS_JSON_OUTPUT
 protected:
    virtual uint8_t doSetConfig();
 private:
