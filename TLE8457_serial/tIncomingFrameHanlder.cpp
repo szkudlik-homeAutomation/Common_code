@@ -26,6 +26,12 @@ uint8_t tIncomingFrameHanlder::handleCommonMessages(uint8_t type, uint16_t data,
              HandleMsgVersionResponse(SenderDevId,(tMessageTypeFwVesionResponse*)(pFrame->Data));
            break;
 
+       case MESSAGE_TYPE_FORCE_RESET:
+             DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_FORCE_RESET");
+             cli();
+             while(1); // let watchdog reboot the device
+           break;
+
        default:
            status = STATUS_UNKNOWN_MESSAGE;
     }

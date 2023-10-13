@@ -27,3 +27,10 @@ bool tOutgoingFrames::SendMsgVersionResponse(uint8_t RecieverID, uint8_t Major, 
 
   CommSender.Enqueue(RecieverID,MESSAGE_TYPE_FW_VERSION_RESPONSE,sizeof(Msg),&Msg);
 };
+
+bool tOutgoingFrames::SendMsgReset(uint8_t RecieverID)
+{
+  DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_FORCE_RESET");
+  CommSender.Enqueue(RecieverID,MESSAGE_TYPE_FORCE_RESET,0,NULL);
+}
+

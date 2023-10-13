@@ -15,8 +15,11 @@ class tOutgoingFrames {
 public:
     tOutgoingFrames() {}
 
+    // frames that always should be supported
     static bool SendMsgVersionRequest(uint8_t RecieverID);
     static bool SendMsgVersionResponse(uint8_t RecieverID, uint8_t Major, uint8_t Minor, uint8_t Patch);
+    static bool SendMsgReset(uint8_t RecieverID);
+
 
 };
 
