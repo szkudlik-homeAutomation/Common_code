@@ -21,6 +21,10 @@ public:
 
     virtual void onMessage(uint8_t type, uint16_t data, void *pData) { handleCommonMessages(type, data, pData); }
 
+private:
+    void HandleMsgVersionRequest(uint8_t SenderID);
+    void HandleMsgVersionResponse(uint8_t SenderID, tMessageTypeFwVesionResponse *Message);
+
 protected:
     uint8_t handleCommonMessages(uint8_t type, uint16_t data, void *pData);
 };

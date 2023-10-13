@@ -13,7 +13,11 @@
 
 class tOutgoingFrames {
 public:
-    tOutgoingFrames();
+    tOutgoingFrames() {}
+
+    static bool SendMsgVersionRequest(uint8_t RecieverID);
+    static bool SendMsgVersionResponse(uint8_t RecieverID, uint8_t Major, uint8_t Minor, uint8_t Patch);
+
 };
 
 #endif /* CONFIG_TLE8457_COMM_LIB */
