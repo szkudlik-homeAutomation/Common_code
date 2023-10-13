@@ -1,13 +1,13 @@
 /*
- * tOutgoingMessages.cpp
+ * tOutgoingFrames.cpp
  *
  *  Created on: Oct 10, 2023
  *      Author: mszkudli
  */
 
-#include "tOutgoingMessages.h"
+#include "tOutgoingFrames.h"
 
-tOutgoingMessages::tOutgoingMessages() {
+tOutgoingFrames::tOutgoingFrames() {
     // TODO Auto-generated constructor stub
 
 }

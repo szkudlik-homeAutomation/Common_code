@@ -1,5 +1,5 @@
 /*
- * tOutgoingMessages.h
+ * tOutgoingFrames.h
  *
  *  Created on: Oct 10, 2023
  *      Author: mszkudli
@@ -11,9 +11,9 @@
 
 #if CONFIG_TLE8457_COMM_LIB
 
-class tOutgoingMessages {
+class tOutgoingFrames {
 public:
-    tOutgoingMessages();
+    tOutgoingFrames();
 };
 
 #endif /* CONFIG_TLE8457_COMM_LIB */
