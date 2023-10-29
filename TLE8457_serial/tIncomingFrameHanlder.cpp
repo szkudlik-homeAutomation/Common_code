@@ -5,6 +5,9 @@
  *      Author: mszkudli
  */
 
+#include "../../../global.h"
+#if CONFIG_TLE8457_COMM_LIB
+
 #include "tIncomingFrameHanlder.h"
 #include "tOutgoingFrames.h"
 #if CONFIG_OUTPUT_PROCESS
@@ -137,3 +140,4 @@ void tIncomingFrameHanlder::HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSet
 }
 
 #endif // CONFIG_OUTPUT_PROCESS
+#endif // CONFIG_TLE8457_COMM_LIB

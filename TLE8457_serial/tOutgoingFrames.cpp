@@ -5,6 +5,9 @@
  *      Author: mszkudli
  */
 
+#include "../../../global.h"
+#if CONFIG_TLE8457_COMM_LIB
+
 #include "tOutgoingFrames.h"
 #include "TLE8457_serial_lib.h"
 
@@ -96,3 +99,5 @@ bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8
 
 
 #endif // CONFIG_OUTPUT_PROCESS
+
+#endif // CONFIG_TLE8457_COMM_LIB
