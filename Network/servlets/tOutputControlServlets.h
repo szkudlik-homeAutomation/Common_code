@@ -20,28 +20,21 @@
 class tOutputSetServlet :  public tHttpServlet
 {
 public:
-  tOutputSetServlet(tOutputProcess *aOutputProcess) :
-	  pOutputProcess(aOutputProcess),
+  tOutputSetServlet() :
 	  tHttpServlet() {}
   virtual ~tOutputSetServlet() {}
 
   virtual bool ProcessAndResponse();
-private:
-  tOutputProcess *pOutputProcess;
 };
 
 class tOutputStateServlet : public tHttpServlet
 {
   public:
-   tOutputStateServlet(tOutputProcess *aOutputProcess)  :
-  	  pOutputProcess(aOutputProcess),
-  	  tHttpServlet() {}
+   tOutputStateServlet(): tHttpServlet() {}
 
    virtual ~tOutputStateServlet() {}
 
    virtual bool ProcessAndResponse();
-  private:
-    tOutputProcess *pOutputProcess;
 };
 
 #endif CONFIG_OUTPUT_CONTROL_SERVLET

@@ -36,7 +36,7 @@ bool tOutputSetServlet::ProcessAndResponse()
    DEBUG_PRINT_3(" Timer=");
    DEBUG_3(println(Timer,DEC));
 
-   pOutputProcess->SetOutput(Output,State,Timer,tOutputProcess::ForceTimer);
+   tOutputProcess::get()->SetOutput(Output,State,Timer,tOutputProcess::ForceTimer);
    SendResponse200();
 
 return false;
@@ -60,8 +60,8 @@ bool tOutputStateServlet::ProcessAndResponse()
      return false;
    }
 
-   State = pOutputProcess->GetOutputState(Output);
-   TimerValue = pOutputProcess->GetOutputTimer(Output);
+   State = tOutputProcess::get()->GetOutputState(Output);
+   TimerValue = tOutputProcess::get()->GetOutputTimer(Output);
 
 
    DEBUG_PRINT_3("==>HTTP output state get, Out=");
