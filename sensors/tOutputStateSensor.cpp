@@ -22,14 +22,12 @@ tOutputStateSensor::tOutputStateSensor()  : tSensor(SENSOR_TYPE_OUTPUT_STATES)
    mConfigSet = true;
 }
 
-extern tOutputProcess OutputProcess;
-
 void tOutputStateSensor::doTriggerMeasurement()
 {
    for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
    {
-      mResult.State[i] = OutputProcess.GetOutputState(i);
-      mResult.Timer [i] = OutputProcess.GetOutputTimer(i);
+      mResult.State[i] = tOutputProcess::get()->GetOutputState(i);
+      mResult.Timer [i] = tOutputProcess::get()->GetOutputTimer(i);
    }
 
    onMeasurementCompleted(true);

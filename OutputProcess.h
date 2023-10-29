@@ -2,6 +2,8 @@
 
 
 #include "../../global.h"
+#if CONFIG_OUTPUT_PROCESS
+
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
 /*
@@ -57,9 +59,13 @@ private:
 
 class tOutputProcess : public  Process
 {
-  public:
+private:
+	static tOutputProcess *instance;
+public:
+	static tOutputProcess *get() { return instance; }
+
   tOutputProcess(Scheduler &manager) :
-    Process(manager,LOW_PRIORITY,OUTPUT_SERVICE_TIME) {}
+    Process(manager,LOW_PRIORITY,OUTPUT_SERVICE_TIME) {instance = this;}
 
   static const bool TimerLongerOnly = true;
   static const bool ForceTimer = false;
@@ -106,3 +112,5 @@ class tOutputProcess : public  Process
 protected:
   tOutput Output[NUM_OF_OUTPUTS];
 };
+
+#endif // CONFIG_OUTPUT_PROCESS

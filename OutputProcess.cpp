@@ -1,5 +1,9 @@
 #include "../../global.h"
+#if CONFIG_OUTPUT_PROCESS
+
 #include "OutputProcess.h"
+
+static tOutputProcess *tOutputProcess::instance;
 
 void tOutputProcess::service()
 {
@@ -34,7 +38,6 @@ uint8_t  tOutputProcess::GetOutputTimersStateMap()
   return Map;
 }
 
-
 void tOutput::Tick()
 {
   if (mTimer)
@@ -66,3 +69,4 @@ void tOutput::SetState(uint8_t State)
   }
 
 }
+#endif // CONFIG_OUTPUT_PROCESS
