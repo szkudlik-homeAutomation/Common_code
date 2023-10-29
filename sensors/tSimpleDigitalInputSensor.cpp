@@ -9,16 +9,15 @@
 #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
 
 #include "tSimpleDigitalInputSensor.h"
-
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tSimpleDigitalInputSensor::TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
+uint8_t tSimpleDigitalInputSensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize != sizeof(tResult))
+   if (dataBlobSize != sizeof(tSimpleDigitalInputSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tResult *pResult =(tResult *) pDataCache;
+   tSimpleDigitalInputSensor::tResult *pResult =(tSimpleDigitalInputSensor::tResult *) pDataCache;
    pStream->print(F("\"State\":"));
    pStream->print(pResult->State,DEC);
    pStream->print(F(","));
@@ -28,20 +27,18 @@ uint8_t tSimpleDigitalInputSensor::TranslateBlobToJSON(uint8_t dataBlobSize, voi
 
 void tSimpleDigitalInputSensor::doTriggerMeasurement()
 {
-   mResult.State = (digitalRead(mConfig.Pin) == mConfig.ActiveState);
+   mResult.State = (digitalRead(Config.Pin) == Config.ActiveState);
 
    onMeasurementCompleted(true);
 }
 
-uint8_t tSimpleDigitalInputSensor::SetSpecificConfig(void *pBlob)
+uint8_t tSimpleDigitalInputSensor::doSetConfig()
 {
-   mConfig = *(tConfig *)pBlob;
-   pinMode(mConfig.Pin, INPUT_PULLUP);
+   pinMode(Config.Pin, INPUT_PULLUP);
 
    mResult.State = 0;
    mCurrentMeasurementBlob = (void*) &mResult;
    mMeasurementBlobSize = sizeof(mResult);
-   mConfigSet = true;
 
    return STATUS_SUCCESS;
 }

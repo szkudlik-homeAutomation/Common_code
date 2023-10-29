@@ -12,6 +12,8 @@
 
 #include "tSensor.h"
 
+class tSensorDesc;
+
 class tSensorHubEvent
 {
 public:
@@ -23,7 +25,6 @@ private:
    tSensorHubEvent *pNext; friend class tSensorHub;
 };
 
-
 /**
  * Sensor hub is an entity working on a central node, aggregating all sensor that may be on remote nodes
  *
@@ -32,7 +33,8 @@ private:
 class tSensorHub {
 public:
 
-	tSensorHub() {};
+	tSensorHub() { Instance = this; }
+	static tSensorHub *Instance;
 
 	uint8_t RegisterLocalSensor(uint8_t SensorID, char * pSensorName);
 	uint8_t RegisterRemoteSensor(uint8_t SensorID, char * pSensorName) {}
@@ -102,58 +104,28 @@ public:
     * get data from a sensor stored locally, formatted in JSON, and stream them to provided (tcp)stream
     */
    uint8_t getCachedSensorsDataJson(Stream *pStream);
+
+protected:
+   /**
+    * Application callback for app specific sensors factory, called when sensor has not been found by SensorDescFactory
+    */
+   virtual tSensorDesc *appSpecificSenorDescFactory(uint8_t SensorType, uint8_t SensorID, char * pSensorName) {}
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
+public:
    /*
     * to be called on sensor event, either remote or local
     */
    void onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob);
 
 private:
+   /*
+    * create a sensorDesc object based on sensor type
+    */
+   tSensorDesc *sensorDescFactory(uint8_t SensorType, uint8_t SensorID, char * pSensorName);
 
-	class tSensorDesc
-	{
-	public:
-	   tSensorDesc(uint8_t aSensorType, uint8_t aSensorID, char * apSensorName) :
-		   SensorID(aSensorID),
-		   sensorType(aSensorType),
-		   pName(apSensorName),
-		   pDataCache(NULL),
-		   pFirstEventHander(NULL),
-		   dataBlobSize(0),
-		   Status(STATUS_NO_DATA_RECIEVED)
-	   {
-		   pNext = pFirst; pFirst = this;
-	   }
-
-	   uint8_t Status;
-	   uint8_t SensorID;
-	   uint8_t sensorType;
-	   uint8_t dataBlobSize;
-	   void *pDataCache;
-	   char * pName;
-	   tSensorHubEvent *pFirstEventHander;
-
-	   static tSensorDesc *getFirst() { return pFirst; }
-	   tSensorDesc *getNext() { return pNext; }
-
-	   static tSensorDesc *getByID(uint8_t SensorID);
-	   static tSensorDesc *getByName(const char * pSensorName);
-	private:
-	   tSensorDesc *pNext;
-	   static tSensorDesc *pFirst;
-	};
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-	/*
-	 * Format JSON datra based on pSensor desc - called by getCachedSensorDataJson and getCachedSensorsDataJson
-	 */
-	uint8_t formatJSON(tSensorDesc *pSensorDesc, Stream *pStream);
-#endif // CONFIG_SENSORS_JSON_OUTPUT
-
-	void callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType);
+   void callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType);
 
 };
 
-extern tSensorHub SensorHub;
 #endif //CONFIG_SENSOR_HUB

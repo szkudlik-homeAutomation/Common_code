@@ -11,34 +11,51 @@
 #include "../../../global.h"
 #if CONFIG_PT100_ANALOG_SENSOR
 #include "tSensor.h"
+#include "tSensorDesc.h"
+
+class tPt100AnalogSensorDesc : public tSensorDesc
+{
+public:
+    tPt100AnalogSensorDesc(uint8_t aSensorID, char * apSensorName) :
+        tSensorDesc(SENSOR_TYPE_PT100_ANALOG, aSensorID, apSensorName) {}
+
+protected:
+#if CONFIG_SENSORS_JSON_OUTPUT
+   /* sensor specific JSON formatter */
+    virtual uint8_t doFormatJSON(Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
+};
 
 class tPt100AnalogSensor : public tSensor {
 public:
+   static const uint8_t API_VERSION = 1;
+
    typedef struct
    {
       uint8_t Pin;
       int8_t Correction;   // resistance of sensor cable
    } tConfig;
 
+   tConfig Config;
+
    typedef struct
    {
       int Temperature;
    } tResult;
 
-   tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG) {}
-
-   virtual uint8_t SetSpecificConfig(void *pBlob);
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-#endif CONFIG_SENSORS_JSON_OUTPUT
+   tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG, API_VERSION)
+   {
+	   mCurrentMeasurementBlob = (void*) &mResult;
+	   mMeasurementBlobSize = sizeof(mResult);
+	   TemperatureAvg = 0;
+   }
 
 protected:
    virtual void doTimeTick();
    virtual void doTriggerMeasurement();
+
 private:
    tResult mResult;
-   tConfig mConfig;
    float TemperatureAvg;
 };
 #endif // CONFIG_PT100_ANALOG_SENSOR

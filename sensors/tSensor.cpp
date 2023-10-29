@@ -11,34 +11,24 @@
 
 #include "tSensor.h"
 
-#if CONFIG_DS1820_SENSOR
-#include "tDS1820Sensor.h"
-#endif
-
-#if CONFIG_IMPULSE_SENSOR
-#include "tImpulseSensor.h"
-#endif
-
-#if CONFIG_PT100_ANALOG_SENSOR
-#include "tPt100AnalogSensor.h"
-#endif
-
-#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
-#include "tSimpleDigitalInputSensor.h"
-#endif
-
-#if CONFIG_OUTPUT_STATE_SENSOR
-#include "tOutputStateSensor.h"
-#endif
-
-#if CONFIG_SYSTEM_STATUS_SENSOR
-#include "tSystemStatusSensor.h"
-#endif
-
 #include "tSensorHub.h"
 
 tSensor* tSensor::pFirst = NULL;
 
+uint8_t tSensor::setConfig(uint16_t measurementPeriod)
+{
+	if (mState != SENSOR_CREATED)
+	{
+		return STATUS_CONFIG_SET_ERROR;
+	}
+    mMeasurementPeriod = measurementPeriod;
+    mCurrMeasurementPeriod = measurementPeriod;
+    uint8_t status = doSetConfig();
+    if (STATUS_SUCCESS == status)
+    {
+    	mState = SENSOR_PAUSED;
+    }
+}
 
 uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
 {
@@ -51,21 +41,22 @@ uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
 
    mSensorID = sensorID;
 #if CONFIG_CENTRAL_NODE
-   SensorHub.RegisterLocalSensor(mSensorID, pSensorName);
+   tSensorHub::Instance->RegisterLocalSensor(mSensorID, pSensorName);
 #endif //CONFIG_CENTRAL_NODE
 		   //TODO: send a message to central node in case of remote sensor
 
    return STATUS_SUCCESS;
 }
 
-tSensor::tSensor(uint8_t SensorType) :
+tSensor::tSensor(uint8_t SensorType, uint8_t ApiVersion) :
       mCurrentMeasurementBlob(NULL),
       mMeasurementBlobSize(0),
       mSensorType(SensorType),
-      mConfigSet(false),
+      mState(SENSOR_CREATED),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mSensorID(0xFF)
+      mSensorID(0xFF),
+	  mApiVersion(ApiVersion)
 {
    pNext = pFirst;
    pFirst = this;
@@ -94,74 +85,15 @@ void tSensor::onMeasurementCompleted(bool Status)
 #if CONFIG_SENSOR_HUB
   if (Status)
   {
-	  SensorHub.onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
   else
   {
-	  SensorHub.onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
 #endif //CONFIG_SENSOR_HUB
   //TODO: remote sensors
 }
-
-// static procedures
-// executed on cetral node, not on nodes where sensors are actually created
-// can't use virtual methods - all static
-#if CONFIG_SENSORS_JSON_OUTPUT
-
-__attribute__((weak)) uint8_t appTranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
-{
-	return STATUS_UNKNOWN_SENSOR_TYPE;
-}
-
-uint8_t TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream)
-{
-   uint8_t Result = STATUS_UNKNOWN_SENSOR_TYPE;
-   switch (SensorType)
-   {
-#if CONFIG_DS1820_SENSOR
-      case SENSOR_TYPE_DS1820:
-         Result = tDS1820Sensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-         break;
-#endif // CONFIG_DS1820_SENSOR
-
-#if CONFIG_IMPULSE_SENSOR
-      case SENSOR_TYPE_IMPULSE:
-         Result = tImpulseSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-         break;
-#endif //CONFIG_IMPULSE_SENSOR
-
-#if CONFIG_PT100_ANALOG_SENSOR
-         case SENSOR_TYPE_PT100_ANALOG:
-         Result = tPt100AnalogSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-         break;
-#endif
-
-#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
-      case SENSOR_TYPE_DIGITAL_INPUT:
-         Result = tSimpleDigitalInputSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-         break;
-#endif
-
-#if CONFIG_OUTPUT_STATE_SENSOR
-     case SENSOR_TYPE_OUTPUT_STATES:
-         Result = tOutputStateSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-         break;
-#endif
-
-#if CONFIG_SYSTEM_STATUS_SENSOR
-      case SENSOR_TYPE_SYSTEM_STATUS:
-          Result = tSystemStatusSensor::TranslateBlobToJSON(dataBlobSize,pDataCache,pStream);
-          break;
-#endif //CONFIG_SYSTEM_STATUS_SENSOR
-
-      default:
-    	  Result = appTranslateBlobToJSON(SensorType,dataBlobSize,pDataCache,pStream);
-          break;
-   }
-   return Result;
-}
-#endif // CONFIG_SENSORS_JSON_OUTPUT
 
 void tSensor::Run()
 {
@@ -197,4 +129,5 @@ void tSensorProcess::service()
 }
 
 void tSensorProcess::setup() {}
+
 #endif //CONFIG_SENSORS

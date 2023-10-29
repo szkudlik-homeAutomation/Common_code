@@ -12,8 +12,22 @@
 #if CONFIG_DS1820_SENSOR
 
 #include "tSensor.h"
+#include "tSensorDesc.h"
 
 class DallasTemperature;
+
+class tDs1820SensorDesc : public tSensorDesc
+{
+public:
+	tDs1820SensorDesc(uint8_t aSensorID, char * apSensorName) :
+		tSensorDesc(SENSOR_TYPE_DS1820, aSensorID, apSensorName) {}
+
+protected:
+#if CONFIG_SENSORS_JSON_OUTPUT
+   /* sensor specific JSON formatter */
+    virtual uint8_t doFormatJSON(Stream *pStream);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
+};
 
 class tDS1820Sensor: public tSensor {
 public:
@@ -42,29 +56,27 @@ public:
                      // or NumOfDevices if Avg = 0
    } tResult;
 
-   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820) {}
+   /* the config */
+   tConfig Config;
 
-   virtual uint8_t SetSpecificConfig(void *pBlob);
+   static const uint8_t API_VERSION = 1;
 
-#if CONFIG_SENSORS_JSON_OUTPUT
-   static uint8_t TranslateBlobToJSON(uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
+   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820, API_VERSION) {}
 
    static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
 
+
    tResult *getCurrentMeasurement() { return (tResult *)mCurrentMeasurementBlob;}
-
    uint8_t compareAddr(uint8_t* pDeviceAddress1, uint8_t* pDeviceAddress2);
-
    uint8_t findDevID(uint8_t* pDeviceAddress);
 
 protected:
    virtual void doTriggerMeasurement();
    virtual void doTimeTick();
+   virtual uint8_t doSetConfig();
 
 private:
    static const uint8_t NUM_TICKS_TO_MEASURE_COMPETE = (750 / SENSOR_PROCESS_SERVICE_TIME)+1;
-   uint8_t mAvg;
    uint8_t mNumOfDevices;
    uint8_t mTicksToMeasurementCompete;
    DallasTemperature *pDs1820;
