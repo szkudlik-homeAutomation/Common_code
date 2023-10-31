@@ -27,6 +27,7 @@ typedef struct
   uint8_t Minor;
   uint8_t Patch;
 } tMessageTypeFwVesionResponse;
+C_ASSERT(sizeof(tMessageTypeFwVesionResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /**
  * force the note to reset. May be sent as a broadcast
@@ -51,6 +52,7 @@ typedef struct
   uint8_t  PowerState;      // state of 8 outputs, 1 means it is on
   uint8_t  TimerState;      // state of 8 timers, 1 means the output is on but there's timer pending, no timer value here
 } tMessageTypeOverviewStateResponse;
+C_ASSERT(sizeof(tMessageTypeOverviewStateResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 
 /**
@@ -76,6 +78,7 @@ typedef struct
   uint16_t TimerValue;      // state of a timer. 0 means there's no timer pending
   uint16_t DefaultTimer;    // a default timer for the output.
 } tMessageTypeOutputStateResponse;
+C_ASSERT(sizeof(tMessageTypeOutputStateResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /**
  * Sent by the central node - arbitrary set state of a single output
@@ -87,3 +90,4 @@ typedef struct
   uint8_t  State;        // state 0 or 1 to be set, where "1" means an active state
   uint16_t Timer;        // timer when the output should be turned off. In seconds, 0 means forever, 0xFFFF means default timer value
 } tMessageTypeSetOutput;
+C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
