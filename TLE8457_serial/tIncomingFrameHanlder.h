@@ -17,7 +17,7 @@
 
 class tIncomingFrameHanlder : public tMessageReciever {
 public:
-    tIncomingFrameHanlder() : tMessageReciever() {}
+    tIncomingFrameHanlder() : tMessageReciever() { RegisterMessageType(tMessageReciever::MessageType_frameRecieved); }
 
     virtual void onMessage(uint8_t type, uint16_t data, void *pData) { handleCommonMessages(type, data, pData); }
 
