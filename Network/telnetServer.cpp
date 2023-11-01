@@ -3,6 +3,7 @@
 #include "../../../global.h"
 #if CONFIG_TELNET_SERVER
 #include "../TLE8457_serial/tOutgoingFrames.h"
+#include "../TLE8457_serial/CommonFramesDefs.h"
 
 #if CONFIG_OUTPUT_PROCESS
 #include "../OutputProcess.h"
@@ -14,9 +15,12 @@ Commander cmd;
 tTelnetSession *pTelnetSession = NULL;
 
 tTelnetSession::tTelnetSession(EthernetClient aEthernetClient,commandList_t *pTelnetCommands, uint8_t NumOfTelnetCommands)
-   : tTcpSession(aEthernetClient, TELNET_SESSION_TIMEOUT), tLogTransport()
+   : tTcpSession(aEthernetClient, TELNET_SESSION_TIMEOUT),
+	 tLogTransport(),
+	 tMessageReciever()
 {
   DEBUG_PRINTLN_3("TELNET Session started");
+  RegisterMessageType(tMessages::MessageType_ExternalEvent);
   cmd.begin(&mEthernetClient, pTelnetCommands, NumOfTelnetCommands);
   cmd.commandPrompt(ON); //enable the command prompt
   cmd.echo(false);     //Echo incoming characters to theoutput port
@@ -44,6 +48,55 @@ void tTelnetSession::Log(uint8_t str)
 {
     if (NULL != cmd.getOutputPort())
       cmd.getOutputPort()->write(str);
+}
+
+void tTelnetSession::onMessage(uint8_t type, uint16_t data, void *pData)
+{
+	struct tMessages::tVersionResponse *pVersionResponse = (struct tMessages::tVersionResponse *)pData;
+	struct tMessages::tOutputStateResponse* pOutputStateResponse = (struct tMessages::tOutputStateResponse*)pData;
+	struct tMessages::tOverviewStateResponse *pOverviewStateResponse = (struct tMessages::tOverviewStateResponse*)pData;
+
+	if (type == tMessages::MessageType_ExternalEvent)
+	{
+		switch (data)
+		{
+		case tMessages::ExternalEvent_VersionResponse:
+			cmd.print(F("FW Version for device "));
+			cmd.print(pVersionResponse->SenderID);
+			cmd.print(F("="));
+			cmd.print(pVersionResponse->Major);
+			cmd.print(F("."));
+			cmd.print(pVersionResponse->Minor);
+			cmd.print(F("."));
+			cmd.println(pVersionResponse->Patch);
+
+			break;
+
+		case tMessages::ExternalEvent_OutputStateResponse:
+			cmd.print(F("PowerState for device "));
+			cmd.print(pOutputStateResponse->SenderID);
+			cmd.print(F(" output ID "));
+			cmd.print(pOutputStateResponse->OutputID);
+			cmd.print(F("="));
+			cmd.print(pOutputStateResponse->PowerState);
+			cmd.print(F(" with timers = "));
+			cmd.print(pOutputStateResponse->TimerValue);
+			cmd.print(F(" default timer = "));
+			cmd.println(pOutputStateResponse->DefaultTimer);
+
+			break;
+
+		case tMessages::ExternalEvent_OverviewStateResponse:
+			cmd.print(F("PowerStateBitmap for device "));
+//			LOG(print(SenderID,HEX));
+			cmd.print(F("="));
+//			LOG(print(PowerState,BIN));
+			cmd.print(F(" with timers map="));
+//			LOG(println(TimerState,BIN));
+
+			break;
+		}
+	}
 }
 
 bool TelnetEnableLogs(Commander &Cmdr)

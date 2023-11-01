@@ -6,10 +6,12 @@
 #include "tcpServer.h"
 #include "../Logger.h"
 #include "../../lib/Commander/src/Commander.h"
+#include "../tMessageReciever.h"
+#include "../tMessages.h"
 
 class commandList_t;
 
-class tTelnetSession : public tTcpSession, public tLogTransport
+class tTelnetSession : public tTcpSession, public tLogTransport, public tMessageReciever
 {
 public:
   tTelnetSession(EthernetClient aEthernetClient,commandList_t *pTelnetCommands, uint8_t NumOfTelnetCommands);
@@ -17,6 +19,7 @@ public:
 
 protected:
   virtual bool doProcess();
+  virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 
   virtual void Log(uint8_t str);
 private:

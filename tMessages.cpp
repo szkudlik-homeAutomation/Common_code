@@ -65,12 +65,20 @@ static void tMessages::OutputStateResponseHandler(struct tOutputStateResponse* p
 
 void tMessages::OverviewStateResponseHandler(uint8_t SenderID, uint8_t PowerState, uint8_t  TimerState)
 {
+	tOverviewStateResponse OverviewStateResponse;
+
 	LOG_PRINT("PowerStateBitmap for device ");
 	LOG(print(SenderID,HEX));
 	LOG_PRINT("=");
 	LOG(print(PowerState,BIN));
 	LOG_PRINT(" with timers map=");
 	LOG(println(TimerState,BIN));
+
+	OverviewStateResponse.SenderID = SenderID;
+	OverviewStateResponse.PowerState = PowerState;
+	OverviewStateResponse.TimerState = TimerState;
+
+    tMessageReciever::Dispatch(tMessages::MessageType_ExternalEvent,ExternalEvent_OverviewStateResponse,&OverviewStateResponse);
 }
 
 #endif // CONFIG_OUTPUT_PROCESS

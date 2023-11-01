@@ -44,7 +44,7 @@ size_t tLogger::write(uint8_t str)
 {
 	for (tLogTransport * i = (tLogTransport*)tLogTransport::pFirst; i != NULL ; i = (tLogTransport*)i->pNext)
 	{
-		if ((i->mLogEnbabled) | mLogsForced) i->Log(str);
+		if (i->mLogEnbabled) i->Log(str);
 	}
 }
 

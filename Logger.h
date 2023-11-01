@@ -15,7 +15,7 @@
 
 class tLogger : public Print {
 public:
-	tLogger() : mLogsForced(false) {}
+	tLogger() {}
 	virtual ~tLogger() {}
 
     virtual size_t write(uint8_t str);

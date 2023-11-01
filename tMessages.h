@@ -22,6 +22,7 @@ public:
 	static const uint8_t MessageType_ExternalEvent = 1;
 	  static const uint8_t ExternalEvent_VersionResponse = 0;
 	  static const uint8_t ExternalEvent_OutputStateResponse = 1;
+	  static const uint8_t ExternalEvent_OverviewStateResponse = 2;
 
 	static const uint8_t MessageType_SensorEvent   = 2;
 
@@ -58,6 +59,12 @@ public:
 	  static void OutputStateResponseHandler(uint8_t SenderID, uint8_t OutputID, uint8_t PowerState, uint16_t  TimerValue, uint16_t DefaultTimer);
 	  static void OutputStateResponseHandler(struct tOutputStateResponse* pOutputStateResponse);
 
+	  typedef struct tOverviewStateResponse
+	  {
+		  uint8_t SenderID;
+		  uint8_t PowerState;
+		  uint16_t TimerState;
+	  };
 	  static void OverviewStateResponseHandler(uint8_t SenderID, uint8_t PowerState, uint8_t  TimerState);
 
 #endif CONFIG_OUTPUT_PROCESS
