@@ -2,7 +2,11 @@
 
 #include "../../../global.h"
 #if CONFIG_TELNET_SERVER
+#include "../TLE8457_serial/tOutgoingFrames.h"
 
+#if CONFIG_OUTPUT_PROCESS
+#include "../OutputProcess.h"
+#endif //CONFIG_OUTPUT_PROCESS
 
 // must be static-global (why? - only 1 telnet session may be active)
 Commander cmd;
@@ -53,5 +57,112 @@ bool  TelnetDisableLogs(Commander &Cmdr)
    if (pTelnetSession) pTelnetSession->DisableLogs();
    return true;
 }
+
+#if CONFIG_TLE8457_COMM_LIB
+
+bool send_GetVersion(Commander &Cmdr)
+{
+  int Dst;
+  if(Cmdr.getInt(Dst))
+  {
+	  tOutgoingFrames::SendMsgVersionRequest(Dst);
+  }
+  else
+  {
+    Cmdr.println(F("Usage: GetVersion dst_dev_id"));
+    return false;
+  }
+
+  return true;
+}
+
+bool send_Reset(Commander &Cmdr)
+{
+  int Dst;
+  if(Cmdr.getInt(Dst))
+  {
+	  tOutgoingFrames::SendMsgReset(Dst);
+  }
+  else
+  {
+    Cmdr.println(F("Usage: SendReset dst_dev_id"));
+    return false;
+  }
+
+  return true;
+}
+
+#if CONFIG_OUTPUT_PROCESS
+bool send_stateOverviewHandler(Commander &Cmdr)
+{
+
+  int Dst;
+  if(Cmdr.getInt(Dst))
+  {
+	  tOutgoingFrames::SendMsgOverviewStateRequest(Dst);
+  }
+  else
+  {
+    Cmdr.println(F("Usage: StateOverview dst_dev_id"));
+    return false;
+  }
+
+  return true;
+}
+
+bool send_OutputStateHandler(Commander &Cmdr)
+{
+
+  int Dst;
+  int OutId;
+  if(!Cmdr.getInt(Dst))
+  {
+    goto error;
+  }
+  if (! Cmdr.getInt(OutId))
+  {
+    goto error;
+  }
+
+  tOutgoingFrames::SendMsgOutputStateRequest(Dst,OutId);
+
+  return true;
+error:
+  Cmdr.println(F("Usage: OutputState dst_dev_id output_id"));
+  return false;
+}
+
+bool send_SetOutputHandler(Commander &Cmdr)
+{
+  int Dst;
+  int OutId;
+  int State;
+  int Timer = DEFAULT_TIMER;
+
+  if(!Cmdr.getInt(Dst))
+  {
+    goto error;
+  }
+  if (! Cmdr.getInt(OutId))
+  {
+    goto error;
+  }
+  if (! Cmdr.getInt(State))
+  {
+    goto error;
+  }
+  if (! Cmdr.getInt(Timer))
+  {
+    //goto finish;
+  }
+
+  tOutgoingFrames::SendMsgSetOutput(Dst, OutId, State, Timer);
+  return true;
+error:
+  Cmdr.println(F("Usage: SetOutput dst_dev_id output_id state[0/1] [timer[sec]]"));
+  return false;
+}
+#endif // CONFIG_OUTPUT_PROCESS
+#endif // CONFIG_TLE8457_COMM_LIB
 
 #endif // CONFIG_TELNET_SERVER

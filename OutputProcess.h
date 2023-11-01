@@ -17,6 +17,8 @@
 
 #define OUTPUT_SERVICE_TIME 1000  // 1 second
 
+#define DEFAULT_TIMER 0xFFFF
+
 class tOutput
 {
    static const uint8_t PIN_NOT_ASSIGNED = 255;

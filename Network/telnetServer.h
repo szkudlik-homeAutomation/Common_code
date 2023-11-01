@@ -45,6 +45,15 @@ private:
 
 bool TelnetEnableLogs(Commander &Cmdr);
 bool TelnetDisableLogs(Commander &Cmdr);
+#if CONFIG_TLE8457_COMM_LIB
+bool send_GetVersion(Commander &Cmdr);
+bool send_Reset(Commander &Cmdr);
+#if CONFIG_OUTPUT_PROCESS
+bool send_stateOverviewHandler(Commander &Cmdr);
+bool send_OutputStateHandler(Commander &Cmdr);
+bool send_SetOutputHandler(Commander &Cmdr);
+#endif CONFIG_OUTPUT_PROCESS
 
+#endif //CONFIG_TLE8457_COMM_LIB
 
 #endif //CONFIG_TELNET_SERVER
