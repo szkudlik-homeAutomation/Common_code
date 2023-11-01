@@ -25,9 +25,9 @@
 
 #include "Logger.h"
 
-#define LOG_PRINTLN(x) { Logger.EnableLogsForce(); Logger.println(F(x)); Logger.DisableLogsForce(); }
-#define LOG_PRINT(x)   { Logger.EnableLogsForce(); Logger.print(F(x)); Logger.DisableLogsForce(); }
-#define LOG(x) 		   { Logger.EnableLogsForce(); Logger.x; ; Logger.DisableLogsForce(); }
+#define LOG_PRINTLN(x) Logger.println(F(x));
+#define LOG_PRINT(x)   Logger.print(F(x));
+#define LOG(x) 		   Logger.x;
 
 #endif // !CONFIG_LOGGER
 

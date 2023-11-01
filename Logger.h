@@ -20,11 +20,6 @@ public:
 
     virtual size_t write(uint8_t str);
 
-    void EnableLogsForce() { mLogsForced = true; }
-    void DisableLogsForce() { mLogsForced = false; }
-
-private:
-	  bool mLogsForced;
 };
 
 extern tLogger Logger;
