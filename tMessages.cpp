@@ -31,7 +31,7 @@ void tMessages::VersionResponseHandler(struct tVersionResponse *pVersionResponse
 	LOG_PRINT(".");
 	LOG(println(pVersionResponse->Patch,DEC));
 
-	tMessageReciever::Dispatch(tMessageReciever::MessageType_frameRecieved,frameRecieved_VersionResponse,pVersionResponse);
+	tMessageReciever::Dispatch(tMessages::MessageType_ExternalEvent,ExternalEvent_VersionResponse,pVersionResponse);
 }
 
 #if CONFIG_OUTPUT_PROCESS
@@ -60,7 +60,7 @@ static void tMessages::OutputStateResponseHandler(struct tOutputStateResponse* p
     LOG_PRINT(" default timer = ");
     LOG(println(pOutputStateResponse->DefaultTimer,DEC));
 
-    tMessageReciever::Dispatch(tMessageReciever::MessageType_frameRecieved,frameRecieved_OutputStateResponse,pOutputStateResponse);
+    tMessageReciever::Dispatch(tMessages::MessageType_ExternalEvent,ExternalEvent_OutputStateResponse,pOutputStateResponse);
 }
 
 void tMessages::OverviewStateResponseHandler(uint8_t SenderID, uint8_t PowerState, uint8_t  TimerState)

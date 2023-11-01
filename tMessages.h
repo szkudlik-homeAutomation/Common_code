@@ -7,8 +7,28 @@
 
 class tMessages {
 public:
-	  static const uint8_t frameRecieved_VersionResponse = 0;
-	  static const uint8_t frameRecieved_OutputStateResponse = 1;
+
+	/*
+	 * a frame has been recieved - an event dedicated for serial frame parser
+	 *
+	 *  data is always mFrame.MessageType
+	 */
+	static const uint8_t MessageType_SerialFrameRecieved = 0;
+
+	/*
+	 * an event from external - i.e. TCP or Serial communication
+	 * list of events below
+	 */
+	static const uint8_t MessageType_ExternalEvent = 1;
+	  static const uint8_t ExternalEvent_VersionResponse = 0;
+	  static const uint8_t ExternalEvent_OutputStateResponse = 1;
+
+	static const uint8_t MessageType_SensorEvent   = 2;
+
+	// NOTE - app specific event types start from 16
+
+
+
 
 	  typedef struct tVersionResponse
 	  {
@@ -18,14 +38,14 @@ public:
 		  uint8_t Patch;
 	  };
 	  /*
-	   * log and dispatch MessageType_frameRecieved::frameRecieved_VersionResponse response through tMessageReciever
+	   * log and dispatch tMessages::MessageType_ExternalEvent::ExternalEvent_VersionResponse response through tMessageReciever
 	   */
 	  static void VersionResponseHandler(uint8_t SenderID, uint8_t Major, uint8_t Minor, uint8_t Patch);
 	  static void VersionResponseHandler(struct tVersionResponse *pVersionResponse);
 
 #if CONFIG_OUTPUT_PROCESS
 	  /*
-	   * log and dispatch MessageType_frameRecieved::frameRecieved_OutputStateResponseouput state response through tMessageReciever
+	   * log and dispatch tMessages::MessageType_ExternalEvent::ExternalEvent_OutputStateResponse state response through tMessageReciever
 	   */
 	  typedef struct tOutputStateResponse
 	  {

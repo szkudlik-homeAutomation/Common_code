@@ -14,7 +14,7 @@
 #include "../OutputProcess.h"
 #endif // CONFIG_OUTPUT_PROCESS
 
-uint8_t tIncomingFrameHanlder::handleCommonMessages(uint8_t type, uint16_t data, void *pData)
+uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)
 {
     tCommunicationFrame *pFrame = (tCommunicationFrame *)pData;
     uint8_t SenderDevId = pFrame->SenderDevId;

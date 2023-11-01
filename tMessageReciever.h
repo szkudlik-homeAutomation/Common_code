@@ -11,11 +11,6 @@
 
 class tMessageReciever {
 public:
-	static const uint8_t MessageType_frameRecieved = 0;
-	static const uint8_t MessageType_SensorEvent   = 1;
-
-	// NOTE - app specific event types start from 16
-
 	tMessageReciever()  { pNext = pFirst ; pFirst = this; }
 	~tMessageReciever();
 
