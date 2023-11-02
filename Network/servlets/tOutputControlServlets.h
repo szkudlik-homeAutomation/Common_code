@@ -12,7 +12,7 @@
 #if CONFIG_OUTPUT_CONTROL_SERVLET
 
 #include "servlets.h"
-#include "../../OutputProcess.h"
+#include "../../tOutputProcess.h"
 
 /**
  * output servlet - controlling or checking state of an output

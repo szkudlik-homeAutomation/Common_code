@@ -8,7 +8,7 @@
 #if CONFIG_OUTPUT_STATE_SENSOR
 
 #include "tOutputStateSensor.h"
-#include "../OutputProcess.h"
+#include "../tOutputProcess.h"
 
 tOutputStateSensor::tOutputStateSensor() : tSensor(SENSOR_TYPE_OUTPUT_STATES, API_VERSION)
 {

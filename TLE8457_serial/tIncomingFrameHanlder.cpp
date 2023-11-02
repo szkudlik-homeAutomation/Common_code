@@ -11,7 +11,7 @@
 #include "tIncomingFrameHanlder.h"
 #include "tOutgoingFrames.h"
 #if CONFIG_OUTPUT_PROCESS
-#include "../OutputProcess.h"
+#include "../tOutputProcess.h"
 #endif // CONFIG_OUTPUT_PROCESS
 
 uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)

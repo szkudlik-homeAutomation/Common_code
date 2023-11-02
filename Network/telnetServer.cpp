@@ -5,7 +5,7 @@
 #include "../TLE8457_serial/tOutgoingFrames.h"
 
 #if CONFIG_OUTPUT_PROCESS
-#include "../OutputProcess.h"
+#include "../tOutputProcess.h"
 #include "../TLE8457_serial/NodeScanTask.h"
 #endif //CONFIG_OUTPUT_PROCESS
 

@@ -1,7 +1,7 @@
 #include "../../global.h"
 #if CONFIG_OUTPUT_PROCESS
 
-#include "OutputProcess.h"
+#include "tOutputProcess.h"
 
 static tOutputProcess *tOutputProcess::instance;
 
