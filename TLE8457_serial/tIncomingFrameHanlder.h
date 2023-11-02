@@ -23,7 +23,7 @@ public:
 
 private:
     void HandleMsgVersionRequest(uint8_t SenderID);
-    void HandleMsgVersionResponse(uint8_t SenderID, tMessageTypeFwVesionResponse *Message);
+    void HandleMsgVersionResponse(uint8_t SenderID, tMessageTypeFwVesionResponse *pMessage);
 
 #if CONFIG_OUTPUT_PROCESS
     void HandleMsgOverviewStateRequest(uint8_t SenderID);
