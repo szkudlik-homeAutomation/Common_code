@@ -52,8 +52,14 @@ bool send_Reset(Commander &Cmdr);
 bool send_stateOverviewHandler(Commander &Cmdr);
 bool send_OutputStateHandler(Commander &Cmdr);
 bool send_SetOutputHandler(Commander &Cmdr);
-#endif CONFIG_OUTPUT_PROCESS
+
+#if CONFIG_NODE_SCAN_TASK
+bool trigger_ScanNodes(Commander &Cmdr);
+#endif //CONFIG_NODE_SCAN_TASK
+
+#endif // CONFIG_OUTPUT_PROCESS
 
 #endif //CONFIG_TLE8457_COMM_LIB
+
 
 #endif //CONFIG_TELNET_SERVER

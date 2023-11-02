@@ -6,6 +6,7 @@
 
 #if CONFIG_OUTPUT_PROCESS
 #include "../OutputProcess.h"
+#include "../TLE8457_serial/NodeScanTask.h"
 #endif //CONFIG_OUTPUT_PROCESS
 
 // must be static-global (why? - only 1 telnet session may be active)
@@ -162,6 +163,14 @@ error:
   Cmdr.println(F("Usage: SetOutput dst_dev_id output_id state[0/1] [timer[sec]]"));
   return false;
 }
+
+#if CONFIG_NODE_SCAN_TASK
+bool trigger_ScanNodes(Commander &Cmdr)
+{
+   NodeScanTask::trigger();
+}
+#endif //CONFIG_NODE_SCAN_TASK
+
 #endif // CONFIG_OUTPUT_PROCESS
 #endif // CONFIG_TLE8457_COMM_LIB
 

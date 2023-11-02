@@ -73,4 +73,12 @@ void tMessages::OverviewStateResponseHandler(uint8_t SenderID, uint8_t PowerStat
 	LOG(println(TimerState,BIN));
 }
 
+#if CONFIG_NODE_SCAN_TASK
+void tMessages::NodeScanResponse(uint32_t ActiveNodesMap)
+{
+    LOG_PRINT("Active node map: ");
+    LOG(println(ActiveNodesMap,BIN));
+}
+#endif //CONFIG_NODE_SCAN_TASK
+
 #endif // CONFIG_OUTPUT_PROCESS

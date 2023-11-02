@@ -59,7 +59,10 @@ public:
 	  static void OutputStateResponseHandler(struct tOutputStateResponse* pOutputStateResponse);
 
 	  static void OverviewStateResponseHandler(uint8_t SenderID, uint8_t PowerState, uint8_t  TimerState);
-
 #endif CONFIG_OUTPUT_PROCESS
+
+#if CONFIG_NODE_SCAN_TASK
+	    static void NodeScanResponse(uint32_t ActiveNodesMap);
+#endif CONFIG_NODE_SCAN_TASK
 
 };
