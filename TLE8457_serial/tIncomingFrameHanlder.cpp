@@ -76,11 +76,25 @@ void tIncomingFrameHanlder::HandleMsgVersionRequest(uint8_t SenderID)
     tOutgoingFrames::SendMsgVersionResponse(SenderID,FW_VERSION_MAJOR,FW_VERSION_MINOR,FW_VERSION_PATCH);
 }
 
-void tIncomingFrameHanlder::HandleMsgVersionResponse(uint8_t SenderID, tMessageTypeFwVesionResponse *Message)
+void tIncomingFrameHanlder::HandleMsgVersionResponse(uint8_t SenderID, tMessageTypeFwVesionResponse *pMessage)
 {
-#if CONFIG_CENTRAL_NODE
-    tMessages::VersionResponseHandler(SenderID,Message->Major,Message->Minor,Message->Patch);
-#endif
+	tMessages::tVersionResponse VersionResponse;
+
+	VersionResponse.SenderID = SenderID;
+	VersionResponse.Major = pMessage->Major;
+	VersionResponse.Minor = pMessage->Minor;
+	VersionResponse.Patch = pMessage->Patch;
+
+	LOG_PRINT("FW Version for device ");
+	LOG(print(SenderID,HEX));
+	LOG_PRINT("=");
+	LOG(print(pMessage->Major,DEC));
+	LOG_PRINT(".");
+	LOG(print(pMessage->Minor,DEC));
+	LOG_PRINT(".");
+	LOG(println(pMessage->Patch,DEC));
+
+	tMessageReciever::Dispatch(tMessages::MessageType_ExternalEvent,tMessages::ExternalEvent_VersionResponse,&VersionResponse);
 }
 
 
@@ -90,12 +104,15 @@ void tIncomingFrameHanlder::HandleMsgOverviewStateRequest(uint8_t SenderID)
    tOutgoingFrames::SendMsgOverviewStateResponse(SenderID,tOutputProcess::get()->GetOutputStateMap(),tOutputProcess::get()->GetOutputTimersStateMap());
 }
 
-
 void tIncomingFrameHanlder::HandleMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message)
 {
-#if CONFIG_CENTRAL_NODE
-	tMessages::OverviewStateResponseHandler(SenderID,Message->PowerState,Message->TimerState);
-#endif
+	LOG_PRINT("PowerStateBitmap for device ");
+	LOG(print(SenderID,HEX));
+	LOG_PRINT("=");
+	LOG(print(Message->PowerState,BIN));
+	LOG_PRINT(" with timers map=");
+	LOG(println(Message->TimerState,BIN));
+   //TODO: send a message
 }
 
 void tIncomingFrameHanlder::HandleMsgOutputStateRequest(uint8_t SenderID, tMessageTypeOutputStateRequest* Message)
@@ -115,9 +132,25 @@ void tIncomingFrameHanlder::HandleMsgOutputStateRequest(uint8_t SenderID, tMessa
 
 void tIncomingFrameHanlder::HandleMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message)
 {
-#if CONFIG_CENTRAL_NODE
-	tMessages::OutputStateResponseHandler(SenderID,Message->OutputID,Message->PowerState,Message->TimerValue,Message->DefaultTimer);
-#endif
+	tMessages::tOutputStateResponse OutputStateResponse;
+	OutputStateResponse.SenderID = SenderID;
+	OutputStateResponse.OutputID = Message->OutputID;
+	OutputStateResponse.PowerState = Message->PowerState;
+	OutputStateResponse.TimerValue = Message->TimerValue;
+	OutputStateResponse.DefaultTimer = Message->DefaultTimer;
+
+	LOG_PRINT("PowerState for device ");
+	LOG(print(OutputStateResponse.SenderID,HEX));
+	LOG_PRINT(" output ID ");
+	LOG(print(OutputStateResponse.OutputID,DEC));
+	LOG_PRINT("=");
+	LOG(print(OutputStateResponse.PowerState,DEC));
+	LOG_PRINT(" with timers = ");
+	LOG(print(OutputStateResponse.TimerValue,DEC));
+    LOG_PRINT(" default timer = ");
+    LOG(println(OutputStateResponse.DefaultTimer,DEC));
+
+    tMessageReciever::Dispatch(tMessages::MessageType_ExternalEvent,tMessages::ExternalEvent_OutputStateResponse,&OutputStateResponse);
 }
 
 void tIncomingFrameHanlder::HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSetOutput* Message)

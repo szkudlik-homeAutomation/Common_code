@@ -28,7 +28,10 @@ bool NodeScanTask::Process(uint32_t * pPeriod)
    else
    {
        // send result
-       tMessages::NodeScanResponse(mActiveNodesMap);
+	   LOG_PRINT("Active node map: ");
+	   LOG(println(mActiveNodesMap,BIN));
+
+	   //TODO: send a message
        return false;
    }
 
