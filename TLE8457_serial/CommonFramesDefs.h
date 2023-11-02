@@ -7,7 +7,7 @@
  * message types MUST stay as they are!!!
  * Light Control is already installed and cannot be easily changed
  *
- * light control uses IDs up to 0x11
+ * !!!! light control uses IDs up to 0x11 !!!!!! and it must stay this way
  *
  */
 
@@ -91,3 +91,28 @@ typedef struct
   uint16_t Timer;        // timer when the output should be turned off. In seconds, 0 means forever, 0xFFFF means default timer value
 } tMessageTypeSetOutput;
 C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/**
+ * Look for a sensor with a given ID
+ * A node that holds the sensor in question must response with MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE
+ * usually send as broadcast
+ */
+#define MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST 0x12
+typedef struct
+{
+    uint8_t SensorID;
+} tMessageGetSensorByIdReqest;
+C_ASSERT(sizeof(tMessageGetSensorByIdReqest) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+#define MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE 0x13
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t ApiVersion;
+    uint8_t SensorType;
+    uint8_t isConfigured : 1,
+			isRunning : 1,
+			isMeasurementValid : 1;
+    uint16_t MeasurementPeriod;
+} tMessageGetSensorByIdResponse;
+C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);

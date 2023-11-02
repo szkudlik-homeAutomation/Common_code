@@ -13,6 +13,10 @@
 #if CONFIG_OUTPUT_PROCESS
 #include "../tOutputProcess.h"
 #endif // CONFIG_OUTPUT_PROCESS
+#if CONFIG_SENSORS
+#include "../sensors/tSensor.h"
+#endif //CONFIG_SENSORS
+
 
 uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)
 {
@@ -63,6 +67,17 @@ uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)
            HandleMsgSetOutput(SenderDevId,(tMessageTypeSetOutput*)(pFrame->Data));
            break;
 #endif //CONFIG_OUTPUT_PROCESS
+#if CONFIG_SENSORS
+       case MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST");
+           HandleMsgGetSensorByIdReqest(SenderDevId, (tMessageGetSensorByIdReqest*)(pFrame->Data));
+           break;
+
+       case MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE");
+           HandleMsgGetSensorByIdResponse(SenderDevId, (tMessageGetSensorByIdResponse*)(pFrame->Data));
+           break;
+#endif //CONFIG_SENSORS
 
        default:
            status = STATUS_UNKNOWN_MESSAGE;
@@ -173,4 +188,45 @@ void tIncomingFrameHanlder::HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSet
 }
 
 #endif // CONFIG_OUTPUT_PROCESS
+
+#if CONFIG_SENSORS
+void tIncomingFrameHanlder::HandleMsgGetSensorByIdReqest(uint8_t SenderID, tMessageGetSensorByIdReqest *Message)
+{
+	tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+	if (NULL != pSensor)
+	{
+		tMessageGetSensorByIdResponse Response;
+		Response.SensorID = Message->SensorID;
+		Response.MeasurementPeriod = pSensor->GetMeasurementPeriod();
+		Response.ApiVersion = pSensor->getSensorApiVersion();
+		Response.SensorType = pSensor->getSensorType();
+		Response.isConfigured = pSensor->isConfigured();
+		Response.isMeasurementValid = pSensor->isMeasurementValid();
+		Response.isRunning = pSensor->isRunning();
+	    tOutgoingFrames::SendGetSensorByIdResponse(SenderID, &Response);
+	}
+}
+
+void tIncomingFrameHanlder::HandleMsgGetSensorByIdResponse(uint8_t SenderID, tMessageGetSensorByIdResponse *Message)
+{
+	LOG_PRINT("Sensor ID ");
+	LOG(print(Message->SensorID, DEC));
+	LOG_PRINT(" found on node ");
+	LOG(println(SenderID,DEC));
+	LOG_PRINT(" ->sensor type: ");
+	LOG(println(Message->SensorType,DEC));
+	LOG_PRINT(" ->API version: ");
+	LOG(println(Message->ApiVersion,DEC));
+	LOG_PRINT(" ->MeasurementPeriod: ");
+	LOG(println(Message->MeasurementPeriod,DEC));
+	LOG_PRINT(" ->isConfigured: ");
+	LOG(print(Message->isConfigured,DEC));
+	LOG_PRINT(" isRunning: ");
+	LOG(print(Message->isRunning,DEC));
+	LOG_PRINT(" isMeasurementValid: ");
+	LOG(println(Message->isMeasurementValid,DEC));
+}
+
+#endif //CONFIG_SENSORS
+
 #endif // CONFIG_TLE8457_COMM_LIB

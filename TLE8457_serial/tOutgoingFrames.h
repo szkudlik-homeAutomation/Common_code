@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../../../global.h"
+#include "CommonFramesDefs.h"
 
 #if CONFIG_TLE8457_COMM_LIB
 
@@ -27,6 +28,10 @@ public:
     static bool SendMsgOutputStateResponse(uint8_t RecieverID, uint8_t  OutputID, uint8_t  PowerState, uint16_t TimerValue, uint16_t DefaultTimer);
     static bool SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8_t  State, uint16_t Timer);
 #endif // CONFIG_OUTPUT_PROCESS
+#if CONFIG_SENSORS
+    static bool SendGetSensorByIdReqest(uint8_t RecieverID, uint8_t SensorID);
+    static bool SendGetSensorByIdResponse(uint8_t RecieverID, tMessageGetSensorByIdResponse *pMessage);
+#endif //CONFIG_SENSORS
 };
 
 #endif /* CONFIG_TLE8457_COMM_LIB */

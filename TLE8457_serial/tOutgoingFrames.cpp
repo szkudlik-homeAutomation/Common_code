@@ -91,7 +91,23 @@ bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8
   return true;
 }
 
-
 #endif // CONFIG_OUTPUT_PROCESS
+
+#if CONFIG_SENSORS
+bool tOutgoingFrames::SendGetSensorByIdReqest(uint8_t RecieverID, uint8_t SensorID)
+{
+    tMessageGetSensorByIdReqest Message;
+    Message.SensorID = SensorID;
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST");
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST, sizeof(Message), &Message);
+}
+
+bool tOutgoingFrames::SendGetSensorByIdResponse(uint8_t RecieverID, tMessageGetSensorByIdResponse *pMessage)
+{
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE");
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE, sizeof(*pMessage), pMessage);
+}
+
+#endif //CONFIG_SENSORS
 
 #endif // CONFIG_TLE8457_COMM_LIB

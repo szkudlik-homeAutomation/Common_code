@@ -32,6 +32,10 @@ private:
     void HandleMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message);
     void HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSetOutput* Message);
 #endif //CONFIG_OUTPUT_PROCESS
+#if CONFIG_SENSORS
+    void HandleMsgGetSensorByIdReqest(uint8_t SenderID, tMessageGetSensorByIdReqest *Message);
+    void HandleMsgGetSensorByIdResponse(uint8_t SenderID, tMessageGetSensorByIdResponse *Message);
+#endif //CONFIG_SENSORS
 
 protected:
     uint8_t handleCommonMessages(uint16_t data, void *pData);
