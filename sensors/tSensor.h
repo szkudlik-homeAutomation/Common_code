@@ -61,14 +61,6 @@ public:
 
 extern tSensorProcess SensorProcess;
 
-#if CONFIG_SENSORS_JSON_OUTPUT
-/* translate a data blob with sensor type to JSON data */
-uint8_t TranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-
-/* an same, but for app specific sensors, implemented as weak stub */
-uint8_t appTranslateBlobToJSON(uint8_t SensorType, uint8_t dataBlobSize, void *pDataCache, Stream *pStream);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
-
 class tSensor {
 public:
 

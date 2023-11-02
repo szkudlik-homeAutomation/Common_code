@@ -49,7 +49,6 @@ uint8_t tSensorDesc::formatJSON(Stream *pStream)
    pStream->print(F("\":{"));
    if (Status == STATUS_SUCCESS)
    {
-   //   Result = TranslateBlobToJSON(sensorType, dataBlobSize, pDataCache, pStream);
 	   Result = doFormatJSON(pStream);
    }
    else if (Status == STATUS_NO_DATA_RECIEVED)
