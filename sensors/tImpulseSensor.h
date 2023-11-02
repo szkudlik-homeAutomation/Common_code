@@ -13,6 +13,8 @@
 #include "tSensor.h"
 #include "tSensorDesc.h"
 
+#if CONFIG_SENSOR_HUB
+
 class tImpulseSensorDesc : public tSensorDesc
 {
 public:
@@ -25,6 +27,8 @@ protected:
     virtual uint8_t doFormatJSON(Stream *pStream);
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 };
+#endif //CONFIG_SENSOR_HUB
+
 
 class tImpulseSensor final : public tSensor {
 public:

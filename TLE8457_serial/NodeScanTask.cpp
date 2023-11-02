@@ -1,9 +1,7 @@
 #include "../../../global.h"
 
+#if CONFIG_TLE8457_COMM_LIB
 #if CONFIG_NODE_SCAN_TASK
-#if !CONFIG_TLE8457_COMM_LIB
-#error
-#endif
 
 #include "tOutgoingFrames.h"
 #include "TLE8457_serial_lib.h"
@@ -48,4 +46,4 @@ void NodeScanTask::onMessage(uint8_t type, uint16_t data, void *pData)
 }
 
 #endif //CONFIG_NODE_SCAN_TASK
-
+#endif //CONFIG_TLE8457_COMM_LIB

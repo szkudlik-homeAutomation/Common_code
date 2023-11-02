@@ -7,7 +7,7 @@
  * message types MUST stay as they are!!!
  * Light Control is already installed and cannot be easily changed
  *
- * light control uses IDs up to 0x11
+ * !!!! light control uses IDs up to 0x11 !!!!!! and it must stay this way
  *
  */
 
