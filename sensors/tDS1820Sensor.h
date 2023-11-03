@@ -72,7 +72,7 @@ public:
 
    static const uint8_t API_VERSION = 1;
 
-   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820, API_VERSION) {}
+   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820, API_VERSION, sizeof(Config), &Config) {}
 
    static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
 

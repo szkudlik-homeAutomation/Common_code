@@ -45,7 +45,7 @@ public:
       uint8_t State;
    } tResult;
 
-   tSimpleDigitalInputSensor() : tSensor(SENSOR_TYPE_DIGITAL_INPUT, API_VERSION) {}
+   tSimpleDigitalInputSensor() : tSensor(SENSOR_TYPE_DIGITAL_INPUT, API_VERSION, sizeof(Config), &Config) {}
 
    virtual void doTriggerMeasurement();
 
