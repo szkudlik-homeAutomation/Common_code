@@ -10,7 +10,7 @@
 
 #include "tSystemStatusSensor.h"
 
-tSystemStatusSensor::tSystemStatusSensor() : tSensor(SENSOR_TYPE_SYSTEM_STATUS, API_VERSION)
+tSystemStatusSensor::tSystemStatusSensor() : tSensor(SENSOR_TYPE_SYSTEM_STATUS, API_VERSION, 0, NULL)
 {
    mCurrentMeasurementBlob = (void*) &mResult;
    mMeasurementBlobSize = sizeof(mResult);

@@ -10,7 +10,7 @@
 #include "tOutputStateSensor.h"
 #include "../tOutputProcess.h"
 
-tOutputStateSensor::tOutputStateSensor() : tSensor(SENSOR_TYPE_OUTPUT_STATES, API_VERSION)
+tOutputStateSensor::tOutputStateSensor() : tSensor(SENSOR_TYPE_OUTPUT_STATES, API_VERSION, 0, NULL)
 {
    for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
    {

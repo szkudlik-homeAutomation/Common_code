@@ -66,8 +66,11 @@ public:
 
 	/* process and set config. The config must be set before either by sensor's specific functions
 	 * setConfig MUST be called once
+	 *
+	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
+	 * the config will be copied to specific sensor config
 	 */
-	uint8_t setConfig(uint16_t measurementPeriod);
+	uint8_t setConfig(uint16_t measurementPeriod, void *pConfigBlob = NULL);
 
 	/* make the sensor running */
 	uint8_t Start()
@@ -113,7 +116,7 @@ protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
     * For identification, API version must be increased every time the config OR the result data format changes
     */
-   tSensor(uint8_t SensorType, uint8_t ApiVersion);
+   tSensor(uint8_t SensorType, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr);
 
    void *mCurrentMeasurementBlob;
    uint8_t mMeasurementBlobSize;
@@ -141,6 +144,8 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
+   uint8_t mConfigBlobSize;
+   void *mConfigBlobPtr;
 
    static tSensor* pFirst;
    tSensor* pNext;

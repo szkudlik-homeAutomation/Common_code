@@ -43,7 +43,7 @@ public:
       int Temperature;
    } tResult;
 
-   tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG, API_VERSION)
+   tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG, API_VERSION, sizeof(Config), &Config)
    {
 	   mCurrentMeasurementBlob = (void*) &mResult;
 	   mMeasurementBlobSize = sizeof(mResult);
