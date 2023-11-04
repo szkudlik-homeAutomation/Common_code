@@ -54,19 +54,6 @@ public:
 	const char *getSensorName(uint8_t SensorID);
 
 	/*
-	 * Get an ID of a sensor info (remote operation)
-	 */
-	void getSensorInfoRequest(uint8_t SensorID);
-	virtual void getSensorInfoResponse(
-	      uint8_t Status,
-			uint8_t SensorID,
-			uint8_t DeviceId,
-			uint8_t SensorType,
-			bool isRunning,
-			uint16_t MeasurementPeriod,
-			const char *sensorName) {};
-
-	/*
 	 * Subscribe to all events from the sensor
 	 * There's no unsubscribe - not needed in fact
 	 *

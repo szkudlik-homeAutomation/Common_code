@@ -192,6 +192,25 @@ bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
     Cmdr.println(F("Usage: GetSensorById sensor_id [dst_dev]   if dst is not provided => broadcast"));
     return false;
 }
+
+bool send_GetSensorMeasurementReqest(Commander &Cmdr)
+{
+    int Dst = DEVICE_ID_BROADCAST;
+    int SensorId;
+
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+    Cmdr.getInt(Dst);
+
+    tOutgoingFrames::SendGetSensorMeasurementReqest(Dst, SensorId);
+    return true;
+  error:
+    Cmdr.println(F("Usage: GetSensorMeasurement sensor_id [dst_dev]   if dst is not provided => broadcast"));
+    return false;
+}
+
 #endif //CONFIG_SENSORS
 
 #endif // CONFIG_TLE8457_COMM_LIB

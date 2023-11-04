@@ -25,6 +25,7 @@
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
+/* sensor time tick - 100ms */
 #define SENSOR_PROCESS_SERVICE_TIME 100
 
 #define SENSOR_TYPE_DS1820 1
@@ -75,6 +76,7 @@ public:
 	/* make the sensor running */
 	uint8_t Start()
 	{
+		misSendingEventFrames = true;
 		if (SENSOR_PAUSED == mState)
 		{
 			mState = SENSOR_RUNNING;
@@ -112,6 +114,9 @@ public:
 
    static void Run();
 
+#if CONFIG_TLE8457_COMM_LIB
+   void sendMsgSensorEvent(bool onDemand);
+#endif //CONFIG_TLE8457_COMM_LIB
 protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
     * For identification, API version must be increased every time the config OR the result data format changes
@@ -144,6 +149,7 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
+   bool misSendingEventFrames;
    uint8_t mConfigBlobSize;
    void *mConfigBlobPtr;
 

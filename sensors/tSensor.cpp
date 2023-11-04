@@ -12,6 +12,8 @@
 #include "tSensor.h"
 
 #include "tSensorHub.h"
+#include "../TLE8457_serial/TLE8457_serial_lib.h"
+#include "../TLE8457_serial/tOutgoingFrames.h"
 
 tSensor* tSensor::pFirst = NULL;
 
@@ -102,8 +104,37 @@ void tSensor::onMeasurementCompleted(bool Status)
       tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
 #endif //CONFIG_SENSOR_HUB
-  //TODO: remote sensors
+#if CONFIG_TLE8457_COMM_LIB
+  if (misSendingEventFrames)
+	  sendMsgSensorEvent(false);
+#endif
 }
+
+#if CONFIG_TLE8457_COMM_LIB
+void tSensor::sendMsgSensorEvent(bool onDemand)
+{
+	if (misMeasurementValid)
+	{
+		uint8_t pos = 0;
+		uint8_t seq = 0;
+		bool lastSegment = false;
+		while (!lastSegment)
+		{
+			lastSegment = (pos + SENSOR_MEASUREMENT_PAYLOAD_SIZE) >= mMeasurementBlobSize;
+
+			tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, onDemand,
+					(uint8_t*)mCurrentMeasurementBlob+pos,
+					lastSegment ? mMeasurementBlobSize - pos : SENSOR_MEASUREMENT_PAYLOAD_SIZE,
+					seq, lastSegment);
+			pos += SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+			seq++;
+		}
+	} else
+	{
+		tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
+	}
+}
+#endif //CONFIG_TLE8457_COMM_LIB
 
 void tSensor::Run()
 {

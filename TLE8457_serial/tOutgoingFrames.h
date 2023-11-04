@@ -9,6 +9,7 @@
 
 #include "../../../global.h"
 #include "CommonFramesDefs.h"
+#include "../sensors/tSensor.h"
 
 #if CONFIG_TLE8457_COMM_LIB
 
@@ -31,6 +32,10 @@ public:
 #if CONFIG_SENSORS
     static bool SendGetSensorByIdReqest(uint8_t RecieverID, uint8_t SensorID);
     static bool SendGetSensorByIdResponse(uint8_t RecieverID, tMessageGetSensorByIdResponse *pMessage);
+    static bool SendGetSensorMeasurementReqest(uint8_t RecieverID, uint8_t SensorID);
+    static bool SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, tSensorEventType EventType, bool onDemand,
+    		    void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment);
+ 
 #endif //CONFIG_SENSORS
 };
 

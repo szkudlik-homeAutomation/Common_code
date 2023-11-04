@@ -77,6 +77,17 @@ uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE");
            HandleMsgGetSensorByIdResponse(SenderDevId, (tMessageGetSensorByIdResponse*)(pFrame->Data));
            break;
+
+       case MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST");
+           HandleMsgGetSensorMeasurementReqest(SenderDevId,(tMessageGetSensorMeasurementReqest*)(pFrame->Data));
+           break;
+
+       case MESSAGE_TYPE_SENSOR_EVENT:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_EVENT");
+           HandleMsgSensorEvent(SenderDevId,(tMessageSensorEvent*)(pFrame->Data));
+           break;
+
 #endif //CONFIG_SENSORS
 
        default:
@@ -225,7 +236,43 @@ void tIncomingFrameHanlder::HandleMsgGetSensorByIdResponse(uint8_t SenderID, tMe
 	LOG(print(Message->isRunning,DEC));
 	LOG_PRINT(" isMeasurementValid: ");
 	LOG(println(Message->isMeasurementValid,DEC));
+	   //TODO: send a message
 }
+
+void tIncomingFrameHanlder::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message)
+{
+    /* get data blob from sensor and send it in one or more frames */
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (NULL == pSensor)
+        return;
+
+    pSensor->sendMsgSensorEvent(true);
+}
+
+void tIncomingFrameHanlder::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
+{
+	DEBUG_PRINT_3("Sensor ID:");
+	DEBUG_3(print(Message->SensorID, DEC));
+	DEBUG_PRINT_3(" EventType:");
+	DEBUG_3(print(Message->EventType, DEC));
+	DEBUG_PRINT_3(" onDemand:");
+	DEBUG_3(print(Message->onDemand, DEC));
+	DEBUG_PRINT_3(" SegmentSeq:");
+	DEBUG_3(print(Message->SegmentSeq, DEC));
+	DEBUG_PRINT_3(" LastSegment:");
+	DEBUG_3(println(Message->LastSegment, DEC));
+	DEBUG_PRINT_3(" Payload:");
+	for (uint8_t i = 0; i < SENSOR_MEASUREMENT_PAYLOAD_SIZE; i++)
+	{
+		if (Message->Payload[i] < 0x10)
+			DEBUG_PRINT_3("0");
+		DEBUG_3(print(Message->Payload[i], HEX));
+	}
+	DEBUG_PRINTLN_3("");
+
+    /* todo: put incoming data to SensorHub */
+}
+
 
 #endif //CONFIG_SENSORS
 

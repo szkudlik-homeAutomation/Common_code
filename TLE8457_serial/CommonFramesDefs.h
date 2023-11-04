@@ -1,5 +1,6 @@
 #pragma once
-
+#include "../../../global.h"
+#if CONFIG_TLE8457_COMM_LIB
 
 /*
  * NOTE - backward compatibility
@@ -92,6 +93,8 @@ typedef struct
 } tMessageTypeSetOutput;
 C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
+#if CONFIG_SENSORS
+
 /**
  * Look for a sensor with a given ID
  * A node that holds the sensor in question must response with MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE
@@ -112,7 +115,41 @@ typedef struct
     uint8_t SensorType;
     uint8_t isConfigured : 1,
 			isRunning : 1,
-			isMeasurementValid : 1;
+			isMeasurementValid : 1,
+			isSendingEvents : 1;	// the sensor is sending broadcast events
     uint16_t MeasurementPeriod;
 } tMessageGetSensorByIdResponse;
 C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/*
+ * request for current sensor measurement
+ * the node that has the sensor of given ID should respond with MESSAGE_TYPE_SENSOR_EVENT with "onDemand" bit set
+ *
+ * MESSAGE_TYPE_SENSOR_EVENT may be divided to several frames if needed
+ */
+#define MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST 0x14
+typedef struct
+{
+    uint8_t SensorID;
+} tMessageGetSensorMeasurementReqest;
+C_ASSERT(sizeof(tMessageGetSensorMeasurementReqest) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/*
+ * an event from a sensor
+ * sent either when a sensor reports a status or on demand
+ */
+#define MESSAGE_TYPE_SENSOR_EVENT 0x15
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t LastSegment  : 1,	// if "1" - no more segments
+            EventType    : 3,   // tSensorEventType
+			onDemand     : 1,	// this is a response for MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST
+            SegmentSeq   : 3;	// if "0" - first segment, next segments must have SegmentSeq++
+    uint8_t Payload[SENSOR_MEASUREMENT_PAYLOAD_SIZE];
+} tMessageSensorEvent;
+C_ASSERT(sizeof(tMessageSensorEvent) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+#endif //CONFIG_SENSORS
+
+#endif //CONFIG_TLE8457_COMM_LIB
