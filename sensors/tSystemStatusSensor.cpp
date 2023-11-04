@@ -15,11 +15,20 @@ tSystemStatusSensor::tSystemStatusSensor() : tSensor(SENSOR_TYPE_SYSTEM_STATUS, 
    mCurrentMeasurementBlob = (void*) &mResult;
    mMeasurementBlobSize = sizeof(mResult);
    mResult.Uptime = 0;
+   tickCnt = 0;
+}
+void tSystemStatusSensor::doTimeTick()
+{
+	tickCnt++;
+	if (tickCnt == (1000 / SENSOR_PROCESS_SERVICE_TIME))
+	{// 1 sec
+		mResult.Uptime++;
+		tickCnt = 0;
+	}
 }
 
 void tSystemStatusSensor::doTriggerMeasurement()
 {
-	mResult.Uptime++;
 	mResult.FreeMemory = getFreeRam();
 
 	onMeasurementCompleted(true);
