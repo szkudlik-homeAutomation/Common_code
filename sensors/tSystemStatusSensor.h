@@ -39,9 +39,11 @@ public:
    tSystemStatusSensor();
 
 protected:
+   virtual void doTimeTick();
    virtual void doTriggerMeasurement();
 
 private:
    tResult mResult;
+   uint8_t tickCnt;
 };
 #endif //CONFIG_SYSTEM_STATUS_SENSOR
