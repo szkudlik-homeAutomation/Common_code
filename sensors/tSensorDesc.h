@@ -40,6 +40,8 @@ public:
 
 	/*
 	 * Format cached data as JSON
+	 *
+	 * note! format JSON should support all APIs that are in the system (backward compatibility)
 	 */
    uint8_t formatJSON(Stream *pStream);
 

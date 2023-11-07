@@ -37,6 +37,11 @@ void tSystemStatusSensor::doTriggerMeasurement()
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSystemStatusSensorDesc::doFormatJSON(Stream *pStream)
 {
+    if (sensorApiVersion != 1)
+    {
+          return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
+    }
+
    if (dataBlobSize != sizeof(tSystemStatusSensor::tResult))
    {
 		 return STATUS_JSON_ENCODE_ERROR;
