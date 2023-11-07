@@ -30,15 +30,16 @@ protected:
 
 class tOutputStateSensor : public tSensor {
 public:
-   static const uint8_t API_VERSION = 1;
-
    tOutputStateSensor();
 
    typedef struct
    {
       uint8_t State[NUM_OF_OUTPUTS];
       uint16_t Timer[NUM_OF_OUTPUTS];
-   } tResult;
+   } tResult_api_v1;
+
+   static const uint8_t API_VERSION = 1;
+   typedef tResult_api_v1 tResult;
 
 protected:
    virtual void doTriggerMeasurement();

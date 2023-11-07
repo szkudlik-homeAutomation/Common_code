@@ -30,13 +30,14 @@ protected:
 
 class tSystemStatusSensor: public tSensor {
 public:
-	static const uint8_t API_VERSION = 1;
-
    typedef struct
    {
    	   uint16_t FreeMemory;
    	   uint16_t Uptime;
-   } tResult;
+   } tResult_api_v1;
+
+   static const uint8_t API_VERSION = 1;
+   typedef tResult_api_v1 tResult;
 
    tSystemStatusSensor();
 

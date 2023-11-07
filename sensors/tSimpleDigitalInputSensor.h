@@ -30,20 +30,22 @@ protected:
 
 class tSimpleDigitalInputSensor: public tSensor {
 public:
-   static const uint8_t API_VERSION = 1;
-
    typedef struct
    {
       uint8_t Pin;
       uint8_t ActiveState;
-   } tConfig;
-
-   tConfig Config;
+   } tConfig_api_v1;
 
    typedef struct
    {
       uint8_t State;
-   } tResult;
+   } tResult_api_v1;
+
+   static const uint8_t API_VERSION = 1;
+   typedef tConfig_api_v1 tConfig;
+   typedef tResult_api_v1 tResult;
+
+   tConfig Config;
 
    tSimpleDigitalInputSensor() : tSensor(SENSOR_TYPE_DIGITAL_INPUT, API_VERSION, sizeof(Config), &Config) {}
 
