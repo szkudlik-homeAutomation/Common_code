@@ -51,7 +51,7 @@ uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
 
    mSensorID = sensorID;
 #if CONFIG_CENTRAL_NODE
-   tSensorHub::Instance->RegisterLocalSensor(mSensorID, pSensorName);
+   tSensorHub::Instance->RegisterLocalSensor(mSensorID, pSensorName, mApiVersion);
 #endif //CONFIG_CENTRAL_NODE
 		   //TODO: send a message to central node in case of remote sensor
 

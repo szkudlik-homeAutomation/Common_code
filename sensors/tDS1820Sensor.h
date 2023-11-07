@@ -19,8 +19,7 @@ class DallasTemperature;
 class tDs1820SensorDesc : public tSensorDesc
 {
 public:
-	tDs1820SensorDesc(uint8_t aSensorID, char * apSensorName) :
-		tSensorDesc(SENSOR_TYPE_DS1820, aSensorID, apSensorName) {}
+	tDs1820SensorDesc() : tSensorDesc() {}
 
 protected:
 #if CONFIG_SENSORS_JSON_OUTPUT
