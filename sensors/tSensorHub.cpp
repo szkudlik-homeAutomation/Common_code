@@ -48,7 +48,7 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize
 }
 
 
-uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
+uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName, uint8_t api_version)
 {
 	   DEBUG_PRINTLN_3("");
 	   DEBUG_PRINT_3("==>Sensor register request. ID: ");
@@ -67,7 +67,8 @@ uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 	   tSensorDesc *pSensorDesc = sensorDescFactory(
 			   pSensor->getSensorType(),
 			   SensorID,
-			   pSensorName);
+			   pSensorName,
+			   api_version);
 
 	   // send response
 	   DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
@@ -212,53 +213,58 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uin
 #endif
 
 
-tSensorDesc *tSensorHub::sensorDescFactory(uint8_t SensorType, uint8_t SensorID, char * pSensorName)
+tSensorDesc *tSensorHub::sensorDescFactory(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion)
 {
     tSensorDesc *newSensorDesc = NULL;
     switch (SensorType)
     {
     #if CONFIG_DS1820_SENSOR
           case SENSOR_TYPE_DS1820:
-              newSensorDesc = new tDs1820SensorDesc(SensorID, pSensorName);
+              newSensorDesc = new tDs1820SensorDesc();
               break;
     #endif // CONFIG_DS1820_SENSOR
 
     #if CONFIG_IMPULSE_SENSOR
           case SENSOR_TYPE_IMPULSE:
-             newSensorDesc = new tImpulseSensorDesc(SensorID, pSensorName);
+             newSensorDesc = new tImpulseSensorDesc();
              break;
     #endif //CONFIG_IMPULSE_SENSOR
 
     #if CONFIG_PT100_ANALOG_SENSOR
              case SENSOR_TYPE_PT100_ANALOG:
-                 newSensorDesc = new tPt100AnalogSensorDesc(SensorID, pSensorName);
+                 newSensorDesc = new tPt100AnalogSensorDesc();
                  break;
     #endif
 
     #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
           case SENSOR_TYPE_DIGITAL_INPUT:
-             newSensorDesc = new tSimpleDigitalInputSensorDesc(SensorID, pSensorName);
+             newSensorDesc = new tSimpleDigitalInputSensorDesc();
              break;
     #endif
 
     #if CONFIG_OUTPUT_STATE_SENSOR
          case SENSOR_TYPE_OUTPUT_STATES:
-             newSensorDesc = new tOutputStateSensorDesc(SensorID, pSensorName);
+             newSensorDesc = new tOutputStateSensorDesc();
              break;
     #endif
 
     #if CONFIG_SYSTEM_STATUS_SENSOR
           case SENSOR_TYPE_SYSTEM_STATUS:
-              newSensorDesc = new tSystemStatusSensorDesc(SensorID, pSensorName);
+              newSensorDesc = new tSystemStatusSensorDesc();
               break;
     #endif //CONFIG_SYSTEM_STATUS_SENSOR
 
           default:
-              newSensorDesc = appSpecificSenorDescFactory(SensorType, SensorID, pSensorName);
+              newSensorDesc = appSpecificSenorDescFactory(SensorType);
     }
 
     if (NULL == newSensorDesc)
-        newSensorDesc = new tSensorDesc(SensorType, SensorID, pSensorName); /* generic, no JSON output */
+        newSensorDesc = new tSensorDesc(); /* generic, no JSON output */
+
+    newSensorDesc->sensorApiVersion = apiVersion;
+    newSensorDesc->sensorType = SensorType;
+    newSensorDesc->SensorID = SensorID;
+    newSensorDesc->pName = pSensorName;
 
     return newSensorDesc;
 }

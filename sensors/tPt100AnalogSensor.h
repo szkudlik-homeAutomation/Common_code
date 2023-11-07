@@ -17,8 +17,7 @@
 class tPt100AnalogSensorDesc : public tSensorDesc
 {
 public:
-    tPt100AnalogSensorDesc(uint8_t aSensorID, char * apSensorName) :
-        tSensorDesc(SENSOR_TYPE_PT100_ANALOG, aSensorID, apSensorName) {}
+    tPt100AnalogSensorDesc() : tSensorDesc() {}
 
 protected:
 #if CONFIG_SENSORS_JSON_OUTPUT

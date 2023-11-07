@@ -18,8 +18,7 @@
 class tImpulseSensorDesc : public tSensorDesc
 {
 public:
-    tImpulseSensorDesc(uint8_t aSensorID, char * apSensorName) :
-        tSensorDesc(SENSOR_TYPE_IMPULSE, aSensorID, apSensorName) {}
+    tImpulseSensorDesc() : tSensorDesc() {}
 
 protected:
 #if CONFIG_SENSORS_JSON_OUTPUT

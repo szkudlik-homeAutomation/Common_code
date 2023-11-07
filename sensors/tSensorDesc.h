@@ -22,10 +22,7 @@ class tSensorHubEvent;
 class tSensorDesc
 {
 public:
-   tSensorDesc(uint8_t aSensorType, uint8_t aSensorID, char * apSensorName) :
-	   SensorID(aSensorID),
-	   sensorType(aSensorType),
-	   pName(apSensorName),
+   tSensorDesc() :
 	   pDataCache(NULL),
 	   pFirstEventHander(NULL),
 	   dataBlobSize(0),
@@ -38,6 +35,7 @@ public:
    uint8_t SensorID;
    uint8_t sensorType;
    uint8_t dataBlobSize;
+   uint8_t sensorApiVersion;
    void *pDataCache;
    char * pName;
    tSensorHubEvent *pFirstEventHander;
@@ -52,6 +50,7 @@ public:
 
    static tSensorDesc *getByID(uint8_t SensorID);
    static tSensorDesc *getByName(const char * pSensorName);
+
 protected:
    /* sensor specific JSON formatter */
     virtual uint8_t doFormatJSON(Stream *pStream) {}

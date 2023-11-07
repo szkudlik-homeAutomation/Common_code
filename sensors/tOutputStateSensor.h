@@ -16,8 +16,7 @@
 class tOutputStateSensorDesc : public tSensorDesc
 {
 public:
-    tOutputStateSensorDesc(uint8_t aSensorID, char * apSensorName) :
-        tSensorDesc(SENSOR_TYPE_OUTPUT_STATES, aSensorID, apSensorName) {}
+    tOutputStateSensorDesc() : tSensorDesc() {}
 
 protected:
 #if CONFIG_SENSORS_JSON_OUTPUT

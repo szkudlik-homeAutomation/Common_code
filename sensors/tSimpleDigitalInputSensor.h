@@ -17,8 +17,7 @@
 class tSimpleDigitalInputSensorDesc : public tSensorDesc
 {
 public:
-    tSimpleDigitalInputSensorDesc(uint8_t aSensorID, char * apSensorName) :
-        tSensorDesc(SENSOR_TYPE_DIGITAL_INPUT, aSensorID, apSensorName) {}
+    tSimpleDigitalInputSensorDesc() : tSensorDesc() {}
 
 protected:
 #if CONFIG_SENSORS_JSON_OUTPUT
