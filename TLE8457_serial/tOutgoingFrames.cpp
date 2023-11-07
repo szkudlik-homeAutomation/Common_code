@@ -80,14 +80,12 @@ bool tOutgoingFrames::SendMsgOutputStateResponse(uint8_t RecieverID, uint8_t  Ou
 // SET OUTPUT
 bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8_t  State, uint16_t Timer)
 {
-#if CONFIG_CENTRAL_NODE
   tMessageTypeSetOutput Message;
   Message.OutId = OutId;
   Message.State = State;
   Message.Timer = Timer;
   DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SET_OUTPUT");
   CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SET_OUTPUT, sizeof(Message), &Message);
-#endif
   return true;
 }
 
