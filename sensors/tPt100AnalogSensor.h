@@ -28,20 +28,22 @@ protected:
 
 class tPt100AnalogSensor : public tSensor {
 public:
-   static const uint8_t API_VERSION = 1;
-
    typedef struct
    {
       uint8_t Pin;
       int8_t Correction;   // resistance of sensor cable
-   } tConfig;
-
-   tConfig Config;
+   } tConfig_api_v1;
 
    typedef struct
    {
       int Temperature;
-   } tResult;
+   } tResult_api_v1;
+
+   static const uint8_t API_VERSION = 1;
+   typedef tConfig_api_v1 tConfig;
+   typedef tResult_api_v1 tResult;
+
+   tConfig Config;
 
    tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG, API_VERSION, sizeof(Config), &Config)
    {

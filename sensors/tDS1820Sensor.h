@@ -39,7 +39,7 @@ public:
    {
       uint8_t Pin;   // pin the oneWire bus is connected to
       uint8_t Avg;   // if true, measurements from all valid devices on the wire will be taken as average
-   } tConfig;
+   } tConfig_api_v1;
 
    typedef struct
    {
@@ -54,12 +54,15 @@ public:
       tDs1820Data Dev[0];
                      // size of the array is 1 if Avg = 1
                      // or NumOfDevices if Avg = 0
-   } tResult;
+   } tResult_api_v1;
+
+   static const uint8_t API_VERSION = 1;
+   typedef tConfig_api_v1 tConfig;
+   typedef tResult_api_v1 tResult;
 
    /* the config */
    tConfig Config;
 
-   static const uint8_t API_VERSION = 1;
 
    tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820, API_VERSION, sizeof(Config), &Config) {}
 
