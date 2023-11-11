@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../global.h"
+#if CONFIG_TLE8457_COMM_LIB
 #if CONFIG_NODE_SCAN_TASK
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
@@ -32,3 +33,4 @@ private:
    uint32_t mActiveNodesMap;
 };
 #endif // CONFIG_NODE_SCAN_TASK
+#endif //CONFIG_TLE8457_COMM_LIB
