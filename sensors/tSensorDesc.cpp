@@ -1,5 +1,5 @@
 /*
- * tSensorDesc1.cpp
+ * tSensorDesc.cpp
  *
  *  Created on: Oct 4, 2023
  *      Author: mszkudli
