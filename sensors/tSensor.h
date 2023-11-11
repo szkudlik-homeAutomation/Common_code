@@ -71,7 +71,7 @@ public:
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
 	 * the config will be copied to specific sensor config
 	 */
-	uint8_t setConfig(uint16_t measurementPeriod, void *pConfigBlob = NULL);
+	uint8_t setConfig(uint8_t SensorID, uint16_t measurementPeriod, void *pConfigBlob = NULL);
 
 	/* make the sensor running */
 	uint8_t Start()
@@ -99,7 +99,7 @@ public:
    /* register the sensor in sensor hub.
     * either local or remote in case of remote nodes
     */
-   uint8_t Register(uint8_t sensorID, char * pSensorName);
+   uint8_t Register(char * pSensorName);
 
    uint16_t GetMeasurementPeriod() const { return mMeasurementPeriod; }
    void TriggerMeasurement() { if (isRunning()) doTriggerMeasurement(); }
@@ -109,6 +109,7 @@ public:
    const bool isMeasurementValid() { return misMeasurementValid; }   // false if not triggered or measurement error
    uint8_t getSensorID() const { return mSensorID; }
    uint8_t getSensorApiVersion() const { return mApiVersion; }
+   uint8_t getConfigBlobSize() const { return mConfigBlobSize; }
 
    static tSensor* getSensor(uint8_t sensorID);
 

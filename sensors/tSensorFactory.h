@@ -21,7 +21,9 @@ public:
 	tSensorFactory() { Instance = this; };
 	virtual ~tSensorFactory() { Instance = NULL; }
 
-	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID) { return NULL; }
+	tSensor *CreateSensor(uint8_t SensorType);
+	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, uint8_t ApiVersion, void *pConfigBlob,
+					      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart);
 
 #if CONFIG_SENSOR_HUB
    /*

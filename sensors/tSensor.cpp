@@ -17,7 +17,7 @@
 
 tSensor* tSensor::pFirst = NULL;
 
-uint8_t tSensor::setConfig(uint16_t measurementPeriod, void *pConfigBlob)
+uint8_t tSensor::setConfig(uint8_t SensorID, uint16_t measurementPeriod, void *pConfigBlob)
 {
 	if (mState != SENSOR_CREATED)
 	{
@@ -29,7 +29,8 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, void *pConfigBlob)
 	    memcpy(mConfigBlobPtr, pConfigBlob, mConfigBlobSize);
 	}
 
-    mMeasurementPeriod = measurementPeriod;
+    mSensorID = SensorID;
+	mMeasurementPeriod = measurementPeriod;
     mCurrMeasurementPeriod = measurementPeriod;
     uint8_t status = doSetConfig();
     if (STATUS_SUCCESS == status)
@@ -40,16 +41,8 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, void *pConfigBlob)
     return status;
 }
 
-uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
+uint8_t tSensor::Register(char * pSensorName)
 {
-   if (NULL != getSensor(sensorID))
-   {
-      DEBUG_PRINT_3("Register duplicate ID: ");
-      DEBUG_3(println(mSensorID,DEC));
-      return STATUS_DUPLICATE_ID;
-   }
-
-   mSensorID = sensorID;
 #if CONFIG_SENSOR_HUB
    tSensorHub::Instance->RegisterLocalSensor(mSensorID, pSensorName, mApiVersion);
 #endif //CONFIG_SENSOR_HUB
