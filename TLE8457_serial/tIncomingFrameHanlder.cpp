@@ -10,9 +10,11 @@
 
 #include "tIncomingFrameHanlder.h"
 #include "tOutgoingFrames.h"
+
 #if CONFIG_OUTPUT_PROCESS
 #include "../tOutputProcess.h"
 #endif // CONFIG_OUTPUT_PROCESS
+
 #if CONFIG_SENSORS
 #include "../sensors/tSensor.h"
 #endif //CONFIG_SENSORS
@@ -214,6 +216,7 @@ void tIncomingFrameHanlder::HandleMsgGetSensorByIdReqest(uint8_t SenderID, tMess
 		Response.isConfigured = pSensor->isConfigured();
 		Response.isMeasurementValid = pSensor->isMeasurementValid();
 		Response.isRunning = pSensor->isRunning();
+		Response.EventsMask = pSensor->getSensorSerialEventsMask();
 	    tOutgoingFrames::SendGetSensorByIdResponse(SenderID, &Response);
 	}
 }
@@ -235,7 +238,9 @@ void tIncomingFrameHanlder::HandleMsgGetSensorByIdResponse(uint8_t SenderID, tMe
 	LOG_PRINT(" isRunning: ");
 	LOG(print(Message->isRunning,DEC));
 	LOG_PRINT(" isMeasurementValid: ");
-	LOG(println(Message->isMeasurementValid,DEC));
+	LOG(print(Message->isMeasurementValid,DEC));
+	LOG_PRINT(" EventMask: ");
+	LOG(println(Message->EventsMask,BIN));
 	   //TODO: send a message
 }
 
@@ -252,15 +257,15 @@ void tIncomingFrameHanlder::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID
 void tIncomingFrameHanlder::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
 {
 	DEBUG_PRINT_3("Sensor ID:");
-	DEBUG_3(print(Message->SensorID, DEC));
+	DEBUG_3(print(Message->Header.SensorID, DEC));
 	DEBUG_PRINT_3(" EventType:");
-	DEBUG_3(print(Message->EventType, DEC));
+	DEBUG_3(print(Message->Header.EventType, DEC));
 	DEBUG_PRINT_3(" onDemand:");
-	DEBUG_3(print(Message->onDemand, DEC));
+	DEBUG_3(print(Message->Header.onDemand, DEC));
 	DEBUG_PRINT_3(" SegmentSeq:");
-	DEBUG_3(print(Message->SegmentSeq, DEC));
+	DEBUG_3(print(Message->Header.SegmentSeq, DEC));
 	DEBUG_PRINT_3(" LastSegment:");
-	DEBUG_3(println(Message->LastSegment, DEC));
+	DEBUG_3(println(Message->Header.LastSegment, DEC));
 	DEBUG_PRINT_3(" Payload:");
 	for (uint8_t i = 0; i < SENSOR_MEASUREMENT_PAYLOAD_SIZE; i++)
 	{

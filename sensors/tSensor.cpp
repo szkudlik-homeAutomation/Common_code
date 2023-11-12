@@ -61,7 +61,8 @@ tSensor::tSensor(uint8_t SensorType, uint8_t ApiVersion, uint8_t ConfigBlobSize,
       mSensorID(0xFF),
 	  mApiVersion(ApiVersion),
 	  mConfigBlobSize(ConfigBlobSize),
-	  mConfigBlobPtr(ConfigBlobPtr)
+	  mConfigBlobPtr(ConfigBlobPtr),
+	  mSerialEventsMask(0)
 {
    pNext = pFirst;
    pFirst = this;
@@ -98,7 +99,7 @@ void tSensor::onMeasurementCompleted(bool Status)
   }
 #endif //CONFIG_SENSOR_HUB
 #if CONFIG_TLE8457_COMM_LIB
-  if (misSendingEventFrames)
+  if (mSerialEventsMask)	// any bit is set
 	  sendMsgSensorEvent(false);
 #endif
 }

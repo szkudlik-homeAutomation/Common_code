@@ -116,7 +116,7 @@ typedef struct
     uint8_t isConfigured : 1,
 			isRunning : 1,
 			isMeasurementValid : 1,
-			isSendingEvents : 1;	// the sensor is sending broadcast events
+			EventsMask		   : 4;
     uint16_t MeasurementPeriod;
 } tMessageGetSensorByIdResponse;
 C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
@@ -143,12 +143,21 @@ typedef struct
 {
     uint8_t SensorID;
     uint8_t LastSegment  : 1,	// if "1" - no more segments
-            EventType    : 3,   // tSensorEventType
-			onDemand     : 1,	// this is a response for MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST
-            SegmentSeq   : 3;	// if "0" - first segment, next segments must have SegmentSeq++
-    uint8_t Payload[SENSOR_MEASUREMENT_PAYLOAD_SIZE];
+            EventType    : 4,   // SensorEventType
+			onDemand     : 1;	// this is a response for MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST
+
+    uint8_t SegmentSeq;				// if "0" - first segment, next segments must have SegmentSeq++
+} tMessageSensorEventHeader;
+
+#define SENSOR_MEASUREMENT_PAYLOAD_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageSensorEventHeader))
+
+typedef struct
+{
+	tMessageSensorEventHeader Header;
+	uint8_t Payload[SENSOR_MEASUREMENT_PAYLOAD_SIZE];
 } tMessageSensorEvent;
-C_ASSERT(sizeof(tMessageSensorEvent) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+C_ASSERT(sizeof(tMessageSensorEvent) == COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 #endif //CONFIG_SENSORS
 

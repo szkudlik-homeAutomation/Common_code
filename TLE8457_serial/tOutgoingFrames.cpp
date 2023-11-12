@@ -114,7 +114,7 @@ static bool tOutgoingFrames::SendGetSensorMeasurementReqest(uint8_t RecieverID, 
     CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST, sizeof(Message), &Message);
 }
 
-static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, tSensorEventType EventType, bool onDemand,
+static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
 		void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment)
 {
     DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_EVENT");
@@ -124,15 +124,15 @@ static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorI
         DEBUG_PRINTLN_3("SendSensorEvent - payload too big");
         return false;
     }
-    Message.LastSegment = LastSegment;
-    Message.onDemand = onDemand;
-    Message.EventType = EventType;
-    Message.SegmentSeq = seq;
-    Message.SensorID = SensorID;
+    Message.Header.LastSegment = LastSegment;
+    Message.Header.onDemand = onDemand;
+    Message.Header.EventType = EventType;
+    Message.Header.SegmentSeq = seq;
+    Message.Header.SensorID = SensorID;
     memset(Message.Payload, 0, SENSOR_MEASUREMENT_PAYLOAD_SIZE);
     memcpy(Message.Payload, pPayload, payloadSize);
 
-    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_EVENT, sizeof(Message), &Message);
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_EVENT, sizeof(tMessageSensorEvent), &Message);
 }
 
 

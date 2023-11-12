@@ -38,13 +38,10 @@
 
 #define SENSOR_ID_NOT_FOUND 0xff
 
-typedef enum
-{
-   EV_TYPE_MEASUREMENT_ERROR,
-   EV_TYPE_MEASUREMENT_COMPLETED,
-   EV_TYPE_MEASUREMENT_CHANGE,
-   EV_TYPE_THOLD_EXCEEDED
-} tSensorEventType;
+#define EV_TYPE_MEASUREMENT_COMPLETED BIT0
+#define EV_TYPE_MEASUREMENT_ERROR  BIT1
+#define EV_TYPE_MEASUREMENT_CHANGE BIT2
+#define EV_TYPE_THOLD_EXCEEDED BIT3
 
 class tSensor;
 
@@ -64,7 +61,6 @@ extern tSensorProcess SensorProcess;
 
 class tSensor {
 public:
-
 	/* process and set config. The config must be set before either by sensor's specific functions
 	 * setConfig MUST be called once
 	 *
@@ -73,10 +69,12 @@ public:
 	 */
 	uint8_t setConfig(uint8_t SensorID, uint16_t measurementPeriod, void *pConfigBlob = NULL);
 
+	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask = mask; }
+	uint8_t getSensorSerialEventsMask() const { return mSerialEventsMask; }
+
 	/* make the sensor running */
 	uint8_t Start()
 	{
-		misSendingEventFrames = true;
 		if (SENSOR_PAUSED == mState)
 		{
 			mState = SENSOR_RUNNING;
@@ -150,7 +148,7 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
-   bool misSendingEventFrames;
+   uint8_t mSerialEventsMask;
    uint8_t mConfigBlobSize;
    void *mConfigBlobPtr;
 

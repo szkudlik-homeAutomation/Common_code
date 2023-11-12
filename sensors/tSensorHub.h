@@ -18,7 +18,7 @@ class tSensorHubEvent
 {
 public:
    tSensorHubEvent() {}
-   virtual void onEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob) = 0;
+   virtual void onEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob) = 0;
 
 private:
    void Connect(tSensorHubEvent **pFirst) { pNext = *pFirst; *pFirst = this; }
@@ -98,10 +98,10 @@ public:
    /*
     * to be called on sensor event, either remote or local
     */
-   void onSensorEvent(uint8_t SensorID, tSensorEventType EventType, uint8_t dataBlobSize, void *pDataBlob);
+   void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 
 private:
-   void callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType);
+   void callAllCallbacks(tSensorDesc *pSensorDesc, uint8_t EventType);
 
 };
 
