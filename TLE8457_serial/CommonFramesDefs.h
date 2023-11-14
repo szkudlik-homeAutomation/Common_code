@@ -95,19 +95,24 @@ C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 #if CONFIG_SENSORS
 
+#define MESSAGE_TYPE_GENERAL_STATUS 0x12
+typedef struct {
+    uint8_t Status;
+} tMesssageGeneralStatus;
+
 /**
  * Look for a sensor with a given ID
  * A node that holds the sensor in question must response with MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE
  * usually send as broadcast
  */
-#define MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST 0x12
+#define MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST 0x13
 typedef struct
 {
     uint8_t SensorID;
 } tMessageGetSensorByIdReqest;
 C_ASSERT(sizeof(tMessageGetSensorByIdReqest) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
-#define MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE 0x13
+#define MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE 0x14
 typedef struct
 {
     uint8_t SensorID;
@@ -127,7 +132,7 @@ C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZ
  *
  * MESSAGE_TYPE_SENSOR_EVENT may be divided to several frames if needed
  */
-#define MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST 0x14
+#define MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST 0x15
 typedef struct
 {
     uint8_t SensorID;
@@ -138,7 +143,7 @@ C_ASSERT(sizeof(tMessageGetSensorMeasurementReqest) <= COMMUNICATION_PAYLOAD_DAT
  * an event from a sensor
  * sent either when a sensor reports a status or on demand
  */
-#define MESSAGE_TYPE_SENSOR_EVENT 0x15
+#define MESSAGE_TYPE_SENSOR_EVENT 0x16
 typedef struct
 {
     uint8_t SensorID;
@@ -160,5 +165,6 @@ typedef struct
 C_ASSERT(sizeof(tMessageSensorEvent) == COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 #endif //CONFIG_SENSORS
+
 
 #endif //CONFIG_TLE8457_COMM_LIB

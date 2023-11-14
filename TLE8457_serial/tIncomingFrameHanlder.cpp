@@ -43,6 +43,11 @@ uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)
              cli();
              while(1); // let watchdog reboot the device
            break;
+       case MESSAGE_TYPE_GENERAL_STATUS:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_GENERAL_STATUS");
+           HandleMsgGeneralStatus(SenderDevId, (tMesssageGeneralStatus *)(pFrame->Data));
+           break;
+
 #if CONFIG_OUTPUT_PROCESS
        case MESSAGE_TYPE_OVERVIEW_STATE_REQUEST:
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_OVERVIEW_STATE_REQUEST");
@@ -125,6 +130,14 @@ void tIncomingFrameHanlder::HandleMsgVersionResponse(uint8_t SenderID, tMessageT
 	tMessageReciever::Dispatch(tMessages::MessageType_ExternalEvent,tMessages::ExternalEvent_VersionResponse,&VersionResponse);
 }
 
+void tIncomingFrameHanlder::HandleMsgGeneralStatus(uint8_t SenderID, tMesssageGeneralStatus *pMessage)
+{
+    LOG_PRINT("Status from node: ");
+    LOG(print(SenderID,HEX));
+    LOG_PRINT(" ");
+    LOG(println(pMessage->Status,DEC));
+    //TODO: send a message
+}
 
 #if CONFIG_OUTPUT_PROCESS
 void tIncomingFrameHanlder::HandleMsgOverviewStateRequest(uint8_t SenderID)

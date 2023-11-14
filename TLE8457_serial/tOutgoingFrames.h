@@ -19,6 +19,7 @@ public:
     static bool SendMsgVersionRequest(uint8_t RecieverID);
     static bool SendMsgVersionResponse(uint8_t RecieverID, uint8_t Major, uint8_t Minor, uint8_t Patch);
     static bool SendMsgReset(uint8_t RecieverID);
+    static bool SendMsgStatus(uint8_t RecieverID, uint8_t Status);
 
 #if CONFIG_OUTPUT_PROCESS
     static bool SendMsgOverviewStateRequest(uint8_t RecieverID);
