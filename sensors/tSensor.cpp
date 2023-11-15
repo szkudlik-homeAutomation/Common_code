@@ -17,7 +17,7 @@
 
 tSensor* tSensor::pFirst = NULL;
 
-uint8_t tSensor::setConfig(uint8_t SensorID, uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize)
+uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize)
 {
 	if (mState != SENSOR_CREATED)
 	{
@@ -42,7 +42,6 @@ uint8_t tSensor::setConfig(uint8_t SensorID, uint16_t measurementPeriod, uint8_t
 	    memcpy(mConfigBlobPtr, pConfigBlob, mConfigBlobSize);
 	}
 
-    mSensorID = SensorID;
 	mMeasurementPeriod = measurementPeriod;
     mCurrMeasurementPeriod = measurementPeriod;
     uint8_t status = doSetConfig();
@@ -64,14 +63,14 @@ uint8_t tSensor::Register(char * pSensorName)
    return STATUS_SUCCESS;
 }
 
-tSensor::tSensor(uint8_t SensorType, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr) :
+tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr) :
       mCurrentMeasurementBlob(NULL),
       mMeasurementBlobSize(0),
       mSensorType(SensorType),
       mState(SENSOR_CREATED),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mSensorID(0xFF),
+      mSensorID(sensorID),
 	  mApiVersion(ApiVersion),
 	  mConfigBlobSize(ConfigBlobSize),
 	  mConfigBlobPtr(ConfigBlobPtr),

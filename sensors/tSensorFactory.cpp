@@ -104,18 +104,14 @@ tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, ch
 tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, uint8_t ApiVersion, void *pConfigBlob,
 	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart)
 {
-	DEBUG_PRINT_3("Creating sensor type ");
-	DEBUG_3(print(SensorType,DEC));
-	DEBUG_PRINT_3(" ID ");
-	DEBUG_3(print(SensorID,DEC));
-	tSensor *pSensor = CreateSensor(SensorType);
+	tSensor *pSensor = CreateSensor(SensorType, SensorID);
 	if (NULL == pSensor)
 	{
 		DEBUG_PRINTLN_3(" error: cannot create sensor");
 		return NULL;
 	}
 
-	pSensor->setConfig(SensorID, measurementPeriod, ApiVersion, pConfigBlob, configBlobSize);
+	pSensor->setConfig(measurementPeriod, ApiVersion, pConfigBlob, configBlobSize);
 	if(autoStart)
 		pSensor->Start();
 
@@ -126,49 +122,54 @@ free:
 	return NULL;
 }
 
-tSensor *tSensorFactory::CreateSensor(uint8_t SensorType)
+tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
 {
+	DEBUG_PRINT_3("Creating sensor type ");
+	DEBUG_3(print(SensorType,DEC));
+	DEBUG_PRINT_3(" ID ");
+	DEBUG_3(print(SensorID,DEC));
+
 	tSensor *pSensor = NULL;
     switch (SensorType)
     {
     #if CONFIG_DS1820_SENSOR
           case SENSOR_TYPE_DS1820:
-        	  pSensor = new tDS1820Sensor();
+        	  pSensor = new tDS1820Sensor(SensorID);
               break;
     #endif // CONFIG_DS1820_SENSOR
 
     #if CONFIG_IMPULSE_SENSOR
           case SENSOR_TYPE_IMPULSE:
-        	 pSensor = new tImpulseSensor();
+        	 pSensor = new tImpulseSensor(SensorID);
              break;
     #endif //CONFIG_IMPULSE_SENSOR
 
     #if CONFIG_PT100_ANALOG_SENSOR
           case SENSOR_TYPE_PT100_ANALOG:
-        	  pSensor = new tPt100AnalogSensor();
+        	  pSensor = new tPt100AnalogSensor(SensorID);
               break;
     #endif
 
     #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
           case SENSOR_TYPE_DIGITAL_INPUT:
-        	  pSensor = new tSimpleDigitalInputSensor();
+        	  pSensor = new tSimpleDigitalInputSensor(SensorID);
               break;
     #endif
 
     #if CONFIG_OUTPUT_STATE_SENSOR
          case SENSOR_TYPE_OUTPUT_STATES:
-        	 pSensor = new tOutputStateSensor();
+        	 pSensor = new tOutputStateSensor(SensorID);
              break;
     #endif
 
     #if CONFIG_SYSTEM_STATUS_SENSOR
           case SENSOR_TYPE_SYSTEM_STATUS:
-        	  pSensor = new tSystemStatusSensor();
+        	  pSensor = new tSystemStatusSensor(SensorID);
               break;
     #endif //CONFIG_SYSTEM_STATUS_SENSOR
 
           default:
-        	  pSensor = appSpecificCreateSensor(SensorType);
+        	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
     }
 
     return pSensor;

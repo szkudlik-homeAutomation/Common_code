@@ -63,7 +63,7 @@ public:
    tConfig Config;
 
 
-   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820, API_VERSION, sizeof(Config), &Config) {}
+   tDS1820Sensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DS1820, sensorID, API_VERSION, sizeof(Config), &Config) {}
 
    static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
 

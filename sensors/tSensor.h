@@ -67,11 +67,11 @@ public:
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
 	 * the config will be copied to specific sensor config
 	 */
-	uint8_t setConfig(uint8_t SensorID, uint16_t measurementPeriod)
+	uint8_t setConfig(uint16_t measurementPeriod)
 	{
-		setConfig(SensorID, measurementPeriod, 0, NULL, 0);
+		setConfig(measurementPeriod, 0, NULL, 0);
 	}
-	uint8_t setConfig(uint8_t SensorID, uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
+	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
 	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask = mask; }
 	uint8_t getSensorSerialEventsMask() const { return mSerialEventsMask; }
@@ -124,7 +124,7 @@ protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
     * For identification, API version must be increased every time the config OR the result data format changes
     */
-   tSensor(uint8_t SensorType, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr);
+   tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr);
 
    void *mCurrentMeasurementBlob;
    uint8_t mMeasurementBlobSize;

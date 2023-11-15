@@ -44,7 +44,7 @@ public:
 
    tConfig Config;
 
-   tPt100AnalogSensor() : tSensor(SENSOR_TYPE_PT100_ANALOG, API_VERSION, sizeof(Config), &Config)
+   tPt100AnalogSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_PT100_ANALOG, sensorID, API_VERSION, sizeof(Config), &Config)
    {
 	   mCurrentMeasurementBlob = (void*) &mResult;
 	   mMeasurementBlobSize = sizeof(mResult);

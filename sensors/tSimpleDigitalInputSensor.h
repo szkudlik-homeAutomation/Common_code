@@ -44,7 +44,7 @@ public:
 
    tConfig Config;
 
-   tSimpleDigitalInputSensor() : tSensor(SENSOR_TYPE_DIGITAL_INPUT, API_VERSION, sizeof(Config), &Config) {}
+   tSimpleDigitalInputSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DIGITAL_INPUT, sensorID, API_VERSION, sizeof(Config), &Config) {}
 
    virtual void doTriggerMeasurement();
 

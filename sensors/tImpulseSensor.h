@@ -37,7 +37,7 @@ public:
    typedef tResult_api_v1 tResult;
 
 
-   tImpulseSensor();
+   tImpulseSensor(uint8_t sensorID);
    virtual ~tImpulseSensor() {}
 
    void CleanSum(); 			// clear Sum
