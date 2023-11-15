@@ -104,6 +104,7 @@ tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, ch
 tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, uint8_t ApiVersion, void *pConfigBlob,
 	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart)
 {
+	uint8_t Status;
 	tSensor *pSensor = CreateSensor(SensorType, SensorID);
 	if (NULL == pSensor)
 	{
@@ -111,15 +112,17 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, uint
 		return NULL;
 	}
 
-	pSensor->setConfig(measurementPeriod, ApiVersion, pConfigBlob, configBlobSize);
+	Status = pSensor->setConfig(measurementPeriod, ApiVersion, pConfigBlob, configBlobSize);
+	if (STATUS_SUCCESS != Status)
+	{
+		delete(pSensor);
+		return NULL;
+	}
+
 	if(autoStart)
 		pSensor->Start();
 
 	return pSensor;
-
-free:
-	delete(pSensor);
-	return NULL;
 }
 
 tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
