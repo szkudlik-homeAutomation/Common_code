@@ -34,6 +34,7 @@ public:
     static bool SendGetSensorMeasurementReqest(uint8_t RecieverID, uint8_t SensorID);
     static bool SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
     		    void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment);
+    static bool SendSensorCreate(uint8_t RecieverID, uint8_t SensorType, uint8_t SensorID);
  
 #endif //CONFIG_SENSORS
 };

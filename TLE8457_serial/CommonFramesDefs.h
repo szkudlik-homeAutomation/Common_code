@@ -164,6 +164,15 @@ typedef struct
 
 C_ASSERT(sizeof(tMessageSensorEvent) == COMMUNICATION_PAYLOAD_DATA_SIZE);
 
+
+#define MESSAGE_TYPE_SENSOR_CREATE 0x17
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t SensorType;
+} tMessageSensorCreate;
+C_ASSERT(sizeof(tMessageSensorCreate) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
 #endif //CONFIG_SENSORS
 
 

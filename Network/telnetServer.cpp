@@ -211,6 +211,32 @@ bool send_GetSensorMeasurementReqest(Commander &Cmdr)
     return false;
 }
 
+bool send_CreateSensorRequest(Commander &Cmdr)
+{
+    int Dst;
+    int SensorType;
+    int SensorId;
+
+    if(!Cmdr.getInt(Dst))
+    {
+      goto error;
+    }
+    if(!Cmdr.getInt(SensorType))
+    {
+      goto error;
+    }
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+
+    tOutgoingFrames::SendSensorCreate(Dst, SensorType, SensorId);
+    return true;
+  error:
+    Cmdr.println(F("Usage: CreateSensor dev_id sensor_type sensor_id"));
+    return false;
+}
+
 #endif //CONFIG_SENSORS
 
 #endif // CONFIG_TLE8457_COMM_LIB

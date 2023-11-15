@@ -17,6 +17,7 @@
 
 #if CONFIG_SENSORS
 #include "../sensors/tSensor.h"
+#include "../sensors/tSensorFactory.h"
 #endif //CONFIG_SENSORS
 
 
@@ -93,6 +94,10 @@ uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)
        case MESSAGE_TYPE_SENSOR_EVENT:
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_EVENT");
            HandleMsgSensorEvent(SenderDevId,(tMessageSensorEvent*)(pFrame->Data));
+           break;
+       case MESSAGE_TYPE_SENSOR_CREATE:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_CREATE");
+           HandleMsgSensorCreate(SenderDevId, (tMessageSensorCreate*)(pFrame->Data));
            break;
 
 #endif //CONFIG_SENSORS
@@ -289,6 +294,21 @@ void tIncomingFrameHanlder::HandleMsgSensorEvent(uint8_t SenderID, tMessageSenso
 	DEBUG_PRINTLN_3("");
 
     /* todo: put incoming data to SensorHub */
+}
+
+void tIncomingFrameHanlder::HandleMsgSensorCreate(uint8_t SenderID, tMessageSensorCreate *Message)
+{
+    DEBUG_PRINT_3("Creating type: ");
+    DEBUG_3(print(Message->SensorType, DEC));
+    DEBUG_PRINT_3(" with ID: ");
+    DEBUG_3(println(Message->SensorID, DEC));
+
+   tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Message->SensorType, Message->SensorID);
+
+   if (pSensor)
+       tOutgoingFrames::SendMsgStatus(SenderID, 0);
+   else
+       tOutgoingFrames::SendMsgStatus(SenderID, STATUS_GENERAL_FAILURE);
 }
 
 

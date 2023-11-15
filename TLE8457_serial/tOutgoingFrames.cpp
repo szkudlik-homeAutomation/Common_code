@@ -143,6 +143,14 @@ static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorI
     CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_EVENT, sizeof(tMessageSensorEvent), &Message);
 }
 
+static bool tOutgoingFrames::SendSensorCreate(uint8_t RecieverID, uint8_t SensorType, uint8_t SensorID)
+{
+    tMessageSensorCreate Msg;
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_CREATE");
+    Msg.SensorID = SensorID;
+    Msg.SensorType = SensorType;
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CREATE, sizeof(Msg), &Msg);
+}
 
 #endif //CONFIG_SENSORS
 

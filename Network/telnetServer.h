@@ -61,6 +61,7 @@ bool trigger_ScanNodes(Commander &Cmdr);
 #if CONFIG_SENSORS
 bool send_GetSensorByIdReqestHandler(Commander &Cmdr);
 bool send_GetSensorMeasurementReqest(Commander &Cmdr);
+bool send_CreateSensorRequest(Commander &Cmdr);
 #endif //CONFIG_SENSORS
 
 #endif //CONFIG_TLE8457_COMM_LIB
