@@ -115,14 +115,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, uint
 		return NULL;
 	}
 
-	if ((ApiVersion != pSensor->getSensorApiVersion()) ||
-		 configBlobSize != pSensor->getConfigBlobSize())
-	{
-		DEBUG_PRINTLN_3(" error: api version mismatch");
-		goto free;
-	}
-
-	pSensor->setConfig(SensorID, measurementPeriod, pConfigBlob);
+	pSensor->setConfig(SensorID, measurementPeriod, ApiVersion, pConfigBlob, configBlobSize);
 	if(autoStart)
 		pSensor->Start();
 

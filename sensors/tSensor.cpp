@@ -17,15 +17,28 @@
 
 tSensor* tSensor::pFirst = NULL;
 
-uint8_t tSensor::setConfig(uint8_t SensorID, uint16_t measurementPeriod, void *pConfigBlob)
+uint8_t tSensor::setConfig(uint8_t SensorID, uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize)
 {
 	if (mState != SENSOR_CREATED)
 	{
 		return STATUS_CONFIG_SET_ERROR;
 	}
 
+	if (ApiVersion && (ApiVersion != getSensorApiVersion()))
+	{
+		DEBUG_PRINTLN_3(" error: api version mismatch");
+		return STATUS_CONFIG_SET_ERROR;
+	}
+
 	if (NULL != pConfigBlob && NULL != mConfigBlobPtr)
 	{
+		if ((ApiVersion != getSensorApiVersion()) ||
+			 configBlobSize != getConfigBlobSize())
+		{
+			DEBUG_PRINTLN_3(" error: api version mismatch");
+			return STATUS_CONFIG_SET_ERROR;
+		}
+
 	    memcpy(mConfigBlobPtr, pConfigBlob, mConfigBlobSize);
 	}
 
