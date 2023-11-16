@@ -38,10 +38,12 @@
 
 #define SENSOR_ID_NOT_FOUND 0xff
 
-#define EV_TYPE_MEASUREMENT_COMPLETED BIT0
-#define EV_TYPE_MEASUREMENT_ERROR  BIT1
-#define EV_TYPE_MEASUREMENT_CHANGE BIT2
-#define EV_TYPE_THOLD_EXCEEDED BIT3
+#define EV_TYPE_MEASUREMENT_COMPLETED 1
+#define EV_TYPE_MEASUREMENT_ERROR  2
+#define EV_TYPE_MEASUREMENT_CHANGE 3
+#define EV_TYPE_THOLD_EXCEEDED 4
+#define EV_TYPE_SENSOR_STATE_CHANGE 5
+
 
 class tSensor;
 
@@ -61,6 +63,20 @@ extern tSensorProcess SensorProcess;
 
 class tSensor {
 public:
+	typedef union
+	{
+		struct
+		{
+			uint8_t MeasurementCompleted  : 1,
+					MeasurementError : 1,
+					MeasurementChange : 1,
+					TholdExceeded : 1,
+					SensorStateChange : 1;
+		};
+		uint8_t Byte;
+	} tEventMask;
+	C_ASSERT(sizeof(tEventMask) == sizeof(uint8_t));
+
 	/* process and set config. The config must be set before either by sensor's specific functions
 	 * setConfig MUST be called once
 	 *
@@ -73,30 +89,15 @@ public:
 	}
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
-	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask = mask; }
-	uint8_t getSensorSerialEventsMask() const { return mSerialEventsMask; }
+	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask.Byte = mask; }
+	void setSensorSerialEventsMask(tEventMask mask) { mSerialEventsMask.Byte = mask.Byte; }
+
+	tEventMask getSensorSerialEventsMask() const { return mSerialEventsMask; }
 
 	/* make the sensor running */
-	uint8_t Start()
-	{
-		if (SENSOR_PAUSED == mState)
-		{
-			mState = SENSOR_RUNNING;
-			return doRun();
-		}
-		return STATUS_SENSOR_INCORRECT_STATE;
-	}
-
+	uint8_t Start();
 	/* pause the sensor */
-	uint8_t Pause()
-	{
-		if (SENSOR_RUNNING == mState)
-		{
-			mState = SENSOR_PAUSED;
-			return doPause();
-		}
-		return STATUS_SENSOR_INCORRECT_STATE;
-	}
+	uint8_t Pause();
 
    /* register the sensor in sensor hub.
     * either local or remote in case of remote nodes
@@ -118,7 +119,7 @@ public:
    static void Run();
 
 #if CONFIG_TLE8457_COMM_LIB
-   void sendMsgSensorEvent(bool onDemand);
+   void sendMsgSensorEventMeasurementCompleted(bool onDemand);
 #endif //CONFIG_TLE8457_COMM_LIB
 protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
@@ -132,9 +133,9 @@ protected:
    void onMeasurementCompleted(bool Status);
 
    virtual void doTriggerMeasurement() = 0;
-   virtual uint8_t doSetConfig() { return STATUS_SUCCESS; }
-   virtual uint8_t doRun() { return STATUS_SUCCESS; }
-   virtual uint8_t doPause() { return STATUS_SUCCESS; }
+   virtual uint8_t onSetConfig() { return STATUS_SUCCESS; }
+   virtual uint8_t onRun() { return STATUS_SUCCESS; }
+   virtual uint8_t onPause() { return STATUS_SUCCESS; }
    virtual void doTimeTick() {};
 
 private:
@@ -152,7 +153,7 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
-   uint8_t mSerialEventsMask;
+   tEventMask mSerialEventsMask;
    uint8_t mConfigBlobSize;
    void *mConfigBlobPtr;
 

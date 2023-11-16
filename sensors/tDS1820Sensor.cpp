@@ -61,7 +61,7 @@ uint8_t tDs1820SensorDesc::doFormatJSON(Stream *pStream)
 }
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
-uint8_t tDS1820Sensor::doSetConfig()
+uint8_t tDS1820Sensor::onSetConfig()
 {
    OneWire * pOneWire = new OneWire(Config.Pin);
    pDs1820 = new DallasTemperature(pOneWire);

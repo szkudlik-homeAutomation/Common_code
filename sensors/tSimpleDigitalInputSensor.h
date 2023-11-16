@@ -49,7 +49,7 @@ public:
    virtual void doTriggerMeasurement();
 
 protected:
-   virtual uint8_t doSetConfig();
+   virtual uint8_t onSetConfig();
 private:
    tResult mResult;
 };

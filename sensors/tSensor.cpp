@@ -44,13 +44,44 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 
 	mMeasurementPeriod = measurementPeriod;
     mCurrMeasurementPeriod = measurementPeriod;
-    uint8_t status = doSetConfig();
+    uint8_t status = onSetConfig();
     if (STATUS_SUCCESS == status)
     {
     	mState = SENSOR_PAUSED;
     }
 
     return status;
+}
+
+/* make the sensor running */
+uint8_t tSensor::Start()
+{
+	uint8_t result;
+	if (SENSOR_PAUSED == mState)
+	{
+		result = onRun();
+		if (STATUS_SUCCESS == result)
+			mState = SENSOR_RUNNING;
+		return result;
+	}
+	if (SENSOR_RUNNING != mState)
+		return STATUS_SENSOR_INCORRECT_STATE;
+	return STATUS_SUCCESS;
+}
+
+/* pause the sensor */
+uint8_t tSensor::Pause()
+{
+	uint8_t result;
+	if (SENSOR_RUNNING == mState)
+	{
+		result = onPause();
+		if (STATUS_SUCCESS == result)
+			mState = SENSOR_PAUSED;
+		return result;
+	}
+
+	return STATUS_SENSOR_INCORRECT_STATE;
 }
 
 uint8_t tSensor::Register(char * pSensorName)
@@ -73,11 +104,12 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
       mSensorID(sensorID),
 	  mApiVersion(ApiVersion),
 	  mConfigBlobSize(ConfigBlobSize),
-	  mConfigBlobPtr(ConfigBlobPtr),
-	  mSerialEventsMask(0)
+	  mConfigBlobPtr(ConfigBlobPtr)
+
 {
    pNext = pFirst;
    pFirst = this;
+   mSerialEventsMask.Byte = 0;
 }
 
 tSensor* tSensor::getSensor(uint8_t sensorID)
@@ -104,20 +136,23 @@ void tSensor::onMeasurementCompleted(bool Status)
   if (Status)
   {
       tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
+#if CONFIG_TLE8457_COMM_LIB
+	   if (mSerialEventsMask.MeasurementCompleted)
+	   {
+		   sendMsgSensorEventMeasurementCompleted(false);
+	   }
+#endif
+
   }
   else
   {
       tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
 #endif //CONFIG_SENSOR_HUB
-#if CONFIG_TLE8457_COMM_LIB
-  if (mSerialEventsMask)	// any bit is set
-	  sendMsgSensorEvent(false);
-#endif
 }
 
 #if CONFIG_TLE8457_COMM_LIB
-void tSensor::sendMsgSensorEvent(bool onDemand)
+void tSensor::sendMsgSensorEventMeasurementCompleted(bool onDemand)
 {
 	if (misMeasurementValid)
 	{

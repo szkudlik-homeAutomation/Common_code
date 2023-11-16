@@ -148,7 +148,7 @@ typedef struct
 {
     uint8_t SensorID;
     uint8_t LastSegment  : 1,	// if "1" - no more segments
-            EventType    : 4,   // SensorEventType
+            EventType    : 4,   // SensorEventType (numeric)
 			onDemand     : 1;	// this is a response for MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST
 
     uint8_t SegmentSeq;				// if "0" - first segment, next segments must have SegmentSeq++

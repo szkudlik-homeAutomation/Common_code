@@ -123,7 +123,7 @@ void tSensorHub::callAllCallbacks(tSensorDesc *pSensorDesc, uint8_t EventType)
    tSensorHubEvent *pEventCallback = pSensorDesc->pFirstEventHander;
    while (pEventCallback)
    {
-      if (EV_TYPE_MEASUREMENT_ERROR & EventType)
+      if (EV_TYPE_MEASUREMENT_ERROR == EventType)
          pEventCallback->onEvent(pSensorDesc->SensorID, EventType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache);
       else
          pEventCallback->onEvent(pSensorDesc->SensorID, EventType, 0, NULL);
@@ -140,7 +140,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
       return;
    }
 
-   if (EventType & EV_TYPE_MEASUREMENT_ERROR)
+   if (EventType == EV_TYPE_MEASUREMENT_ERROR)
    {
       pSensorDesc->Status = STATUS_SENSOR_ERROR_REPORTED;
       // callbacks

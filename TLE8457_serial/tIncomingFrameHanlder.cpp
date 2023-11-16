@@ -137,9 +137,9 @@ void tIncomingFrameHanlder::HandleMsgVersionResponse(uint8_t SenderID, tMessageT
 
 void tIncomingFrameHanlder::HandleMsgGeneralStatus(uint8_t SenderID, tMesssageGeneralStatus *pMessage)
 {
-    LOG_PRINT("Status from node: ");
+    LOG_PRINT("Message from node: ");
     LOG(print(SenderID,HEX));
-    LOG_PRINT(" ");
+    LOG_PRINT(" status: ");
     LOG(println(pMessage->Status,DEC));
     //TODO: send a message
 }
@@ -234,7 +234,7 @@ void tIncomingFrameHanlder::HandleMsgGetSensorByIdReqest(uint8_t SenderID, tMess
 		Response.isConfigured = pSensor->isConfigured();
 		Response.isMeasurementValid = pSensor->isMeasurementValid();
 		Response.isRunning = pSensor->isRunning();
-		Response.EventsMask = pSensor->getSensorSerialEventsMask();
+		Response.EventsMask = pSensor->getSensorSerialEventsMask().Byte;
 	    tOutgoingFrames::SendGetSensorByIdResponse(SenderID, &Response);
 	}
 }
@@ -269,7 +269,7 @@ void tIncomingFrameHanlder::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID
     if (NULL == pSensor)
         return;
 
-    pSensor->sendMsgSensorEvent(true);
+    pSensor->sendMsgSensorEventMeasurementCompleted(true);
 }
 
 void tIncomingFrameHanlder::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)

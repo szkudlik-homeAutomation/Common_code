@@ -75,7 +75,7 @@ public:
 protected:
    virtual void doTriggerMeasurement();
    virtual void doTimeTick();
-   virtual uint8_t doSetConfig();
+   virtual uint8_t onSetConfig();
 
 private:
    static const uint8_t NUM_TICKS_TO_MEASURE_COMPETE = (750 / SENSOR_PROCESS_SERVICE_TIME)+1;

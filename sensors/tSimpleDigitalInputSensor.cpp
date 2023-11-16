@@ -37,7 +37,7 @@ void tSimpleDigitalInputSensor::doTriggerMeasurement()
    onMeasurementCompleted(true);
 }
 
-uint8_t tSimpleDigitalInputSensor::doSetConfig()
+uint8_t tSimpleDigitalInputSensor::onSetConfig()
 {
    pinMode(Config.Pin, INPUT_PULLUP);
 
