@@ -237,6 +237,55 @@ bool send_CreateSensorRequest(Commander &Cmdr)
     return false;
 }
 
+bool send_StartSensorRequest(Commander &Cmdr)
+{
+    int Dst;
+    int SensorId;
+    tSensor::tEventMask SensorEventMask;
+    SensorEventMask.MeasurementCompleted = 1;
+
+    if(!Cmdr.getInt(Dst))
+    {
+      goto error;
+    }
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+
+    Cmdr.getInt(SensorEventMask.Byte);
+
+    tOutgoingFrames::SendSensorStart(Dst, SensorId, SensorEventMask);
+    return true;
+  error:
+    Cmdr.println(F("Usage: StartSensor dev_id sensor_id [sensor_ev_mask = EV_TYPE_MEASUREMENT_COMPLETED]"));
+    return false;
+}
+
+bool send_StopSensorRequest(Commander &Cmdr)
+{
+    int Dst;
+    int SensorId;
+
+    if(!Cmdr.getInt(Dst))
+    {
+      goto error;
+    }
+
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+
+    tOutgoingFrames::SendSensorStop(Dst, SensorId);
+    return true;
+
+ error:
+    Cmdr.println(F("Usage: StopSensor dev_id sensor_id"));
+    return false;
+}
+
+
 #endif //CONFIG_SENSORS
 
 #endif // CONFIG_TLE8457_COMM_LIB

@@ -152,6 +152,24 @@ static bool tOutgoingFrames::SendSensorCreate(uint8_t RecieverID, uint8_t Sensor
     CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CREATE, sizeof(Msg), &Msg);
 }
 
+static bool tOutgoingFrames::SendSensorStart(uint8_t RecieverID, uint8_t SensorID, tSensor::tEventMask EventMask)
+{
+    tMessageSensorStart Msg;
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_START");
+    Msg.SensorID = SensorID;
+    Msg.SensorEventMask = EventMask.Byte;
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_START, sizeof(Msg), &Msg);
+}
+
+static bool tOutgoingFrames::SendSensorStop(uint8_t RecieverID, uint8_t SensorID)
+{
+    tMessageSensorStop Msg;
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_STOP");
+    Msg.SensorID = SensorID;
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_STOP, sizeof(Msg), &Msg);
+}
+
+
 #endif //CONFIG_SENSORS
 
 #endif // CONFIG_TLE8457_COMM_LIB

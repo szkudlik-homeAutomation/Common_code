@@ -39,7 +39,8 @@ private:
     void HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message);
     void HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message);
     void HandleMsgSensorCreate(uint8_t SenderID, tMessageSensorCreate *Message);
-
+    void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
+    void HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message);
 #endif //CONFIG_SENSORS
 
 protected:

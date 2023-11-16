@@ -99,6 +99,15 @@ uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_CREATE");
            HandleMsgSensorCreate(SenderDevId, (tMessageSensorCreate*)(pFrame->Data));
            break;
+       case MESSAGE_TYPE_SENSOR_START:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_START");
+           HandleMsgSensorStart(SenderDevId, (tMessageSensorStart*)(pFrame->Data));
+           break;
+
+       case MESSAGE_TYPE_SENSOR_STOP:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_STOP");
+           HandleMsgSensorStop(SenderDevId, (tMessageSensorStop*)(pFrame->Data));
+           break;
 
 #endif //CONFIG_SENSORS
 
@@ -309,6 +318,44 @@ void tIncomingFrameHanlder::HandleMsgSensorCreate(uint8_t SenderID, tMessageSens
        tOutgoingFrames::SendMsgStatus(SenderID, 0);
    else
        tOutgoingFrames::SendMsgStatus(SenderID, STATUS_GENERAL_FAILURE);
+}
+
+void tIncomingFrameHanlder::HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message)
+{
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (!pSensor)
+        return;
+
+    DEBUG_PRINT_3("Starting sensor ID: ");
+    DEBUG_3(print(Message->SensorID, DEC));
+    DEBUG_PRINT_3(" with event mask: ");
+    DEBUG_3(println(Message->SensorEventMask, BIN));
+
+    uint8_t result = pSensor->Start();
+    if (STATUS_SUCCESS == result)
+    	pSensor->setSensorSerialEventsMask(Message->SensorEventMask);
+
+    DEBUG_PRINT_3("   status: ");
+    DEBUG_3(println(result, DEC));
+
+    tOutgoingFrames::SendMsgStatus(SenderID, result);
+}
+
+void tIncomingFrameHanlder::HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message)
+{
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (!pSensor)
+        return;
+
+    DEBUG_PRINT_3("Stopping sensor ID: ");
+    DEBUG_3(println(Message->SensorID, DEC));
+
+    uint8_t result = pSensor->Pause();
+
+    DEBUG_PRINT_3("   status: ");
+    DEBUG_3(println(result, DEC));
+
+    tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 
 

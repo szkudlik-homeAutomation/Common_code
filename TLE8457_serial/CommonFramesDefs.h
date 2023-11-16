@@ -164,7 +164,9 @@ typedef struct
 
 C_ASSERT(sizeof(tMessageSensorEvent) == COMMUNICATION_PAYLOAD_DATA_SIZE);
 
-
+/* Create a sensor
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
 #define MESSAGE_TYPE_SENSOR_CREATE 0x17
 typedef struct
 {
@@ -172,6 +174,35 @@ typedef struct
     uint8_t SensorType;
 } tMessageSensorCreate;
 C_ASSERT(sizeof(tMessageSensorCreate) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/* send a config blob to remote sensor */
+#define MESSAGE_TYPE_SENSOR_CONFIGURE 0x18
+
+/* Start a sensor, set events mask
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_START 0x19
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t SensorEventMask;	// bitmap
+} tMessageSensorStart;
+C_ASSERT(sizeof(tMessageSensorStart) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/* Stop a sensor
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_STOP 0x1A
+typedef struct
+{
+    uint8_t SensorID;
+} tMessageSensorStop;
+C_ASSERT(sizeof(tMessageSensorStop) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+
+
+
+
 
 #endif //CONFIG_SENSORS
 
