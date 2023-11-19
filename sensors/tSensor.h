@@ -85,7 +85,7 @@ public:
 	 */
 	uint8_t setConfig(uint16_t measurementPeriod)
 	{
-		setConfig(measurementPeriod, 0, NULL, 0);
+		return setConfig(measurementPeriod, 0, NULL, 0);
 	}
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
