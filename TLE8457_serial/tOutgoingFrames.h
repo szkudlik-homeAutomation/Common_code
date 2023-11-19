@@ -37,6 +37,7 @@ public:
     static bool SendSensorCreate(uint8_t RecieverID, uint8_t SensorType, uint8_t SensorID);
     static bool SendSensorStart(uint8_t RecieverID, uint8_t SensorID, tSensor::tEventMask EventMask);
     static bool SendSensorStop(uint8_t RecieverID, uint8_t SensorID);
+    static bool SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod);
  
 #endif //CONFIG_SENSORS
 };

@@ -108,6 +108,10 @@ uint8_t tIncomingFrameHanlder::handleCommonMessages(uint16_t data, void *pData)
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_STOP");
            HandleMsgSensorStop(SenderDevId, (tMessageSensorStop*)(pFrame->Data));
            break;
+       case MESSAGE_TYPE_SENSOR_CONFIGURE:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_CONFIGURE");
+           HandleMsgSensorConfigure(SenderDevId, (tMessageSensorConfigure*)(pFrame->Data));
+           break;
 
 #endif //CONFIG_SENSORS
 
@@ -358,6 +362,27 @@ void tIncomingFrameHanlder::HandleMsgSensorStop(uint8_t SenderID, tMessageSensor
     tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 
+void tIncomingFrameHanlder::HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message)
+{
+    uint8_t result;
+    tSensor *pSensor = tSensor::getSensor(Message->Header.SensorID);
+    if (!pSensor)
+        return;
+
+    DEBUG_PRINT_3("Setting config for sensor ID: ");
+    DEBUG_3(println(Message->Header.SensorID, DEC));
+
+    if ((Message->Header.SegmentSeq == 0) && (Message->Header.LastSegment == 1))
+    {
+    	result = pSensor->setConfig(Message->Data.MeasurementPeriod);
+    }
+    else
+    {
+    	result = STATUS_UNSUPPORTED;
+    }
+
+    tOutgoingFrames::SendMsgStatus(SenderID, result);
+}
 
 #endif //CONFIG_SENSORS
 

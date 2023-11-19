@@ -41,6 +41,7 @@ private:
     void HandleMsgSensorCreate(uint8_t SenderID, tMessageSensorCreate *Message);
     void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
     void HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message);
+    void HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message);
 #endif //CONFIG_SENSORS
 
 protected:

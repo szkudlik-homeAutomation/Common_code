@@ -177,6 +177,29 @@ C_ASSERT(sizeof(tMessageSensorCreate) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /* send a config blob to remote sensor */
 #define MESSAGE_TYPE_SENSOR_CONFIGURE 0x18
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t LastSegment  : 1,
+    		SegmentSeq   : 7;
+} tMessageSensorConfigureHeader;
+
+typedef struct
+{
+	uint16_t MeasurementPeriod;
+}tMessageSensorConfigureCommonData;
+
+#define SENSOR_CONFIG_PAYLOAD_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageSensorConfigureHeader))
+
+typedef struct
+{
+	tMessageSensorConfigureHeader Header;
+	union {
+		tMessageSensorConfigureCommonData Data;			// if SEQ = 0
+		uint8_t Payload[SENSOR_CONFIG_PAYLOAD_SIZE];	// if SEQ > 0
+	};
+} tMessageSensorConfigure;
+C_ASSERT(sizeof(tMessageSensorConfigure) == COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /* Start a sensor, set events mask
  * MESSAGE_TYPE_GENERAL_STATUS will be sent back

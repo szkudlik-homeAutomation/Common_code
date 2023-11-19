@@ -169,6 +169,32 @@ static bool tOutgoingFrames::SendSensorStop(uint8_t RecieverID, uint8_t SensorID
     CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_STOP, sizeof(Msg), &Msg);
 }
 
+static bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod)
+{
+	tMessageSensorConfigure Msg;
+	DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_CONFIGURE");
+
+	Msg.Header.SensorID = SensorID;
+	Msg.Header.LastSegment = LastSegment;
+	Msg.Header.SegmentSeq = seq;
+	if (0 == seq)
+	{
+		Msg.Data.MeasurementPeriod = MeasurementPeriod;
+	}
+	else
+	{
+		if (payloadSize > SENSOR_CONFIG_PAYLOAD_SIZE)
+	    {
+	        DEBUG_PRINTLN_3("SendSensorConfigure - payload too big");
+	        return false;
+	    }
+
+	    memset(Msg.Payload, 0, SENSOR_CONFIG_PAYLOAD_SIZE);
+	    memcpy(Msg.Payload, pPayload, payloadSize);
+	}
+
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CONFIGURE, sizeof(Msg), &Msg);
+}
 
 #endif //CONFIG_SENSORS
 
