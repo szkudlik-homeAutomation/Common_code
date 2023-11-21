@@ -372,13 +372,13 @@ void tIncomingFrameHanlder::HandleMsgSensorConfigure(uint8_t SenderID, tMessageS
     DEBUG_PRINT_3("Setting config for sensor ID: ");
     DEBUG_3(println(Message->Header.SensorID, DEC));
 
-    if ((Message->Header.SegmentSeq == 0) && (Message->Header.LastSegment == 1))
+    if (Message->Header.LastSegment == 1)
     {
     	result = pSensor->setConfig(Message->Data.MeasurementPeriod);
     }
     else
     {
-    	result = STATUS_UNSUPPORTED;
+    	result = pSensor->setParitalConfig(Message->Header.SegmentSeq, Message->Payload, SENSOR_CONFIG_PAYLOAD_SIZE);
     }
 
     tOutgoingFrames::SendMsgStatus(SenderID, result);

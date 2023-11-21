@@ -195,8 +195,8 @@ typedef struct
 {
 	tMessageSensorConfigureHeader Header;
 	union {
-		tMessageSensorConfigureCommonData Data;			// if SEQ = 0
-		uint8_t Payload[SENSOR_CONFIG_PAYLOAD_SIZE];	// if SEQ > 0
+		tMessageSensorConfigureCommonData Data;			// if LastSegment
+		uint8_t Payload[SENSOR_CONFIG_PAYLOAD_SIZE];	// if !LastSegment
 	};
 } tMessageSensorConfigure;
 C_ASSERT(sizeof(tMessageSensorConfigure) == COMMUNICATION_PAYLOAD_DATA_SIZE);

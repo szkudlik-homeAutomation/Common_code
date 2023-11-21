@@ -77,7 +77,9 @@ public:
 	} tEventMask;
 	C_ASSERT(sizeof(tEventMask) == sizeof(uint8_t));
 
-	/* process and set config. The config must be set before either by sensor's specific functions
+	/* process and set config. The config must be set before
+	 *  - by sensor's specific functions
+	 *  - or by setParitalConfig
 	 * setConfig MUST be called once
 	 *
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
@@ -88,6 +90,18 @@ public:
 		return setConfig(measurementPeriod, 0, NULL, 0);
 	}
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
+
+	/* handle partial config
+	 * seq numbers must be in order, any missing part will result in an error
+	 *
+	 * note!
+	 * Due to limitation in serial data transfer, data are always comming in the const sizes chunks
+	 * provided here as ChunkSize
+	 * setParitalConfig must check size of config and copy the required part of data only
+	 *
+	 * if seq sequence is broken in any way, error core is returned
+	 */
+	uint8_t setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize);
 
 	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask.Byte = mask; }
 	void setSensorSerialEventsMask(tEventMask mask) { mSerialEventsMask.Byte = mask.Byte; }
@@ -129,6 +143,7 @@ protected:
 
    void *mCurrentMeasurementBlob;
    uint8_t mMeasurementBlobSize;
+   uint8_t mPartialConfigSeq;
 
    void onMeasurementCompleted(bool Status);
 

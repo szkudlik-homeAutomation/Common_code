@@ -53,6 +53,31 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
     return status;
 }
 
+uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
+{
+    if (mState != SENSOR_CREATED)
+    {
+         return STATUS_CONFIG_SET_ERROR;
+    }
+
+    if (seq != mPartialConfigSeq)
+    {
+        return STATUS_DATA_SEQ_ERROR;
+    }
+
+    mPartialConfigSeq++;
+
+    uint8_t configOffset = ChunkSize * seq;
+    uint8_t toCopy = mConfigBlobSize - configOffset;
+    if (toCopy > ChunkSize) toCopy = ChunkSize;
+    if (toCopy == 0)
+        return STATUS_DATA_SEQ_ERROR;
+
+    memcpy((uint8_t *)mConfigBlobPtr + configOffset, data, toCopy);
+
+    return STATUS_SUCCESS;
+}
+
 /* make the sensor running */
 uint8_t tSensor::Start()
 {
@@ -104,8 +129,8 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
       mSensorID(sensorID),
 	  mApiVersion(ApiVersion),
 	  mConfigBlobSize(ConfigBlobSize),
-	  mConfigBlobPtr(ConfigBlobPtr)
-
+	  mConfigBlobPtr(ConfigBlobPtr),
+	  mPartialConfigSeq(0)
 {
    pNext = pFirst;
    pFirst = this;
