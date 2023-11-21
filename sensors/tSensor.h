@@ -154,11 +154,11 @@ protected:
    virtual void doTimeTick() {};
 
 private:
-   static const uint8_t SENSOR_CREATED = 0;
-   static const uint8_t SENSOR_PAUSED = 1;
-   static const uint8_t SENSOR_RUNNING = 2;
+   static const int8_t SENSOR_CREATED = 0;
+   static const int8_t SENSOR_PAUSED = 1;
+   static const int8_t SENSOR_RUNNING = 2;
 
-   uint8_t mState;
+   int8_t mState;   // if mState < 0 => error. Error code = -STATUS_*
 
    uint8_t mSensorID;
 
