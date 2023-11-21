@@ -39,10 +39,9 @@
 #include "tSystemStatusSensor.h"
 #endif
 
+static tSensorFactory* tSensorFactory::Instance;
 
 #if CONFIG_SENSOR_HUB
-
-static tSensorFactory* tSensorFactory::Instance;
 
 tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion)
 {

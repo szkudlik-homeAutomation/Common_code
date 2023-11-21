@@ -4,6 +4,8 @@
  *  Created on: Oct 4, 2023
  *      Author: mszkudli
  */
+#include "../../../global.h"
+#if CONFIG_SENSOR_HUB
 
 #include "tSensorDesc.h"
 
@@ -68,3 +70,4 @@ uint8_t tSensorDesc::formatJSON(Stream *pStream)
    pStream->print(SensorID);
    pStream->print(F("}"));
 }
+#endif //CONFIG_SENSOR_HUB
