@@ -287,6 +287,9 @@ void tIncomingFrameHanlder::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID
 
 void tIncomingFrameHanlder::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
 {
+	if (Message->Header.onDemand)
+		Logger.EnableLogsForce();
+
 	DEBUG_PRINT_3("Sensor ID:");
 	DEBUG_3(print(Message->Header.SensorID, DEC));
 	DEBUG_PRINT_3(" EventType:");
@@ -306,7 +309,10 @@ void tIncomingFrameHanlder::HandleMsgSensorEvent(uint8_t SenderID, tMessageSenso
 	}
 	DEBUG_PRINTLN_3("");
 
-    /* todo: put incoming data to SensorHub */
+	if (Message->Header.onDemand)
+		Logger.DisableLogsForce();
+
+	/* todo: put incoming data to SensorHub */
 }
 
 void tIncomingFrameHanlder::HandleMsgSensorCreate(uint8_t SenderID, tMessageSensorCreate *Message)
