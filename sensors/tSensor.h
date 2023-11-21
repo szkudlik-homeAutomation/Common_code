@@ -100,11 +100,6 @@ public:
 	/* pause the sensor */
 	uint8_t Pause();
 
-   /* register the sensor in sensor hub.
-    * either local or remote in case of remote nodes
-    */
-   uint8_t Register(char * pSensorName);
-
    uint16_t GetMeasurementPeriod() const { return mMeasurementPeriod; }
    void TriggerMeasurement() { if (isRunning()) doTriggerMeasurement(); }
    bool isRunning() const { return (mState == SENSOR_RUNNING); }
@@ -120,7 +115,13 @@ public:
    static void Run();
 
 #if CONFIG_TLE8457_COMM_LIB
-   void sendMsgSensorEventMeasurementCompleted(bool onDemand);
+   /* send a serial frame with current measurement and SensorEventType as event type
+    * if odDemand = false - frame will be sent only sensor is registered to such events
+    *
+    * if !misMeasurementValid = event type will be EV_TYPE_MEASUREMENT_ERROR regardless of SensorEventType
+    *
+    */
+   void sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType);
 #endif //CONFIG_TLE8457_COMM_LIB
 protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node

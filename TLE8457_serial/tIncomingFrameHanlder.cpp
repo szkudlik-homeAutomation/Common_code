@@ -282,7 +282,7 @@ void tIncomingFrameHanlder::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID
     if (NULL == pSensor)
         return;
 
-    pSensor->sendMsgSensorEventMeasurementCompleted(true);
+    pSensor->sendSerialMsgSensorEvent(true, EV_TYPE_MEASUREMENT_COMPLETED);
 }
 
 void tIncomingFrameHanlder::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)

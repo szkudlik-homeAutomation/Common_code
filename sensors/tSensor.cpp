@@ -109,16 +109,6 @@ uint8_t tSensor::Pause()
 	return STATUS_SENSOR_INCORRECT_STATE;
 }
 
-uint8_t tSensor::Register(char * pSensorName)
-{
-#if CONFIG_SENSOR_HUB
-   tSensorHub::Instance->RegisterLocalSensor(mSensorID, pSensorName, mApiVersion);
-#endif //CONFIG_SENSOR_HUB
-		   //TODO: send a message to central node in case of remote sensor
-
-   return STATUS_SUCCESS;
-}
-
 tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr) :
       mCurrentMeasurementBlob(NULL),
       mMeasurementBlobSize(0),
@@ -161,43 +151,47 @@ void tSensor::onMeasurementCompleted(bool Status)
   if (Status)
   {
       tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
-#if CONFIG_TLE8457_COMM_LIB
-	   if (mSerialEventsMask & (1 << EV_TYPE_MEASUREMENT_COMPLETED))
-	   {
-		   sendMsgSensorEventMeasurementCompleted(false);
-	   }
-#endif
-
   }
   else
   {
       tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
 #endif //CONFIG_SENSOR_HUB
-}
 
 #if CONFIG_TLE8457_COMM_LIB
-void tSensor::sendMsgSensorEventMeasurementCompleted(bool onDemand)
+  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	// EV_TYPE_MEASUREMENT_ERROR will be sent if ! misMeasurementValid
+#endif
+
+}
+
+
+#if CONFIG_TLE8457_COMM_LIB
+void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 {
 	if (misMeasurementValid)
 	{
 		uint8_t pos = 0;
 		uint8_t seq = 0;
 		bool lastSegment = false;
-		while (!lastSegment)
+		if (onDemand || (mSerialEventsMask & (1 << SensorEventType)))
 		{
-			lastSegment = (pos + SENSOR_MEASUREMENT_PAYLOAD_SIZE) >= mMeasurementBlobSize;
+			while (!lastSegment)
+			{
+				lastSegment = (pos + SENSOR_MEASUREMENT_PAYLOAD_SIZE) >= mMeasurementBlobSize;
 
-			tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, onDemand,
-					(uint8_t*)mCurrentMeasurementBlob+pos,
-					lastSegment ? mMeasurementBlobSize - pos : SENSOR_MEASUREMENT_PAYLOAD_SIZE,
-					seq, lastSegment);
-			pos += SENSOR_MEASUREMENT_PAYLOAD_SIZE;
-			seq++;
+				tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), SensorEventType, onDemand,
+						(uint8_t*)mCurrentMeasurementBlob+pos,
+						lastSegment ? mMeasurementBlobSize - pos : SENSOR_MEASUREMENT_PAYLOAD_SIZE,
+						seq, lastSegment);
+				pos += SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+				seq++;
+			}
 		}
-	} else
+	}
+	else
 	{
-		tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
+		if (onDemand || (mSerialEventsMask & (1 << EV_TYPE_MEASUREMENT_ERROR)))
+			tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
 	}
 }
 #endif //CONFIG_TLE8457_COMM_LIB
