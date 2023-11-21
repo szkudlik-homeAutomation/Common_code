@@ -38,11 +38,11 @@
 
 #define SENSOR_ID_NOT_FOUND 0xff
 
-#define EV_TYPE_MEASUREMENT_COMPLETED 1
-#define EV_TYPE_MEASUREMENT_ERROR  2
-#define EV_TYPE_MEASUREMENT_CHANGE 3
-#define EV_TYPE_THOLD_EXCEEDED 4
-#define EV_TYPE_SENSOR_STATE_CHANGE 5
+#define EV_TYPE_MEASUREMENT_COMPLETED 0
+#define EV_TYPE_MEASUREMENT_ERROR  1
+#define EV_TYPE_MEASUREMENT_CHANGE 2
+#define EV_TYPE_THOLD_EXCEEDED 3
+#define EV_TYPE_SENSOR_STATE_CHANGE 4
 
 
 class tSensor;
@@ -63,19 +63,7 @@ extern tSensorProcess SensorProcess;
 
 class tSensor {
 public:
-	typedef union
-	{
-		struct
-		{
-			uint8_t MeasurementCompleted  : 1,
-					MeasurementError : 1,
-					MeasurementChange : 1,
-					TholdExceeded : 1,
-					SensorStateChange : 1;
-		};
-		uint8_t Byte;
-	} tEventMask;
-	C_ASSERT(sizeof(tEventMask) == sizeof(uint8_t));
+
 
 	/* process and set config. The config must be set before
 	 *  - by sensor's specific functions
@@ -103,10 +91,9 @@ public:
 	 */
 	uint8_t setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize);
 
-	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask.Byte = mask; }
-	void setSensorSerialEventsMask(tEventMask mask) { mSerialEventsMask.Byte = mask.Byte; }
+	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask = mask; }
 
-	tEventMask getSensorSerialEventsMask() const { return mSerialEventsMask; }
+	uint8_t getSensorSerialEventsMask() const { return mSerialEventsMask; }
 
 	/* make the sensor running */
 	uint8_t Start();
@@ -168,7 +155,7 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
-   tEventMask mSerialEventsMask;
+   uint8_t mSerialEventsMask;
    uint8_t mConfigBlobSize;
    void *mConfigBlobPtr;
 

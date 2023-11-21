@@ -247,7 +247,7 @@ void tIncomingFrameHanlder::HandleMsgGetSensorByIdReqest(uint8_t SenderID, tMess
 		Response.isConfigured = pSensor->isConfigured();
 		Response.isMeasurementValid = pSensor->isMeasurementValid();
 		Response.isRunning = pSensor->isRunning();
-		Response.EventsMask = pSensor->getSensorSerialEventsMask().Byte;
+		Response.EventsMask = pSensor->getSensorSerialEventsMask();
 	    tOutgoingFrames::SendGetSensorByIdResponse(SenderID, &Response);
 	}
 }

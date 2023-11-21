@@ -130,11 +130,11 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
 	  mApiVersion(ApiVersion),
 	  mConfigBlobSize(ConfigBlobSize),
 	  mConfigBlobPtr(ConfigBlobPtr),
-	  mPartialConfigSeq(0)
+	  mPartialConfigSeq(0),
+	  mSerialEventsMask(0)
 {
    pNext = pFirst;
    pFirst = this;
-   mSerialEventsMask.Byte = 0;
 }
 
 tSensor* tSensor::getSensor(uint8_t sensorID)
@@ -162,7 +162,7 @@ void tSensor::onMeasurementCompleted(bool Status)
   {
       tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
 #if CONFIG_TLE8457_COMM_LIB
-	   if (mSerialEventsMask.MeasurementCompleted)
+	   if (mSerialEventsMask & (1 << EV_TYPE_MEASUREMENT_COMPLETED))
 	   {
 		   sendMsgSensorEventMeasurementCompleted(false);
 	   }

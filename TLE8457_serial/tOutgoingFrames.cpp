@@ -152,12 +152,12 @@ static bool tOutgoingFrames::SendSensorCreate(uint8_t RecieverID, uint8_t Sensor
     CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CREATE, sizeof(Msg), &Msg);
 }
 
-static bool tOutgoingFrames::SendSensorStart(uint8_t RecieverID, uint8_t SensorID, tSensor::tEventMask EventMask)
+static bool tOutgoingFrames::SendSensorStart(uint8_t RecieverID, uint8_t SensorID, uint8_t EventMask)
 {
     tMessageSensorStart Msg;
     DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_START");
     Msg.SensorID = SensorID;
-    Msg.SensorEventMask = EventMask.Byte;
+    Msg.SensorEventMask = EventMask;
     CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_START, sizeof(Msg), &Msg);
 }
 

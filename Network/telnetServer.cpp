@@ -241,15 +241,15 @@ bool send_StartSensorRequest(Commander &Cmdr)
 {
     int Dst = DEVICE_ID_BROADCAST;
     int SensorId;
-    tSensor::tEventMask SensorEventMask;
-    SensorEventMask.MeasurementCompleted = 1;
+    uint8_t SensorEventMask;
+    SensorEventMask = 1 << EV_TYPE_MEASUREMENT_COMPLETED;
 
     if(!Cmdr.getInt(SensorId))
     {
       goto error;
     }
 
-    Cmdr.getInt(SensorEventMask.Byte);
+    Cmdr.getInt(SensorEventMask);
     Cmdr.getInt(Dst);
 
     tOutgoingFrames::SendSensorStart(Dst, SensorId, SensorEventMask);
