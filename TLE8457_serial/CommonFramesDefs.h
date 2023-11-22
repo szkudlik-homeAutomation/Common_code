@@ -123,6 +123,8 @@ typedef struct
 			isMeasurementValid : 1,
 			EventsMask		   : 4;
     uint16_t MeasurementPeriod;
+    uint8_t ConfigBlobSize;
+    uint8_t MeasurementBlobSize;
 } tMessageGetSensorByIdResponse;
 C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 

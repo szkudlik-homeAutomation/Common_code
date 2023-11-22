@@ -109,6 +109,7 @@ public:
    uint8_t getSensorID() const { return mSensorID; }
    uint8_t getSensorApiVersion() const { return mApiVersion; }
    uint8_t getConfigBlobSize() const { return mConfigBlobSize; }
+   uint8_t getMeasurementBlobSize() const { return mMeasurementBlobSize; }
 
    static tSensor* getSensor(uint8_t sensorID);
 

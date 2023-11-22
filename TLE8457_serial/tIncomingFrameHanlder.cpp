@@ -248,6 +248,8 @@ void tIncomingFrameHanlder::HandleMsgGetSensorByIdReqest(uint8_t SenderID, tMess
 		Response.isMeasurementValid = pSensor->isMeasurementValid();
 		Response.isRunning = pSensor->isRunning();
 		Response.EventsMask = pSensor->getSensorSerialEventsMask();
+		Response.ConfigBlobSize = pSensor->getConfigBlobSize();
+		Response.MeasurementBlobSize = pSensor->getMeasurementBlobSize();
 	    tOutgoingFrames::SendGetSensorByIdResponse(SenderID, &Response);
 	}
 }
@@ -264,6 +266,10 @@ void tIncomingFrameHanlder::HandleMsgGetSensorByIdResponse(uint8_t SenderID, tMe
 	LOG(println(Message->ApiVersion,DEC));
 	LOG_PRINT(" ->MeasurementPeriod: ");
 	LOG(println(Message->MeasurementPeriod,DEC));
+    LOG_PRINT(" ->Config blob size: ");
+    LOG(println(Message->ConfigBlobSize,DEC));
+    LOG_PRINT(" ->measurement blob size: ");
+    LOG(println(Message->MeasurementBlobSize,DEC));
 	LOG_PRINT(" ->isConfigured: ");
 	LOG(print(Message->isConfigured,DEC));
 	LOG_PRINT(" isRunning: ");
