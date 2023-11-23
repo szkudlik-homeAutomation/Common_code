@@ -36,7 +36,7 @@ public:
 	tSensorHub() { Instance = this; }
 	static tSensorHub *Instance;
 
-	uint8_t RegisterLocalSensor(uint8_t SensorID, char * pSensorName, uint8_t api_version);
+	uint8_t RegisterLocalSensor(uint8_t SensorID, char * pSensorName);
 	uint8_t RegisterRemoteSensor(uint8_t SensorID, char * pSensorName) {}
 
 	/*

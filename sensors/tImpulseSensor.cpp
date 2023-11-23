@@ -46,7 +46,7 @@ uint8_t tImpulseSensorDesc::doFormatJSON(Stream *pStream)
           return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
     }
 
-    if (dataBlobSize != sizeof(tImpulseSensor::tResult))
+    if (mDataBlobSize != sizeof(tImpulseSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }

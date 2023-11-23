@@ -29,7 +29,7 @@ public:
    /*
 	* create a sensorDesc object based on sensor type
 	*/
-   tSensorDesc *CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion);
+   tSensorDesc *CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion, uint8_t dataBlobSize);
 
 #endif CONFIG_SENSOR_HUB
 

@@ -17,7 +17,7 @@ uint8_t tSimpleDigitalInputSensorDesc::doFormatJSON(Stream *pStream)
           return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
     }
 
-   if (dataBlobSize != sizeof(tSimpleDigitalInputSensor::tResult))
+   if (mDataBlobSize != sizeof(tSimpleDigitalInputSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }

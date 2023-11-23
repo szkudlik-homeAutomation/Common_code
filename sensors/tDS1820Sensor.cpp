@@ -21,7 +21,7 @@ uint8_t tDs1820SensorDesc::doFormatJSON(Stream *pStream)
          return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
    }
 
-   if (dataBlobSize < sizeof(tDS1820Sensor::tResult))
+   if (mDataBlobSize < sizeof(tDS1820Sensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
@@ -29,7 +29,7 @@ uint8_t tDs1820SensorDesc::doFormatJSON(Stream *pStream)
    tDS1820Sensor::tResult *pResult =(tDS1820Sensor::tResult *) pDataCache;
    uint8_t MeasurementBlobSize = sizeof(tDS1820Sensor::tResult) +
 		   (sizeof(tDS1820Sensor::tDs1820Data) * pResult->NumOfDevices);
-   if (dataBlobSize != MeasurementBlobSize)
+   if (mDataBlobSize != MeasurementBlobSize)
    {
          return STATUS_JSON_ENCODE_ERROR;
    }

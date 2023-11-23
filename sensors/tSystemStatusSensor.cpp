@@ -42,7 +42,7 @@ uint8_t tSystemStatusSensorDesc::doFormatJSON(Stream *pStream)
           return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
     }
 
-   if (dataBlobSize != sizeof(tSystemStatusSensor::tResult))
+   if (mDataBlobSize != sizeof(tSystemStatusSensor::tResult))
    {
 		 return STATUS_JSON_ENCODE_ERROR;
    }

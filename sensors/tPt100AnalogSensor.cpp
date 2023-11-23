@@ -97,7 +97,7 @@ uint8_t tPt100AnalogSensorDesc::doFormatJSON(Stream *pStream)
           return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
     }
 
-    if (dataBlobSize != sizeof(tPt100AnalogSensor::tResult))
+    if (mDataBlobSize != sizeof(tPt100AnalogSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }

@@ -25,7 +25,7 @@ public:
    tSensorDesc() :
 	   pDataCache(NULL),
 	   pFirstEventHander(NULL),
-	   dataBlobSize(0),
+	   mDataBlobSize(0),
 	   Status(STATUS_NO_DATA_RECIEVED)
    {
 	   pNext = pFirst; pFirst = this;
@@ -34,11 +34,13 @@ public:
    uint8_t Status;
    uint8_t SensorID;
    uint8_t sensorType;
-   uint8_t dataBlobSize;
+   uint8_t mDataBlobSize;
    uint8_t sensorApiVersion;
    void *pDataCache;
    char * pName;
    tSensorHubEvent *pFirstEventHander;
+
+   uint8_t setDataBlobSize(uint8_t dataBlobSize);
 
 	/*
 	 * Format cached data as JSON

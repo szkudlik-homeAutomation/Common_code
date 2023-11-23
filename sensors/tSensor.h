@@ -12,10 +12,7 @@
  * 2) fill the config - specific to the sensor
  * 		2a) generic "getConfigBlob" may be used in case of dynamic creation of sensors i.e. from eeprom
  * 3) call "setConfig" with measurementPeriod
- * 4) optional: call "register" with sensor ID and name
  * 5) call "Start"
- *
- * register may be called multiple times, especially in case of remote sensors
  *
  * the sensor should be running at this point
  */

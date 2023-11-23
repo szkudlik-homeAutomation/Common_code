@@ -44,12 +44,12 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize
       return STATUS_UNKNOWN_SENSOR_ID;
    }
 
-   *dataBlobSize = pSensorDesc->dataBlobSize;
+   *dataBlobSize = pSensorDesc->mDataBlobSize;
    *pDataBlob = pSensorDesc->pDataCache;
 }
 
 
-uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName, uint8_t api_version)
+uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 {
 	   DEBUG_PRINTLN_3("");
 	   DEBUG_PRINT_3("==>Sensor register request. ID: ");
@@ -69,7 +69,9 @@ uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName, ui
 			   pSensor->getSensorType(),
 			   SensorID,
 			   pSensorName,
-			   api_version);
+			   pSensor->getSensorApiVersion(),
+			   pSensor->getMeasurementBlobSize()
+			   );
 
 	   // send response
 	   DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
@@ -124,7 +126,7 @@ void tSensorHub::callAllCallbacks(tSensorDesc *pSensorDesc, uint8_t EventType)
    while (pEventCallback)
    {
       if (EV_TYPE_MEASUREMENT_ERROR == EventType)
-         pEventCallback->onEvent(pSensorDesc->SensorID, EventType, pSensorDesc->dataBlobSize, pSensorDesc->pDataCache);
+         pEventCallback->onEvent(pSensorDesc->SensorID, EventType, pSensorDesc->mDataBlobSize, pSensorDesc->pDataCache);
       else
          pEventCallback->onEvent(pSensorDesc->SensorID, EventType, 0, NULL);
 
@@ -148,21 +150,15 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
       return;
    }
 
-   if ((pSensorDesc->dataBlobSize == 0) && (dataBlobSize > 0))
+   if (dataBlobSize != pSensorDesc->mDataBlobSize)
    {
-      pSensorDesc->dataBlobSize = dataBlobSize;
-      pSensorDesc->pDataCache = malloc(dataBlobSize);
-   }
-
-   if (pSensorDesc->dataBlobSize != dataBlobSize)
-   {
-      pSensorDesc->Status = STATUS_INCORRECT_DATA_SIZE;
-      callAllCallbacks(pSensorDesc,EV_TYPE_MEASUREMENT_ERROR);
-      return;
+       pSensorDesc->Status = STATUS_INCORRECT_DATA_SIZE;
+       return;
    }
 
    pSensorDesc->Status = STATUS_SUCCESS;
-   memcpy(pSensorDesc->pDataCache,pDataBlob,dataBlobSize);
+   if (0 != dataBlobSize)
+       memcpy(pSensorDesc->pDataCache,pDataBlob,dataBlobSize);
 
    // callbacks
    callAllCallbacks(pSensorDesc,EventType);

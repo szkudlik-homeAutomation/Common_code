@@ -40,7 +40,7 @@ uint8_t tOutputStateSensorDesc::doFormatJSON(Stream *pStream)
           return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
     }
 
-    if (dataBlobSize != sizeof(tOutputStateSensor::tResult))
+    if (mDataBlobSize != sizeof(tOutputStateSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
