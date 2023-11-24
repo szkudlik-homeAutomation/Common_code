@@ -20,13 +20,13 @@ void WorkerProcess::service()
       pCurrentWorkerTask = mQueue.dequeue();
    }
 
-   uint32_t nextPeriod;
+   uint32_t nextServiceDelay;
    bool continueTask;
-   continueTask = pCurrentWorkerTask->Process(&nextPeriod);
+   continueTask = pCurrentWorkerTask->Process(&nextServiceDelay);
    if (continueTask)
    {
       // continue after requested time
-      setPeriod(nextPeriod);
+      setPeriod(nextServiceDelay);
       return;
    }
 

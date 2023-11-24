@@ -8,9 +8,9 @@
 #include "NodeScanTask.h"
 
 
-bool NodeScanTask::Process(uint32_t * pPeriod)
+bool NodeScanTask::Process(uint32_t *pNextServiceDelay)
 {
-   *pPeriod = REQUEST_SENDING_PERIOD;
+   *pNextServiceDelay = REQUEST_SENDING_PERIOD;
 
    if (mCurrentNodeID < MAX_NUM_OF_NODES)
    {
@@ -20,7 +20,7 @@ bool NodeScanTask::Process(uint32_t * pPeriod)
    }
    else if (mCurrentNodeID == MAX_NUM_OF_NODES)
    {
-      *pPeriod = RESPONSE_WAIT_PERIOD;
+      *pNextServiceDelay = RESPONSE_WAIT_PERIOD;
        mCurrentNodeID++;
    }
    else
