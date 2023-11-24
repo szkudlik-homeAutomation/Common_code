@@ -19,7 +19,7 @@ public:
    }
    virtual ~NodeScanTask() {}
 
-   virtual bool Process(uint32_t * pPeriod);
+   virtual bool Process(uint32_t * pNextServiceDelay);
    static void trigger() { Worker.Enqueue(new NodeScanTask()); }
 
 protected:

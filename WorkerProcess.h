@@ -13,7 +13,7 @@ public:
    WorkerTask() {}
    virtual ~WorkerTask() {}
 
-   virtual bool Process(uint32_t * pPeriod) = 0;
+   virtual bool Process(uint32_t * pNextServiceDelay) = 0;
 };
 
 
