@@ -38,6 +38,20 @@ public:
 			  uint16_t DefaultTimer;
 		  };
 
+      static const uint8_t ExternalEvent_GenealStatus = 2;
+          typedef struct tGeneralStatus
+          {
+              uint8_t SenderID;
+              uint8_t Status;
+          };
+
+      static const uint8_t ExternalEvent_GetSensorByIdResponse = 3;
+          typedef struct tGeneralStatus
+          {
+              uint8_t SenderID;
+              tMessageGetSensorByIdResponse Msg;;
+          };
+
 	static const uint8_t MessageType_SensorEvent   = 2;
 
 	// NOTE - app specific event types start from 16

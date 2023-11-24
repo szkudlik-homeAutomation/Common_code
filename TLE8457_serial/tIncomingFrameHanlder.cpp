@@ -154,7 +154,9 @@ void tIncomingFrameHanlder::HandleMsgGeneralStatus(uint8_t SenderID, tMesssageGe
     LOG(print(SenderID,HEX));
     LOG_PRINT(" status: ");
     LOG(println(pMessage->Status,DEC));
-    //TODO: send a message
+
+    tMessages::tGeneralStatus Response;
+    tMessageReciever::Dispatch(tMessages::MessageType_ExternalEvent,tMessages::ExternalEvent_GenealStatus,&Response);
 }
 
 #if CONFIG_OUTPUT_PROCESS
