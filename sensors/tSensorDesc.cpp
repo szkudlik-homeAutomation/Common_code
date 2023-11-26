@@ -1,5 +1,5 @@
 /*
- * tSensorDesc1.cpp
+ * tSensorDesc.cpp
  *
  *  Created on: Oct 4, 2023
  *      Author: mszkudli
@@ -40,6 +40,24 @@ tSensorDesc *tSensorDesc::getByName(const char * pSensorName)
    }
 
    return pSensorDesc;
+}
+
+uint8_t tSensorDesc::setDataBlobSize(uint8_t dataBlobSize)
+{
+    if (0 == dataBlobSize)
+        return STATUS_SUCCESS;
+
+    if (NULL != pDataCache)
+        return STATUS_SENSOR_INCORRECT_STATE;
+
+    pDataCache = malloc(dataBlobSize);
+
+    if (NULL == pDataCache)
+        return STATUS_OUT_OF_MEMORY;
+
+    mDataBlobSize = dataBlobSize;
+
+    return STATUS_SUCCESS;
 }
 
 uint8_t tSensorDesc::formatJSON(Stream *pStream)

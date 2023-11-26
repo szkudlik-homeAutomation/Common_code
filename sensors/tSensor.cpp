@@ -15,7 +15,7 @@
 
 tSensor* tSensor::pFirst = NULL;
 
-uint8_t tSensor::setConfig(uint16_t measurementPeriod, void *pConfigBlob)
+uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize)
 {
 	if (mState != SENSOR_CREATED)
 	{
@@ -27,9 +27,9 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, void *pConfigBlob)
 	    memcpy(mConfigBlobPtr, pConfigBlob, mConfigBlobSize);
 	}
 
-    mMeasurementPeriod = measurementPeriod;
+	mMeasurementPeriod = measurementPeriod;
     mCurrMeasurementPeriod = measurementPeriod;
-    uint8_t status = doSetConfig();
+    uint8_t status = onSetConfig();
     if (STATUS_SUCCESS == status)
     {
     	mState = SENSOR_PAUSED;
@@ -38,32 +38,45 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, void *pConfigBlob)
     return status;
 }
 
-uint8_t tSensor::Register(uint8_t sensorID, char * pSensorName)
+/* make the sensor running */
+uint8_t tSensor::Start()
 {
-   if (NULL != getSensor(sensorID))
-   {
-      DEBUG_PRINT_3("Register duplicate ID: ");
-      DEBUG_3(println(mSensorID,DEC));
-      return STATUS_DUPLICATE_ID;
-   }
-
-   mSensorID = sensorID;
-#if CONFIG_CENTRAL_NODE
-   tSensorHub::Instance->RegisterLocalSensor(mSensorID, pSensorName, mApiVersion);
-#endif //CONFIG_CENTRAL_NODE
-		   //TODO: send a message to central node in case of remote sensor
-
-   return STATUS_SUCCESS;
+	uint8_t result;
+	if (SENSOR_PAUSED == mState)
+	{
+		result = onRun();
+		if (STATUS_SUCCESS == result)
+			mState = SENSOR_RUNNING;
+		return result;
+	}
+	if (SENSOR_RUNNING != mState)
+		return STATUS_SENSOR_INCORRECT_STATE;
+	return STATUS_SUCCESS;
 }
 
-tSensor::tSensor(uint8_t SensorType, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr) :
+/* pause the sensor */
+uint8_t tSensor::Pause()
+{
+	uint8_t result;
+	if (SENSOR_RUNNING == mState)
+	{
+		result = onPause();
+		if (STATUS_SUCCESS == result)
+			mState = SENSOR_PAUSED;
+		return result;
+	}
+
+	return STATUS_SENSOR_INCORRECT_STATE;
+}
+
+tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr) :
       mCurrentMeasurementBlob(NULL),
       mMeasurementBlobSize(0),
       mSensorType(SensorType),
       mState(SENSOR_CREATED),
       mMeasurementPeriod(0),
       mCurrMeasurementPeriod(0),
-      mSensorID(0xFF),
+      mSensorID(sensorID),
 	  mApiVersion(ApiVersion),
 	  mConfigBlobSize(ConfigBlobSize),
 	  mConfigBlobPtr(ConfigBlobPtr)

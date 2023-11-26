@@ -24,7 +24,7 @@ uint8_t tDs1820SensorDesc::doFormatJSON(Stream *pStream)
    tDS1820Sensor::tResult *pResult =(tDS1820Sensor::tResult *) pDataCache;
    uint8_t MeasurementBlobSize = sizeof(tDS1820Sensor::tResult) +
 		   (sizeof(tDS1820Sensor::tDs1820Data) * pResult->NumOfDevices);
-   if (dataBlobSize != MeasurementBlobSize)
+   if (mDataBlobSize != MeasurementBlobSize)
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
@@ -56,7 +56,7 @@ uint8_t tDs1820SensorDesc::doFormatJSON(Stream *pStream)
 }
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
-uint8_t tDS1820Sensor::doSetConfig()
+uint8_t tDS1820Sensor::onSetConfig()
 {
    OneWire * pOneWire = new OneWire(Config.Pin);
    pDs1820 = new DallasTemperature(pOneWire);

@@ -74,7 +74,7 @@ public:
    tConfig Config;
 
 
-   tDS1820Sensor() : tSensor(SENSOR_TYPE_DS1820, API_VERSION, sizeof(Config), &Config) {}
+   tDS1820Sensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DS1820, sensorID, API_VERSION, sizeof(Config), &Config) {}
 
    static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
 
@@ -86,7 +86,7 @@ public:
 protected:
    virtual void doTriggerMeasurement();
    virtual void doTimeTick();
-   virtual uint8_t doSetConfig();
+   virtual uint8_t onSetConfig();
 
 private:
    static const uint8_t NUM_TICKS_TO_MEASURE_COMPETE = (750 / SENSOR_PROCESS_SERVICE_TIME)+1;

@@ -12,10 +12,7 @@
  * 2) fill the config - specific to the sensor
  * 		2a) generic "getConfigBlob" may be used in case of dynamic creation of sensors i.e. from eeprom
  * 3) call "setConfig" with measurementPeriod
- * 4) optional: call "register" with sensor ID and name
  * 5) call "Start"
- *
- * register may be called multiple times, especially in case of remote sensors
  *
  * the sensor should be running at this point
  */
@@ -25,6 +22,7 @@
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
+/* sensor time tick - 100ms */
 #define SENSOR_PROCESS_SERVICE_TIME 100
 
 #define SENSOR_TYPE_DS1820 1
@@ -37,13 +35,12 @@
 
 #define SENSOR_ID_NOT_FOUND 0xff
 
-typedef enum
-{
-   EV_TYPE_MEASUREMENT_ERROR,
-   EV_TYPE_MEASUREMENT_COMPLETED,
-   EV_TYPE_MEASUREMENT_CHANGE,
-   EV_TYPE_THOLD_EXCEEDED
-} tSensorEventType;
+#define EV_TYPE_MEASUREMENT_COMPLETED 0
+#define EV_TYPE_MEASUREMENT_ERROR  1
+#define EV_TYPE_MEASUREMENT_CHANGE 2
+#define EV_TYPE_THOLD_EXCEEDED 3
+#define EV_TYPE_SENSOR_STATE_CHANGE 4
+
 
 class tSensor;
 
@@ -70,34 +67,16 @@ public:
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
 	 * the config will be copied to specific sensor config
 	 */
-	uint8_t setConfig(uint16_t measurementPeriod, void *pConfigBlob = NULL);
+	uint8_t setConfig(uint16_t measurementPeriod)
+	{
+		return setConfig(measurementPeriod, 0, NULL, 0);
+	}
+	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
 	/* make the sensor running */
-	uint8_t Start()
-	{
-		if (SENSOR_PAUSED == mState)
-		{
-			mState = SENSOR_RUNNING;
-			return doRun();
-		}
-		return STATUS_SENSOR_INCORRECT_STATE;
-	}
-
+	uint8_t Start();
 	/* pause the sensor */
-	uint8_t Pause()
-	{
-		if (SENSOR_RUNNING == mState)
-		{
-			mState = SENSOR_PAUSED;
-			return doPause();
-		}
-		return STATUS_SENSOR_INCORRECT_STATE;
-	}
-
-   /* register the sensor in sensor hub.
-    * either local or remote in case of remote nodes
-    */
-   uint8_t Register(uint8_t sensorID, char * pSensorName);
+	uint8_t Pause();
 
    uint16_t GetMeasurementPeriod() const { return mMeasurementPeriod; }
    void TriggerMeasurement() { if (isRunning()) doTriggerMeasurement(); }
@@ -107,6 +86,8 @@ public:
    const bool isMeasurementValid() { return misMeasurementValid; }   // false if not triggered or measurement error
    uint8_t getSensorID() const { return mSensorID; }
    uint8_t getSensorApiVersion() const { return mApiVersion; }
+   uint8_t getConfigBlobSize() const { return mConfigBlobSize; }
+   uint8_t getMeasurementBlobSize() const { return mMeasurementBlobSize; }
 
    static tSensor* getSensor(uint8_t sensorID);
 
@@ -116,7 +97,7 @@ protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
     * For identification, API version must be increased every time the config OR the result data format changes
     */
-   tSensor(uint8_t SensorType, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr);
+   tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8_t ConfigBlobSize, void *ConfigBlobPtr);
 
    void *mCurrentMeasurementBlob;
    uint8_t mMeasurementBlobSize;
@@ -124,9 +105,9 @@ protected:
    void onMeasurementCompleted(bool Status);
 
    virtual void doTriggerMeasurement() = 0;
-   virtual uint8_t doSetConfig() { return STATUS_SUCCESS; }
-   virtual uint8_t doRun() { return STATUS_SUCCESS; }
-   virtual uint8_t doPause() { return STATUS_SUCCESS; }
+   virtual uint8_t onSetConfig() { return STATUS_SUCCESS; }
+   virtual uint8_t onRun() { return STATUS_SUCCESS; }
+   virtual uint8_t onPause() { return STATUS_SUCCESS; }
    virtual void doTimeTick() {};
 
 private:

@@ -10,7 +10,7 @@
 #if CONFIG_IMPULSE_SENSOR
 #include "tImpulseSensor.h"
 
-tImpulseSensor::tImpulseSensor() : tSensor(SENSOR_TYPE_IMPULSE, API_VERSION, 0, NULL)
+tImpulseSensor::tImpulseSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_IMPULSE, sensorID, API_VERSION, 0, NULL)
 {
 	mResult.Count = 0;
 	mResult.Sum = 0;

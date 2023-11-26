@@ -29,7 +29,7 @@ protected:
 
 class tOutputStateSensor : public tSensor {
 public:
-   tOutputStateSensor();
+   tOutputStateSensor(uint8_t sensorID);
 
    typedef struct
    {
