@@ -105,11 +105,6 @@ public:
     */
    uint8_t getCachedSensorsDataJson(Stream *pStream);
 
-protected:
-   /**
-    * Application callback for app specific sensors factory, called when sensor has not been found by SensorDescFactory
-    */
-   virtual tSensorDesc *appSpecificSenorDescFactory(uint8_t SensorType) {}
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
 public:
@@ -119,12 +114,7 @@ public:
    void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 
 private:
-   /*
-    * create a sensorDesc object based on sensor type
-    */
-   tSensorDesc *sensorDescFactory(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion);
-
-   void callAllCallbacks(tSensorDesc *pSensorDesc, tSensorEventType EventType);
+   void callAllCallbacks(tSensorDesc *pSensorDesc, uint8_t EventType);
 
 };
 

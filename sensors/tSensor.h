@@ -61,7 +61,10 @@ extern tSensorProcess SensorProcess;
 class tSensor {
 public:
 
-	/* process and set config. The config must be set before either by sensor's specific functions
+
+	/* process and set config. The config must be set before
+	 *  - by sensor's specific functions
+	 *  - or by setParitalConfig
 	 * setConfig MUST be called once
 	 *
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
