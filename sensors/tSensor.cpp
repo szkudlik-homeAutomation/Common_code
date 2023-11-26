@@ -22,8 +22,21 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 		return STATUS_CONFIG_SET_ERROR;
 	}
 
+	if (ApiVersion && (ApiVersion != getSensorApiVersion()))
+	{
+		DEBUG_PRINTLN_3(" error: api version mismatch");
+		return STATUS_CONFIG_SET_ERROR;
+	}
+
 	if (NULL != pConfigBlob && NULL != mConfigBlobPtr)
 	{
+		if ((ApiVersion != getSensorApiVersion()) ||
+			 configBlobSize != getConfigBlobSize())
+		{
+			DEBUG_PRINTLN_3(" error: api version mismatch");
+			return STATUS_CONFIG_SET_ERROR;
+		}
+
 	    memcpy(mConfigBlobPtr, pConfigBlob, mConfigBlobSize);
 	}
 

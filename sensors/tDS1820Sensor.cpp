@@ -16,7 +16,12 @@
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tDs1820SensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize < sizeof(tDS1820Sensor::tResult))
+   if (sensorApiVersion != 1)
+   {
+         return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
+   }
+
+   if (mDataBlobSize < sizeof(tDS1820Sensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }

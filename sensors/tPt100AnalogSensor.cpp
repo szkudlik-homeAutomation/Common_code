@@ -92,7 +92,12 @@
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tPt100AnalogSensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize != sizeof(tPt100AnalogSensor::tResult))
+    if (sensorApiVersion != 1)
+    {
+          return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
+    }
+
+    if (mDataBlobSize != sizeof(tPt100AnalogSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }

@@ -41,7 +41,12 @@ void tImpulseSensor::CleanSum()
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tImpulseSensorDesc::doFormatJSON(Stream *pStream)
 {
-   if (dataBlobSize != sizeof(tImpulseSensor::tResult))
+    if (sensorApiVersion != 1)
+    {
+          return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
+    }
+
+    if (mDataBlobSize != sizeof(tImpulseSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
