@@ -19,22 +19,17 @@ class tIncomingFrameHanlder : public tMessageReciever {
 public:
     tIncomingFrameHanlder() : tMessageReciever() { RegisterMessageType(tMessages::MessageType_SerialFrameRecieved); }
 
-    virtual void onMessage(uint8_t type, uint16_t data, void *pData) { handleCommonMessages(data, pData); }
+    virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 
 private:
     void HandleMsgVersionRequest(uint8_t SenderID);
     void HandleMsgVersionResponse(uint8_t SenderID, tMessageTypeFwVesionResponse *pMessage);
 
 #if CONFIG_OUTPUT_PROCESS
-    void HandleMsgOverviewStateRequest(uint8_t SenderID);
-    void HandleMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message);
-    void HandleMsgOutputStateRequest(uint8_t SenderID, tMessageTypeOutputStateRequest* Message);
-    void HandleMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message);
-    void HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSetOutput* Message);
+    void LogMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message);
+    void LogMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message);
 #endif //CONFIG_OUTPUT_PROCESS
 
-protected:
-    uint8_t handleCommonMessages(uint16_t data, void *pData);
 };
 
 #endif // CONFIG_TLE8457_COMM_LIB

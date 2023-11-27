@@ -38,11 +38,11 @@ bool NodeScanTask::Process(uint32_t *pNextServiceDelay)
 
 void NodeScanTask::onMessage(uint8_t type, uint16_t data, void *pData)
 {
-	if (data != tMessages::ExternalEvent_VersionResponse)
+	if (type != tMessages::MessageType_SerialFrameRecieved || data != MESSAGE_TYPE_FW_VERSION_RESPONSE)
 		return;
 
-	struct tMessages::tVersionResponse *pVersionResponse = (struct tMessages::tVersionResponse *)pData;
-	mActiveNodesMap |= 1 << (pVersionResponse->SenderID - 1);
+    tCommunicationFrame *pFrame = (tCommunicationFrame *)pData;
+	mActiveNodesMap |= 1 << (pFrame->SenderDevId - 1);
 }
 
 #endif //CONFIG_NODE_SCAN_TASK
