@@ -15,7 +15,7 @@ class NodeScanTask : public WorkerTask, public tMessageReciever
 public:
    NodeScanTask() : mCurrentNodeID(0), mActiveNodesMap(0)
    {
-	   RegisterMessageType(tMessages::MessageType_ExternalEvent);
+	   RegisterMessageType(tMessages::MessageType_SerialFrameRecieved);
    }
    virtual ~NodeScanTask() {}
 

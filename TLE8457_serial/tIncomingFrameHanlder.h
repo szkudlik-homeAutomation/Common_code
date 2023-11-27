@@ -19,7 +19,7 @@ class tIncomingFrameHanlder : public tMessageReciever {
 public:
     tIncomingFrameHanlder() : tMessageReciever() { RegisterMessageType(tMessages::MessageType_SerialFrameRecieved); }
 
-    virtual void onMessage(uint8_t type, uint16_t data, void *pData) { handleCommonMessages(data, pData); }
+    virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 
 private:
     void HandleMsgVersionRequest(uint8_t SenderID);
@@ -33,8 +33,6 @@ private:
     void HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSetOutput* Message);
 #endif //CONFIG_OUTPUT_PROCESS
 
-protected:
-    uint8_t handleCommonMessages(uint16_t data, void *pData);
 };
 
 #endif // CONFIG_TLE8457_COMM_LIB
