@@ -5,6 +5,8 @@
 #if CONFIG_OUTPUT_PROCESS
 
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
+#include "tMessageReciever.h"
+#include "tMessages.h"
 
 /*
  * requires NUM_OF_OUTPUTS defined
@@ -59,7 +61,7 @@ private:
          Reserved  : 6;
 };
 
-class tOutputProcess : public  Process
+class tOutputProcess : public  Process, public tMessageReciever
 {
 private:
 	static tOutputProcess *instance;
@@ -67,7 +69,14 @@ public:
 	static tOutputProcess *get() { return instance; }
 
   tOutputProcess(Scheduler &manager) :
-    Process(manager,LOW_PRIORITY,OUTPUT_SERVICE_TIME) {instance = this;}
+    Process(manager,LOW_PRIORITY,OUTPUT_SERVICE_TIME),
+    tMessageReciever()
+    {
+      instance = this;
+#if CONFIG_TLE8457_COMM_LIB
+      RegisterMessageType(tMessages::MessageType_SerialFrameRecieved);
+#endif CONFIG_TLE8457_COMM_LIB
+    }
 
   static const bool TimerLongerOnly = true;
   static const bool ForceTimer = false;
@@ -113,6 +122,9 @@ public:
   virtual void service();
 protected:
   tOutput Output[NUM_OF_OUTPUTS];
+
+protected:
+    virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 };
 
 #endif // CONFIG_OUTPUT_PROCESS

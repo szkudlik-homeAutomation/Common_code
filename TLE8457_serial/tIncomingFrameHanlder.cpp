@@ -10,9 +10,6 @@
 
 #include "tIncomingFrameHanlder.h"
 #include "tOutgoingFrames.h"
-#if CONFIG_OUTPUT_PROCESS
-#include "../tOutputProcess.h"
-#endif // CONFIG_OUTPUT_PROCESS
 
 void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
 {
@@ -42,27 +39,23 @@ void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
 #if CONFIG_OUTPUT_PROCESS
        case MESSAGE_TYPE_OVERVIEW_STATE_REQUEST:
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_OVERVIEW_STATE_REQUEST");
-           HandleMsgOverviewStateRequest(SenderDevId);
            break;
 
        case MESSAGE_TYPE_OVERVIEW_STATE_RESPONSE:
-           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_OVERVIEW_STATE_RESPONSE");
-           HandleMsgOverviewStateResponse(SenderDevId,(tMessageTypeOverviewStateResponse*) (pFrame->Data));
+           LogMsgOverviewStateResponse(SenderDevId,(tMessageTypeOverviewStateResponse*) (pFrame->Data));
            break;
 
        case MESSAGE_TYPE_OUTPUT_STATE_REQUEST:
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_OUTPUT_STATE_REQUEST");
-           HandleMsgOutputStateRequest(SenderDevId,(tMessageTypeOutputStateRequest*)(pFrame->Data));
            break;
 
        case MESSAGE_TYPE_OUTPUT_STATE_RESPONSE:
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_OUTPUT_STATE_RESPONSE");
-           HandleMsgOutputStateResponse(SenderDevId,(tMessageTypeOutputStateResponse*) (pFrame->Data));
+           LogMsgOutputStateResponse(SenderDevId,(tMessageTypeOutputStateResponse*) (pFrame->Data));
            break;
 
        case MESSAGE_TYPE_SET_OUTPUT:
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SET_OUTPUT");
-           HandleMsgSetOutput(SenderDevId,(tMessageTypeSetOutput*)(pFrame->Data));
            break;
 #endif //CONFIG_OUTPUT_PROCESS
 
@@ -88,13 +81,10 @@ void tIncomingFrameHanlder::HandleMsgVersionResponse(uint8_t SenderID, tMessageT
 
 
 #if CONFIG_OUTPUT_PROCESS
-void tIncomingFrameHanlder::HandleMsgOverviewStateRequest(uint8_t SenderID)
-{
-   tOutgoingFrames::SendMsgOverviewStateResponse(SenderID,tOutputProcess::get()->GetOutputStateMap(),tOutputProcess::get()->GetOutputTimersStateMap());
-}
 
-void tIncomingFrameHanlder::HandleMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message)
+void tIncomingFrameHanlder::LogMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message)
 {
+    DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_OVERVIEW_STATE_RESPONSE");
 	LOG_PRINT("PowerStateBitmap for device ");
 	LOG(print(SenderID,HEX));
 	LOG_PRINT("=");
@@ -103,22 +93,7 @@ void tIncomingFrameHanlder::HandleMsgOverviewStateResponse(uint8_t SenderID, tMe
 	LOG(println(Message->TimerState,BIN));
 }
 
-void tIncomingFrameHanlder::HandleMsgOutputStateRequest(uint8_t SenderID, tMessageTypeOutputStateRequest* Message)
-{
-  if (Message->OutputID < NUM_OF_OUTPUTS)
-  {
-      uint16_t DefTimer;
-#if CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
-      EEPROM.get(EEPROM_DEFAULT_TIMER_VALUE_OFFSET+Message->OutputID*(sizeof(uint16_t)),DefTimer);
-#else CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
-      DefTimer = 0;
-#endif CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
-
-      tOutgoingFrames::SendMsgOutputStateResponse(SenderID,Message->OutputID, tOutputProcess::get()->GetOutputState(Message->OutputID), tOutputProcess::get()->GetOutputTimer(Message->OutputID),DefTimer);
-  }
-}
-
-void tIncomingFrameHanlder::HandleMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message)
+void tIncomingFrameHanlder::LogMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message)
 {
 	LOG_PRINT("PowerState for device ");
 	LOG(print(SenderID,HEX));
@@ -130,25 +105,6 @@ void tIncomingFrameHanlder::HandleMsgOutputStateResponse(uint8_t SenderID, tMess
 	LOG(print(Message->TimerValue,DEC));
     LOG_PRINT(" default timer = ");
     LOG(println(Message->DefaultTimer,DEC));
-}
-
-void tIncomingFrameHanlder::HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSetOutput* Message)
-{
-   if (Message->OutId >= NUM_OF_OUTPUTS)
-   {
-     // drop it
-     return;
-   }
-   uint16_t Timer = Message->Timer;
-
-#if CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
-   if (DEFAULT_TIMER == Timer)
-   {
-     EEPROM.get(EEPROM_DEFAULT_TIMER_VALUE_OFFSET+Message->OutId*(sizeof(uint16_t)),Timer);
-   }
-#endif // CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
-
-  tOutputProcess::get()->SetOutput(Message->OutId,Message->State,Timer,tOutputProcess::ForceTimer);
 }
 
 #endif // CONFIG_OUTPUT_PROCESS

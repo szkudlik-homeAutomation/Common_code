@@ -26,11 +26,8 @@ private:
     void HandleMsgVersionResponse(uint8_t SenderID, tMessageTypeFwVesionResponse *pMessage);
 
 #if CONFIG_OUTPUT_PROCESS
-    void HandleMsgOverviewStateRequest(uint8_t SenderID);
-    void HandleMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message);
-    void HandleMsgOutputStateRequest(uint8_t SenderID, tMessageTypeOutputStateRequest* Message);
-    void HandleMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message);
-    void HandleMsgSetOutput(uint8_t SenderID, tMessageTypeSetOutput* Message);
+    void LogMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message);
+    void LogMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message);
 #endif //CONFIG_OUTPUT_PROCESS
 
 };

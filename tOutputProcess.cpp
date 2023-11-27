@@ -2,6 +2,8 @@
 #if CONFIG_OUTPUT_PROCESS
 
 #include "tOutputProcess.h"
+#include "TLE8457_serial/tOutgoingFrames.h"
+#include "TLE8457_serial/TLE8457_serial_lib.h"
 
 static tOutputProcess *tOutputProcess::instance;
 
@@ -45,6 +47,60 @@ void tOutput::Tick()
     mTimer--;
     if (0 == mTimer) SetState(0);
   }
+}
+
+void tOutputProcess::onMessage(uint8_t type, uint16_t data, void *pData)
+{
+#if CONFIG_TLE8457_COMM_LIB
+    if (type != tMessages::MessageType_SerialFrameRecieved)
+        return;
+
+    tCommunicationFrame *pFrame = (tCommunicationFrame *)pData;
+
+    switch (data)   // messageType
+    {
+
+    case MESSAGE_TYPE_OVERVIEW_STATE_REQUEST:
+        tOutgoingFrames::SendMsgOverviewStateResponse(pFrame->SenderDevId,GetOutputStateMap(),GetOutputTimersStateMap());
+        break;
+
+    case MESSAGE_TYPE_OUTPUT_STATE_REQUEST:
+        {
+            uint16_t DefTimer;
+            tMessageTypeOutputStateRequest* Message = (tMessageTypeOutputStateRequest*)(pFrame->Data);
+            if (Message->OutputID < NUM_OF_OUTPUTS)
+            {
+                #if CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
+                EEPROM.get(EEPROM_DEFAULT_TIMER_VALUE_OFFSET+Message->OutputID*(sizeof(uint16_t)),DefTimer);
+                #else CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
+                DefTimer = 0;
+                #endif CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
+
+                tOutgoingFrames::SendMsgOutputStateResponse(pFrame->SenderDevId,Message->OutputID,GetOutputState(Message->OutputID), GetOutputTimer(Message->OutputID),DefTimer);
+            }
+        }
+        break;
+
+    case MESSAGE_TYPE_SET_OUTPUT:
+        {
+            tMessageTypeSetOutput* Message = (tMessageTypeSetOutput*)(pFrame->Data);
+            if (Message->OutId < NUM_OF_OUTPUTS)
+            {
+                uint16_t Timer = Message->Timer;
+
+            #if CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
+               if (DEFAULT_TIMER == Timer)
+               {
+                 EEPROM.get(EEPROM_DEFAULT_TIMER_VALUE_OFFSET+Message->OutId*(sizeof(uint16_t)),Timer);
+               }
+            #endif // CONFIG_OUTPUT_USE_EEPROM_DEF_TIMER
+
+               SetOutput(Message->OutId,Message->State,Timer,ForceTimer);
+            }
+        }
+        break;
+    }
+#endif // CONFIG_TLE8457_COMM_LIB
 }
 
 void tOutput::SetState(uint8_t State)
