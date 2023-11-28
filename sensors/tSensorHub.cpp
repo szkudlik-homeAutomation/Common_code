@@ -12,6 +12,7 @@
 #include "tSensor.h"
 #include "tSensorDesc.h"
 #include "tSensorFactory.h"
+#include "../tMessageReciever.h"
 
 static tSensorHub *tSensorHub::Instance = NULL;
 
@@ -130,6 +131,10 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
 
 void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
+#if CONFIG_SENSOR_HUB_GENERATE_EVENTS
+   tSensorEvent Event;
+#endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
+
    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
    if (NULL == pSensorDesc)
    {
@@ -139,8 +144,12 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
    if (EventType == EV_TYPE_MEASUREMENT_ERROR)
    {
       pSensorDesc->Status = STATUS_SENSOR_ERROR_REPORTED;
-      // callbacks
-  //    callAllCallbacks(pSensorDesc,EV_TYPE_MEASUREMENT_ERROR);
+#if CONFIG_SENSOR_HUB_GENERATE_EVENTS
+      Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
+      Event.dataBlobSize = 0;
+      Event.pDataBlob = NULL;
+      tMessageReciever::Dispatch(MessageType_SensorEvent, SensorID, &Event);
+#endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
       return;
    }
 
@@ -154,10 +163,12 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
    if (0 != dataBlobSize)
        memcpy(pSensorDesc->pDataCache,pDataBlob,dataBlobSize);
 
-   // callbacks
-  // callAllCallbacks(pSensorDesc,EventType);
+#if CONFIG_SENSOR_HUB_GENERATE_EVENTS
+   Event.EventType = EventType;
+   Event.dataBlobSize = pSensorDesc->mDataBlobSize;
+   Event.pDataBlob = pSensorDesc->pDataCache;
+   tMessageReciever::Dispatch(MessageType_SensorEvent, SensorID, &Event);
+#endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
 }
-
-
 
 #endif //CONFIG_SENSOR_HUB
