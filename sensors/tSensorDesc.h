@@ -10,7 +10,6 @@
 
 #if CONFIG_SENSOR_HUB
 
-class tSensorHubEvent;
 
 /**
  * tSensorDesc is an instance describing a sensor that may run on a diffrent node
@@ -24,7 +23,6 @@ class tSensorDesc
 public:
    tSensorDesc() :
 	   pDataCache(NULL),
-	   pFirstEventHander(NULL),
 	   mDataBlobSize(0),
 	   Status(STATUS_NO_DATA_RECIEVED)
    {
@@ -38,7 +36,6 @@ public:
    uint8_t sensorApiVersion;
    void *pDataCache;
    char * pName;
-   tSensorHubEvent *pFirstEventHander;
 
    uint8_t setDataBlobSize(uint8_t dataBlobSize);
 

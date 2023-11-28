@@ -99,18 +99,6 @@ void tSensorHub::getSensorInfoRequest(uint8_t SensorID)
          pSensorDesc->pName);
 }
 
-uint8_t tSensorHub::subscribeToEvents(uint8_t SensorID, tSensorHubEvent *pSensorEvent)
-{
-   tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
-   if (NULL == pSensorDesc)
-   {
-      return STATUS_UNKNOWN_SENSOR_ID;
-   }
-
-   pSensorEvent->Connect(&pSensorDesc->pFirstEventHander);
-   return STATUS_SUCCESS;
-}
-
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
 {
@@ -140,21 +128,6 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
 
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
-void tSensorHub::callAllCallbacks(tSensorDesc *pSensorDesc, uint8_t EventType)
-{
-   // callbacks
-   tSensorHubEvent *pEventCallback = pSensorDesc->pFirstEventHander;
-   while (pEventCallback)
-   {
-      if (EV_TYPE_MEASUREMENT_ERROR == EventType)
-         pEventCallback->onEvent(pSensorDesc->SensorID, EventType, pSensorDesc->mDataBlobSize, pSensorDesc->pDataCache);
-      else
-         pEventCallback->onEvent(pSensorDesc->SensorID, EventType, 0, NULL);
-
-      pEventCallback = pEventCallback->pNext;
-   }
-}
-
 void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
@@ -167,7 +140,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
    {
       pSensorDesc->Status = STATUS_SENSOR_ERROR_REPORTED;
       // callbacks
-      callAllCallbacks(pSensorDesc,EV_TYPE_MEASUREMENT_ERROR);
+  //    callAllCallbacks(pSensorDesc,EV_TYPE_MEASUREMENT_ERROR);
       return;
    }
 
@@ -182,7 +155,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
        memcpy(pSensorDesc->pDataCache,pDataBlob,dataBlobSize);
 
    // callbacks
-   callAllCallbacks(pSensorDesc,EventType);
+  // callAllCallbacks(pSensorDesc,EventType);
 }
 
 
