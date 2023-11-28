@@ -91,3 +91,9 @@ typedef struct
   uint16_t Timer;        // timer when the output should be turned off. In seconds, 0 means forever, 0xFFFF means default timer value
 } tMessageTypeSetOutput;
 C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+
+#define MESSAGE_TYPE_GENERAL_STATUS 0x12
+typedef struct {
+    uint8_t Status;
+} tMesssageGeneralStatus;

@@ -35,6 +35,14 @@ bool tOutgoingFrames::SendMsgReset(uint8_t RecieverID)
   CommSender.Enqueue(RecieverID,MESSAGE_TYPE_FORCE_RESET,0,NULL);
 }
 
+bool tOutgoingFrames::SendMsgStatus(uint8_t RecieverID, uint8_t Status)
+{
+    tMesssageGeneralStatus Msg;
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_GENERAL_STATUS");
+    Msg.Status = Status;
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_GENERAL_STATUS, sizeof(Msg), &Msg);
+}
+
 #if CONFIG_OUTPUT_PROCESS
 // OVERVIEW STATE HANDSHAKE
 bool tOutgoingFrames::SendMsgOverviewStateRequest(uint8_t RecieverID)

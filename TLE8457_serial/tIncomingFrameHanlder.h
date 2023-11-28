@@ -24,6 +24,7 @@ public:
 private:
     void HandleMsgVersionRequest(uint8_t SenderID);
     void HandleMsgVersionResponse(uint8_t SenderID, tMessageTypeFwVesionResponse *pMessage);
+    void LogMsgGeneralStatus(uint8_t SenderID, tMesssageGeneralStatus *pMessage);
 
 #if CONFIG_OUTPUT_PROCESS
     void LogMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message);
