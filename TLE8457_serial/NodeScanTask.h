@@ -8,14 +8,13 @@
 #include "../../lib/ArduinoQueue/ArduinoQueue.h"
 #include "../WorkerProcess.h"
 #include "../tMessageReciever.h"
-#include "../tMessages.h"
 
 class NodeScanTask : public WorkerTask, public tMessageReciever
 {
 public:
    NodeScanTask() : mCurrentNodeID(0), mActiveNodesMap(0)
    {
-	   RegisterMessageType(tMessages::MessageType_SerialFrameRecieved);
+	   RegisterMessageType(MessageType_SerialFrameRecieved);
    }
    virtual ~NodeScanTask() {}
 

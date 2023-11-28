@@ -13,7 +13,7 @@
 
 void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
 {
-    if (type != tMessages::MessageType_SerialFrameRecieved)
+    if (type != MessageType_SerialFrameRecieved)
         return;
 
     tCommunicationFrame *pFrame = (tCommunicationFrame *)pData;

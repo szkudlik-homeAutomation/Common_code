@@ -9,6 +9,19 @@
 
 #include "../../global.h"
 
+
+/*
+ * a frame has been recieved - an event dedicated for serial frame parser
+ *
+ *  data is always mFrame.MessageType
+ */
+static const uint8_t MessageType_SerialFrameRecieved = 0;
+
+static const uint8_t MessageType_SensorEvent   = 2;
+
+// NOTE - app specific event types start from 16
+
+
 class tMessageReciever {
 public:
 	tMessageReciever()  { pNext = pFirst ; pFirst = this; }
