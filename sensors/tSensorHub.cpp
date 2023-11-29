@@ -146,6 +146,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
       pSensorDesc->Status = STATUS_SENSOR_ERROR_REPORTED;
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS
       Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
+      Event.SensorType = pSensorDesc->sensorType;
       Event.dataBlobSize = 0;
       Event.pDataBlob = NULL;
       tMessageReciever::Dispatch(MessageType_SensorEvent, SensorID, &Event);

@@ -28,6 +28,7 @@ static const uint8_t MessageType_SerialFrameRecieved = 0;
 static const uint8_t MessageType_SensorEvent   = 1;
     typedef struct tSensorEvent
     {
+    	uint8_t SensorType;
         uint8_t EventType;
         uint8_t dataBlobSize;
         void *pDataBlob;

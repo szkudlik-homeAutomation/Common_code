@@ -133,12 +133,14 @@ void tSensor::onMeasurementCompleted(bool Status)
   if (Status)
   {
       Event.EventType = EV_TYPE_MEASUREMENT_COMPLETED;
+      Event.SensorType = getSensorType();
       Event.dataBlobSize = mMeasurementBlobSize;
       Event.pDataBlob = mCurrentMeasurementBlob;
   }
   else
   {
       Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
+      Event.SensorType = getSensorType();
       Event.dataBlobSize = 0;
       Event.pDataBlob = NULL;
   }
