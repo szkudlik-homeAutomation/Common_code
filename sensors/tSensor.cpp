@@ -15,6 +15,8 @@
 
 tSensor* tSensor::pFirst = NULL;
 
+tSensorProcess *tSensorProcess::Instance = NULL;
+
 uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize)
 {
 	if (mState != SENSOR_CREATED)
@@ -183,5 +185,11 @@ void tSensorProcess::service()
 }
 
 void tSensorProcess::setup() {}
+
+void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
+{
+    if (type != MessageType_SerialFrameRecieved)
+        return;
+}
 
 #endif //CONFIG_SENSORS
