@@ -185,4 +185,10 @@ void tSensorProcess::service()
 
 void tSensorProcess::setup() {}
 
+void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
+{
+    if (type != MessageType_SerialFrameRecieved)
+        return;
+}
+
 #endif //CONFIG_SENSORS

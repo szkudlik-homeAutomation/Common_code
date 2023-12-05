@@ -21,6 +21,7 @@
 #if CONFIG_SENSORS
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
+#include "../tMessageReciever.h"
 
 /* sensor time tick - 100ms */
 #define SENSOR_PROCESS_SERVICE_TIME 100
@@ -45,16 +46,22 @@
 
 class tSensor;
 
-class tSensorProcess : public Process
+class tSensorProcess : public Process, public tMessageReciever
 {
 public:
-	static tSensorProcess *Instance;
-   tSensorProcess(Scheduler &manager) :
-    Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME) { Instance = this; }
+    tSensorProcess(Scheduler &manager) :
+        Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME)
+    {
+        Instance = this;
+        RegisterMessageType(MessageType_SerialFrameRecieved);
+    }
+
+   static tSensorProcess *Instance;
 
    virtual void setup();
    virtual void service();
-
+protected:
+    virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 };
 
 class tSensor {
