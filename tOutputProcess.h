@@ -6,7 +6,6 @@
 
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "tMessageReciever.h"
-#include "tMessages.h"
 
 /*
  * requires NUM_OF_OUTPUTS defined
@@ -74,7 +73,7 @@ public:
     {
       instance = this;
 #if CONFIG_TLE8457_COMM_LIB
-      RegisterMessageType(tMessages::MessageType_SerialFrameRecieved);
+      RegisterMessageType(MessageType_SerialFrameRecieved);
 #endif CONFIG_TLE8457_COMM_LIB
     }
 

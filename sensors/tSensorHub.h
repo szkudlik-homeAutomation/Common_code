@@ -14,17 +14,6 @@
 
 class tSensorDesc;
 
-class tSensorHubEvent
-{
-public:
-   tSensorHubEvent() {}
-   virtual void onEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob) = 0;
-
-private:
-   void Connect(tSensorHubEvent **pFirst) { pNext = *pFirst; *pFirst = this; }
-   tSensorHubEvent *pNext; friend class tSensorHub;
-};
-
 /**
  * Sensor hub is an entity working on a central node, aggregating all sensor that may be on remote nodes
  *
@@ -66,15 +55,6 @@ public:
 			uint16_t MeasurementPeriod,
 			const char *sensorName) {};
 
-	/*
-	 * Subscribe to all events from the sensor
-	 * There's no unsubscribe - not needed in fact
-	 *
-	 * @retval SENSOR_STATUS_UNKNOWN_SENSOR
-	 * @retval SENSOR_STATUS_TIMEOUT
-	 */
-	uint8_t subscribeToEvents(uint8_t SensorID, tSensorHubEvent *pSensorEvent);
-
 	/**
 	 * Asyn get current sensor data from remote node
 	 *
@@ -112,9 +92,6 @@ public:
     * to be called on sensor event, either remote or local
     */
    void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
-
-private:
-   void callAllCallbacks(tSensorDesc *pSensorDesc, uint8_t EventType);
 
 };
 

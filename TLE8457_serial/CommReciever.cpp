@@ -5,7 +5,6 @@
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../../lib/AceCRC/src/AceCRC.h"
 #include "../tMessageReciever.h"
-#include "../tMessages.h"
 
 #include "TLE8457_serial_lib.h"
 #include "CommReciever.h"
@@ -173,7 +172,7 @@ void CommRecieverProcess::ProcessFrame()
    mRetransTableHead %= RECIEVE_NUMBER_OF_RETRANS_TABLE;
 
    //  dispatch message
-   tMessageReciever::Dispatch(tMessages::MessageType_SerialFrameRecieved, mFrame.MessageType, &mFrame);
+   tMessageReciever::Dispatch(MessageType_SerialFrameRecieved, mFrame.MessageType, &mFrame);
 }
 
 #endif // CONFIG_TLE8457_COMM_LIB

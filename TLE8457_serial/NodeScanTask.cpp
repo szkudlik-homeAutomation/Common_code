@@ -38,7 +38,7 @@ bool NodeScanTask::Process(uint32_t *pNextServiceDelay)
 
 void NodeScanTask::onMessage(uint8_t type, uint16_t data, void *pData)
 {
-	if (type != tMessages::MessageType_SerialFrameRecieved || data != MESSAGE_TYPE_FW_VERSION_RESPONSE)
+	if (type != MessageType_SerialFrameRecieved || data != MESSAGE_TYPE_FW_VERSION_RESPONSE)
 		return;
 
     tCommunicationFrame *pFrame = (tCommunicationFrame *)pData;

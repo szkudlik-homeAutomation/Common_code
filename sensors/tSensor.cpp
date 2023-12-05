@@ -10,8 +10,8 @@
 #if CONFIG_SENSORS
 
 #include "tSensor.h"
-
 #include "tSensorHub.h"
+#include "../tMessageReciever.h"
 
 tSensor* tSensor::pFirst = NULL;
 
@@ -128,7 +128,25 @@ void tSensor::onMeasurementCompleted(bool Status)
       tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
 #endif //CONFIG_SENSOR_HUB
-  //TODO: remote sensors
+#if CONFIG_SENSOR_GENERATE_EVENTS
+  tSensorEvent Event;
+  if (Status)
+  {
+      Event.EventType = EV_TYPE_MEASUREMENT_COMPLETED;
+      Event.SensorType = getSensorType();
+      Event.dataBlobSize = mMeasurementBlobSize;
+      Event.pDataBlob = mCurrentMeasurementBlob;
+  }
+  else
+  {
+      Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
+      Event.SensorType = getSensorType();
+      Event.dataBlobSize = 0;
+      Event.pDataBlob = NULL;
+  }
+
+  tMessageReciever::Dispatch(MessageType_SensorEvent, getSensorID(), &Event);
+#endif //CONFIG_SENSOR_GENERATE_EVENTS
 }
 
 void tSensor::Run()

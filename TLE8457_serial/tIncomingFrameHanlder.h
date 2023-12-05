@@ -13,11 +13,10 @@
 
 #include "TLE8457_serial_lib.h"
 #include "../tMessageReciever.h"
-#include "../tMessages.h"
 
 class tIncomingFrameHanlder : public tMessageReciever {
 public:
-    tIncomingFrameHanlder() : tMessageReciever() { RegisterMessageType(tMessages::MessageType_SerialFrameRecieved); }
+    tIncomingFrameHanlder() : tMessageReciever() { RegisterMessageType(MessageType_SerialFrameRecieved); }
 
     virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 
