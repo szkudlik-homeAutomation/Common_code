@@ -22,6 +22,7 @@
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../tMessageReciever.h"
+#include "../TLE8457_serial/TLE8457_serial_lib.h"
 
 /* sensor time tick - 100ms */
 #define SENSOR_PROCESS_SERVICE_TIME 100
@@ -62,6 +63,8 @@ public:
    virtual void service();
 protected:
     virtual void onMessage(uint8_t type, uint16_t data, void *pData);
+private:
+    void HandleMessageGetSensorByIdReqest(tCommunicationFrame *pFrame);
 };
 
 class tSensor {
@@ -82,6 +85,7 @@ public:
 	}
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
+	uint8_t getSensorSerialEventsMask() const { return 0; } // stub
 	/* make the sensor running */
 	uint8_t Start();
 	/* pause the sensor */

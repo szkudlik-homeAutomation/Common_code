@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../global.h"
+#if CONFIG_TLE8457_COMM_LIB
 
 /*
  * NOTE - backward compatibility
@@ -97,3 +99,37 @@ C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 typedef struct {
     uint8_t Status;
 } tMesssageGeneralStatus;
+
+#if CONFIG_SENSORS
+
+/**
+ * Look for a sensor with a given ID
+ * A node that holds the sensor in question must response with MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE
+ * usually send as broadcast
+ */
+#define MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST 0x13
+typedef struct
+{
+    uint8_t SensorID;
+} tMessageGetSensorByIdReqest;
+C_ASSERT(sizeof(tMessageGetSensorByIdReqest) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+#define MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE 0x14
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t ApiVersion;
+    uint8_t SensorType;
+    uint8_t isConfigured : 1,
+			isRunning : 1,
+			isMeasurementValid : 1,
+			EventsMask		   : 4;
+    uint16_t MeasurementPeriod;
+    uint8_t ConfigBlobSize;
+    uint8_t MeasurementBlobSize;
+} tMessageGetSensorByIdResponse;
+C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+
+#endif // CONFIG_SENSORS
+#endif //CONFIG_TLE8457_COMM_LIB
