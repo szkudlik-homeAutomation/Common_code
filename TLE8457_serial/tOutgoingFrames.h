@@ -31,6 +31,9 @@ public:
 #if CONFIG_SENSORS
     static bool SendGetSensorByIdReqest(uint8_t RecieverID, uint8_t SensorID);
     static bool SendGetSensorByIdResponse(uint8_t RecieverID, tMessageGetSensorByIdResponse *pMessage);
+    static bool SendSensorCreate(uint8_t RecieverID, uint8_t SensorType, uint8_t SensorID);
+    static bool SendSensorStart(uint8_t RecieverID, uint8_t SensorID, uint8_t EventMask);
+    static bool SendSensorStop(uint8_t RecieverID, uint8_t SensorID);
 #endif //CONFIG_SENSORS
 };
 

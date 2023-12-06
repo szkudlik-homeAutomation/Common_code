@@ -192,6 +192,77 @@ bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
     Cmdr.println(F("Usage: GetSensorById sensor_id [dst_dev = broadcast]"));
     return false;
 }
+
+
+bool send_CreateSensorRequest(Commander &Cmdr)
+{
+    int Dst;
+    int SensorType;
+    int SensorId;
+
+    if(!Cmdr.getInt(Dst))
+    {
+      goto error;
+    }
+    if(!Cmdr.getInt(SensorType))
+    {
+      goto error;
+    }
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+
+    tOutgoingFrames::SendSensorCreate(Dst, SensorType, SensorId);
+    return true;
+  error:
+    Cmdr.println(F("Usage: CreateSensor dev_id sensor_type sensor_id"));
+    return false;
+}
+
+bool send_StartSensorRequest(Commander &Cmdr)
+{
+    int Dst = DEVICE_ID_BROADCAST;
+    int SensorId;
+    uint8_t SensorEventMask;
+    SensorEventMask = 1 << EV_TYPE_MEASUREMENT_COMPLETED;
+
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+
+    Cmdr.getInt(SensorEventMask);
+    Cmdr.getInt(Dst);
+
+    tOutgoingFrames::SendSensorStart(Dst, SensorId, SensorEventMask);
+    return true;
+  error:
+    Cmdr.println(F("Usage: StartSensor sensor_id [sensor_ev_mask = EV_TYPE_MEASUREMENT_COMPLETED] [dev_id = broadcast]"));
+    return false;
+}
+
+bool send_StopSensorRequest(Commander &Cmdr)
+{
+    int Dst = DEVICE_ID_BROADCAST;
+    int SensorId;
+
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+
+    Cmdr.getInt(Dst);
+
+    tOutgoingFrames::SendSensorStop(Dst, SensorId);
+    return true;
+
+ error:
+    Cmdr.println(F("Usage: StopSensor sensor_id [dev_id = broadcast]"));
+    return false;
+}
+
+
 #endif // CONFIG_SENSORS
 #endif // CONFIG_TLE8457_COMM_LIB
 

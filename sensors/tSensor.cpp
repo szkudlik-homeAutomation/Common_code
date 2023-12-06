@@ -11,6 +11,7 @@
 
 #include "tSensor.h"
 #include "tSensorHub.h"
+#include "tSensorFactory.h"
 #include "../tMessageReciever.h"
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/CommonFramesDefs.h"
@@ -228,6 +229,66 @@ void tSensorProcess::HandleMessageGetSensorByIdReqest(tCommunicationFrame *pFram
     Response.ConfigBlobSize = pSensor->getConfigBlobSize();
     Response.MeasurementBlobSize = pSensor->getMeasurementBlobSize();
     tOutgoingFrames::SendGetSensorByIdResponse(pFrame->SenderDevId, &Response);
+}
+
+
+void tSensorProcess::HandleMsgSensorCreate(tCommunicationFrame *pFrame)
+{
+    tMessageSensorCreate *Message = (tMessageSensorCreate *)pFrame->Data;
+
+   DEBUG_PRINT_3("Creating type: ");
+   DEBUG_3(print(Message->SensorType, DEC));
+   DEBUG_PRINT_3(" with ID: ");
+   DEBUG_3(println(Message->SensorID, DEC));
+
+   tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Message->SensorType, Message->SensorID);
+
+   if (pSensor)
+       tOutgoingFrames::SendMsgStatus(pFrame->SenderDevId, 0);
+   else
+       tOutgoingFrames::SendMsgStatus(pFrame->SenderDevId, STATUS_GENERAL_FAILURE);
+}
+
+void tSensorProcess::HandleMsgSensorStart(tCommunicationFrame *pFrame)
+{
+    tMessageSensorStart *Message = (tMessageSensorStart *)pFrame->Data;
+
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (!pSensor)
+        return;
+
+    DEBUG_PRINT_3("Starting sensor ID: ");
+    DEBUG_3(print(Message->SensorID, DEC));
+    DEBUG_PRINT_3(" with event mask: ");
+    DEBUG_3(println(Message->SensorEventMask, BIN));
+
+    uint8_t result = pSensor->Start();
+    if (STATUS_SUCCESS == result)
+        pSensor->setSensorSerialEventsMask(Message->SensorEventMask);
+
+    DEBUG_PRINT_3("   status: ");
+    DEBUG_3(println(result, DEC));
+
+    tOutgoingFrames::SendMsgStatus(pFrame->SenderDevId, result);
+}
+
+void tSensorProcess::HandleMsgSensorStop(tCommunicationFrame *pFrame)
+{
+    tMessageSensorStop *Message = (tMessageSensorStop *)pFrame->Data;
+
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (!pSensor)
+        return;
+
+    DEBUG_PRINT_3("Stopping sensor ID: ");
+    DEBUG_3(println(Message->SensorID, DEC));
+
+    uint8_t result = pSensor->Pause();
+
+    DEBUG_PRINT_3("   status: ");
+    DEBUG_3(println(result, DEC));
+
+    tOutgoingFrames::SendMsgStatus(pFrame->SenderDevId, result);
 }
 
 #else //CONFIG_TLE8457_COMM_LIB

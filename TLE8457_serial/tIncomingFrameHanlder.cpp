@@ -72,6 +72,18 @@ void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE");
            LogMsgGetSensorByIdResponse(SenderDevId, (tMessageGetSensorByIdResponse*)(pFrame->Data));
            break;
+
+       case MESSAGE_TYPE_SENSOR_CREATE:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_CREATE");
+           break;
+       case MESSAGE_TYPE_SENSOR_START:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_START");
+           break;
+
+       case MESSAGE_TYPE_SENSOR_STOP:
+           DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_STOP");
+           break;
+
 #endif //CONFIG_SENSORS
 
     }

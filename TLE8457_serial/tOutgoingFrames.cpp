@@ -114,6 +114,32 @@ bool tOutgoingFrames::SendGetSensorByIdResponse(uint8_t RecieverID, tMessageGetS
     DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE");
     CommSender.Enqueue(RecieverID, MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE, sizeof(*pMessage), pMessage);
 }
+
+static bool tOutgoingFrames::SendSensorCreate(uint8_t RecieverID, uint8_t SensorType, uint8_t SensorID)
+{
+    tMessageSensorCreate Msg;
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_CREATE");
+    Msg.SensorID = SensorID;
+    Msg.SensorType = SensorType;
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CREATE, sizeof(Msg), &Msg);
+}
+
+static bool tOutgoingFrames::SendSensorStart(uint8_t RecieverID, uint8_t SensorID, uint8_t EventMask)
+{
+    tMessageSensorStart Msg;
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_START");
+    Msg.SensorID = SensorID;
+    Msg.SensorEventMask = EventMask;
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_START, sizeof(Msg), &Msg);
+}
+
+static bool tOutgoingFrames::SendSensorStop(uint8_t RecieverID, uint8_t SensorID)
+{
+    tMessageSensorStop Msg;
+    DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_STOP");
+    Msg.SensorID = SensorID;
+    CommSender.Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_STOP, sizeof(Msg), &Msg);
+}
 #endif //CONFIG_SENSORS
 
 #endif // CONFIG_TLE8457_COMM_LIB

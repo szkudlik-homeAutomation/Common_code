@@ -65,6 +65,10 @@ protected:
     virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 private:
     void HandleMessageGetSensorByIdReqest(tCommunicationFrame *pFrame);
+    void HandleMsgSensorStop(tCommunicationFrame *pFrame);
+    void HandleMsgSensorStart(tCommunicationFrame *pFrame);
+    void HandleMsgSensorCreate(tCommunicationFrame *pFrame);
+
 };
 
 class tSensor {
@@ -86,6 +90,7 @@ public:
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
 	uint8_t getSensorSerialEventsMask() const { return 0; } // stub
+	void setSensorSerialEventsMask(uint8_t mask) { } //stub
 	/* make the sensor running */
 	uint8_t Start();
 	/* pause the sensor */

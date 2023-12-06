@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../../global.h"
 #if CONFIG_TLE8457_COMM_LIB
 
@@ -129,6 +128,40 @@ typedef struct
     uint8_t MeasurementBlobSize;
 } tMessageGetSensorByIdResponse;
 C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+
+/* Create a sensor
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_CREATE 0x17
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t SensorType;
+} tMessageSensorCreate;
+C_ASSERT(sizeof(tMessageSensorCreate) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+
+/* Start a sensor, set events mask
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_START 0x19
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t SensorEventMask;	// bitmap
+} tMessageSensorStart;
+C_ASSERT(sizeof(tMessageSensorStart) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/* Stop a sensor
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_STOP 0x1A
+typedef struct
+{
+    uint8_t SensorID;
+} tMessageSensorStop;
+C_ASSERT(sizeof(tMessageSensorStop) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 
 #endif // CONFIG_SENSORS
