@@ -48,16 +48,14 @@ class tSensor;
 class tSensorProcess : public Process
 {
 public:
+	static tSensorProcess *Instance;
    tSensorProcess(Scheduler &manager) :
-    Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME) {}
+    Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME) { Instance = this; }
 
    virtual void setup();
    virtual void service();
 
 };
-
-
-extern tSensorProcess SensorProcess;
 
 class tSensor {
 public:

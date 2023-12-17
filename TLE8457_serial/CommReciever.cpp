@@ -12,11 +12,14 @@
 
 using namespace ace_crc::crc16ccitt_nibble;
 
+CommRecieverProcess *CommRecieverProcess::Instance = NULL;
+
 CommRecieverProcess::CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId)
    : Process(manager,LOW_PRIORITY,RECIEVE_CHECK_PERIOD),
      mRetransTableHead(0),
      mSelfDevId(SelfDevId)
 {
+  Instance = this;
   SetState(STATE_IDLE);
 }
 

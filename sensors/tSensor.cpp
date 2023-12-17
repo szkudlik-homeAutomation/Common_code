@@ -14,6 +14,7 @@
 #include "../tMessageReciever.h"
 
 tSensor* tSensor::pFirst = NULL;
+tSensorProcess *tSensorProcess::Instance;
 
 uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize)
 {

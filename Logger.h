@@ -15,7 +15,8 @@
 
 class tLogger : public Print {
 public:
-	tLogger() : mLogsForced(false) {}
+	static tLogger *Instance;
+	tLogger() : mLogsForced(false) { Instance = this; }
 	virtual ~tLogger() {}
 
     virtual size_t write(uint8_t str);
@@ -26,8 +27,6 @@ public:
 private:
 	  bool mLogsForced;
 };
-
-extern tLogger Logger;
 
 class tLogTransport
 {
@@ -51,13 +50,12 @@ private:
 class tSerialLogTransport : public tLogTransport
 {
 public:
-	tSerialLogTransport() : tLogTransport() {EnableLogs();}
+	static tSerialLogTransport *Instance;
+	tSerialLogTransport() : tLogTransport() {Instance = this; EnableLogs();}
 	virtual ~tSerialLogTransport() {};
 
 	virtual void Log(uint8_t str) { DEBUG_SERIAL.write(str); }
 };
-
-extern tSerialLogTransport SerialLogTransport;
 
 #endif
 

@@ -12,6 +12,8 @@
 #include "Logger.h"
 
 tLogTransport* tLogTransport::pFirst = NULL;
+tLogger *tLogger::Instance = NULL;
+tSerialLogTransport *tSerialLogTransport::Instance = NULL;
 
 tLogTransport::~tLogTransport()
 {

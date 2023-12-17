@@ -14,6 +14,7 @@
 class CommRecieverProcess : public  Process
 {
  public:
+  static CommRecieverProcess *Instance;
   CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId);
 
   void clearSelfFrameMark() { mSelfFrameMark = false; }
@@ -45,7 +46,5 @@ class CommRecieverProcess : public  Process
     uint8_t mRetransTableHead;
     bool mSelfFrameMark;
 };
-
-extern CommRecieverProcess CommReciever;
 
 #endif // CONFIG_TLE8457_COMM_LIB
