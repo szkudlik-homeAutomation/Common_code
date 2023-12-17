@@ -6,6 +6,8 @@
 
 #include "WorkerProcess.h"
 
+WorkerProcess *WorkerProcess::Instance = NULL;
+
 void WorkerProcess::service()
 {
    if (NULL == pCurrentWorkerTask)

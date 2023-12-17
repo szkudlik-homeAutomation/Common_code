@@ -20,9 +20,10 @@ public:
 class WorkerProcess: public Process
 {
   public:
-  WorkerProcess(Scheduler &manager) : Process(manager,LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) {}
+	static WorkerProcess *Instance;
+    WorkerProcess(Scheduler &manager) : Process(manager,LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) { Instance = this; }
 
-  void Enqueue(WorkerTask *pWorkerTask);
+    void Enqueue(WorkerTask *pWorkerTask);
 
 protected:
   virtual void service();
@@ -32,7 +33,5 @@ private:
   WorkerTask *pCurrentWorkerTask;
 
 };
-
-extern WorkerProcess Worker;
 
 #endif CONFIG_WORKER_PROCESS

@@ -15,12 +15,16 @@
 
 using namespace ace_crc::crc16ccitt_nibble;
 
+
+CommSenderProcess *CommSenderProcess::Instance = NULL;
+
 CommSenderProcess::CommSenderProcess(Scheduler &manager, uint8_t RandomSeed, uint8_t SenderDevId) :
     Process(manager,MEDIUM_PRIORITY,SERVICE_CONSTANTLY),
     mRandom(RandomSeed),
     mQueue(OUTPUT_QUEUE_SIZE),
     isSending(false)
     {
+	  Instance = this;
       mFrame.SenderDevId = SenderDevId;
       mFrame.Seq = 0;
     };
@@ -51,7 +55,7 @@ void CommSenderProcess::service()
   {
     // wait till the frame has been physically sent
     COMM_SERIAL.flush();
-    if (true == CommReciever.getSelfFrameMark())
+    if (true == CommRecieverProcess::Instance->getSelfFrameMark())
     {
       // frame sent properly, decrease retranmissions
       mRetransLeft--;
@@ -61,7 +65,7 @@ void CommSenderProcess::service()
        // a collision detected
        mCollisionRetransLeft--;
     }
-    CommReciever.clearSelfFrameMark();
+    CommRecieverProcess::Instance->clearSelfFrameMark();
   if ((0 == mRetransLeft) || (0 == mCollisionRetransLeft))
       isSending = false;
   }
@@ -74,7 +78,7 @@ void CommSenderProcess::service()
     {
       mCollisionRetransLeft = MAX_NUM_OF_RETRANSMISSIONS;
       mRetransLeft = NUM_OF_RETRANSMISSIONS;
-      CommReciever.clearSelfFrameMark();
+      CommRecieverProcess::Instance->clearSelfFrameMark();
       isSending = true;
     }
     else

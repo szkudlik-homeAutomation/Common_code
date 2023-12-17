@@ -13,6 +13,7 @@
 class CommSenderProcess : public Process
 {
   public:
+  static CommSenderProcess *Instance;
   CommSenderProcess(Scheduler &manager, uint8_t RandomSeed, uint8_t SenderDevId);
 
   void Enqueue(uint8_t DstDevId, uint8_t MessageType, uint8_t DataSize, void *pData);
@@ -40,7 +41,5 @@ private:
   bool DequeueFrame();
 };
 
-
-extern CommSenderProcess CommSender;
 
 #endif // CONFIG_TLE8457_COMM_LIB

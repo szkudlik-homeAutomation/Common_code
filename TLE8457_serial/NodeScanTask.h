@@ -19,7 +19,7 @@ public:
    virtual ~NodeScanTask() {}
 
    virtual bool Process(uint32_t * pNextServiceDelay);
-   static void trigger() { Worker.Enqueue(new NodeScanTask()); }
+   static void trigger() { WorkerProcess::Instance->Enqueue(new NodeScanTask()); }
 
 protected:
    virtual void onMessage(uint8_t type, uint16_t data, void *pData);
