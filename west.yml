@@ -52,4 +52,10 @@ manifest:
       repo-path: OneWire_lib
       revision: 386a8d0715781fd38a61c7f0a753c2f988a2abca
 
+    - name: Wiegand
+      path: src/lib/Wiegand
+      repo-path: Wiegand-Protocol-Library-for-Arduino.git
+      revision: 2a702d7befd6d906d1663481fe6d99415f37526c
+
+
 
