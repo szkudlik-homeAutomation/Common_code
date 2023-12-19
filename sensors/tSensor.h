@@ -48,7 +48,7 @@ class tSensor;
 class tSensorProcess : public Process
 {
 public:
-	tSensorProcess *Instance;
+	static tSensorProcess *Instance;
    tSensorProcess(Scheduler &manager) :
     Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME) { Instance = this; }
 
