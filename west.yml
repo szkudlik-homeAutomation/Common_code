@@ -55,7 +55,7 @@ manifest:
     - name: Wiegand
       path: src/lib/Wiegand
       repo-path: Wiegand-Protocol-Library-for-Arduino.git
-      revision: 2a702d7befd6d906d1663481fe6d99415f37526c
+      revision: 220973b2817a44a2c3575d51a2bd7cf93724388b
 
 
 
