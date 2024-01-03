@@ -10,6 +10,7 @@
 
 #include "tIncomingFrameHanlder.h"
 #include "tOutgoingFrames.h"
+#include "../tTimestamp.h"
 
 void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
 {
@@ -40,6 +41,12 @@ void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_GENERAL_STATUS");
            LogMsgGeneralStatus(SenderDevId, (tMesssageGeneralStatus *)(pFrame->Data));
            break;
+#if CONFIG_TIMESTAMP
+       case MESSAGE_TYPE_TIMESTAMP:
+           DEBUG_2(println("===================>Setting timestamp to %u", ((tMessageTypeTimestamp *)(pFrame->Data))->timestamp));
+           tTimestamp::set(((tMessageTypeTimestamp *)(pFrame->Data))->timestamp);
+           break;
+#endif // CONFIG_TIMESTAMP
 
 #if CONFIG_OUTPUT_PROCESS
        case MESSAGE_TYPE_OVERVIEW_STATE_REQUEST:
