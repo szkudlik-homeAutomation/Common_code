@@ -40,7 +40,7 @@ manifest:
     - name: Commander
       path: src/lib/Commander
       repo-path: Commander_lib.git
-      revision: 00400242b0a5407d7c02d9568988d1b3200d121d
+      revision: 03941219a7718825de1b96e1e682dade5f49e675
       
     - name: ArduinoQueue
       path: src/lib/ArduinoQueue
