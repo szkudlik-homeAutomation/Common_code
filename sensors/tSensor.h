@@ -31,6 +31,7 @@
 #define SENSOR_TYPE_DIGITAL_INPUT 4
 #define SENSOR_TYPE_OUTPUT_STATES 5
 #define SENSOR_TYPE_SYSTEM_STATUS 6
+#define SENSOR_TYPE_WIEGAND 7
 
 // app sensor types should start from 128
 
@@ -68,6 +69,8 @@ public:
 	 *
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
 	 * the config will be copied to specific sensor config
+	 *
+	 * period in SENSOR_PROCESS_SERVICE_TIME unit
 	 */
 	uint8_t setConfig(uint16_t measurementPeriod)
 	{
@@ -110,6 +113,8 @@ protected:
    virtual uint8_t onSetConfig() { return STATUS_SUCCESS; }
    virtual uint8_t onRun() { return STATUS_SUCCESS; }
    virtual uint8_t onPause() { return STATUS_SUCCESS; }
+
+   // called every SENSOR_PROCESS_SERVICE_TIME
    virtual void doTimeTick() {};
 
 private:

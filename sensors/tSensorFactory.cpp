@@ -39,6 +39,10 @@
 #include "tSystemStatusSensor.h"
 #endif
 
+#if CONFIG_WIEGAND_SENSOR
+#include "tWiegandSensor.h"
+#endif
+
 static tSensorFactory* tSensorFactory::Instance;
 
 #if CONFIG_SENSOR_HUB
@@ -84,6 +88,12 @@ tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, ch
               newSensorDesc = new tSystemStatusSensorDesc();
               break;
     #endif //CONFIG_SYSTEM_STATUS_SENSOR
+
+	#if CONFIG_WIEGAND_SENSOR
+          case SENSOR_TYPE_WIEGAND:
+              newSensorDesc = new tWiegandSensorDesc();
+              break;
+	#endif //CONFIG_WIEGAND_SENSOR
 
           default:
               newSensorDesc = appSpecificCreateDesc(SensorType);
@@ -175,6 +185,13 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
         	  pSensor = new tSystemStatusSensor(SensorID);
               break;
     #endif //CONFIG_SYSTEM_STATUS_SENSOR
+	#if CONFIG_WIEGAND_SENSOR
+		  case SENSOR_TYPE_WIEGAND:
+			  pSensor = new tWiegandSensor(SensorID);
+			  break;
+	#endif //CONFIG_WIEGAND_SENSOR
+
+
 
           default:
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
