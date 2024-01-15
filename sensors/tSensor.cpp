@@ -11,6 +11,7 @@
 
 #include "tSensor.h"
 #include "tSensorHub.h"
+#include "tSensorFactory.h"
 #include "../tMessageReciever.h"
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/tOutgoingFrames.h"
@@ -200,16 +201,15 @@ void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
     switch (data)   // messageType
     {
     case MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST:
-    {
         HandleMessageGetSensorByIdReqest(pFrame->SenderDevId, (tMessageGetSensorByIdReqest *)pFrame->Data);
         break;
-    }
+    case MESSAGE_TYPE_SENSOR_CREATE:
+        HandleMsgSensorCreate(pFrame->SenderDevId, (tMessageSensorCreate *)pFrame->Data);
     break;
 
     }
 #endif // CONFIG_TLE8457_COMM_LIB
 }
-
 #if CONFIG_TLE8457_COMM_LIB
 void tSensorProcess::HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame)
 {
@@ -229,6 +229,21 @@ void tSensorProcess::HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGe
           Response.MeasurementBlobSize = pSensor->getMeasurementBlobSize();
           CommSenderProcess::Instance->Enqueue(sender, MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE, sizeof(Response), &Response);
     }
+}
+
+void tSensorProcess::HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame)
+{
+    DEBUG_PRINT_3("Creating type: ");
+    DEBUG_3(print(pFrame->SensorType, DEC));
+    DEBUG_PRINT_3(" with ID: ");
+    DEBUG_3(println(pFrame->SensorID, DEC));
+
+    tSensor *pSensor = tSensorFactory::Instance->CreateSensor(pFrame->SensorType, pFrame->SensorID);
+
+    if (pSensor)
+        tOutgoingFrames::SendMsgStatus(sender, 0);
+    else
+        tOutgoingFrames::SendMsgStatus(sender, STATUS_GENERAL_FAILURE);
 }
 
 #endif // CONFIG_TLE8457_COMM_LIB

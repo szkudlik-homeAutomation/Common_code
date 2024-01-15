@@ -66,6 +66,7 @@ protected:
 private:
 #if CONFIG_TLE8457_COMM_LIB
     void HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame);
+    void HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame);
 #endif // CONFIG_TLE8457_COMM_LIB
 };
 
