@@ -29,6 +29,9 @@ private:
     void LogMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message);
     void LogMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message);
 #endif //CONFIG_OUTPUT_PROCESS
+#if CONFIG_SENSORS
+    void LogMsgGetSensorByIdResponse(uint8_t SenderID, tMessageGetSensorByIdResponse *Message);
+#endif //CONFIG_SENSORS
 
 };
 

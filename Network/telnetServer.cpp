@@ -2,6 +2,7 @@
 
 #include "../../../global.h"
 #if CONFIG_TELNET_SERVER
+#include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/tOutgoingFrames.h"
 
 #if CONFIG_OUTPUT_PROCESS
@@ -172,6 +173,29 @@ bool trigger_ScanNodes(Commander &Cmdr)
 #endif //CONFIG_NODE_SCAN_TASK
 
 #endif // CONFIG_OUTPUT_PROCESS
+
+#if CONFIG_SENSORS
+bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
+{
+    int Dst = DEVICE_ID_BROADCAST;
+    int SensorId;
+
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+    Cmdr.getInt(Dst);
+
+    tMessageGetSensorByIdReqest Message;
+    Message.SensorID = SensorId;
+    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST, sizeof(Message), &Message);
+
+    return true;
+  error:
+    Cmdr.println(F("Usage: GetSensorById sensor_id [dst_dev = broadcast]"));
+    return false;
+}
+#endif // CONFIG_SENSORS
 #endif // CONFIG_TLE8457_COMM_LIB
 
 #endif // CONFIG_TELNET_SERVER

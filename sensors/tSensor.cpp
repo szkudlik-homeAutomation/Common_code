@@ -12,6 +12,8 @@
 #include "tSensor.h"
 #include "tSensorHub.h"
 #include "../tMessageReciever.h"
+#include "../TLE8457_serial/TLE8457_serial_lib.h"
+#include "../TLE8457_serial/tOutgoingFrames.h"
 
 tSensor* tSensor::pFirst = NULL;
 tSensorProcess *tSensorProcess::Instance;
@@ -187,8 +189,47 @@ void tSensorProcess::setup() {}
 
 void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
 {
+#if CONFIG_TLE8457_COMM_LIB
     if (type != MessageType_SerialFrameRecieved)
         return;
+
+    tCommunicationFrame *pFrame = (tCommunicationFrame *)pData;
+    uint8_t SenderDevId = pFrame->SenderDevId;
+    uint8_t status = STATUS_SUCCESS;
+
+    switch (data)   // messageType
+    {
+    case MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST:
+    {
+        HandleMessageGetSensorByIdReqest(pFrame->SenderDevId, (tMessageGetSensorByIdReqest *)pFrame->Data);
+        break;
+    }
+    break;
+
+    }
+#endif // CONFIG_TLE8457_COMM_LIB
 }
 
+#if CONFIG_TLE8457_COMM_LIB
+void tSensorProcess::HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame)
+{
+    tSensor *pSensor = tSensor::getSensor(pFrame->SensorID);
+    if (NULL != pSensor)
+    {
+          tMessageGetSensorByIdResponse Response;
+          Response.SensorID = pFrame->SensorID;
+          Response.MeasurementPeriod = pSensor->GetMeasurementPeriod();
+          Response.ApiVersion = pSensor->getSensorApiVersion();
+          Response.SensorType = pSensor->getSensorType();
+          Response.isConfigured = pSensor->isConfigured();
+          Response.isMeasurementValid = pSensor->isMeasurementValid();
+          Response.isRunning = pSensor->isRunning();
+          Response.EventsMask = pSensor->getSensorSerialEventsMask();
+          Response.ConfigBlobSize = pSensor->getConfigBlobSize();
+          Response.MeasurementBlobSize = pSensor->getMeasurementBlobSize();
+          CommSenderProcess::Instance->Enqueue(sender, MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE, sizeof(Response), &Response);
+    }
+}
+
+#endif // CONFIG_TLE8457_COMM_LIB
 #endif //CONFIG_SENSORS

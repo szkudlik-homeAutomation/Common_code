@@ -58,6 +58,9 @@ bool trigger_ScanNodes(Commander &Cmdr);
 #endif //CONFIG_NODE_SCAN_TASK
 
 #endif // CONFIG_OUTPUT_PROCESS
+#if CONFIG_SENSORS
+bool send_GetSensorByIdReqestHandler(Commander &Cmdr);
+#endif //CONFIG_SENSORS
 
 #endif //CONFIG_TLE8457_COMM_LIB
 
