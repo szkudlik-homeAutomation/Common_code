@@ -205,11 +205,16 @@ void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
         break;
     case MESSAGE_TYPE_SENSOR_CREATE:
         HandleMsgSensorCreate(pFrame->SenderDevId, (tMessageSensorCreate *)pFrame->Data);
-    break;
+        break;
     case MESSAGE_TYPE_SENSOR_CONFIGURE:
         HandleMsgSensorConfigure(pFrame->SenderDevId, (tMessageSensorConfigure *)pFrame->Data);
-    break;
-
+        break;
+    case MESSAGE_TYPE_SENSOR_START:
+        HandleMsgSensorStart(pFrame->SenderDevId, (tMessageSensorStart *)pFrame->Data);
+        break;
+    case MESSAGE_TYPE_SENSOR_STOP:
+        HandleMsgSensorStop(pFrame->SenderDevId, (tMessageSensorStop *)pFrame->Data);
+        break;
     }
 #endif // CONFIG_TLE8457_COMM_LIB
 }
@@ -272,6 +277,45 @@ void tSensorProcess::HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorCo
             tOutgoingFrames::SendMsgStatus(SenderID, result);
         }
     }
+}
+
+
+void tSensorProcess::HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message)
+{
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (!pSensor)
+        return;
+
+    DEBUG_PRINT_3("Starting sensor ID: ");
+    DEBUG_3(print(Message->SensorID, DEC));
+    DEBUG_PRINT_3(" with event mask: ");
+    DEBUG_3(println(Message->SensorEventMask, BIN));
+
+    uint8_t result = pSensor->Start();
+    if (STATUS_SUCCESS == result)
+        pSensor->setSensorSerialEventsMask(Message->SensorEventMask);
+
+    DEBUG_PRINT_3("   status: ");
+    DEBUG_3(println(result, DEC));
+
+    tOutgoingFrames::SendMsgStatus(SenderID, result);
+}
+
+void tSensorProcess::HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message)
+{
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (!pSensor)
+        return;
+
+    DEBUG_PRINT_3("Stopping sensor ID: ");
+    DEBUG_3(println(Message->SensorID, DEC));
+
+    uint8_t result = pSensor->Pause();
+
+    DEBUG_PRINT_3("   status: ");
+    DEBUG_3(println(result, DEC));
+
+    tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 
 #endif // CONFIG_TLE8457_COMM_LIB

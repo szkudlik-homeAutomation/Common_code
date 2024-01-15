@@ -68,6 +68,9 @@ private:
     void HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame);
     void HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame);
     void HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message);
+    void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
+    void HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message);
+
 #endif // CONFIG_TLE8457_COMM_LIB
 };
 
@@ -89,8 +92,6 @@ public:
 	}
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
-	uint8_t getSensorSerialEventsMask() const { return 0; } // stub
-
 	/* handle partial config
 	 * seq numbers must be in order, any missing part will result in an error
 	 *
@@ -102,6 +103,11 @@ public:
 	 * if seq sequence is broken in any way, error core is returned
 	 */
 	uint8_t setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize);
+
+	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask = mask; }
+
+	uint8_t getSensorSerialEventsMask() const { return mSerialEventsMask; }
+
 	/* make the sensor running */
 	uint8_t Start();
 	/* pause the sensor */
@@ -155,6 +161,7 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
+   uint8_t mSerialEventsMask;
    uint8_t mConfigBlobSize;
    void *mConfigBlobPtr;
 
