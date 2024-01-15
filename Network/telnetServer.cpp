@@ -226,6 +226,35 @@ bool send_CreateSensorRequest(Commander &Cmdr)
     return false;
 }
 
+bool send_ConfigureSensorRequest(Commander &Cmdr)
+{
+    int Dst = DEVICE_ID_BROADCAST;
+    int SensorId;
+    int period;
+
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+
+    if(!Cmdr.getInt(period))
+    {
+      goto error;
+    }
+
+    Cmdr.getInt(Dst);
+
+    uint8_t seq = 0;
+    // TODO - payload data
+    tOutgoingFrames::SendSensorConfigure(Dst, SensorId, seq, true /* last segment */, NULL /*payload */, 0 /* payload size */, period);
+
+    return true;
+
+ error:
+    Cmdr.println(F("Usage: ConfigureSensor sensor_id period [dev_id = broadcast]"));
+    return false;
+}
+
 #endif // CONFIG_SENSORS
 #endif // CONFIG_TLE8457_COMM_LIB
 

@@ -206,6 +206,9 @@ void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
     case MESSAGE_TYPE_SENSOR_CREATE:
         HandleMsgSensorCreate(pFrame->SenderDevId, (tMessageSensorCreate *)pFrame->Data);
     break;
+    case MESSAGE_TYPE_SENSOR_CONFIGURE:
+        HandleMsgSensorConfigure(pFrame->SenderDevId, (tMessageSensorConfigure *)pFrame->Data);
+    break;
 
     }
 #endif // CONFIG_TLE8457_COMM_LIB
@@ -246,5 +249,56 @@ void tSensorProcess::HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate 
         tOutgoingFrames::SendMsgStatus(sender, STATUS_GENERAL_FAILURE);
 }
 
+void tSensorProcess::HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message)
+{
+    uint8_t result;
+    tSensor *pSensor = tSensor::getSensor(Message->Header.SensorID);
+    if (!pSensor)
+        return;
+
+    DEBUG_PRINT_3("Setting config for sensor ID: ");
+    DEBUG_3(println(Message->Header.SensorID, DEC));
+
+    if (Message->Header.LastSegment == 1)
+    {
+        result = pSensor->setConfig(Message->Data.MeasurementPeriod);
+        tOutgoingFrames::SendMsgStatus(SenderID, result);
+    }
+    else
+    {
+        result = pSensor->setParitalConfig(Message->Header.SegmentSeq, Message->Payload, SENSOR_CONFIG_PAYLOAD_SIZE);
+        if (result != STATUS_SUCCESS)
+        {
+            tOutgoingFrames::SendMsgStatus(SenderID, result);
+        }
+    }
+}
+
 #endif // CONFIG_TLE8457_COMM_LIB
+
+uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
+{
+    if (mState != SENSOR_CREATED)
+    {
+         return STATUS_CONFIG_SET_ERROR;
+    }
+
+    if (seq != mPartialConfigSeq)
+    {
+        return STATUS_DATA_SEQ_ERROR;
+    }
+
+    mPartialConfigSeq++;
+
+    uint8_t configOffset = ChunkSize * seq;
+    uint8_t toCopy = mConfigBlobSize - configOffset;
+    if (toCopy > ChunkSize) toCopy = ChunkSize;
+    if (toCopy == 0)
+        return STATUS_DATA_SEQ_ERROR;
+
+    memcpy((uint8_t *)mConfigBlobPtr + configOffset, data, toCopy);
+
+    return STATUS_SUCCESS;
+}
+
 #endif //CONFIG_SENSORS

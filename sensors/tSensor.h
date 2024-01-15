@@ -67,6 +67,7 @@ private:
 #if CONFIG_TLE8457_COMM_LIB
     void HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame);
     void HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame);
+    void HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message);
 #endif // CONFIG_TLE8457_COMM_LIB
 };
 
@@ -89,6 +90,18 @@ public:
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
 	uint8_t getSensorSerialEventsMask() const { return 0; } // stub
+
+	/* handle partial config
+	 * seq numbers must be in order, any missing part will result in an error
+	 *
+	 * note!
+	 * Due to limitation in serial data transfer, data are always comming in the const sizes chunks
+	 * provided here as ChunkSize
+	 * setParitalConfig must check size of config and copy the required part of data only
+	 *
+	 * if seq sequence is broken in any way, error core is returned
+	 */
+	uint8_t setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize);
 	/* make the sensor running */
 	uint8_t Start();
 	/* pause the sensor */
@@ -117,6 +130,7 @@ protected:
 
    void *mCurrentMeasurementBlob;
    uint8_t mMeasurementBlobSize;
+   uint8_t mPartialConfigSeq;
 
    void onMeasurementCompleted(bool Status);
 
