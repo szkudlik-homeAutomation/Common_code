@@ -96,7 +96,9 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
       mSensorID(sensorID),
 	  mApiVersion(ApiVersion),
 	  mConfigBlobSize(ConfigBlobSize),
-	  mConfigBlobPtr(ConfigBlobPtr)
+	  mConfigBlobPtr(ConfigBlobPtr),
+	  mPartialConfigSeq(0),
+	  mSerialEventsMask(0)
 {
    pNext = pFirst;
    pFirst = this;
@@ -151,7 +153,41 @@ void tSensor::onMeasurementCompleted(bool Status)
 
   tMessageReciever::Dispatch(MessageType_SensorEvent, getSensorID(), &Event);
 #endif //CONFIG_SENSOR_GENERATE_EVENTS
+#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	// EV_TYPE_MEASUREMENT_ERROR will be sent if ! misMeasurementValid
+#endif // CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
 }
+
+#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
+{
+	if (misMeasurementValid)
+	{
+		uint8_t pos = 0;
+		uint8_t seq = 0;
+		bool lastSegment = false;
+		if (onDemand || (mSerialEventsMask & (1 << SensorEventType)))
+		{
+			while (!lastSegment)
+			{
+				lastSegment = (pos + SENSOR_MEASUREMENT_PAYLOAD_SIZE) >= mMeasurementBlobSize;
+
+				tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), SensorEventType, onDemand,
+						(uint8_t*)mCurrentMeasurementBlob+pos,
+						lastSegment ? mMeasurementBlobSize - pos : SENSOR_MEASUREMENT_PAYLOAD_SIZE,
+						seq, lastSegment);
+				pos += SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+				seq++;
+			}
+		}
+	}
+	else
+	{
+		if (onDemand || (mSerialEventsMask & (1 << EV_TYPE_MEASUREMENT_ERROR)))
+			tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
+	}
+}
+#endif //CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
 
 void tSensor::Run()
 {

@@ -305,6 +305,27 @@ bool send_StopSensorRequest(Commander &Cmdr)
     return false;
 }
 
+bool send_GetSensorMeasurementReqest(Commander &Cmdr)
+{
+    int Dst = DEVICE_ID_BROADCAST;
+    int SensorId;
+
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+    Cmdr.getInt(Dst);
+
+    tMessageGetSensorMeasurementReqest Message;
+    Message.SensorID = SensorId;
+    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST, sizeof(Message), &Message);
+
+    return true;
+  error:
+    Cmdr.println(F("Usage: GetSensorMeasurement sensor_id [dst_dev = broadcast]"));
+    return false;
+}
+
 #endif // CONFIG_SENSORS
 #endif // CONFIG_TLE8457_COMM_LIB
 

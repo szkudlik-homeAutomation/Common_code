@@ -31,6 +31,7 @@ private:
 #endif //CONFIG_OUTPUT_PROCESS
 #if CONFIG_SENSORS
     void LogMsgGetSensorByIdResponse(uint8_t SenderID, tMessageGetSensorByIdResponse *Message);
+    void LogMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message);
 #endif //CONFIG_SENSORS
 
 };

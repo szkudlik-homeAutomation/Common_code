@@ -28,6 +28,8 @@ public:
 #endif // CONFIG_OUTPUT_PROCESS
 #if CONFIG_SENSORS
     static bool SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod);
+    static bool SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
+    		    void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment);
 #endif //CONFIG_SENSORS
 };
 

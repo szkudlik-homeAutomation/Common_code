@@ -60,6 +60,7 @@ bool trigger_ScanNodes(Commander &Cmdr);
 #endif // CONFIG_OUTPUT_PROCESS
 #if CONFIG_SENSORS
 bool send_GetSensorByIdReqestHandler(Commander &Cmdr);
+bool send_GetSensorMeasurementReqest(Commander &Cmdr);
 bool send_CreateSensorRequest(Commander &Cmdr);
 bool send_StartSensorRequest(Commander &Cmdr);
 bool send_StopSensorRequest(Commander &Cmdr);
