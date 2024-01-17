@@ -79,27 +79,6 @@ uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 	   return STATUS_SUCCESS;
 }
 
-void tSensorHub::getSensorInfoRequest(uint8_t SensorID)
-{
-   //TODO: async communication with external nodes
-   tSensor *pSensor = tSensor::getSensor(SensorID);
-   tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
-   if ((NULL == pSensor) || (NULL == pSensorDesc))
-   {
-      getSensorInfoResponse(STATUS_UNKNOWN_SENSOR_ID, 0, 0, 0, 0, 0, NULL);
-      return;
-   }
-
-   getSensorInfoResponse(
-         STATUS_SUCCESS,
-         pSensorDesc->SensorID,
-         0, // deviceID TBD
-         pSensorDesc->sensorType,
-         pSensor->isRunning(),
-         pSensor->GetMeasurementPeriod(),
-         pSensorDesc->pName);
-}
-
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
 {
