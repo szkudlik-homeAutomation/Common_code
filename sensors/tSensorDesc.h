@@ -34,6 +34,7 @@ public:
    uint8_t sensorType;
    uint8_t mDataBlobSize;
    uint8_t sensorApiVersion;
+   uint8_t mNodeID;     // id of a node the sensor is located on. 0 => local sensor
    void *pDataCache;
    char * pName;
 

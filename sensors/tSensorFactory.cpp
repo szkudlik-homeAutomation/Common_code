@@ -43,7 +43,7 @@ static tSensorFactory* tSensorFactory::Instance;
 
 #if CONFIG_SENSOR_HUB
 
-tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion, uint8_t dataBlobSize)
+tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion, uint8_t dataBlobSize, uint8_t nodeID)
 {
     uint8_t result;
     tSensorDesc *newSensorDesc = NULL;
@@ -96,6 +96,7 @@ tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, ch
     newSensorDesc->sensorType = SensorType;
     newSensorDesc->SensorID = SensorID;
     newSensorDesc->pName = pSensorName;
+    newSensorDesc->mNodeID = nodeID;
     result = newSensorDesc->setDataBlobSize(dataBlobSize);
     if (STATUS_SUCCESS != result)
     {

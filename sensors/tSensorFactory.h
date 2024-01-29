@@ -28,8 +28,9 @@ public:
 #if CONFIG_SENSOR_HUB
    /*
 	* create a sensorDesc object based on sensor type
+	* nodeID - id of a node this sensor is located on. 0 => local sensor
 	*/
-   tSensorDesc *CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion, uint8_t dataBlobSize);
+   tSensorDesc *CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion, uint8_t dataBlobSize, uint8_t nodeID);
 
 #endif CONFIG_SENSOR_HUB
 

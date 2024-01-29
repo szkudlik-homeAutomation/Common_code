@@ -71,7 +71,8 @@ uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 			   SensorID,
 			   pSensorName,
 			   pSensor->getSensorApiVersion(),
-			   pSensor->getMeasurementBlobSize()
+			   pSensor->getMeasurementBlobSize(),
+			   0 /* local sensor */
 			   );
 
 	   // send response
