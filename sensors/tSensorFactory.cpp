@@ -51,37 +51,43 @@ tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, ch
     {
     #if CONFIG_DS1820_SENSOR
           case SENSOR_TYPE_DS1820:
-              newSensorDesc = new tDs1820SensorDesc();
+              if (tDs1820SensorDesc::isApiSupported(apiVersion))
+                  newSensorDesc = new tDs1820SensorDesc();
               break;
     #endif // CONFIG_DS1820_SENSOR
 
     #if CONFIG_IMPULSE_SENSOR
           case SENSOR_TYPE_IMPULSE:
-             newSensorDesc = new tImpulseSensorDesc();
+             if (tImpulseSensorDesc::isApiSupported(apiVersion))
+                  newSensorDesc = new tImpulseSensorDesc();
              break;
     #endif //CONFIG_IMPULSE_SENSOR
 
     #if CONFIG_PT100_ANALOG_SENSOR
-             case SENSOR_TYPE_PT100_ANALOG:
+          case SENSOR_TYPE_PT100_ANALOG:
+             if (tPt100AnalogSensorDesc::isApiSupported(apiVersion))
                  newSensorDesc = new tPt100AnalogSensorDesc();
-                 break;
+          break;
     #endif
 
     #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
           case SENSOR_TYPE_DIGITAL_INPUT:
-             newSensorDesc = new tSimpleDigitalInputSensorDesc();
+             if (tSimpleDigitalInputSensorDesc::isApiSupported(apiVersion))
+                 newSensorDesc = new tSimpleDigitalInputSensorDesc();
              break;
     #endif
 
     #if CONFIG_OUTPUT_STATE_SENSOR
          case SENSOR_TYPE_OUTPUT_STATES:
-             newSensorDesc = new tOutputStateSensorDesc();
-             break;
+             if (tOutputStateSensorDesc::isApiSupported(apiVersion))
+                 newSensorDesc = new tOutputStateSensorDesc();
+         break;
     #endif
 
     #if CONFIG_SYSTEM_STATUS_SENSOR
           case SENSOR_TYPE_SYSTEM_STATUS:
-              newSensorDesc = new tSystemStatusSensorDesc();
+              if (tSystemStatusSensorDesc::isApiSupported(apiVersion))
+                  newSensorDesc = new tSystemStatusSensorDesc();
               break;
     #endif //CONFIG_SYSTEM_STATUS_SENSOR
 
@@ -90,7 +96,7 @@ tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, ch
     }
 
     if (NULL == newSensorDesc)
-        newSensorDesc = new tSensorDesc(); /* generic, no JSON output */
+        newSensorDesc = new tSensorDesc(); /* generic, no specific JSON output */
 
     newSensorDesc->sensorApiVersion = apiVersion;
     newSensorDesc->sensorType = SensorType;

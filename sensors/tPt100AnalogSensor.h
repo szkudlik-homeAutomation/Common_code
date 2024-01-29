@@ -18,6 +18,7 @@ class tPt100AnalogSensorDesc : public tSensorDesc
 {
 public:
     tPt100AnalogSensorDesc() : tSensorDesc() {}
+    static bool isApiSupported(uint8_t apiVersion) { return (apiVersion == 1); }
 
 protected:
 #if CONFIG_SENSORS_JSON_OUTPUT

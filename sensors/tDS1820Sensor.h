@@ -28,6 +28,7 @@ class tDs1820SensorDesc : public tSensorDesc
 {
 public:
 	tDs1820SensorDesc() : tSensorDesc() {}
+	static bool isApiSupported(uint8_t apiVersion) { return (apiVersion == 1); }
 
 protected:
 #if CONFIG_SENSORS_JSON_OUTPUT
