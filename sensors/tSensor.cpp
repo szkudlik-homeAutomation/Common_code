@@ -226,7 +226,7 @@ void tSensorProcess::setup() {}
 
 void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
 {
-#if CONFIG_TLE8457_COMM_LIB
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
     if (type != MessageType_SerialFrameRecieved)
         return;
 
@@ -252,9 +252,9 @@ void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
         HandleMsgSensorStop(pFrame->SenderDevId, (tMessageSensorStop *)pFrame->Data);
         break;
     }
-#endif // CONFIG_TLE8457_COMM_LIB
+#endif // CONFIG_SENSORS_OVER_SERIAL_COMM
 }
-#if CONFIG_TLE8457_COMM_LIB
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
 void tSensorProcess::HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame)
 {
     tSensor *pSensor = tSensor::getSensor(pFrame->SensorID);
@@ -381,4 +381,4 @@ uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
     return STATUS_SUCCESS;
 }
 
-#endif //CONFIG_SENSORS
+#endif //CONFIG_SENSORS_OVER_SERIAL_COMM

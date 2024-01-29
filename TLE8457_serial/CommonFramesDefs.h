@@ -98,7 +98,7 @@ typedef struct {
     uint8_t Status;
 } tMesssageGeneralStatus;
 
-#if CONFIG_SENSORS
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
 
 /**
  * Look for a sensor with a given ID
@@ -224,4 +224,4 @@ typedef struct
 } tMessageSensorStop;
 C_ASSERT(sizeof(tMessageSensorStop) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
-#endif //CONFIG_SENSORS
+#endif //CONFIG_SENSORS_OVER_SERIAL_COMM

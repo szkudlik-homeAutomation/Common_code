@@ -64,14 +64,14 @@ public:
 protected:
     virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 private:
-#if CONFIG_TLE8457_COMM_LIB
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
     void HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame);
     void HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame);
     void HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message);
     void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
     void HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message);
 
-#endif // CONFIG_TLE8457_COMM_LIB
+#endif // CONFIG_SENSORS_OVER_SERIAL_COMM
 };
 
 class tSensor {

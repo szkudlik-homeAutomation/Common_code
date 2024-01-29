@@ -9,9 +9,9 @@
 #include "../tOutputProcess.h"
 #include "../TLE8457_serial/NodeScanTask.h"
 #endif //CONFIG_OUTPUT_PROCESS
-#if CONFIG_SENSORS
+#if CONFIG_TELNET_COMMANDS_SENSORS
 #include "../sensors/tSensor.h"
-#endif
+#endif //CONFIG_TELNET_COMMANDS_SENSORS
 // must be static-global (why? - only 1 telnet session may be active)
 Commander cmd;
 
@@ -176,7 +176,7 @@ bool trigger_ScanNodes(Commander &Cmdr)
 
 #endif // CONFIG_OUTPUT_PROCESS
 
-#if CONFIG_SENSORS
+#if CONFIG_TELNET_COMMANDS_SENSORS
 bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
 {
     int Dst = DEVICE_ID_BROADCAST;
@@ -326,7 +326,7 @@ bool send_GetSensorMeasurementReqest(Commander &Cmdr)
     return false;
 }
 
-#endif // CONFIG_SENSORS
+#endif // CONFIG_TELNET_COMMANDS_SENSORS
 #endif // CONFIG_TLE8457_COMM_LIB
 
 #endif // CONFIG_TELNET_SERVER

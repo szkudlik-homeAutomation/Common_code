@@ -58,14 +58,14 @@ bool trigger_ScanNodes(Commander &Cmdr);
 #endif //CONFIG_NODE_SCAN_TASK
 
 #endif // CONFIG_OUTPUT_PROCESS
-#if CONFIG_SENSORS
+#if CONFIG_TELNET_COMMANDS_SENSORS
 bool send_GetSensorByIdReqestHandler(Commander &Cmdr);
 bool send_GetSensorMeasurementReqest(Commander &Cmdr);
 bool send_CreateSensorRequest(Commander &Cmdr);
 bool send_StartSensorRequest(Commander &Cmdr);
 bool send_StopSensorRequest(Commander &Cmdr);
 bool send_ConfigureSensorRequest(Commander &Cmdr);
-#endif //CONFIG_SENSORS
+#endif //CONFIG_TELNET_COMMANDS_SENSORS
 
 #endif //CONFIG_TLE8457_COMM_LIB
 

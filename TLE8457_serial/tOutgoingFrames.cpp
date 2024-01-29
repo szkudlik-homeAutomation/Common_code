@@ -98,7 +98,7 @@ bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8
 }
 #endif // CONFIG_OUTPUT_PROCESS
 
-#if CONFIG_SENSORS
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
 
 static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
 		void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment)
@@ -148,7 +148,7 @@ static bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t Sen
 	CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CONFIGURE, sizeof(Msg), &Msg);
 }
 
-#endif //CONFIG_SENSORS
+#endif //CONFIG_SENSORS_OVER_SERIAL_COMM
 
 
 #endif // CONFIG_TLE8457_COMM_LIB
