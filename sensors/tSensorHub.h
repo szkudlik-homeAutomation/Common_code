@@ -26,6 +26,7 @@ public:
 	static tSensorHub *Instance;
 
 	uint8_t RegisterLocalSensor(uint8_t SensorID, char * pSensorName);
+	uint8_t RegisterRemoteSensor(uint8_t SensorID, uint8_t SensorType, uint8_t nodeID, char * pSensorName, uint8_t ApiVersion, uint8_t MeasurementBlobSize);
 
 	/*
 	 * Get an ID of a sensor by name
