@@ -25,7 +25,6 @@ uint8_t tSimpleDigitalInputSensorDesc::doFormatJSON(Stream *pStream)
    tSimpleDigitalInputSensor::tResult *pResult =(tSimpleDigitalInputSensor::tResult *) pDataCache;
    pStream->print(F("\"State\":"));
    pStream->print(pResult->State,DEC);
-   pStream->print(F(","));
    return STATUS_SUCCESS;
 }
 #endif //CONFIG_SENSORS_JSON_OUTPUT

@@ -66,7 +66,7 @@ uint8_t tSensorDesc::formatJSON(Stream *pStream)
    // note that the sensor may be located on a remote machine, use cached data
    pStream->print(F("\""));
    pStream->print(pName);
-   pStream->print(F("\":{"));
+   pStream->print(F("\":{\"SensorData\":{"));
    if (Status == STATUS_SUCCESS)
    {
 	   Result = doFormatJSON(pStream);
@@ -78,14 +78,29 @@ uint8_t tSensorDesc::formatJSON(Stream *pStream)
    else
    {
 	   Result = STATUS_SENSOR_ERROR_REPORTED;
-	   pStream->print(F("\"SensorStatus\":"));
+	   pStream->print(F("\"SensorSpecificStatus\":"));
 	   pStream->print(Status);
-	   pStream->print(F(","));
    }
-   pStream->print(F("\"Status\":"));
+   pStream->print(F("},\"GeneralData\":{\"Status\":"));
    pStream->print(Result);
+   pStream->print(F(",\"StatusString\":"));
+   switch (Result)
+   {
+   case STATUS_SUCCESS:
+   	   pStream->print(F("\"success\""));
+   	   break;
+   case STATUS_SENSOR_ERROR_REPORTED:
+   	   pStream->print(F("\"error\""));
+   	   break;
+   case STATUS_NO_DATA_RECIEVED:
+   	   pStream->print(F("\"no data recieved\""));
+   	   break;
+   default: pStream->print(F("\"unknown\""));
+   }
    pStream->print(F(",\"ID\":"));
    pStream->print(SensorID);
-   pStream->print(F("}"));
+   pStream->print(F(",\"NodeID\":"));
+   pStream->print(mNodeID);
+   pStream->print(F("}}"));
 }
 #endif //CONFIG_SENSOR_HUB

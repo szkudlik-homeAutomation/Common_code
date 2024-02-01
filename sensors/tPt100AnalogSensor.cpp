@@ -105,7 +105,6 @@ uint8_t tPt100AnalogSensorDesc::doFormatJSON(Stream *pStream)
    tPt100AnalogSensor::tResult *pResult =(tPt100AnalogSensor::tResult *) pDataCache;
    pStream->print(F("\"Temperature\":"));
    pStream->print(pResult->Temperature);
-   pStream->print(F(","));
    return STATUS_SUCCESS;
 }
 #endif CONFIG_SENSORS_JSON_OUTPUT

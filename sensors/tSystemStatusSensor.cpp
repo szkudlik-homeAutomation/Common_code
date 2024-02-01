@@ -54,7 +54,7 @@ uint8_t tSystemStatusSensorDesc::doFormatJSON(Stream *pStream)
    pStream->print(pResult->FreeMemory);
    pStream->print(F(", \"Version\":\""));
    pStream->print(F(FW_VERSION));
-   pStream->print(F("\","));
+   pStream->print(F("\""));
 
    return STATUS_SUCCESS;
 }

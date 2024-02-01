@@ -57,7 +57,6 @@ uint8_t tImpulseSensorDesc::doFormatJSON(Stream *pStream)
    pStream->print(F(","));
    pStream->print(F("\"SumOfImpulses\":"));
    pStream->print(pResult->Sum);
-   pStream->print(F(","));
 
    return STATUS_SUCCESS;
 }
