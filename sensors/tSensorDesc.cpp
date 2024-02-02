@@ -8,6 +8,7 @@
 #if CONFIG_SENSOR_HUB
 
 #include "tSensorDesc.h"
+#include "../TLE8457_serial/CommonFramesDefs.h"
 
 tSensorDesc * tSensorDesc::pFirst = NULL;
 
@@ -44,18 +45,38 @@ tSensorDesc *tSensorDesc::getByName(const char * pSensorName)
 
 uint8_t tSensorDesc::setDataBlobSize(uint8_t dataBlobSize)
 {
+	uint8_t MemSize = dataBlobSize;
     if (0 == dataBlobSize)
         return STATUS_SUCCESS;
 
     if (NULL != pDataCache)
         return STATUS_SENSOR_INCORRECT_STATE;
 
-    pDataCache = malloc(dataBlobSize);
+    mDataBlobSize = dataBlobSize;
+    bool doubleSize = false;
 
+    if (mNodeID != 0)   // remote sensor
+    {
+        // remote sensor, check if extra space is required for incoming data assembly
+        if (dataBlobSize > SENSOR_MEASUREMENT_PAYLOAD_SIZE)
+        {
+        	MemSize *= 2;
+            doubleSize = true;
+        }
+    }
+
+    pDataCache = malloc(MemSize);
     if (NULL == pDataCache)
         return STATUS_OUT_OF_MEMORY;
 
-    mDataBlobSize = dataBlobSize;
+    if (doubleSize)
+    {
+        pRemoteDataCache = (uint8_t*)pDataCache + dataBlobSize;
+    }
+    else
+    {
+        pRemoteDataCache = NULL;
+    }
 
     return STATUS_SUCCESS;
 }

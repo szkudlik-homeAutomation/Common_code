@@ -23,6 +23,7 @@ class tSensorDesc
 public:
    tSensorDesc() :
 	   pDataCache(NULL),
+	   pRemoteDataCache(NULL),
 	   mDataBlobSize(0),
 	   Status(STATUS_NO_DATA_RECIEVED)
    {
@@ -36,6 +37,8 @@ public:
    uint8_t sensorApiVersion;
    uint8_t mNodeID;     // id of a node the sensor is located on. 0 => local sensor
    void *pDataCache;
+   void *pRemoteDataCache;  // pointer to additional data cache used for assembling incoming data (if needed)
+   uint8_t mSeq;    // packet reassembly seq
    char * pName;
 
    uint8_t setDataBlobSize(uint8_t dataBlobSize);

@@ -156,10 +156,40 @@ void tSensorHub::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Mes
     if (!pSensorDesc)
         return;
 
-//    if (!Message->Header.LastSegment && !pSensorDesc->pRemoteDataCache)
-//        return; // no space for packet reassemlby
-//
-    onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorDesc->mDataBlobSize, Message->Payload);
+    // no data assembly?
+    if (Message->Header.LastSegment && !pSensorDesc->pRemoteDataCache)
+    {
+    	onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorDesc->mDataBlobSize, Message->Payload);
+    	return;
+    }
+
+    if (!pSensorDesc->pRemoteDataCache)
+        return; // no space for packet reassemlby
+
+    if (Message->Header.SegmentSeq != pSensorDesc->mSeq)
+    {
+    	// out of order
+    	pSensorDesc->mSeq = 0;
+    	return;
+    }
+
+    uint8_t toCopy = SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+    uint8_t offset = Message->Header.SegmentSeq * SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+    if (toCopy > pSensorDesc->mDataBlobSize - offset)
+    {
+    	toCopy = pSensorDesc->mDataBlobSize - offset;
+    }
+    memcpy((uint8_t *)pSensorDesc->pRemoteDataCache + offset, Message->Payload, toCopy);
+
+    if (Message->Header.LastSegment)
+    {
+    	onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorDesc->mDataBlobSize, pSensorDesc->pRemoteDataCache);
+    	pSensorDesc->mSeq = 0;
+    }
+    else
+    {
+    	pSensorDesc->mSeq++;
+    }
 }
 
 void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
