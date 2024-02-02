@@ -13,6 +13,7 @@
 #include "tSensorDesc.h"
 #include "tSensorFactory.h"
 #include "../tMessageReciever.h"
+#include "../TLE8457_serial/TLE8457_serial_lib.h"
 
 static tSensorHub *tSensorHub::Instance = NULL;
 
@@ -148,6 +149,19 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
 
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
+
+void tSensorHub::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
+{
+    tSensorDesc *pSensorDesc = tSensorDesc::getByID(Message->Header.SensorID);
+    if (!pSensorDesc)
+        return;
+
+//    if (!Message->Header.LastSegment && !pSensorDesc->pRemoteDataCache)
+//        return; // no space for packet reassemlby
+//
+    onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorDesc->mDataBlobSize, Message->Payload);
+}
+
 void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS
@@ -189,6 +203,27 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
    Event.pDataBlob = pSensorDesc->pDataCache;
    tMessageReciever::Dispatch(MessageType_SensorEvent, SensorID, &Event);
 #endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
+}
+
+
+void tSensorHub::onMessage(uint8_t type, uint16_t data, void *pData)
+{
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
+
+	if (type != MessageType_SerialFrameRecieved)
+        return;
+
+    tCommunicationFrame *pFrame = (tCommunicationFrame *)pData;
+    uint8_t SenderDevId = pFrame->SenderDevId;
+    uint8_t status = STATUS_SUCCESS;
+
+    switch (data)   // messageType
+    {
+    case MESSAGE_TYPE_SENSOR_EVENT:
+        HandleMsgSensorEvent(pFrame->SenderDevId, (tMessageSensorEvent *)pFrame->Data);
+        break;
+    }
+#endif // CONFIG_SENSORS_OVER_SERIAL_COMM
 }
 
 #endif //CONFIG_SENSOR_HUB

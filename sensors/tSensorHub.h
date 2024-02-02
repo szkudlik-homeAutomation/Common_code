@@ -11,7 +11,7 @@
 #if CONFIG_SENSOR_HUB
 
 #include "tSensor.h"
-
+#include "../tMessageReciever.h"
 class tSensorDesc;
 
 /**
@@ -19,10 +19,16 @@ class tSensorDesc;
  *
  * As the sensors may be on remote nodes, the app has no direct access to tSensor class.
  */
-class tSensorHub {
+class tSensorHub : public tMessageReciever {
 public:
 
-	tSensorHub() { Instance = this; }
+	tSensorHub()
+	{
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
+		RegisterMessageType(MessageType_SerialFrameRecieved);
+#endif // CONFIG_SENSORS_OVER_SERIAL_COMM
+	    Instance = this;
+	}
 	static tSensorHub *Instance;
 
 	uint8_t RegisterLocalSensor(uint8_t SensorID, char * pSensorName);
@@ -71,6 +77,10 @@ public:
     */
    void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 
+protected:
+   virtual void onMessage(uint8_t type, uint16_t data, void *pData);
+private:
+   void HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message);
 };
 
 #endif //CONFIG_SENSOR_HUB
