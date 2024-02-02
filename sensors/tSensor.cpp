@@ -251,6 +251,9 @@ void tSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
     case MESSAGE_TYPE_SENSOR_STOP:
         HandleMsgSensorStop(pFrame->SenderDevId, (tMessageSensorStop *)pFrame->Data);
         break;
+    case MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST:
+        HandleMsgGetSensorMeasurementReqest(SenderDevId,(tMessageGetSensorMeasurementReqest*)(pFrame->Data));
+        break;
     }
 #endif // CONFIG_SENSORS_OVER_SERIAL_COMM
 }
@@ -352,6 +355,16 @@ void tSensorProcess::HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *M
     DEBUG_3(println(result, DEC));
 
     tOutgoingFrames::SendMsgStatus(SenderID, result);
+}
+
+void tSensorProcess::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message)
+{
+    /* get data blob from sensor and send it in one or more frames */
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (NULL == pSensor)
+        return;
+
+    pSensor->sendSerialMsgSensorEvent(true, EV_TYPE_MEASUREMENT_COMPLETED);
 }
 
 #endif // CONFIG_TLE8457_COMM_LIB

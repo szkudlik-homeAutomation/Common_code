@@ -70,6 +70,7 @@ private:
     void HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message);
     void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
     void HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message);
+    void HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message);
 
 #endif // CONFIG_SENSORS_OVER_SERIAL_COMM
 };
