@@ -125,6 +125,7 @@ void tSensor::onMeasurementCompleted(bool Status)
   misMeasurementValid = Status;
 
 #if CONFIG_SENSOR_HUB
+  if (getSensorID() == 1)	//TEST
   if (Status)
   {
       tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
