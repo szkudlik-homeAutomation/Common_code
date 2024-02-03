@@ -118,6 +118,8 @@ uint8_t tSensorDesc::formatJSON(Stream *pStream)
    	   break;
    default: pStream->print(F("\"unknown\""));
    }
+   pStream->print(F(",\"LastUpdate\":"));
+   pStream->print(getTimeSinceUpdate());
    pStream->print(F(",\"ID\":"));
    pStream->print(SensorID);
    pStream->print(F(",\"NodeID\":"));

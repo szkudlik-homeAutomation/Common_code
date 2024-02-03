@@ -204,6 +204,8 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
       return;
    }
 
+   pSensorDesc->resetTimestamp();
+
    if (EventType == EV_TYPE_MEASUREMENT_ERROR)
    {
       pSensorDesc->Status = STATUS_SENSOR_ERROR_REPORTED;

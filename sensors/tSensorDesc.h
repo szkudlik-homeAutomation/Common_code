@@ -28,6 +28,7 @@ public:
 	   Status(STATUS_NO_DATA_RECIEVED)
    {
 	   pNext = pFirst; pFirst = this;
+	   resetTimestamp();
    }
 
    uint8_t Status;
@@ -50,6 +51,9 @@ public:
 	 */
    uint8_t formatJSON(Stream *pStream);
 
+   void resetTimestamp() { mLastTimestamp = millis();}
+   uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 1000; }
+
    static tSensorDesc *getFirst() { return pFirst; }
    tSensorDesc *getNext() { return pNext; }
 
@@ -62,8 +66,7 @@ protected:
 private:
    tSensorDesc *pNext;
    static tSensorDesc *pFirst;
-
-
+   uint32_t mLastTimestamp;	// millis()
 };
 
 #endif // CONFIG_SENSOR_HUB
