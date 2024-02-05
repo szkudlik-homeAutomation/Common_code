@@ -88,37 +88,6 @@ uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 }
 
 
-uint8_t tSensorHub::RegisterRemoteSensor(uint8_t SensorID, uint8_t SensorType, uint8_t nodeID, char * pSensorName, uint8_t ApiVersion, uint8_t MeasurementBlobSize)
-{
-    DEBUG_PRINTLN_3("");
-    DEBUG_PRINT_3("==>Sensor register request. ID: ");
-    DEBUG_3(print(SensorID));
-    DEBUG_PRINT_3(" on node: ");
-    DEBUG_3(print(nodeID));
-    DEBUG_PRINT_3(" name: ");
-    DEBUG_3(println(pSensorName));
-
-    tSensorDesc *pSensorDesc = tSensorDesc::getByID(SensorID);
-    if (NULL != pSensorDesc)
-    {
-        DEBUG_PRINTLN_3("-----> Sensor already registgered ");
-        return STATUS_DUPLICATE_ID;
-    }
-
-    // add sensor to repository
-    pSensorDesc = tSensorFactory::Instance->CreateDesc(
-            SensorType,
-            SensorID,
-            pSensorName,
-            ApiVersion,
-            MeasurementBlobSize,
-            nodeID);
-
-    // send response
-    DEBUG_PRINTLN_3("-----> DONE, SUCCESS");
-    return STATUS_SUCCESS;
-}
-
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
 {
