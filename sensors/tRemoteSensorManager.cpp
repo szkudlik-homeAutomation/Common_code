@@ -10,7 +10,7 @@
 
 
 #include "tRemoteSensorManager.h"
-#include "tSensorDesc.h"
+#include "tSensorCache.h"
 #include "tSensorHub.h"
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 
@@ -33,43 +33,43 @@ void tRemoteSensorManager::onMessage(uint8_t type, uint16_t data, void *pData)
 
 void tRemoteSensorManager::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
 {
-    tSensorDesc *pSensorDesc = tSensorDesc::getByID(Message->Header.SensorID);
-    if (!pSensorDesc)
+    tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
+    if (!pSensorCache)
         return;
 
     // no data assembly?
-    if (Message->Header.LastSegment && !pSensorDesc->pRemoteDataCache)
+    if (Message->Header.LastSegment && !pSensorCache->pRemoteDataCache)
     {
-    	tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorDesc->mDataBlobSize, Message->Payload);
+    	tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorCache->getDataBlobSize(), Message->Payload);
     	return;
     }
 
-    if (!pSensorDesc->pRemoteDataCache)
+    if (!pSensorCache->pRemoteDataCache)
         return; // no space for packet reassemlby
 
-    if (Message->Header.SegmentSeq != pSensorDesc->mSeq)
+    if (Message->Header.SegmentSeq != pSensorCache->mSeq)
     {
     	// out of order
-    	pSensorDesc->mSeq = 0;
+    	pSensorCache->mSeq = 0;
     	return;
     }
 
     uint8_t toCopy = SENSOR_MEASUREMENT_PAYLOAD_SIZE;
     uint8_t offset = Message->Header.SegmentSeq * SENSOR_MEASUREMENT_PAYLOAD_SIZE;
-    if (toCopy > pSensorDesc->mDataBlobSize - offset)
+    if (toCopy > pSensorCache->getDataBlobSize() - offset)
     {
-    	toCopy = pSensorDesc->mDataBlobSize - offset;
+    	toCopy = pSensorCache->getDataBlobSize() - offset;
     }
-    memcpy((uint8_t *)pSensorDesc->pRemoteDataCache + offset, Message->Payload, toCopy);
+    memcpy((uint8_t *)pSensorCache->pRemoteDataCache + offset, Message->Payload, toCopy);
 
     if (Message->Header.LastSegment)
     {
-    	tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorDesc->mDataBlobSize, pSensorDesc->pRemoteDataCache);
-    	pSensorDesc->mSeq = 0;
+    	tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorCache->getDataBlobSize(), pSensorCache->pRemoteDataCache);
+    	pSensorCache->mSeq = 0;
     }
     else
     {
-    	pSensorDesc->mSeq++;
+    	pSensorCache->mSeq++;
     }
 }
 

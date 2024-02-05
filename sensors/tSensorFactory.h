@@ -9,7 +9,7 @@
 #include "../../../global.h"
 
 class tSensor;
-class tSensorDesc;
+#include "tSensorCache.h"
 
 #if CONFIG_SENSORS
 
@@ -25,23 +25,19 @@ public:
 	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, uint8_t ApiVersion, void *pConfigBlob,
 					      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart);
 
-#if CONFIG_SENSOR_HUB
-   /*
-	* create a sensorDesc object based on sensor type
-	* nodeID - id of a node this sensor is located on. 0 => local sensor
-	*/
-   tSensorDesc *CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion, uint8_t dataBlobSize, uint8_t nodeID);
-
-#endif CONFIG_SENSOR_HUB
+#if CONFIG_SENSORS_JSON_OUTPUT
+   /* get a function pointer to JSON encoder for given sensor type and API version. Null if no matching function found */
+   doFormatJSON getJSONFormatFunction(uint8_t SensorType, uint8_t apiVersion);
+#endif // CONFIG_SENSORS_JSON_OUTPUT
 
 protected:
 	virtual tSensor *appSpecificCreateSensor(uint8_t SensorType, uint8_t SensorID) { return NULL; }
 
 #if CONFIG_SENSOR_HUB
 	/**
-    * Application callback for app specific sensors factory, called when sensor has not been found by SensorDescFactory
+    * Application callback for app specific sensors factory, called when sensor has not been found by SensorCacheFactory
     */
-   virtual tSensorDesc *appSpecificCreateDesc(uint8_t SensorType) { return NULL; }
+   virtual doFormatJSON  appSpecificGetSJONFrormatFunction(uint8_t SensorType, uint8_t apiVersion) { return NULL; }
 #endif CONFIG_SENSOR_HUB
 
 };

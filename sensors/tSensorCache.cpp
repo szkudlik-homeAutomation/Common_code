@@ -1,5 +1,5 @@
 /*
- * tSensorDesc.cpp
+ * tSensorCache.cpp
  *
  *  Created on: Oct 4, 2023
  *      Author: mszkudli
@@ -7,15 +7,15 @@
 #include "../../../global.h"
 #if CONFIG_SENSOR_HUB
 
-#include "tSensorDesc.h"
+#include "tSensorCache.h"
 #include "../TLE8457_serial/CommonFramesDefs.h"
 
-tSensorDesc * tSensorDesc::pFirst = NULL;
+tSensorCache * tSensorCache::pFirst = NULL;
 
 
-tSensorDesc *tSensorDesc::getByID(uint8_t SensorID)
+tSensorCache *tSensorCache::getByID(uint8_t SensorID)
 {
-   tSensorDesc *pSensorDesc = pFirst;
+   tSensorCache *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
    {
       if (pSensorDesc->SensorID == SensorID)
@@ -28,9 +28,9 @@ tSensorDesc *tSensorDesc::getByID(uint8_t SensorID)
    return pSensorDesc;
 }
 
-tSensorDesc *tSensorDesc::getByName(const char * pSensorName)
+tSensorCache *tSensorCache::getByName(const char * pSensorName)
 {
-   tSensorDesc *pSensorDesc = pFirst;
+   tSensorCache *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
    {
       if (strcmp(pSensorDesc->pName, pSensorName) == 0)
@@ -43,7 +43,7 @@ tSensorDesc *tSensorDesc::getByName(const char * pSensorName)
    return pSensorDesc;
 }
 
-uint8_t tSensorDesc::setDataBlobSize(uint8_t dataBlobSize)
+uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
 {
 	uint8_t MemSize = dataBlobSize;
     if (0 == dataBlobSize)
@@ -81,16 +81,21 @@ uint8_t tSensorDesc::setDataBlobSize(uint8_t dataBlobSize)
     return STATUS_SUCCESS;
 }
 
-uint8_t tSensorDesc::formatJSON(Stream *pStream)
+uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
    uint8_t Result;
    // note that the sensor may be located on a remote machine, use cached data
    pStream->print(F("\""));
    pStream->print(pName);
    pStream->print(F("\":{\"SensorData\":{"));
+
+
    if (Status == STATUS_SUCCESS)
    {
-	   Result = doFormatJSON(pStream);
+	   if (NULL != mFormatJSON)
+	   {
+		   Result = mFormatJSON(pStream, this);
+	   }
    }
    else if (Status == STATUS_NO_DATA_RECIEVED)
    {

@@ -1,5 +1,5 @@
 /*
- * tSensorDesc1.h
+ * tSensorCache.h
  *
  *  Created on: Oct 4, 2023
  *      Author: mszkudli
@@ -12,18 +12,22 @@
 
 
 /**
- * tSensorDesc is an instance describing a sensor that may run on a diffrent node
- * Each sensor in whole system (including ones on master nore) must have corresponding \
- * SensorDesc on master node
+ * tSensorCache is an instance describing a sensor that may run on a different node
+ * It is used by SensorHub to keep track and present data from all sensors in the
+ * system (from all nodes)
  *
- * Sensor desc keeps a copy (cache) of current data produced by the sensor
+ * tSensorCache keeps a copy (cache) of current data produced by the sensor
  */
-class tSensorDesc
+class tSensorCache;
+typedef uint8_t (*doFormatJSON)(Stream *pStream, tSensorCache *cache);
+
+class tSensorCache
 {
 public:
-   tSensorDesc() :
+   tSensorCache() :
 	   pDataCache(NULL),
 	   pRemoteDataCache(NULL),
+	   mFormatJSON(NULL),
 	   mDataBlobSize(0),
 	   Status(STATUS_NO_DATA_RECIEVED)
    {
@@ -34,7 +38,10 @@ public:
    uint8_t Status;
    uint8_t SensorID;
    uint8_t sensorType;
+private:
    uint8_t mDataBlobSize;
+public:
+   uint8_t getDataBlobSize() const { return mDataBlobSize; }
    uint8_t sensorApiVersion;
    uint8_t mNodeID;     // id of a node the sensor is located on. 0 => local sensor
    void *pDataCache;
@@ -54,18 +61,17 @@ public:
    void resetTimestamp() { mLastTimestamp = millis();}
    uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 1000; }
 
-   static tSensorDesc *getFirst() { return pFirst; }
-   tSensorDesc *getNext() { return pNext; }
+   static tSensorCache *getFirst() { return pFirst; }
+   tSensorCache *getNext() { return pNext; }
 
-   static tSensorDesc *getByID(uint8_t SensorID);
-   static tSensorDesc *getByName(const char * pSensorName);
+   static tSensorCache *getByID(uint8_t SensorID);
+   static tSensorCache *getByName(const char * pSensorName);
 
-protected:
-   /* sensor specific JSON formatter */
-    virtual uint8_t doFormatJSON(Stream *pStream) {}
+   /* C-style function pointer, no point for a class and virtual method here */
+   doFormatJSON mFormatJSON;
 private:
-   tSensorDesc *pNext;
-   static tSensorDesc *pFirst;
+   tSensorCache *pNext;
+   static tSensorCache *pFirst;
    uint32_t mLastTimestamp;	// millis()
 };
 

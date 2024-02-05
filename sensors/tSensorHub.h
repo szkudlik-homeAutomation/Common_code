@@ -11,7 +11,6 @@
 #if CONFIG_SENSOR_HUB
 
 #include "tSensor.h"
-class tSensorDesc;
 
 /**
  * Sensor hub is an entity working on a central node, aggregating all sensor that may be on remote nodes
