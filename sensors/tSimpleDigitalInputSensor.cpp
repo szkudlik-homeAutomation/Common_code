@@ -10,19 +10,14 @@
 
 #include "tSimpleDigitalInputSensor.h"
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tSimpleDigitalInputSensorDesc::doFormatJSON(Stream *pStream)
+uint8_t SimpleDigitalInputSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 {
-    if (sensorApiVersion != 1)
-    {
-          return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
-    }
-
-   if (mDataBlobSize != sizeof(tSimpleDigitalInputSensor::tResult))
+   if (cache->getDataBlobSize() != sizeof(tSimpleDigitalInputSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tSimpleDigitalInputSensor::tResult *pResult =(tSimpleDigitalInputSensor::tResult *) pDataCache;
+   tSimpleDigitalInputSensor::tResult *pResult =(tSimpleDigitalInputSensor::tResult *) cache->pDataCache;
    pStream->print(F("\"State\":"));
    pStream->print(pResult->State,DEC);
    return STATUS_SUCCESS;

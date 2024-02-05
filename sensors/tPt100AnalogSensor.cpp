@@ -90,19 +90,13 @@
 
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tPt100AnalogSensorDesc::doFormatJSON(Stream *pStream)
-{
-    if (sensorApiVersion != 1)
-    {
-          return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
-    }
-
-    if (mDataBlobSize != sizeof(tPt100AnalogSensor::tResult))
+uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache){
+   if (cache->getDataBlobSize() != sizeof(tPt100AnalogSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tPt100AnalogSensor::tResult *pResult =(tPt100AnalogSensor::tResult *) pDataCache;
+   tPt100AnalogSensor::tResult *pResult =(tPt100AnalogSensor::tResult *) cache->pDataCache;
    pStream->print(F("\"Temperature\":"));
    pStream->print(pResult->Temperature);
    return STATUS_SUCCESS;

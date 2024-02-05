@@ -12,32 +12,15 @@
 #if CONFIG_DS1820_SENSOR
 
 #include "tSensor.h"
-#include "tSensorDesc.h"
+#include "tSensorCache.h"
 
 class DallasTemperature;
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-#if !CONFIG_SENSOR_HUB
-#error CONFIG_SENSORS_JSON_OUTPUT requires CONFIG_SENSOR_HUB
-#endif
-#endif
 
-#if CONFIG_SENSOR_HUB
+uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
 
-class tDs1820SensorDesc : public tSensorDesc
-{
-public:
-	tDs1820SensorDesc() : tSensorDesc() {}
-	static bool isApiSupported(uint8_t apiVersion) { return (apiVersion == 1); }
-
-protected:
-#if CONFIG_SENSORS_JSON_OUTPUT
-   /* sensor specific JSON formatter */
-    virtual uint8_t doFormatJSON(Stream *pStream);
-#endif // CONFIG_SENSORS_JSON_OUTPUT
-};
-
-#endif //CONFIG_SENSOR_HUB
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 
 class tDS1820Sensor: public tSensor {

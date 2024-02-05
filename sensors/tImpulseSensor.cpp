@@ -39,19 +39,14 @@ void tImpulseSensor::CleanSum()
 }
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tImpulseSensorDesc::doFormatJSON(Stream *pStream)
+uint8_t ImpulseSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 {
-    if (sensorApiVersion != 1)
-    {
-          return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
-    }
-
-    if (mDataBlobSize != sizeof(tImpulseSensor::tResult))
+   if (cache->getDataBlobSize() != sizeof(tImpulseSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tImpulseSensor::tResult *pResult =(tImpulseSensor::tResult *) pDataCache;
+   tImpulseSensor::tResult *pResult =(tImpulseSensor::tResult *) cache->pDataCache;
    pStream->print(F("\"NumOfImpulses\":"));
    pStream->print(pResult->Count);
    pStream->print(F(","));
