@@ -40,7 +40,7 @@ uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tOutputStateSensor::tResult *pResult =(tOutputStateSensor::tResult *) cache->pDataCache;
+   tOutputStateSensor::tResult *pResult =(tOutputStateSensor::tResult *) cache->getData();
    pStream->print(F("\"NumOfOutputs\":"));
    pStream->print(NUM_OF_OUTPUTS);
    pStream->print(F(","));

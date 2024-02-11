@@ -8,17 +8,35 @@
 #if CONFIG_SENSOR_HUB
 
 #include "tSensorCache.h"
+#include "tSensorFactory.h"
 #include "../TLE8457_serial/CommonFramesDefs.h"
 
 tSensorCache * tSensorCache::pFirst = NULL;
 
+
+uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
+{
+	mSensorType = SensorType;
+	mSensorApiVersion = ApiVersion;
+	mNodeID = nodeID;
+	uint8_t result = setDataBlobSize(dataBlobSize);
+	if (STATUS_SUCCESS != result)
+	{
+		mState = state_create_error;
+		return STATUS_SENSOR_CREATE_ERROR;
+	}
+	mFormatJSON = tSensorFactory::Instance->getJSONFormatFunction(mSensorType, mSensorApiVersion);
+	mState = state_no_data_recieved;
+
+	return STATUS_SUCCESS;
+}
 
 tSensorCache *tSensorCache::getByID(uint8_t SensorID)
 {
    tSensorCache *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
    {
-      if (pSensorDesc->SensorID == SensorID)
+      if (pSensorDesc->mSensorID == SensorID)
       {
          return pSensorDesc;
       }
@@ -81,52 +99,75 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
     return STATUS_SUCCESS;
 }
 
+uint8_t tSensorCache::setData(void *dataSrc, uint8_t dataSize)
+{
+	if (dataSize != mDataBlobSize)
+	{
+		setError(state_incorrect_data_size);
+		return STATUS_INCORRECT_DATA_SIZE;
+	}
+
+	resetTimestamp();
+	mState = state_working;
+	memcpy(pDataCache, dataSrc, mDataBlobSize);
+
+	return STATUS_SUCCESS;
+}
+
 uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
-   uint8_t Result;
+   uint8_t SensorStatus = STATUS_SUCCESS;
    // note that the sensor may be located on a remote machine, use cached data
    pStream->print(F("\""));
    pStream->print(pName);
    pStream->print(F("\":{\"SensorData\":{"));
 
-
-   if (Status == STATUS_SUCCESS)
+   if (mState == state_working)
    {
 	   if (NULL != mFormatJSON)
 	   {
-		   Result = mFormatJSON(pStream, this);
+		   SensorStatus = mFormatJSON(pStream, this);
 	   }
    }
-   else if (Status == STATUS_NO_DATA_RECIEVED)
+
+   pStream->print(F("},\"GeneralData\":{\"State\":"));
+   pStream->print(mState);
+   pStream->print(F(",\"StateString\":"));
+   switch (mState)
    {
-	   Result = STATUS_NO_DATA_RECIEVED;
-   }
-   else
-   {
-	   Result = STATUS_SENSOR_ERROR_REPORTED;
-	   pStream->print(F("\"SensorSpecificStatus\":"));
-	   pStream->print(Status);
-   }
-   pStream->print(F("},\"GeneralData\":{\"Status\":"));
-   pStream->print(Result);
-   pStream->print(F(",\"StatusString\":"));
-   switch (Result)
-   {
-   case STATUS_SUCCESS:
-   	   pStream->print(F("\"success\""));
+   case state_not_detected:
+   	   pStream->print(F("\"not_detected\""));
    	   break;
-   case STATUS_SENSOR_ERROR_REPORTED:
-   	   pStream->print(F("\"error\""));
+   case state_no_data_recieved:
+   	   pStream->print(F("\"no_data_recieved\""));
    	   break;
-   case STATUS_NO_DATA_RECIEVED:
-   	   pStream->print(F("\"no data recieved\""));
+   case state_working:
+   	   pStream->print(F("\"working\""));
+   	   break;
+   case state_timeout:
+   	   pStream->print(F("\"timeout\""));
+   	   break;
+   case state_sensor_error_reported:
+   	   pStream->print(F("\"sensor_error_reported\""));
+   	   break;
+   case state_create_error:
+   	   pStream->print(F("\"create_error\""));
+   	   break;
+   case state_incorrect_data_size:
+   	   pStream->print(F("\"incorrect_data_size\""));
    	   break;
    default: pStream->print(F("\"unknown\""));
+   }
+
+   if (SensorStatus != STATUS_SUCCESS)
+   {
+	   pStream->print(F(",\"SensorStatus\":"));
+	   pStream->print(SensorStatus);
    }
    pStream->print(F(",\"LastUpdate\":"));
    pStream->print(getTimeSinceUpdate());
    pStream->print(F(",\"ID\":"));
-   pStream->print(SensorID);
+   pStream->print(mSensorID);
    pStream->print(F(",\"NodeID\":"));
    pStream->print(mNodeID);
    pStream->print(F("}}"));

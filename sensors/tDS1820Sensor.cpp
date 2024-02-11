@@ -21,7 +21,7 @@ uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tDS1820Sensor::tResult *pResult =(tDS1820Sensor::tResult *) cache->pDataCache;
+   tDS1820Sensor::tResult *pResult =(tDS1820Sensor::tResult *) cache->getData();
    uint8_t MeasurementBlobSize = sizeof(tDS1820Sensor::tResult) +
          (sizeof(tDS1820Sensor::tDs1820Data) * pResult->NumOfDevices);
    if (cache->getDataBlobSize() != MeasurementBlobSize)

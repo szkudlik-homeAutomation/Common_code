@@ -17,7 +17,7 @@ uint8_t SimpleDigitalInputSensorJsonFormat_api_1(Stream *pStream, tSensorCache *
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tSimpleDigitalInputSensor::tResult *pResult =(tSimpleDigitalInputSensor::tResult *) cache->pDataCache;
+   tSimpleDigitalInputSensor::tResult *pResult =(tSimpleDigitalInputSensor::tResult *) cache->getData();
    pStream->print(F("\"State\":"));
    pStream->print(pResult->State,DEC);
    return STATUS_SUCCESS;

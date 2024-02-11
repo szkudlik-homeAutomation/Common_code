@@ -46,7 +46,7 @@ uint8_t ImpulseSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tImpulseSensor::tResult *pResult =(tImpulseSensor::tResult *) cache->pDataCache;
+   tImpulseSensor::tResult *pResult =(tImpulseSensor::tResult *) cache->getData();
    pStream->print(F("\"NumOfImpulses\":"));
    pStream->print(pResult->Count);
    pStream->print(F(","));

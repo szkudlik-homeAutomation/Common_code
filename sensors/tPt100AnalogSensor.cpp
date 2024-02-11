@@ -96,7 +96,7 @@ uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache){
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tPt100AnalogSensor::tResult *pResult =(tPt100AnalogSensor::tResult *) cache->pDataCache;
+   tPt100AnalogSensor::tResult *pResult =(tPt100AnalogSensor::tResult *) cache->getData();
    pStream->print(F("\"Temperature\":"));
    pStream->print(pResult->Temperature);
    return STATUS_SUCCESS;

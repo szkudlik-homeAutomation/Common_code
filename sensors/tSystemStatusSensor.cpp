@@ -42,7 +42,7 @@ uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 		 return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tSystemStatusSensor::tResult *pResult =(tSystemStatusSensor::tResult *) cache->pDataCache;
+   tSystemStatusSensor::tResult *pResult =(tSystemStatusSensor::tResult *) cache->getData();
    pStream->print(F("\"Uptime\":"));
    pStream->print(pResult->Uptime);
    pStream->print(F(", \"FreeMem\":"));
