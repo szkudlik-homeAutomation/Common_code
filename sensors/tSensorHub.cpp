@@ -50,21 +50,14 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize
 }
 
 
-uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
+uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, char * pSensorName)
 {
-   uint8_t result;
+   uint8_t result = STATUS_SUCCESS;
    DEBUG_PRINTLN_3("");
    DEBUG_PRINT_3("==>Sensor register request. ID: ");
    DEBUG_3(print(SensorID));
    DEBUG_PRINT_3(" name: ");
    DEBUG_3(println(pSensorName));
-
-   tSensor *pSensor = tSensor::getSensor(SensorID);
-   if (pSensor == NULL)
-   {
-	  DEBUG_PRINTLN_3("-----> tSensor::getSensor error ");
-	  return STATUS_UNKNOWN_SENSOR_ID;
-   }
 
    tSensorCache *pSensorCache = tSensorCache::getByID(SensorID);
    if (NULL != pSensorCache)
@@ -72,10 +65,22 @@ uint8_t tSensorHub::RegisterLocalSensor(uint8_t SensorID, char * pSensorName)
 	   DEBUG_PRINTLN_3("-----> Sensor already registgered ");
 	   return STATUS_DUPLICATE_ID;
    }
-
    // add sensor to repository
    pSensorCache = new tSensorCache(pSensorName, SensorID);
-   result = pSensorCache->setParams(pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
+
+#if REMOTE_SENSORS_TEST
+   tSensor *pSensor = NULL;
+   if(SensorID == 1)
+	   pSensor = tSensor::getSensor(SensorID);
+#else
+   tSensor *pSensor = tSensor::getSensor(SensorID);
+#endif
+
+   if (pSensor != NULL)
+   {
+	   // local sensor
+	   result = pSensorCache->setParams(pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
+   }
 
    return result;
 }
