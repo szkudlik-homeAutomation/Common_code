@@ -21,8 +21,6 @@
 #if CONFIG_SENSORS
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
-#include "../tMessageReciever.h"
-#include "../TLE8457_serial/CommonFramesDefs.h"
 
 /* sensor time tick - 100ms */
 #define SENSOR_PROCESS_SERVICE_TIME 100
@@ -47,32 +45,20 @@
 
 class tSensor;
 
-class tSensorProcess : public Process, public tMessageReciever
+class tSensorProcess : public Process
 {
 public:
     tSensorProcess(Scheduler &manager) :
         Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME)
     {
         Instance = this;
-        RegisterMessageType(MessageType_SerialFrameRecieved);
     }
 
    static tSensorProcess *Instance;
 
    virtual void setup();
    virtual void service();
-protected:
-    virtual void onMessage(uint8_t type, uint16_t data, void *pData);
-private:
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
-    void HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame);
-    void HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame);
-    void HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message);
-    void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
-    void HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message);
-    void HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message);
 
-#endif // CONFIG_SENSORS_OVER_SERIAL_COMM
 };
 
 class tSensor {
@@ -178,4 +164,5 @@ private:
    static tSensor* pFirst;
    tSensor* pNext;
 };
+
 #endif // CONFIG_SENSORS
