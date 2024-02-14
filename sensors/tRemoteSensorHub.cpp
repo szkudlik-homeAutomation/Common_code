@@ -33,6 +33,30 @@ void tRemoteSensorHub::onMessage(uint8_t type, uint16_t data, void *pData)
 }
 void tRemoteSensorHub::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSensorByIdResponse *Message)
 {
+    // called every time when MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE is recieved
+    // check if sensor cache for incoming sensor exits
+
+    tSensorCache *pSensorCache = tSensorCache::getByID(Message->SensorID);
+    if (NULL == pSensorCache)
+        // unknown sensor
+        return;
+
+
+    if (pSensorCache->isNotDetected())
+    {
+        // sensor seen for the first time
+    	pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
+    }
+    else if (pSensorCache->isWorkingState())
+    {
+        // sensor has been seen before. Check
+        if ((pSensorCache->getSensorType() != Message->SensorType) ||
+            (pSensorCache->getSensorApiVersion() != Message->ApiVersion) ||
+            (pSensorCache->getNodeID() != SenderID))
+        {
+            pSensorCache->setError(tSensorCache::state_inconsistent_params);
+        }
+    }
 }
 
 void tRemoteSensorHub::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
