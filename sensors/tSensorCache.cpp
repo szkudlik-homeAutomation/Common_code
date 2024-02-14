@@ -156,6 +156,10 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    case state_incorrect_data_size:
    	   pStream->print(F("\"incorrect_data_size\""));
    	   break;
+   case state_inconsistent_params:
+   	   pStream->print(F("\"inconsistent_params\""));
+   	   break;
+
    default: pStream->print(F("\"unknown\""));
    }
 

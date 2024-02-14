@@ -42,13 +42,18 @@ private:
     void resetTimestamp() { mLastTimestamp = millis();}
 
 public:
-	static const int8_t state_not_detected  = 1;		// created, not seen in the system yet, not all metadata set
-	static const int8_t state_no_data_recieved = 2;		// dected, all metadata set, no payload data seen yet
-	static const int8_t state_working = 3;				//
-	static const int8_t state_timeout = 4;
-	static const int8_t state_sensor_error_reported = -1;
-	static const int8_t state_create_error = -2;
-	static const int8_t state_incorrect_data_size = -3;
+	static const int8_t state_not_detected  = 0;		// created, not seen in the system yet, not all metadata set
+
+	// >0 - working states
+	static const int8_t state_no_data_recieved = 1;		// dected, all metadata set, no payload data seen yet
+	static const int8_t state_working = 2;				//
+	static const int8_t state_timeout = 3;
+	static const int8_t state_sensor_error_reported = 5;
+
+	// <0 are non-recoverable errors
+	static const int8_t state_create_error = -1;
+	static const int8_t state_incorrect_data_size = -2;
+	static const int8_t state_inconsistent_params = -3;
 
     tSensorCache(char *name, uint8_t ID) :
 	   mSensorID(ID),
@@ -63,7 +68,14 @@ public:
 	   resetTimestamp();
    }
 
-   void setError(int8_t errorState) { resetTimestamp(); if (errorState < 0) mState = errorState; }
+   void setError(int8_t errorState) { resetTimestamp(); if (mState >=0) mState = errorState; }
+   bool isWorkingState() const { return mState > 0; }
+   bool isPermanentError() const { return mState < 0; }
+   bool isNotDetected() const { return mState == state_not_detected; }
+
+   uint8_t getSensorType() const { return mSensorType; }
+   uint8_t getSensorApiVersion() const { return mSensorApiVersion; }
+   uint8_t getNodeID() const { return mNodeID; }
    uint8_t setData(void *dataSrc, uint8_t dataSize);
    char * GetName() { return pName; }
    uint8_t GetSensorID() const { return mSensorID; }
