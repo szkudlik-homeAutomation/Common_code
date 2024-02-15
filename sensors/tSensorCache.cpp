@@ -73,7 +73,7 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
     mDataBlobSize = dataBlobSize;
     bool doubleSize = false;
 
-    if (mNodeID != 0)   // remote sensor
+    if (! isLocalSensor())
     {
         // remote sensor, check if extra space is required for incoming data assembly
         if (dataBlobSize > SENSOR_MEASUREMENT_PAYLOAD_SIZE)

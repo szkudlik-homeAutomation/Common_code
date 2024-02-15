@@ -72,6 +72,7 @@ public:
    bool isWorkingState() const { return mState > 0; }
    bool isPermanentError() const { return mState < 0; }
    bool isNotDetected() const { return mState == state_not_detected; }
+   bool isLocalSensor() const { return mNodeID == 0; }
 
    uint8_t getSensorType() const { return mSensorType; }
    uint8_t getSensorApiVersion() const { return mSensorApiVersion; }
