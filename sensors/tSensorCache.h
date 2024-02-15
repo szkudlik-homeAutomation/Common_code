@@ -49,6 +49,7 @@ public:
 	static const int8_t state_working = 2;				//
 	static const int8_t state_timeout = 3;
 	static const int8_t state_sensor_error_reported = 5;
+	static const int8_t state_data_transfer_error = 6;
 
 	// <0 are non-recoverable errors
 	static const int8_t state_create_error = -1;
@@ -62,17 +63,30 @@ public:
 	   pRemoteDataCache(NULL),
 	   mFormatJSON(NULL),
 	   mDataBlobSize(0),
+	   mSeq(0),
 	   mState(state_not_detected)
    {
 	   pNext = pFirst; pFirst = this;
 	   resetTimestamp();
    }
 
-   void setError(int8_t errorState) { resetTimestamp(); if (mState >=0) mState = errorState; }
+   void setError(int8_t errorState)
+   {
+       resetTimestamp();
+       if (mState >=0)
+           {
+           mState = errorState;
+           resetDataSegment();
+           }
+   }
    bool isWorkingState() const { return mState > 0; }
    bool isPermanentError() const { return mState < 0; }
    bool isNotDetected() const { return mState == state_not_detected; }
    bool isLocalSensor() const { return mNodeID == 0; }
+   bool isDataAssemblyNeeded() const { return pRemoteDataCache != NULL; }
+
+   void resetDataSegment() {mSeq = 0;}
+   uint8_t addDataSegment(uint8_t SegmentSeq, void *Payload);
 
    uint8_t getSensorType() const { return mSensorType; }
    uint8_t getSensorApiVersion() const { return mSensorApiVersion; }
@@ -83,6 +97,7 @@ public:
    uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
+   void *getAssembledData() { return pRemoteDataCache; }
 
 	/*
 	 * Format cached data as JSON

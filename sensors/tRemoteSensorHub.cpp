@@ -61,15 +61,29 @@ void tRemoteSensorHub::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSens
 
 void tRemoteSensorHub::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
 {
+    uint8_t result;
 	tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
 	if (!pSensorCache)
 		return;
 
-
-	if (Message->Header.LastSegment)
+	// no data assembly?
+	if (Message->Header.LastSegment && Message->Header.SegmentSeq == 0 && !pSensorCache->isDataAssemblyNeeded())
 	{
 		onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorCache->getDataBlobSize(), Message->Payload);
 		return;
+	}
+
+	result = pSensorCache->addDataSegment(Message->Header.SegmentSeq, Message->Payload);
+	if (STATUS_SUCCESS != result)
+	{
+	    // error state for a sensor has already been set
+	    return;
+	}
+
+	if (Message->Header.LastSegment)
+	{
+	    tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorCache->getDataBlobSize(), pSensorCache->getAssembledData());
+        pSensorCache->resetDataSegment();
 	}
 }
 

@@ -159,6 +159,10 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    case state_inconsistent_params:
    	   pStream->print(F("\"inconsistent_params\""));
    	   break;
+   case state_data_transfer_error:
+       pStream->print(F("\"data_transfer_error\""));
+       break;
+
 
    default: pStream->print(F("\"unknown\""));
    }
@@ -175,5 +179,31 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    pStream->print(F(",\"NodeID\":"));
    pStream->print(mNodeID);
    pStream->print(F("}}"));
+}
+
+uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
+{
+    if (! isWorkingState())
+        return STATUS_SENSOR_INCORRECT_STATE;
+
+    if (SegmentSeq != mSeq)
+    {
+     // out of order
+        resetDataSegment();
+        setError(state_data_transfer_error);
+        return STATUS_DATA_SEQ_ERROR;
+    }
+
+    uint8_t toCopy = SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+    uint8_t offset = SegmentSeq * SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+    if (toCopy > getDataBlobSize() - offset)
+    {
+     toCopy = getDataBlobSize() - offset;
+    }
+    memcpy((uint8_t *)pRemoteDataCache + offset, Payload, toCopy);
+
+    mSeq++;
+
+    return STATUS_SUCCESS;
 }
 #endif //CONFIG_SENSOR_HUB
