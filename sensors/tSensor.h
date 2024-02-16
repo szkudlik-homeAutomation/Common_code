@@ -105,7 +105,7 @@ public:
    bool isRunning() const { return (mState == SENSOR_RUNNING); }
    bool isConfigured() const { return (mState > SENSOR_CREATED); }
    uint8_t getSensorType() const { return mSensorType; }
-   const bool isMeasurementValid() { return misMeasurementValid; }   // false if not triggered or measurement error
+   bool isMeasurementValid() const { return isRunning() && misMeasurementValid; }   // false if not triggered or measurement error
    uint8_t getSensorID() const { return mSensorID; }
    uint8_t getSensorApiVersion() const { return mApiVersion; }
    uint8_t getConfigBlobSize() const { return mConfigBlobSize; }
@@ -119,7 +119,7 @@ public:
    /* send a serial frame with current measurement and SensorEventType as event type
     * if odDemand = false - frame will be sent only sensor is registered to such events
     *
-    * if !misMeasurementValid = event type will be EV_TYPE_MEASUREMENT_ERROR regardless of SensorEventType
+    * if !isMeasurementValid() = event type will be EV_TYPE_MEASUREMENT_ERROR regardless of SensorEventType
     *
     */
    void sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType);

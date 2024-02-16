@@ -98,7 +98,8 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
 	  mConfigBlobSize(ConfigBlobSize),
 	  mConfigBlobPtr(ConfigBlobPtr),
 	  mPartialConfigSeq(0),
-	  mSerialEventsMask(0)
+	  mSerialEventsMask(0),
+	  misMeasurementValid(false)
 {
    pNext = pFirst;
    pFirst = this;
@@ -163,7 +164,7 @@ void tSensor::onMeasurementCompleted(bool Status)
 #endif //REMOTE_SENSORS_TEST
 
 #if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
-  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	// EV_TYPE_MEASUREMENT_ERROR will be sent if ! misMeasurementValid
+  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	// EV_TYPE_MEASUREMENT_ERROR will be sent if ! isMeasurementValid()
 #endif // CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
 }
 

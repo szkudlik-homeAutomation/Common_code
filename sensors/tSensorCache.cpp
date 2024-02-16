@@ -16,6 +16,7 @@ tSensorCache * tSensorCache::pFirst = NULL;
 
 uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
 {
+	resetTimestamp();
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
 	mNodeID = nodeID;
