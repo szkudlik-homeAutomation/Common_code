@@ -11,23 +11,7 @@
 #include "../../../global.h"
 #if CONFIG_WIEGAND_SENSOR
 #include "tSensor.h"
-#include "tSensorDesc.h"
 #include "../../lib/Wiegand/src/Wiegand.h"
-
-#if CONFIG_SENSOR_HUB
-class tWiegandSensorDesc : public tSensorDesc
-{
-public:
-    tWiegandSensorDesc() : tSensorDesc() {}
-
-protected:
-#if CONFIG_SENSORS_JSON_OUTPUT
-   /* sensor specific JSON formatter */
-    virtual uint8_t doFormatJSON(Stream *pStream);
-#endif // CONFIG_SENSORS_JSON_OUTPUT
-};
-#endif //CONFIG_SENSOR_HUB
-
 
 class tWiegandSensor : public tSensor {
 public:
