@@ -33,19 +33,14 @@ void tOutputStateSensor::doTriggerMeasurement()
 }
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tOutputStateSensorDesc::doFormatJSON(Stream *pStream)
+uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 {
-    if (sensorApiVersion != 1)
-    {
-          return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
-    }
-
-    if (mDataBlobSize != sizeof(tOutputStateSensor::tResult))
+   if (cache->getDataBlobSize() != sizeof(tOutputStateSensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tOutputStateSensor::tResult *pResult =(tOutputStateSensor::tResult *) pDataCache;
+   tOutputStateSensor::tResult *pResult =(tOutputStateSensor::tResult *) cache->getData();
    pStream->print(F("\"NumOfOutputs\":"));
    pStream->print(NUM_OF_OUTPUTS);
    pStream->print(F(","));

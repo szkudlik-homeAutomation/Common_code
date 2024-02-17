@@ -12,8 +12,6 @@
 
 #include "tSensor.h"
 
-class tSensorDesc;
-
 /**
  * Sensor hub is an entity working on a central node, aggregating all sensor that may be on remote nodes
  *
@@ -22,11 +20,13 @@ class tSensorDesc;
 class tSensorHub {
 public:
 
-	tSensorHub() { Instance = this; }
+	tSensorHub()
+	{
+	    Instance = this;
+	}
 	static tSensorHub *Instance;
 
-	uint8_t RegisterLocalSensor(uint8_t SensorID, char * pSensorName);
-	uint8_t RegisterRemoteSensor(uint8_t SensorID, char * pSensorName) {}
+	uint8_t RegisterSensor(uint8_t SensorID, char * pSensorName);
 
 	/*
 	 * Get an ID of a sensor by name
@@ -41,28 +41,6 @@ public:
 	 * return a pointer to sensor name or NULL if the sensor does not exist
 	 */
 	const char *getSensorName(uint8_t SensorID);
-
-	/*
-	 * Get an ID of a sensor info (remote operation)
-	 */
-	void getSensorInfoRequest(uint8_t SensorID);
-	virtual void getSensorInfoResponse(
-	      uint8_t Status,
-			uint8_t SensorID,
-			uint8_t DeviceId,
-			uint8_t SensorType,
-			bool isRunning,
-			uint16_t MeasurementPeriod,
-			const char *sensorName) {};
-
-	/**
-	 * Asyn get current sensor data from remote node
-	 *
-	 * @retval SENSOR_STATUS_UNKNOWN_SENSOR
-	 * @retval SENSOR_STATUS_TIMEOUT
-	 */
-	void getCurrentSensorDataRequest(uint8_t SensorID);
-	virtual void getCurrentSensorDataResponse(uint8_t SensorID, uint8_t dataBlobSize, void *pDataBlob) {}
 
 	/**
 	 * get cached sensor data
@@ -92,7 +70,6 @@ public:
     * to be called on sensor event, either remote or local
     */
    void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
-
 };
 
 #endif //CONFIG_SENSOR_HUB

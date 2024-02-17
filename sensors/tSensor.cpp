@@ -11,7 +11,10 @@
 
 #include "tSensor.h"
 #include "tSensorHub.h"
+#include "tSensorFactory.h"
 #include "../tMessageReciever.h"
+#include "../TLE8457_serial/TLE8457_serial_lib.h"
+#include "../TLE8457_serial/tOutgoingFrames.h"
 
 tSensor* tSensor::pFirst = NULL;
 tSensorProcess *tSensorProcess::Instance;
@@ -93,7 +96,10 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
       mSensorID(sensorID),
 	  mApiVersion(ApiVersion),
 	  mConfigBlobSize(ConfigBlobSize),
-	  mConfigBlobPtr(ConfigBlobPtr)
+	  mConfigBlobPtr(ConfigBlobPtr),
+	  mPartialConfigSeq(0),
+	  mSerialEventsMask(0),
+	  misMeasurementValid(false)
 {
    pNext = pFirst;
    pFirst = this;
@@ -118,6 +124,10 @@ tSensor* tSensor::getSensor(uint8_t sensorID)
 void tSensor::onMeasurementCompleted(bool Status)
 {
   misMeasurementValid = Status;
+#if REMOTE_SENSORS_TEST
+	if (getSensorID() == 1)
+	{
+#endif //REMOTE_SENSORS_TEST
 
 #if CONFIG_SENSOR_HUB
   if (Status)
@@ -148,7 +158,46 @@ void tSensor::onMeasurementCompleted(bool Status)
 
   tMessageReciever::Dispatch(MessageType_SensorEvent, getSensorID(), &Event);
 #endif //CONFIG_SENSOR_GENERATE_EVENTS
+
+#if REMOTE_SENSORS_TEST
+	}
+#endif //REMOTE_SENSORS_TEST
+
+#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	// EV_TYPE_MEASUREMENT_ERROR will be sent if ! isMeasurementValid()
+#endif // CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
 }
+
+#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
+{
+	if (misMeasurementValid)
+	{
+		uint8_t pos = 0;
+		uint8_t seq = 0;
+		bool lastSegment = false;
+		if (onDemand || (mSerialEventsMask & (1 << SensorEventType)))
+		{
+			while (!lastSegment)
+			{
+				lastSegment = (pos + SENSOR_MEASUREMENT_PAYLOAD_SIZE) >= mMeasurementBlobSize;
+
+				tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), SensorEventType, onDemand,
+						(uint8_t*)mCurrentMeasurementBlob+pos,
+						lastSegment ? mMeasurementBlobSize - pos : SENSOR_MEASUREMENT_PAYLOAD_SIZE,
+						seq, lastSegment);
+				pos += SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+				seq++;
+			}
+		}
+	}
+	else
+	{
+		if (onDemand || (mSerialEventsMask & (1 << EV_TYPE_MEASUREMENT_ERROR)))
+			tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
+	}
+}
+#endif //CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
 
 void tSensor::Run()
 {
@@ -185,4 +234,29 @@ void tSensorProcess::service()
 
 void tSensorProcess::setup() {}
 
-#endif //CONFIG_SENSORS
+uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
+{
+    if (mState != SENSOR_CREATED)
+    {
+         return STATUS_CONFIG_SET_ERROR;
+    }
+
+    if (seq != mPartialConfigSeq)
+    {
+        return STATUS_DATA_SEQ_ERROR;
+    }
+
+    mPartialConfigSeq++;
+
+    uint8_t configOffset = ChunkSize * seq;
+    uint8_t toCopy = mConfigBlobSize - configOffset;
+    if (toCopy > ChunkSize) toCopy = ChunkSize;
+    if (toCopy == 0)
+        return STATUS_DATA_SEQ_ERROR;
+
+    memcpy((uint8_t *)mConfigBlobPtr + configOffset, data, toCopy);
+
+    return STATUS_SUCCESS;
+}
+
+#endif //CONFIG_SENSORS_OVER_SERIAL_COMM

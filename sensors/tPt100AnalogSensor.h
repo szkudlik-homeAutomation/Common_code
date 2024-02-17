@@ -11,21 +11,11 @@
 #include "../../../global.h"
 #if CONFIG_PT100_ANALOG_SENSOR
 #include "tSensor.h"
-#include "tSensorDesc.h"
+#include "tSensorCache.h"
 
-#if CONFIG_SENSOR_HUB
-class tPt100AnalogSensorDesc : public tSensorDesc
-{
-public:
-    tPt100AnalogSensorDesc() : tSensorDesc() {}
-
-protected:
 #if CONFIG_SENSORS_JSON_OUTPUT
-   /* sensor specific JSON formatter */
-    virtual uint8_t doFormatJSON(Stream *pStream);
-#endif // CONFIG_SENSORS_JSON_OUTPUT
-};
-#endif //CONFIG_SENSOR_HUB
+uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 
 class tPt100AnalogSensor : public tSensor {

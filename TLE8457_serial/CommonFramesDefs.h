@@ -97,3 +97,131 @@ C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 typedef struct {
     uint8_t Status;
 } tMesssageGeneralStatus;
+
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
+
+/**
+ * Look for a sensor with a given ID
+ * A node that holds the sensor in question must response with MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE
+ * usually send as broadcast
+ */
+#define MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST 0x13
+typedef struct
+{
+    uint8_t SensorID;
+} tMessageGetSensorByIdReqest;
+C_ASSERT(sizeof(tMessageGetSensorByIdReqest) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+#define MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE 0x14
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t ApiVersion;
+    uint8_t SensorType;
+    uint8_t isConfigured : 1,
+			isRunning : 1,
+			isMeasurementValid : 1,
+			EventsMask		   : 4;
+    uint16_t MeasurementPeriod;
+    uint8_t ConfigBlobSize;
+    uint8_t MeasurementBlobSize;
+} tMessageGetSensorByIdResponse;
+C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/*
+ * request for current sensor measurement
+ * the node that has the sensor of given ID should respond with MESSAGE_TYPE_SENSOR_EVENT with "onDemand" bit set
+ *
+ * MESSAGE_TYPE_SENSOR_EVENT may be divided to several frames if needed
+ */
+#define MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST 0x15
+typedef struct
+{
+    uint8_t SensorID;
+} tMessageGetSensorMeasurementReqest;
+C_ASSERT(sizeof(tMessageGetSensorMeasurementReqest) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/*
+ * an event from a sensor
+ * sent either when a sensor reports a status or on demand
+ */
+#define MESSAGE_TYPE_SENSOR_EVENT 0x16
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t LastSegment  : 1,	// if "1" - no more segments
+            EventType    : 4,   // SensorEventType (numeric)
+			onDemand     : 1;	// this is a response for MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST
+
+    uint8_t SegmentSeq;				// if "0" - first segment, next segments must have SegmentSeq++
+} tMessageSensorEventHeader;
+
+#define SENSOR_MEASUREMENT_PAYLOAD_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageSensorEventHeader))
+
+typedef struct
+{
+	tMessageSensorEventHeader Header;
+	uint8_t Payload[SENSOR_MEASUREMENT_PAYLOAD_SIZE];
+} tMessageSensorEvent;
+
+C_ASSERT(sizeof(tMessageSensorEvent) == COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/* Create a sensor
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_CREATE 0x17
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t SensorType;
+} tMessageSensorCreate;
+C_ASSERT(sizeof(tMessageSensorCreate) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/* send a config blob to remote sensor */
+#define MESSAGE_TYPE_SENSOR_CONFIGURE 0x18
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t LastSegment  : 1,
+    		SegmentSeq   : 7;
+} tMessageSensorConfigureHeader;
+
+typedef struct
+{
+	uint16_t MeasurementPeriod;
+}tMessageSensorConfigureCommonData;
+
+#define SENSOR_CONFIG_PAYLOAD_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageSensorConfigureHeader))
+
+typedef struct
+{
+	tMessageSensorConfigureHeader Header;
+	union {
+		tMessageSensorConfigureCommonData Data;			// if LastSegment
+		uint8_t Payload[SENSOR_CONFIG_PAYLOAD_SIZE];	// if !LastSegment
+	};
+} tMessageSensorConfigure;
+C_ASSERT(sizeof(tMessageSensorConfigure) == COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/* Start a sensor, set events mask
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_START 0x19
+typedef struct
+{
+    uint8_t SensorID;
+    uint8_t SensorEventMask;	// bitmap
+} tMessageSensorStart;
+C_ASSERT(sizeof(tMessageSensorStart) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/* Stop a sensor
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_STOP 0x1A
+typedef struct
+{
+    uint8_t SensorID;
+} tMessageSensorStop;
+C_ASSERT(sizeof(tMessageSensorStop) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+#endif //CONFIG_SENSORS_OVER_SERIAL_COMM

@@ -10,22 +10,11 @@
 #include "../../../global.h"
 #if CONFIG_OUTPUT_STATE_SENSOR
 #include "tSensor.h"
-#include "tSensorDesc.h"
+#include "tSensorCache.h"
 
-#if CONFIG_SENSOR_HUB
-class tOutputStateSensorDesc : public tSensorDesc
-{
-public:
-    tOutputStateSensorDesc() : tSensorDesc() {}
-
-protected:
 #if CONFIG_SENSORS_JSON_OUTPUT
-   /* sensor specific JSON formatter */
-    virtual uint8_t doFormatJSON(Stream *pStream);
-#endif // CONFIG_SENSORS_JSON_OUTPUT
-};
-
-#endif CONFIG_SENSOR_HUB
+uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
 class tOutputStateSensor : public tSensor {
 public:

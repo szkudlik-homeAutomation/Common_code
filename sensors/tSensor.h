@@ -49,9 +49,13 @@ class tSensor;
 class tSensorProcess : public Process
 {
 public:
-	static tSensorProcess *Instance;
-   tSensorProcess(Scheduler &manager) :
-    Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME) { Instance = this; }
+    tSensorProcess(Scheduler &manager) :
+        Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME)
+    {
+        Instance = this;
+    }
+
+   static tSensorProcess *Instance;
 
    virtual void setup();
    virtual void service();
@@ -78,6 +82,22 @@ public:
 	}
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
+	/* handle partial config
+	 * seq numbers must be in order, any missing part will result in an error
+	 *
+	 * note!
+	 * Due to limitation in serial data transfer, data are always comming in the const sizes chunks
+	 * provided here as ChunkSize
+	 * setParitalConfig must check size of config and copy the required part of data only
+	 *
+	 * if seq sequence is broken in any way, error core is returned
+	 */
+	uint8_t setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize);
+
+	void setSensorSerialEventsMask(uint8_t mask) { mSerialEventsMask = mask; }
+
+	uint8_t getSensorSerialEventsMask() const { return mSerialEventsMask; }
+
 	/* make the sensor running */
 	uint8_t Start();
 	/* pause the sensor */
@@ -88,7 +108,7 @@ public:
    bool isRunning() const { return (mState == SENSOR_RUNNING); }
    bool isConfigured() const { return (mState > SENSOR_CREATED); }
    uint8_t getSensorType() const { return mSensorType; }
-   const bool isMeasurementValid() { return misMeasurementValid; }   // false if not triggered or measurement error
+   bool isMeasurementValid() const { return isRunning() && misMeasurementValid; }   // false if not triggered or measurement error
    uint8_t getSensorID() const { return mSensorID; }
    uint8_t getSensorApiVersion() const { return mApiVersion; }
    uint8_t getConfigBlobSize() const { return mConfigBlobSize; }
@@ -98,6 +118,15 @@ public:
 
    static void Run();
 
+#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+   /* send a serial frame with current measurement and SensorEventType as event type
+    * if odDemand = false - frame will be sent only sensor is registered to such events
+    *
+    * if !isMeasurementValid() = event type will be EV_TYPE_MEASUREMENT_ERROR regardless of SensorEventType
+    *
+    */
+   void sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType);
+#endif //CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
 protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
     * For identification, API version must be increased every time the config OR the result data format changes
@@ -106,6 +135,7 @@ protected:
 
    void *mCurrentMeasurementBlob;
    uint8_t mMeasurementBlobSize;
+   uint8_t mPartialConfigSeq;
 
    void onMeasurementCompleted(bool Status);
 
@@ -132,10 +162,12 @@ private:
    uint16_t mMeasurementPeriod;
    uint16_t mCurrMeasurementPeriod;
    bool misMeasurementValid;
+   uint8_t mSerialEventsMask;
    uint8_t mConfigBlobSize;
    void *mConfigBlobPtr;
 
    static tSensor* pFirst;
    tSensor* pNext;
 };
+
 #endif // CONFIG_SENSORS

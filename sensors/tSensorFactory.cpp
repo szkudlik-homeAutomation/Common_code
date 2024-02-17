@@ -12,7 +12,6 @@
 
 #include "tSensorFactory.h"
 #include "tSensor.h"
-#include "tSensorDesc.h"
 
 
 #if CONFIG_DS1820_SENSOR
@@ -39,82 +38,80 @@
 #include "tSystemStatusSensor.h"
 #endif
 
-#if CONFIG_WIEGAND_SENSOR
-#include "tWiegandSensor.h"
-#endif
-
 static tSensorFactory* tSensorFactory::Instance;
 
-#if CONFIG_SENSOR_HUB
+#if CONFIG_SENSORS_JSON_OUTPUT
 
-tSensorDesc *tSensorFactory::CreateDesc(uint8_t SensorType, uint8_t SensorID, char * pSensorName, uint8_t apiVersion, uint8_t dataBlobSize)
+doFormatJSON tSensorFactory::getJSONFormatFunction(uint8_t SensorType, uint8_t apiVersion)
 {
-    uint8_t result;
-    tSensorDesc *newSensorDesc = NULL;
     switch (SensorType)
     {
     #if CONFIG_DS1820_SENSOR
           case SENSOR_TYPE_DS1820:
-              newSensorDesc = new tDs1820SensorDesc();
+              switch (apiVersion)
+              {
+              case 1:
+                  return DS1820SensorJsonFormat_api_1;
+              }
               break;
     #endif // CONFIG_DS1820_SENSOR
 
     #if CONFIG_IMPULSE_SENSOR
           case SENSOR_TYPE_IMPULSE:
-             newSensorDesc = new tImpulseSensorDesc();
-             break;
+              switch (apiVersion)
+              {
+              case 1:
+                  return ImpulseSensorJsonFormat_api_1;
+              }
+              break;
     #endif //CONFIG_IMPULSE_SENSOR
 
-    #if CONFIG_PT100_ANALOG_SENSOR
-             case SENSOR_TYPE_PT100_ANALOG:
-                 newSensorDesc = new tPt100AnalogSensorDesc();
-                 break;
-    #endif
+#if CONFIG_PT100_ANALOG_SENSOR
+      case SENSOR_TYPE_PT100_ANALOG:
+          switch (apiVersion)
+          {
+          case 1:
+              return Pt100AnalogSensorJsonFormat_api_1;
+          }
+          break;
+#endif //CONFIG_PT100_ANALOG_SENSOR
 
-    #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
-          case SENSOR_TYPE_DIGITAL_INPUT:
-             newSensorDesc = new tSimpleDigitalInputSensorDesc();
-             break;
-    #endif
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+      case SENSOR_TYPE_DIGITAL_INPUT:
+          switch (apiVersion)
+          {
+          case 1:
+              return SimpleDigitalInputSensorJsonFormat_api_1;
+          }
+          break;
+#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
 
-    #if CONFIG_OUTPUT_STATE_SENSOR
-         case SENSOR_TYPE_OUTPUT_STATES:
-             newSensorDesc = new tOutputStateSensorDesc();
-             break;
-    #endif
+#if CONFIG_OUTPUT_STATE_SENSOR
+      case SENSOR_TYPE_OUTPUT_STATES:
+          switch (apiVersion)
+          {
+          case 1:
+              return OutputStateSensorJsonFormat_api_1;
+          }
+          break;
+#endif //CONFIG_OUTPUT_STATE_SENSOR
 
-    #if CONFIG_SYSTEM_STATUS_SENSOR
-          case SENSOR_TYPE_SYSTEM_STATUS:
-              newSensorDesc = new tSystemStatusSensorDesc();
-              break;
-    #endif //CONFIG_SYSTEM_STATUS_SENSOR
-
-	#if CONFIG_WIEGAND_SENSOR
-          case SENSOR_TYPE_WIEGAND:
-              newSensorDesc = new tWiegandSensorDesc();
-              break;
-	#endif //CONFIG_WIEGAND_SENSOR
-
+#if CONFIG_SYSTEM_STATUS_SENSOR
+      case SENSOR_TYPE_SYSTEM_STATUS:
+          switch (apiVersion)
+          {
+          case 1:
+              return SystemStatusSensorJsonFormat_api_1;
+          }
+          break;
+#endif //CONFIG_SYSTEM_STATUS_SENSOR
           default:
-              newSensorDesc = appSpecificCreateDesc(SensorType);
+              appSpecificGetSJONFrormatFunction(SensorType, apiVersion);
     }
 
-    if (NULL == newSensorDesc)
-        newSensorDesc = new tSensorDesc(); /* generic, no JSON output */
-
-    newSensorDesc->sensorApiVersion = apiVersion;
-    newSensorDesc->sensorType = SensorType;
-    newSensorDesc->SensorID = SensorID;
-    newSensorDesc->pName = pSensorName;
-    result = newSensorDesc->setDataBlobSize(dataBlobSize);
-    if (STATUS_SUCCESS != result)
-    {
-        return NULL;    // no recovery, no need
-    }
-
-    return newSensorDesc;
+    return NULL;
 }
-#endif // CONFIG_SENSOR_HUB
+#endif // CONFIG_SENSORS_JSON_OUTPUT
 
 tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, uint8_t ApiVersion, void *pConfigBlob,
 	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart)
@@ -185,13 +182,6 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
         	  pSensor = new tSystemStatusSensor(SensorID);
               break;
     #endif //CONFIG_SYSTEM_STATUS_SENSOR
-	#if CONFIG_WIEGAND_SENSOR
-		  case SENSOR_TYPE_WIEGAND:
-			  pSensor = new tWiegandSensor(SensorID);
-			  break;
-	#endif //CONFIG_WIEGAND_SENSOR
-
-
 
           default:
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);

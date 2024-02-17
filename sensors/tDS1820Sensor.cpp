@@ -14,22 +14,17 @@
 #include "../../lib/ds1820/DallasTemperature.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tDs1820SensorDesc::doFormatJSON(Stream *pStream)
+uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 {
-   if (sensorApiVersion != 1)
-   {
-         return STATUS_JSON_ENCODE_UNSUPPORTED_API_VERSION;
-   }
-
-   if (mDataBlobSize < sizeof(tDS1820Sensor::tResult))
+   if (cache->getDataBlobSize() < sizeof(tDS1820Sensor::tResult))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tDS1820Sensor::tResult *pResult =(tDS1820Sensor::tResult *) pDataCache;
+   tDS1820Sensor::tResult *pResult =(tDS1820Sensor::tResult *) cache->getData();
    uint8_t MeasurementBlobSize = sizeof(tDS1820Sensor::tResult) +
-		   (sizeof(tDS1820Sensor::tDs1820Data) * pResult->NumOfDevices);
-   if (mDataBlobSize != MeasurementBlobSize)
+         (sizeof(tDS1820Sensor::tDs1820Data) * pResult->NumOfDevices);
+   if (cache->getDataBlobSize() != MeasurementBlobSize)
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
