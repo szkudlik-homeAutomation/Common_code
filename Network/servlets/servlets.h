@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../../../../global.h"
+#if CONFIG_HTTP_SERVLET_OUTCONTROL_JS
+
+#include "../../../http_binaries.h"
+
 #include "../httpServer.h"
 
-#if CONFIG_HTTP_SERVER
-
-#if CONFIG_HTTP_SERVLET_OUTCONTROL_JS
-#include "../../../http_binaries.h"
 
 #ifdef OutputControl_js_raw_len
 
@@ -22,16 +22,3 @@ public:
 #endif
 
 #endif //CONFIG_HTTP_SERVLET_OUTCONTROL_JS
-
-#if CONFIG_TIMESTAMP_SERVLET
-class tTimestampServlet : public tHttpServlet
-{
-public:
-    tTimestampServlet() : tHttpServlet() {}
-  virtual ~tTimestampServlet() {}
-
-  virtual bool ProcessAndResponse();
-};
-#endif //CONFIG_TIMESTAMP_SERVLET
-
-#endif // CONFIG_HTTP_SERVER

@@ -97,9 +97,3 @@ C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 typedef struct {
     uint8_t Status;
 } tMesssageGeneralStatus;
-
-typedef struct
-{
-    uint16_t timestamp;  // 16 bit timestamp
-} tMessageTypeTimestamp;
-#define MESSAGE_TYPE_TIMESTAMP 0x13
