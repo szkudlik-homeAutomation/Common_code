@@ -15,7 +15,7 @@ using namespace ace_crc::crc16ccitt_nibble;
 CommRecieverProcess *CommRecieverProcess::Instance = NULL;
 
 CommRecieverProcess::CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId)
-   : Process(manager,LOW_PRIORITY,RECIEVE_CHECK_PERIOD),
+   : Process(manager,LOW_PRIORITY,CommSenderProcess::frameTransmissionTime),
      mRetransTableHead(0),
      mSelfDevId(SelfDevId)
 {
@@ -49,12 +49,12 @@ void CommRecieverProcess::SetState(uint8_t State)
        break;
 
     case STATE_WAIT_FOR_DATA:
-      setPeriod(RECIEVE_CHECK_PERIOD);
+      setPeriod(CommSenderProcess::frameTransmissionTime);
       DEBUG_PRINTLN_1("------> State WAIT_FOR_DATA");
       break;
 
     case STATE_WAIT_FOR_IDLE:
-      setPeriod(RECIEVE_IDLE_WAIT);
+      setPeriod(CommSenderProcess::frameTransmissionTime * 100);
       DEBUG_PRINTLN_1("------> State IDLE_WAIT");
       break;
   }

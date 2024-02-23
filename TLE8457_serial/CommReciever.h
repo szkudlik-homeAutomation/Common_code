@@ -6,9 +6,6 @@
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
-#define RECIEVE_CHECK_PERIOD FRAME_TRANSMISSION_TIME
-#define RECIEVE_IDLE_WAIT FRAME_TRANSMISSION_TIME*100
-
 #define RECIEVE_NUMBER_OF_RETRANS_TABLE 10  // number of pairs senderId-seq kept to recognize retransmissions
 
 class CommRecieverProcess : public  Process

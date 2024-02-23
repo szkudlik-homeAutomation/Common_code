@@ -92,7 +92,7 @@ void CommSenderProcess::service()
   if (isSending)
   {
     COMM_SERIAL.write((char*)&mFrame,sizeof(mFrame));
-    uint16_t NextTimeout = (mRandom.Get() % MAX_TRANSMIT_DELAY) + FRAME_TRANSMISSION_TIME;
+    uint16_t NextTimeout = (mRandom.Get() % MAX_TRANSMIT_DELAY) + frameTransmissionTime;
     setPeriod(NextTimeout);
   }
 }

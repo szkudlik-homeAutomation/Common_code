@@ -18,8 +18,8 @@
 #error Please define MAX_NUM_OF_RETRANSMISSIONS
 #endif
 
-#ifndef FRAME_TRANSMISSION_TIME
-#error Please define FRAME_TRANSMISSION_TIME
+#ifndef TRANSMISSION_SPEED
+#error Please define TRANSMISSION_SPEED
 #endif
 
 #ifndef MAX_TRANSMIT_DELAY
@@ -43,7 +43,7 @@
  * 4) repeat steps 2-4 given number of times
  *
  * recieve:
- * 1) frame witj incorrect CRC => reject
+ * 1) frame with incorrect CRC => reject
  * 2) check if pair SenderDevId/Seq was recently seen (keep a list of last pairs). If yes => reject
  * 3) execute
  */
