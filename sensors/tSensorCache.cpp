@@ -14,9 +14,10 @@
 tSensorCache * tSensorCache::pFirst = NULL;
 
 
-uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
+uint8_t tSensorCache::setParams(char * name, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
 {
 	resetTimestamp();
+	pName = name;
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
 	mNodeID = nodeID;
@@ -118,8 +119,10 @@ uint8_t tSensorCache::setData(void *dataSrc, uint8_t dataSize)
 uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
    uint8_t SensorStatus = STATUS_SUCCESS;
+   if (NULL == pName)
+	   return STATUS_JSON_ENCODE_ERROR;
+
    // note that the sensor may be located on a remote machine, use cached data
-   pStream->print(F("\""));
    pStream->print(pName);
    pStream->print(F("\":{\"SensorData\":{"));
 
@@ -180,6 +183,8 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    pStream->print(F(",\"NodeID\":"));
    pStream->print(mNodeID);
    pStream->print(F("}}"));
+
+   return STATUS_SUCCESS;
 }
 
 uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)

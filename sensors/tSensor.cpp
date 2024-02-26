@@ -99,7 +99,8 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
 	  mConfigBlobPtr(ConfigBlobPtr),
 	  mPartialConfigSeq(0),
 	  mSerialEventsMask(0),
-	  misMeasurementValid(false)
+	  misMeasurementValid(false),
+	  mName(NULL)
 {
    pNext = pFirst;
    pFirst = this;

@@ -56,9 +56,10 @@ public:
 	static const int8_t state_incorrect_data_size = -2;
 	static const int8_t state_inconsistent_params = -3;
 
-    tSensorCache(char *name, uint8_t ID) :
+    tSensorCache(uint8_t ID) :
 	   mSensorID(ID),
-	   pName(name),
+	   mNodeID(0),
+	   pName(NULL),
 	   pDataCache(NULL),
 	   pRemoteDataCache(NULL),
 	   mFormatJSON(NULL),
@@ -94,7 +95,7 @@ public:
    uint8_t setData(void *dataSrc, uint8_t dataSize);
    char * GetName() { return pName; }
    uint8_t GetSensorID() const { return mSensorID; }
-   uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
+   uint8_t setParams(char * name, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
    void *getAssembledData() { return pRemoteDataCache; }

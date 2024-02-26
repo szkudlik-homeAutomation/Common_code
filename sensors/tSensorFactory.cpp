@@ -117,11 +117,11 @@ doFormatJSON tSensorFactory::getJSONFormatFunction(uint8_t SensorType, uint8_t a
 }
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
-tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, uint8_t ApiVersion, void *pConfigBlob,
+tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char *pName, uint8_t ApiVersion, void *pConfigBlob,
 	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart)
 {
 	uint8_t Status;
-	tSensor *pSensor = CreateSensor(SensorType, SensorID);
+	tSensor *pSensor = CreateSensor(SensorType, SensorID, pName);
 	if (NULL == pSensor)
 	{
 		DEBUG_PRINTLN_3(" error: cannot create sensor");
@@ -141,7 +141,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, uint
 	return pSensor;
 }
 
-tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
+tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char *pName)
 {
 	DEBUG_PRINT_3("Creating sensor type ");
 	DEBUG_3(print(SensorType,DEC));
@@ -195,6 +195,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
     }
 
+    pSensor->setName(pName);
     return pSensor;
 }
 

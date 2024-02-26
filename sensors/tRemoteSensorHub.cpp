@@ -45,7 +45,7 @@ void tRemoteSensorHub::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSens
     if (pSensorCache->isNotDetected())
     {
         // sensor seen for the first time
-    	pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
+    	pSensorCache->setParams("REMOTE-todo", Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
     }
     else if (pSensorCache->isWorkingState())
     {

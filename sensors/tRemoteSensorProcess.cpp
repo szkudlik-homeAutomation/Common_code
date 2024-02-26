@@ -74,7 +74,7 @@ void tRemoteSensorProcess::HandleMsgSensorCreate(uint8_t sender, tMessageSensorC
     DEBUG_PRINT_3(" with ID: ");
     DEBUG_3(println(pFrame->SensorID, DEC));
 
-    tSensor *pSensor = tSensorFactory::Instance->CreateSensor(pFrame->SensorType, pFrame->SensorID);
+    tSensor *pSensor = tSensorFactory::Instance->CreateSensor(pFrame->SensorType, pFrame->SensorID,"REMOTE-todo");
 
     if (pSensor)
         tOutgoingFrames::SendMsgStatus(sender, 0);
