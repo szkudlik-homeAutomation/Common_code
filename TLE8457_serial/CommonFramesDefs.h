@@ -125,8 +125,14 @@ typedef struct
     uint16_t MeasurementPeriod;
     uint8_t ConfigBlobSize;
     uint8_t MeasurementBlobSize;
+} tMessageGetSensorByIdResponseHeader;
+#define MESSAGE_SENSOR_NAME_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageGetSensorByIdResponseHeader))
+typedef struct
+{
+	tMessageGetSensorByIdResponseHeader Header;
+	uint8_t name[MESSAGE_SENSOR_NAME_SIZE];
 } tMessageGetSensorByIdResponse;
-C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageGetSensorByIdResponse) == COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /*
  * request for current sensor measurement

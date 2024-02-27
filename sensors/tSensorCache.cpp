@@ -123,6 +123,7 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 	   return STATUS_JSON_ENCODE_ERROR;
 
    // note that the sensor may be located on a remote machine, use cached data
+   pStream->print(F("\""));
    pStream->print(pName);
    pStream->print(F("\":{\"SensorData\":{"));
 
@@ -139,9 +140,6 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    pStream->print(F(",\"StateString\":"));
    switch (mState)
    {
-   case state_not_detected:
-   	   pStream->print(F("\"not_detected\""));
-   	   break;
    case state_no_data_recieved:
    	   pStream->print(F("\"no_data_recieved\""));
    	   break;

@@ -12,7 +12,7 @@
 
 #include "tSensorFactory.h"
 #include "tSensor.h"
-
+#include "tSensorHub.h"
 
 #if CONFIG_DS1820_SENSOR
 #include "tDS1820Sensor.h"
@@ -196,6 +196,16 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
     }
 
     pSensor->setName(pName);
+
+#if CONFIG_SENSOR_HUB
+
+#if REMOTE_SENSORS_TEST
+    if (SensorID == 1)
+#endif // REMOTE_SENSORS_TEST
+    	tSensorHub::Instance->RegisterSensor(SensorID);
+
+#endif // CONFIG_SENSOR_HUB
+
     return pSensor;
 }
 

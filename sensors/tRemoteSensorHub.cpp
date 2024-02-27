@@ -36,26 +36,43 @@ void tRemoteSensorHub::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSens
     // called every time when MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE is recieved
     // check if sensor cache for incoming sensor exits
 
-    tSensorCache *pSensorCache = tSensorCache::getByID(Message->SensorID);
+    tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
     if (NULL == pSensorCache)
-        // unknown sensor
-        return;
-
-
-    if (pSensorCache->isNotDetected())
     {
-        // sensor seen for the first time
-    	pSensorCache->setParams("REMOTE-todo", Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
+        // remote sensor seen for the first time
+    	pSensorCache = new tSensorCache(Message->Header.SensorID);
+        if (NULL == pSensorCache)
+        	// error??
+        	return;
+
+    	// make copy of sensor name
+    	uint8_t nameSize = strlen(Message->name);
+    	if (nameSize > sizeof(Message->name))
+    		nameSize = sizeof(Message->name);
+
+    	char *nameCopy = malloc(nameSize+1);	// zero delimiter
+    	memset(nameCopy, 0, nameSize+1);
+    	strncpy(nameCopy, Message->name, nameSize);
+
+    	pSensorCache->setParams(nameCopy, Message->Header.SensorType, Message->Header.ApiVersion, SenderID, Message->Header.MeasurementBlobSize);
     }
-    else if (pSensorCache->isWorkingState())
+    else
     {
         // sensor has been seen before. Check
-        if ((pSensorCache->getSensorType() != Message->SensorType) ||
-            (pSensorCache->getSensorApiVersion() != Message->ApiVersion) ||
-            (pSensorCache->getNodeID() != SenderID))
-        {
-            pSensorCache->setError(tSensorCache::state_inconsistent_params);
-        }
+    	// skip local sensors
+#if REMOTE_SENSORS_TEST
+    	if (1 != Message->Header.SensorID)
+#else
+    	if (! pSensorCache->isLocalSensor())
+#endif
+    	{
+            if ((pSensorCache->getSensorType() != Message->Header.SensorType) ||
+                (pSensorCache->getSensorApiVersion() != Message->Header.ApiVersion) ||
+                (pSensorCache->getNodeID() != SenderID))
+            {
+                pSensorCache->setError(tSensorCache::state_inconsistent_params);
+            }
+    	}
     }
 }
 

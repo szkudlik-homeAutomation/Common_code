@@ -53,16 +53,20 @@ void tRemoteSensorProcess::HandleMessageGetSensorByIdReqest(uint8_t sender, tMes
     if (NULL != pSensor)
     {
           tMessageGetSensorByIdResponse Response;
-          Response.SensorID = pFrame->SensorID;
-          Response.MeasurementPeriod = pSensor->GetMeasurementPeriod();
-          Response.ApiVersion = pSensor->getSensorApiVersion();
-          Response.SensorType = pSensor->getSensorType();
-          Response.isConfigured = pSensor->isConfigured();
-          Response.isMeasurementValid = pSensor->isMeasurementValid();
-          Response.isRunning = pSensor->isRunning();
-          Response.EventsMask = pSensor->getSensorSerialEventsMask();
-          Response.ConfigBlobSize = pSensor->getConfigBlobSize();
-          Response.MeasurementBlobSize = pSensor->getMeasurementBlobSize();
+          Response.Header.SensorID = pFrame->SensorID;
+          Response.Header.MeasurementPeriod = pSensor->GetMeasurementPeriod();
+          Response.Header.ApiVersion = pSensor->getSensorApiVersion();
+          Response.Header.SensorType = pSensor->getSensorType();
+          Response.Header.isConfigured = pSensor->isConfigured();
+          Response.Header.isMeasurementValid = pSensor->isMeasurementValid();
+          Response.Header.isRunning = pSensor->isRunning();
+          Response.Header.EventsMask = pSensor->getSensorSerialEventsMask();
+          Response.Header.ConfigBlobSize = pSensor->getConfigBlobSize();
+          Response.Header.MeasurementBlobSize = pSensor->getMeasurementBlobSize();
+
+          memset(Response.name, 0 , sizeof(Response.name));
+          strncpy(Response.name, pSensor->getName(), sizeof(Response.name));
+
           CommSenderProcess::Instance->Enqueue(sender, MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE, sizeof(Response), &Response);
     }
 }

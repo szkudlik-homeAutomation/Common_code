@@ -42,8 +42,6 @@ private:
     void resetTimestamp() { mLastTimestamp = millis();}
 
 public:
-	static const int8_t state_not_detected  = 0;		// created, not seen in the system yet, not all metadata set
-
 	// >0 - working states
 	static const int8_t state_no_data_recieved = 1;		// dected, all metadata set, no payload data seen yet
 	static const int8_t state_working = 2;				//
@@ -65,7 +63,7 @@ public:
 	   mFormatJSON(NULL),
 	   mDataBlobSize(0),
 	   mSeq(0),
-	   mState(state_not_detected)
+	   mState(state_no_data_recieved)
    {
 	   pNext = pFirst; pFirst = this;
 	   resetTimestamp();
@@ -82,7 +80,6 @@ public:
    }
    bool isWorkingState() const { return mState > 0; }
    bool isPermanentError() const { return mState < 0; }
-   bool isNotDetected() const { return mState == state_not_detected; }
    bool isLocalSensor() const { return mNodeID == 0; }
    bool isDataAssemblyNeeded() const { return pRemoteDataCache != NULL; }
 
