@@ -16,6 +16,10 @@
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/tOutgoingFrames.h"
 
+#if CONFIG_EEPROM_SENSORS
+#include "../../../GlobalDefs/Eeprom.h"
+#endif // CONFIG_EEPROM_SENSORS
+
 tSensor* tSensor::pFirst = NULL;
 tSensorProcess *tSensorProcess::Instance;
 
@@ -234,6 +238,80 @@ void tSensorProcess::service()
 }
 
 void tSensorProcess::setup() {}
+
+#if CONFIG_EEPROM_SENSORS
+
+//EEPROM.put(EEPROM_ACTION_TABLE_OFFSET+(EEPROM_ACTION_TABLE_SIZE*ActionTableUsage),*Message);
+//ActionTableUsage++;
+//EEPROM.write(EEPROM_ACTION_TABLE_USAGE_OFFSET,ActionTableUsage);
+
+uint8_t tSensor::SaveToEEprom()
+{
+    eepromDeleteAllSensors();
+    tSensor *pSensor = pFirst;
+    uint16_t offset = EEPROM_FIRST_SENSOR;
+    uint8_t cnt = 0;
+    while (pSensor)
+    {
+        tEepromSensorEntry Entry;
+        Entry.configBlobApiVersion = pSensor->getSensorApiVersion();
+        Entry.configBlobSize = pSensor->getConfigBlobSize();
+        Entry.eventMask = pSensor->getSensorSerialEventsMask();
+        Entry.measurementPeriod = pSensor->GetMeasurementPeriod();
+        Entry.sensorID = pSensor->getSensorID();
+        Entry.sensorType = pSensor->getSensorType();
+        Entry.nameSize = strlen(pSensor->getName());
+        EEPROM.put(offset,Entry);
+        offset += sizeof(Entry);
+        if (offset >= EEPROM.length())
+            return STATUS_OUT_OF_MEMORY;
+
+        for (int i = 0; i < Entry.nameSize; i++)
+        {
+            EEPROM.write(offset++, *(pSensor->getName()+i));
+            if (offset >= EEPROM.length())
+                return STATUS_OUT_OF_MEMORY;
+        }
+        for (int i = 0; i < Entry.configBlobSize; i++)
+        {
+            EEPROM.write(offset++, *(pSensor->getConfigBlob()+i));
+            if (offset >= EEPROM.length())
+                return STATUS_OUT_OF_MEMORY;
+        }
+
+        cnt++;
+        pSensor = pSensor->pNext;
+    }
+
+    EEPROM.write(EEPROM_NUM_OF_SENSORS, cnt);
+    return STATUS_SUCCESS;
+}
+
+uint8_t tSensor::RestoreFromEEprom()
+{
+    uint8_t numOfSesors;
+    numOfSesors = EEPROM.read(EEPROM_NUM_OF_SENSORS);
+    uint16_t offset = EEPROM_FIRST_SENSOR;
+    while(numOfSesors--)
+    {
+        tEepromSensorEntry Entry;
+        char *name;
+        uint8_t *configBlob;
+
+        EEPROM.get(offset, Entry);
+        offset += size_of(Entry);
+        uint8_t *name = malloc(Entry.nameSize + 1);
+        if (NULL == name)
+            return STATUS_OUT_OF_MEMORY;
+        for (int i = 0; i < Entry.nameSize; i++)
+        {
+            *(name + i) = EEPROM.read(offset++);
+        }
+        *(name +  Entry.nameSize) = 0;
+    }
+}
+#endif // CONFIG_EEPROM_SENSORS
+
 
 uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
 {

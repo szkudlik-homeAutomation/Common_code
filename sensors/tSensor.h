@@ -64,7 +64,17 @@ public:
 
 class tSensor {
 public:
+#if CONFIG_EEPROM_SENSORS
+    /*
+     * save all existing sensors to eeprom
+     */
+    static uint8_t SaveToEEprom();
 
+    /* restore all sensors from eeprom
+     * all sensor already existing sensors will be ignored
+     */
+    static uint8_t RestoreFromEEprom();
+#endif //CONFIG_EEPROM_SENSORS
 
 	/* process and set config. The config must be set before
 	 *  - by sensor's specific functions
@@ -72,7 +82,7 @@ public:
 	 * setConfig MUST be called once
 	 *
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
-	 * the config will be copied to specific sensor config
+	 * the config will be __copied__ to specific sensor config
 	 *
 	 * period in SENSOR_PROCESS_SERVICE_TIME unit
 	 */
@@ -113,8 +123,11 @@ public:
    uint8_t getSensorApiVersion() const { return mApiVersion; }
    uint8_t getConfigBlobSize() const { return mConfigBlobSize; }
    uint8_t getMeasurementBlobSize() const { return mMeasurementBlobSize; }
+   uint8_t *getConfigBlob() { return mConfigBlobPtr; }
 
    const char *getName() const { return mName; }
+
+   /* NOTE name is not copied */
    void setName(char *name) { mName = name; }
 
    static tSensor* getSensor(uint8_t sensorID);

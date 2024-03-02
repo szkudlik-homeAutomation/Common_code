@@ -51,8 +51,8 @@ void tRemoteSensorHub::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSens
     		nameSize = sizeof(Message->name);
 
     	char *nameCopy = malloc(nameSize+1);	// zero delimiter
-    	memset(nameCopy, 0, nameSize+1);
     	strncpy(nameCopy, Message->name, nameSize);
+    	*(nameCopy + nameSize) = 0;
 
     	pSensorCache->setParams(nameCopy, Message->Header.SensorType, Message->Header.ApiVersion, SenderID, Message->Header.MeasurementBlobSize);
     }
