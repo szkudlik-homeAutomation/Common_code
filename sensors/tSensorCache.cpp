@@ -169,17 +169,21 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    default: pStream->print(F("\"unknown\""));
    }
 
-   if (SensorStatus != STATUS_SUCCESS)
-   {
-	   pStream->print(F(",\"SensorStatus\":"));
-	   pStream->print(SensorStatus);
-   }
+   pStream->print(F(",\"SensorType\":"));
+   pStream->print(mSensorType);
+
+   pStream->print(F(",\"SensorStatus\":"));
+   pStream->print(SensorStatus);
+
    pStream->print(F(",\"LastUpdate\":"));
    pStream->print(getTimeSinceUpdate());
+
    pStream->print(F(",\"ID\":"));
    pStream->print(mSensorID);
+
    pStream->print(F(",\"NodeID\":"));
    pStream->print(mNodeID);
+
    pStream->print(F("}}"));
 
    return STATUS_SUCCESS;
