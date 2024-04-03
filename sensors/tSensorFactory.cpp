@@ -12,7 +12,7 @@
 
 #include "tSensorFactory.h"
 #include "tSensor.h"
-
+#include "tSensorHub.h"
 
 #if CONFIG_DS1820_SENSOR
 #include "tDS1820Sensor.h"

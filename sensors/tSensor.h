@@ -72,7 +72,7 @@ public:
 	 * setConfig MUST be called once
 	 *
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
-	 * the config will be copied to specific sensor config
+	 * the config will be copied to sensor internal config
 	 *
 	 * period in SENSOR_PROCESS_SERVICE_TIME unit
 	 */
@@ -113,8 +113,11 @@ public:
    uint8_t getSensorApiVersion() const { return mApiVersion; }
    uint8_t getConfigBlobSize() const { return mConfigBlobSize; }
    uint8_t getMeasurementBlobSize() const { return mMeasurementBlobSize; }
+   uint8_t *getConfigBlob() { return mConfigBlobPtr; }
 
    const char *getName() const { return mName; }
+
+   /* NOTE name is not copied */
    void setName(char *name) { mName = name; }
 
    static tSensor* getSensor(uint8_t sensorID);
