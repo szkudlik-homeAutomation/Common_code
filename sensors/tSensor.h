@@ -64,7 +64,17 @@ public:
 
 class tSensor {
 public:
+#if CONFIG_EEPROM_SENSORS
+    /*
+     * save all existing sensors to eeprom
+     */
+    static uint8_t SaveToEEprom();
 
+    /* restore all sensors from eeprom
+     * all sensor already existing sensors will be ignored
+     */
+    static uint8_t RestoreFromEEprom();
+#endif //CONFIG_EEPROM_SENSORS
 
 	/* process and set config. The config must be set before
 	 *  - by sensor's specific functions
