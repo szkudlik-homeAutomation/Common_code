@@ -230,4 +230,10 @@ typedef struct
 } tMessageSensorStop;
 C_ASSERT(sizeof(tMessageSensorStop) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
 
+/* save/restore all sensors to/from eeprom
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_SAVE 0x1B
+#define MESSAGE_TYPE_SENSOR_RESTORE 0x1C
+
 #endif //CONFIG_SENSORS_OVER_SERIAL_COMM

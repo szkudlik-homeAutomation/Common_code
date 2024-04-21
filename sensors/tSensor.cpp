@@ -307,10 +307,8 @@ uint8_t tSensor::RestoreFromEEprom()
             *(name + i) = EEPROM.read(offset++);
         }
         *(name +  Entry.nameSize) = 0;
-        DEBUG_PRINTLN_3("ENTRY");
-        DEBUG_3(println(name));
 
-        //TODO - name copy
+        //name won't be copied
         tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Entry.sensorType, Entry.sensorID, name);
         if (NULL == pSensor)
         {
@@ -320,6 +318,8 @@ uint8_t tSensor::RestoreFromEEprom()
 
         void *configBlob = pSensor->getConfigBlob();
     }
+
+    return STATUS_SUCCESS;
 }
 #endif // CONFIG_EEPROM_SENSORS
 

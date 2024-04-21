@@ -31,6 +31,8 @@ private:
     void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
     void HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message);
     void HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message);
+    void HandeMsgSaveSensorsToEeprom(uint8_t SenderID);
+    void HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID);
 };
 
 #endif /* CONFIG_SENSORS_OVER_SERIAL_COMM */

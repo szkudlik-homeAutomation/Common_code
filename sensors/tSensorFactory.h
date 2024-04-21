@@ -22,7 +22,7 @@ public:
 	virtual ~tSensorFactory() { Instance = NULL; }
 
 	/* note!
-	 * pName must point to static - won't be copied
+	 * pName must point to static - won't be copied!!!
 	 * pConfigBlob will be copied to sensor internals
 	 */
 	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, char *pName);

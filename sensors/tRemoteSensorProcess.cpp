@@ -44,6 +44,12 @@ void tRemoteSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
     case MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST:
         HandleMsgGetSensorMeasurementReqest(SenderDevId,(tMessageGetSensorMeasurementReqest*)(pFrame->Data));
         break;
+    case MESSAGE_TYPE_SENSOR_SAVE:
+    	HandeMsgSaveSensorsToEeprom(SenderDevId);
+    	break;
+    case MESSAGE_TYPE_SENSOR_RESTORE:
+    	HandeMsgRestoreSensorsFromEeprom(SenderDevId);
+    	break;
     }
 }
 
@@ -160,5 +166,18 @@ void tRemoteSensorProcess::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID,
     pSensor->sendSerialMsgSensorEvent(true, EV_TYPE_MEASUREMENT_COMPLETED);
 }
 
+void tRemoteSensorProcess::HandeMsgSaveSensorsToEeprom(uint8_t SenderID)
+{
+	uint8_t result;
+	result = tSensor::SaveToEEprom();
+    tOutgoingFrames::SendMsgStatus(SenderID, result);
+}
+
+void tRemoteSensorProcess::HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID)
+{
+	uint8_t result;
+	result = tSensor::RestoreFromEEprom();
+    tOutgoingFrames::SendMsgStatus(SenderID, result);
+}
 
 #endif // CONFIG_SENSORS_OVER_SERIAL_COMM
