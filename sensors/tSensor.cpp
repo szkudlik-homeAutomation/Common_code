@@ -30,7 +30,7 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 		return STATUS_CONFIG_SET_ERROR;
 	}
 
-	if (ApiVersion && (ApiVersion != getSensorApiVersion()))
+	if (ApiVersion != getSensorApiVersion())
 	{
 		DEBUG_PRINTLN_3(" error: api version mismatch");
 		return STATUS_CONFIG_SET_ERROR;
@@ -38,13 +38,6 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 
 	if (NULL != pConfigBlob && NULL != mConfigBlobPtr)
 	{
-		if ((ApiVersion != getSensorApiVersion()) ||
-			 configBlobSize != getConfigBlobSize())
-		{
-			DEBUG_PRINTLN_3(" error: api version mismatch");
-			return STATUS_CONFIG_SET_ERROR;
-		}
-
 	    memcpy(mConfigBlobPtr, pConfigBlob, mConfigBlobSize);
 	}
 
@@ -241,10 +234,6 @@ void tSensorProcess::setup() {}
 
 #if CONFIG_EEPROM_SENSORS
 
-//EEPROM.put(EEPROM_ACTION_TABLE_OFFSET+(EEPROM_ACTION_TABLE_SIZE*ActionTableUsage),*Message);
-//ActionTableUsage++;
-//EEPROM.write(EEPROM_ACTION_TABLE_USAGE_OFFSET,ActionTableUsage);
-
 uint8_t tSensor::SaveToEEprom()
 {
     eepromDeleteAllSensors();
@@ -253,6 +242,9 @@ uint8_t tSensor::SaveToEEprom()
     uint8_t cnt = 0;
     while (pSensor)
     {
+        if (! pSensor->isRunning())
+            continue; 
+
         tEepromSensorEntry Entry;
         Entry.configBlobApiVersion = pSensor->getSensorApiVersion();
         Entry.configBlobSize = pSensor->getConfigBlobSize();
@@ -292,6 +284,7 @@ uint8_t tSensor::RestoreFromEEprom()
     uint8_t numOfSesors;
     numOfSesors = EEPROM.read(EEPROM_NUM_OF_SENSORS);
     uint16_t offset = EEPROM_FIRST_SENSOR;
+    uint8_t Result;
     while(numOfSesors--)
     {
         tEepromSensorEntry Entry;
@@ -312,11 +305,29 @@ uint8_t tSensor::RestoreFromEEprom()
         tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Entry.sensorType, Entry.sensorID, name);
         if (NULL == pSensor)
         {
-        	free(name);
-        	continue;
+        	// fatal, anyway. No recovery needed
+        	return STATUS_SENSOR_CREATE_ERROR;
         }
 
-        void *configBlob = pSensor->getConfigBlob();
+        /* copy the config */
+        if (pSensor->getConfigBlobSize() != Entry.configBlobSize)
+        {
+        	return STATUS_SENSOR_CREATE_ERROR;
+        }
+
+        uint8_t *configBlob = (uint8_t *)pSensor->getConfigBlob();
+        for (int i = 0; i < Entry.configBlobSize; i++)
+        {
+        	configBlob[i] = EEPROM.read(offset++);
+        }
+
+        Result = pSensor->setConfig(Entry.measurementPeriod, Entry.configBlobApiVersion);
+        if (Result != STATUS_SUCCESS)
+        	return Result;
+
+        Result = pSensor->Start();
+        if (Result != STATUS_SUCCESS)
+        	return Result;
     }
 
     return STATUS_SUCCESS;

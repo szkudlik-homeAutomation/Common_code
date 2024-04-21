@@ -84,11 +84,18 @@ public:
 	 * if pConfigBlob is provided, it must point to blob of config of size equal to mConfigBlobSize
 	 * the config will be copied to sensor internal config
 	 *
+	 * ApiVersion will be checked if provided (!= 0)
+	 *
 	 * period in SENSOR_PROCESS_SERVICE_TIME unit
 	 */
 	uint8_t setConfig(uint16_t measurementPeriod)
 	{
 		return setConfig(measurementPeriod, 0, NULL, 0);
+	}
+
+	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion)
+	{
+		return setConfig(measurementPeriod, ApiVersion, NULL, 0);
 	}
 	uint8_t setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void *pConfigBlob, uint8_t configBlobSize);
 
