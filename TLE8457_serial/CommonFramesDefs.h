@@ -125,8 +125,14 @@ typedef struct
     uint16_t MeasurementPeriod;
     uint8_t ConfigBlobSize;
     uint8_t MeasurementBlobSize;
+} tMessageGetSensorByIdResponseHeader;
+#define MESSAGE_SENSOR_NAME_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageGetSensorByIdResponseHeader))
+typedef struct
+{
+	tMessageGetSensorByIdResponseHeader Header;
+	uint8_t name[MESSAGE_SENSOR_NAME_SIZE];
 } tMessageGetSensorByIdResponse;
-C_ASSERT(sizeof(tMessageGetSensorByIdResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageGetSensorByIdResponse) == COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /*
  * request for current sensor measurement
@@ -223,5 +229,11 @@ typedef struct
     uint8_t SensorID;
 } tMessageSensorStop;
 C_ASSERT(sizeof(tMessageSensorStop) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+/* save/restore all sensors to/from eeprom
+ * MESSAGE_TYPE_GENERAL_STATUS will be sent back
+ */
+#define MESSAGE_TYPE_SENSOR_SAVE 0x1B
+#define MESSAGE_TYPE_SENSOR_RESTORE 0x1C
 
 #endif //CONFIG_SENSORS_OVER_SERIAL_COMM

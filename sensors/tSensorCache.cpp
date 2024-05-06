@@ -14,9 +14,10 @@
 tSensorCache * tSensorCache::pFirst = NULL;
 
 
-uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
+uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
 {
 	resetTimestamp();
+	mName = pName;
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
 	mNodeID = nodeID;
@@ -52,7 +53,7 @@ tSensorCache *tSensorCache::getByName(const char * pSensorName)
    tSensorCache *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
    {
-      if (strcmp(pSensorDesc->pName, pSensorName) == 0)
+      if (strcmp(pSensorDesc->GetName(), pSensorName) == 0)
       {
          return pSensorDesc;
       }
@@ -118,9 +119,12 @@ uint8_t tSensorCache::setData(void *dataSrc, uint8_t dataSize)
 uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
    uint8_t SensorStatus = STATUS_SUCCESS;
+   if (NULL == GetName())
+	   return STATUS_JSON_ENCODE_ERROR;
+
    // note that the sensor may be located on a remote machine, use cached data
    pStream->print(F("\""));
-   pStream->print(pName);
+   pStream->print(GetName());
    pStream->print(F("\":{\"SensorData\":{"));
 
    if (mState == state_working)
@@ -136,9 +140,6 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    pStream->print(F(",\"StateString\":"));
    switch (mState)
    {
-   case state_not_detected:
-   	   pStream->print(F("\"not_detected\""));
-   	   break;
    case state_no_data_recieved:
    	   pStream->print(F("\"no_data_recieved\""));
    	   break;
@@ -168,18 +169,24 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    default: pStream->print(F("\"unknown\""));
    }
 
-   if (SensorStatus != STATUS_SUCCESS)
-   {
-	   pStream->print(F(",\"SensorStatus\":"));
-	   pStream->print(SensorStatus);
-   }
+   pStream->print(F(",\"SensorType\":"));
+   pStream->print(mSensorType);
+
+   pStream->print(F(",\"SensorStatus\":"));
+   pStream->print(SensorStatus);
+
    pStream->print(F(",\"LastUpdate\":"));
    pStream->print(getTimeSinceUpdate());
+
    pStream->print(F(",\"ID\":"));
    pStream->print(mSensorID);
+
    pStream->print(F(",\"NodeID\":"));
    pStream->print(mNodeID);
+
    pStream->print(F("}}"));
+
+   return STATUS_SUCCESS;
 }
 
 uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)

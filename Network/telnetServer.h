@@ -65,6 +65,9 @@ bool send_CreateSensorRequest(Commander &Cmdr);
 bool send_StartSensorRequest(Commander &Cmdr);
 bool send_StopSensorRequest(Commander &Cmdr);
 bool send_ConfigureSensorRequest(Commander &Cmdr);
+bool send_saveSensorsToEeprom(Commander &Cmdr);
+bool send_restoreSensorsFromEeprom(Commander &Cmdr);
+
 #endif //CONFIG_TELNET_COMMANDS_SENSORS
 
 #endif //CONFIG_TLE8457_COMM_LIB

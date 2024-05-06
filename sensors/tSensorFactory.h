@@ -21,8 +21,12 @@ public:
 	tSensorFactory() { Instance = this; };
 	virtual ~tSensorFactory() { Instance = NULL; }
 
-	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID);
-	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, uint8_t ApiVersion, void *pConfigBlob,
+	/* note!
+	 * pName must point to static - won't be copied!!!
+	 * pConfigBlob will be copied to sensor internals
+	 */
+	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, char *pName);
+	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, char *pName, uint8_t ApiVersion, void *pConfigBlob,
 					      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart);
 
 #if CONFIG_SENSORS_JSON_OUTPUT

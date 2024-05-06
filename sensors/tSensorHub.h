@@ -26,7 +26,7 @@ public:
 	}
 	static tSensorHub *Instance;
 
-	uint8_t RegisterSensor(uint8_t SensorID, char * pSensorName);
+	uint8_t RegisterSensor(uint8_t SensorID);
 
 	/*
 	 * Get an ID of a sensor by name

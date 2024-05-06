@@ -16,6 +16,10 @@
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/tOutgoingFrames.h"
 
+#if CONFIG_EEPROM_SENSORS
+#include "../../../GlobalDefs/Eeprom.h"
+#endif // CONFIG_EEPROM_SENSORS
+
 tSensor* tSensor::pFirst = NULL;
 tSensorProcess *tSensorProcess::Instance;
 
@@ -26,7 +30,7 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 		return STATUS_CONFIG_SET_ERROR;
 	}
 
-	if (ApiVersion && (ApiVersion != getSensorApiVersion()))
+	if (ApiVersion != getSensorApiVersion())
 	{
 		DEBUG_PRINTLN_3(" error: api version mismatch");
 		return STATUS_CONFIG_SET_ERROR;
@@ -34,13 +38,6 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 
 	if (NULL != pConfigBlob && NULL != mConfigBlobPtr)
 	{
-		if ((ApiVersion != getSensorApiVersion()) ||
-			 configBlobSize != getConfigBlobSize())
-		{
-			DEBUG_PRINTLN_3(" error: api version mismatch");
-			return STATUS_CONFIG_SET_ERROR;
-		}
-
 	    memcpy(mConfigBlobPtr, pConfigBlob, mConfigBlobSize);
 	}
 
@@ -99,7 +96,8 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
 	  mConfigBlobPtr(ConfigBlobPtr),
 	  mPartialConfigSeq(0),
 	  mSerialEventsMask(0),
-	  misMeasurementValid(false)
+	  misMeasurementValid(false),
+	  mName(NULL)
 {
    pNext = pFirst;
    pFirst = this;
@@ -233,6 +231,109 @@ void tSensorProcess::service()
 }
 
 void tSensorProcess::setup() {}
+
+#if CONFIG_EEPROM_SENSORS
+
+uint8_t tSensor::SaveToEEprom()
+{
+    eepromDeleteAllSensors();
+    tSensor *pSensor = pFirst;
+    uint16_t offset = EEPROM_FIRST_SENSOR;
+    uint8_t cnt = 0;
+    while (pSensor)
+    {
+        if (! pSensor->isRunning())
+            continue; 
+
+        tEepromSensorEntry Entry;
+        Entry.configBlobApiVersion = pSensor->getSensorApiVersion();
+        Entry.configBlobSize = pSensor->getConfigBlobSize();
+        Entry.eventMask = pSensor->getSensorSerialEventsMask();
+        Entry.measurementPeriod = pSensor->GetMeasurementPeriod();
+        Entry.sensorID = pSensor->getSensorID();
+        Entry.sensorType = pSensor->getSensorType();
+        Entry.nameSize = strlen(pSensor->getName());
+        EEPROM.put(offset,Entry);
+        offset += sizeof(Entry);
+        if (offset >= EEPROM.length())
+            return STATUS_OUT_OF_MEMORY;
+
+        for (int i = 0; i < Entry.nameSize; i++)
+        {
+            EEPROM.write(offset++, *(pSensor->getName()+i));
+            if (offset >= EEPROM.length())
+                return STATUS_OUT_OF_MEMORY;
+        }
+        for (int i = 0; i < Entry.configBlobSize; i++)
+        {
+            EEPROM.write(offset++, *(pSensor->getConfigBlob()+i));
+            if (offset >= EEPROM.length())
+                return STATUS_OUT_OF_MEMORY;
+        }
+
+        cnt++;
+        pSensor = pSensor->pNext;
+    }
+
+    EEPROM.write(EEPROM_NUM_OF_SENSORS, cnt);
+    return STATUS_SUCCESS;
+}
+
+uint8_t tSensor::RestoreFromEEprom()
+{
+    uint8_t numOfSesors;
+    numOfSesors = EEPROM.read(EEPROM_NUM_OF_SENSORS);
+    uint16_t offset = EEPROM_FIRST_SENSOR;
+    uint8_t Result;
+    while(numOfSesors--)
+    {
+        tEepromSensorEntry Entry;
+        char *name;
+
+        EEPROM.get(offset, Entry);
+        offset += sizeof(Entry);
+        name = malloc(Entry.nameSize + 1);
+        if (NULL == name)
+            return STATUS_OUT_OF_MEMORY;
+        for (int i = 0; i < Entry.nameSize; i++)
+        {
+            *(name + i) = EEPROM.read(offset++);
+        }
+        *(name +  Entry.nameSize) = 0;
+
+        //name won't be copied
+        tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Entry.sensorType, Entry.sensorID, name);
+        if (NULL == pSensor)
+        {
+        	// fatal, anyway. No recovery needed
+        	return STATUS_SENSOR_CREATE_ERROR;
+        }
+
+        /* copy the config */
+        if (pSensor->getConfigBlobSize() != Entry.configBlobSize)
+        {
+        	return STATUS_SENSOR_CREATE_ERROR;
+        }
+
+        uint8_t *configBlob = (uint8_t *)pSensor->getConfigBlob();
+        for (int i = 0; i < Entry.configBlobSize; i++)
+        {
+        	configBlob[i] = EEPROM.read(offset++);
+        }
+
+        Result = pSensor->setConfig(Entry.measurementPeriod, Entry.configBlobApiVersion);
+        if (Result != STATUS_SUCCESS)
+        	return Result;
+
+        Result = pSensor->Start();
+        if (Result != STATUS_SUCCESS)
+        	return Result;
+    }
+
+    return STATUS_SUCCESS;
+}
+#endif // CONFIG_EEPROM_SENSORS
+
 
 uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
 {

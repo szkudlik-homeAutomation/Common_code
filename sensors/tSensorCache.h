@@ -30,7 +30,7 @@ private:
     uint8_t mDataBlobSize;
     uint8_t mSensorApiVersion;
     uint8_t mNodeID;     // id of a node the sensor is located on. 0 => local sensor
-    char * pName;
+    char * mName;
     void *pDataCache;
     void *pRemoteDataCache;  // pointer to additional data cache used for assembling incoming data (if needed)
     uint8_t mSeq;    // packet reassembly seq
@@ -42,8 +42,6 @@ private:
     void resetTimestamp() { mLastTimestamp = millis();}
 
 public:
-	static const int8_t state_not_detected  = 0;		// created, not seen in the system yet, not all metadata set
-
 	// >0 - working states
 	static const int8_t state_no_data_recieved = 1;		// dected, all metadata set, no payload data seen yet
 	static const int8_t state_working = 2;				//
@@ -56,15 +54,16 @@ public:
 	static const int8_t state_incorrect_data_size = -2;
 	static const int8_t state_inconsistent_params = -3;
 
-    tSensorCache(char *name, uint8_t ID) :
+    tSensorCache(uint8_t ID) :
 	   mSensorID(ID),
-	   pName(name),
+	   mNodeID(0),
+	   mName(NULL),
 	   pDataCache(NULL),
 	   pRemoteDataCache(NULL),
 	   mFormatJSON(NULL),
 	   mDataBlobSize(0),
 	   mSeq(0),
-	   mState(state_not_detected)
+	   mState(state_no_data_recieved)
    {
 	   pNext = pFirst; pFirst = this;
 	   resetTimestamp();
@@ -81,7 +80,6 @@ public:
    }
    bool isWorkingState() const { return mState > 0; }
    bool isPermanentError() const { return mState < 0; }
-   bool isNotDetected() const { return mState == state_not_detected; }
    bool isLocalSensor() const { return mNodeID == 0; }
    bool isDataAssemblyNeeded() const { return pRemoteDataCache != NULL; }
 
@@ -92,9 +90,10 @@ public:
    uint8_t getSensorApiVersion() const { return mSensorApiVersion; }
    uint8_t getNodeID() const { return mNodeID; }
    uint8_t setData(void *dataSrc, uint8_t dataSize);
-   char * GetName() { return pName; }
+   char * GetName() { return mName; }
    uint8_t GetSensorID() const { return mSensorID; }
-   uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
+   /* note! name string is NOT copied, need point to static var */
+   uint8_t setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
    void *getAssembledData() { return pRemoteDataCache; }
