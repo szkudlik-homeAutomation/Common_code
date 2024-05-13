@@ -13,6 +13,7 @@
 
 #include "tSensor.h"
 #include "tSensorCache.h"
+#include "tSensorLogger.h"
 
 class DallasTemperature;
 
@@ -79,6 +80,14 @@ private:
    DallasTemperature *pDs1820;
 
    bool isTempValid(int16_t temp) { return ((temp > -1200) && (temp < 799)); }
+};
+
+class tDS1820SensorLogger : public tSensorLogger
+{
+public:
+    tDS1820SensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_DS1820, sensorID) {}
+protected:
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
 
 #endif // CONFIG_DS1820_SENSOR

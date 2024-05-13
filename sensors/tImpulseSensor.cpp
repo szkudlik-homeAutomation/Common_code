@@ -57,4 +57,20 @@ uint8_t ImpulseSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 }
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
+void tImpulseSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
+{
+    if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
+        //TODO
+        return;
+
+    tImpulseSensor::tResult *pResult = (tImpulseSensor::tResult *)pDataBlob;
+
+    DEBUG_PRINT_3("SensorID: ");
+    DEBUG_3(print(SensorID));
+    DEBUG_PRINT_3(" impulse count: ");
+    DEBUG_3(print(pResult->Count));
+    DEBUG_PRINT_3(" Sum: ");
+    DEBUG_3(println(pResult->Sum));
+}
+
 #endif // CONFIG_IMPULSE_SENSOR

@@ -195,4 +195,38 @@ uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
 
    return DS1820_INVALID_ID;
 }
+
+void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
+{
+    if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
+        //TODO
+        return;
+
+    tDS1820Sensor::tResult *pResult = (tDS1820Sensor::tResult *)pDataBlob;
+    DEBUG_PRINT_3("Measurement completed. SensorID: ");
+    DEBUG_3(print(SensorID));
+    DEBUG_PRINT_3(" devs: ");
+    DEBUG_3(print(pResult->NumOfDevices));
+    DEBUG_PRINT_3(" Avg: ");
+    DEBUG_3(print(pResult->Avg));
+    uint8_t NumOfItems;
+    if (pResult->Avg) {
+       NumOfItems = 1;
+    }
+    else
+    {
+       NumOfItems = pResult->NumOfDevices;
+    }
+    for (int i = 0; i < NumOfItems; i++)
+    {
+       DEBUG_PRINT_3(" dev: ");
+       DEBUG_3(print(i));
+       DEBUG_PRINT_3(" temp: ");
+       DEBUG_3(print(((float)(pResult)->Dev[i].Temperature) / 10));
+    }
+    DEBUG_PRINTLN_3("");
+
+}
+
+
 #endif // CONFIG_DS1820_SENSOR

@@ -12,6 +12,7 @@
 #if CONFIG_PT100_ANALOG_SENSOR
 #include "tSensor.h"
 #include "tSensorCache.h"
+#include "tSensorLogger.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
@@ -52,4 +53,13 @@ private:
    tResult mResult;
    float TemperatureAvg;
 };
+
+class tPt100SensorLogger : public tSensorLogger
+{
+public:
+    tPt100SensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_PT100_ANALOG, sensorID) {}
+protected:
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+};
+
 #endif // CONFIG_PT100_ANALOG_SENSOR

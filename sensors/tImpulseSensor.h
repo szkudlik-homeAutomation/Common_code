@@ -12,6 +12,7 @@
 
 #include "tSensor.h"
 #include "tSensorCache.h"
+#include "tSensorLogger.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT
 
@@ -42,6 +43,14 @@ protected:
 private:
    volatile uint16_t mCnt;
    tResult mResult;
+};
+
+class tImpulseSensorLogger : public tSensorLogger
+{
+public:
+    tImpulseSensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_IMPULSE, sensorID) {}
+protected:
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
 
 #endif //CONFIG_IMPULSE_SENSOR
