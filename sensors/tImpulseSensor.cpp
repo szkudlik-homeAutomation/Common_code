@@ -10,11 +10,46 @@
 #if CONFIG_IMPULSE_SENSOR
 #include "tImpulseSensor.h"
 
-tImpulseSensor::tImpulseSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_IMPULSE, sensorID, API_VERSION, 0, NULL)
+
+volatile uint16_t tImpulseSensor::mCnt[3];
+uint8_t tImpulseSensor::mLastSensorNum  = 0;
+
+// IMPULSE_SENSOR_MAX_SENSORS
+void tImpulseSensor::Impulse0()
 {
+	mCnt[0]++;
+}
+
+void tImpulseSensor::Impulse1()
+{
+	mCnt[1]++;
+}
+
+void tImpulseSensor::Impulse2()
+{
+	mCnt[2]++;
+}
+
+
+uint8_t tImpulseSensor::onSetConfig()
+{
+	pinMode(Config.Pin, INPUT_PULLUP);
+	switch (mSensorNum)
+	{
+		case 0: attachInterrupt(digitalPinToInterrupt(Config.Pin), Impulse0, FALLING); break;
+		case 1: attachInterrupt(digitalPinToInterrupt(Config.Pin), Impulse1, FALLING); break;
+		case 2: attachInterrupt(digitalPinToInterrupt(Config.Pin), Impulse2, FALLING); break;
+		default: return STATUS_SENSOR_CREATE_ERROR;
+	}
+	return STATUS_SUCCESS;
+}
+
+tImpulseSensor::tImpulseSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_IMPULSE, sensorID, API_VERSION, sizeof(Config), &Config)
+{
+	mSensorNum = mLastSensorNum++;
 	mResult.Count = 0;
 	mResult.Sum = 0;
-	mCnt = 0;
+	mCnt[mSensorNum] = 0;
 	mCurrentMeasurementBlob = &mResult;
 	mMeasurementBlobSize = sizeof(mResult);
 }
@@ -23,9 +58,9 @@ void tImpulseSensor::doTriggerMeasurement()
 {
 	ATOMIC
 	(
-		mResult.Count = mCnt;
-		mResult.Sum += mCnt;
-		mCnt = 0;
+		mResult.Count = mCnt[mSensorNum];
+		mResult.Sum += mCnt[mSensorNum];
+		mCnt[mSensorNum] = 0;
 	);
 	onMeasurementCompleted(true);
 }

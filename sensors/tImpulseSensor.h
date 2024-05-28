@@ -28,7 +28,13 @@ public:
       uint16_t Sum;   // sum of all impulses
    } tResult_api_v1;
 
+   typedef struct
+   {
+      uint8_t Pin;
+   } tConfig_api_v1;
+
    static const uint8_t API_VERSION = 1;
+   typedef tConfig_api_v1 tConfig;
    typedef tResult_api_v1 tResult;
 
 
@@ -36,12 +42,20 @@ public:
    virtual ~tImpulseSensor() {}
 
    void CleanSum(); 			// clear Sum
-   void Impulse() { mCnt++;	}	// COUNTER TRIGGER - interrupt safe, may be called in interrupt handler
+   static void Impulse0(); // COUNTER TRIGGER - interrupt safe, may be called in interrupt handler
+   static void Impulse1(); // COUNTER TRIGGER - interrupt safe, may be called in interrupt handler
+   static void Impulse2(); // COUNTER TRIGGER - interrupt safe, may be called in interrupt handler
 
 protected:
    virtual void doTriggerMeasurement();
+   virtual uint8_t onSetConfig();
 private:
-   volatile uint16_t mCnt;
+   static const uint8_t IMPULSE_SENSOR_MAX_SENSORS = 3;
+
+   tConfig Config;
+   static volatile uint16_t mCnt[IMPULSE_SENSOR_MAX_SENSORS];
+   uint8_t mSensorNum;
+   static uint8_t mLastSensorNum;
    tResult mResult;
 };
 
