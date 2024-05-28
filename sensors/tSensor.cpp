@@ -30,7 +30,7 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 		return STATUS_CONFIG_SET_ERROR;
 	}
 
-	if (ApiVersion != getSensorApiVersion())
+	if (ApiVersion && ApiVersion != getSensorApiVersion())
 	{
 		DEBUG_PRINTLN_3(" error: api version mismatch");
 		return STATUS_CONFIG_SET_ERROR;
