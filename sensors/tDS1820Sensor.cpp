@@ -33,22 +33,20 @@ uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
    pStream->print(pResult->NumOfDevices);
    pStream->print(F(",\"Avg\":"));
    pStream->print(pResult->Avg);
-   pStream->print(F(","));
    if (pResult->Avg)
    {
-      pStream->print(F("\"AvgTemperature\":"));
+      pStream->print(F(",\"AvgTemperature\":"));
       pStream->print((float)pResult->Dev[0].Temperature / 10);
-      pStream->print(F(","));
    }
    else
    {
       for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
       {
+         pStream->print(F(","));
          pStream->print(F("\"Temperature_"));
          tDS1820Sensor::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
          pStream->print(F("\":"));
          pStream->print((float)pResult->Dev[i].Temperature / 10);
-         pStream->print(F(","));
       }
    }
 

@@ -43,18 +43,16 @@ uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
    tOutputStateSensor::tResult *pResult =(tOutputStateSensor::tResult *) cache->getData();
    pStream->print(F("\"NumOfOutputs\":"));
    pStream->print(NUM_OF_OUTPUTS);
-   pStream->print(F(","));
    for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
    {
-//      "Out_1": {"State":0, "Timer":1 },
-
+	  pStream->print(F(","));
       pStream->print(F("\"Out_"));
       pStream->print(i);
       pStream->print(F("\":{\"State\":"));
       pStream->print(pResult->State[i]);
       pStream->print(F(",\"Timer\":"));
       pStream->print(pResult->Timer[i]);
-      pStream->print(F("},"));
+   	  pStream->print(F("}"));
    }
 
    return STATUS_SUCCESS;
