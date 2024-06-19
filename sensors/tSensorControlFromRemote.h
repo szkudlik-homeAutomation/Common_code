@@ -1,5 +1,5 @@
 /*
- * tRemoteSensorProcess.h
+ * tSensorControlFromRemote.h
  *
  *  Created on: 13 lut 2024
  *      Author: szkud
@@ -16,9 +16,9 @@
 #include "../TLE8457_serial/CommonFramesDefs.h"
 
 
-class tRemoteSensorProcess: public tSensorProcess, public tMessageReciever {
+class tSensorControlFromRemote: public tMessageReciever {
 public:
-	tRemoteSensorProcess(Scheduler &manager) : tSensorProcess(manager)
+	tSensorControlFromRemote()
 	   { RegisterMessageType(MessageType_SerialFrameRecieved); }
 
 protected:

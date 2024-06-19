@@ -1,5 +1,5 @@
 /*
- * tRemoteSensorProcess.cpp
+ * tSensorControlFromRemote.cpp
  *
  *  Created on: 13 lut 2024
  *      Author: szkud
@@ -8,14 +8,14 @@
 #include "../../../global.h"
 #if CONFIG_SENSORS_OVER_SERIAL_COMM
 
-#include "tRemoteSensorProcess.h"
+#include "tSensorControlFromRemote.h"
 #include "tSensorFactory.h"
 #include "../tMessageReciever.h"
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/tOutgoingFrames.h"
 
 
-void tRemoteSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
+void tSensorControlFromRemote::onMessage(uint8_t type, uint16_t data, void *pData)
 {
     if (type != MessageType_SerialFrameRecieved)
         return;
@@ -53,7 +53,7 @@ void tRemoteSensorProcess::onMessage(uint8_t type, uint16_t data, void *pData)
     }
 }
 
-void tRemoteSensorProcess::HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame)
+void tSensorControlFromRemote::HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame)
 {
     tSensor *pSensor = tSensor::getSensor(pFrame->SensorID);
     if (NULL != pSensor)
@@ -77,7 +77,7 @@ void tRemoteSensorProcess::HandleMessageGetSensorByIdReqest(uint8_t sender, tMes
     }
 }
 
-void tRemoteSensorProcess::HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame)
+void tSensorControlFromRemote::HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame)
 {
     DEBUG_PRINT_3("Creating type: ");
     DEBUG_3(print(pFrame->SensorType, DEC));
@@ -92,7 +92,7 @@ void tRemoteSensorProcess::HandleMsgSensorCreate(uint8_t sender, tMessageSensorC
         tOutgoingFrames::SendMsgStatus(sender, STATUS_GENERAL_FAILURE);
 }
 
-void tRemoteSensorProcess::HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message)
+void tSensorControlFromRemote::HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message)
 {
     uint8_t result;
     tSensor *pSensor = tSensor::getSensor(Message->Header.SensorID);
@@ -118,7 +118,7 @@ void tRemoteSensorProcess::HandleMsgSensorConfigure(uint8_t SenderID, tMessageSe
 }
 
 
-void tRemoteSensorProcess::HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message)
+void tSensorControlFromRemote::HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message)
 {
     tSensor *pSensor = tSensor::getSensor(Message->SensorID);
     if (!pSensor)
@@ -139,7 +139,7 @@ void tRemoteSensorProcess::HandleMsgSensorStart(uint8_t SenderID, tMessageSensor
     tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 
-void tRemoteSensorProcess::HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message)
+void tSensorControlFromRemote::HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message)
 {
     tSensor *pSensor = tSensor::getSensor(Message->SensorID);
     if (!pSensor)
@@ -156,7 +156,7 @@ void tRemoteSensorProcess::HandleMsgSensorStop(uint8_t SenderID, tMessageSensorS
     tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 
-void tRemoteSensorProcess::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message)
+void tSensorControlFromRemote::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message)
 {
     /* get data blob from sensor and send it in one or more frames */
     tSensor *pSensor = tSensor::getSensor(Message->SensorID);
@@ -166,14 +166,14 @@ void tRemoteSensorProcess::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID,
     pSensor->sendSerialMsgSensorEvent(true, EV_TYPE_MEASUREMENT_COMPLETED);
 }
 
-void tRemoteSensorProcess::HandeMsgSaveSensorsToEeprom(uint8_t SenderID)
+void tSensorControlFromRemote::HandeMsgSaveSensorsToEeprom(uint8_t SenderID)
 {
 	uint8_t result;
 	result = tSensor::SaveToEEprom();
     tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 
-void tRemoteSensorProcess::HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID)
+void tSensorControlFromRemote::HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID)
 {
 	uint8_t result;
 	result = tSensor::RestoreFromEEprom();
