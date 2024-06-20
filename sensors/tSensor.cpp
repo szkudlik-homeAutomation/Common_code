@@ -105,14 +105,14 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
 
 tSensor* tSensor::getSensor(uint8_t sensorID)
 {
-   tSensor *pSensor = pFirst;
+   tSensor *pSensor = tSensor::getFirst();
    while (pSensor != NULL)
    {
       if (pSensor->getSensorID() == sensorID)
       {
          return pSensor;
       }
-      pSensor = pSensor->pNext;
+      pSensor = pSensor->getNext();
    }
 
    // not found
@@ -199,7 +199,7 @@ void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 
 void tSensor::Run()
 {
-   tSensor *i = pFirst;
+   tSensor *i = tSensor::getFirst();
    while(i != NULL)
    {
       if (i->isRunning())
@@ -221,7 +221,7 @@ void tSensor::Run()
             }
          }
       }
-      i = i->pNext;
+      i = i->getNext();
    }
 }
 
@@ -237,7 +237,7 @@ void tSensorProcess::setup() {}
 uint8_t tSensor::SaveToEEprom()
 {
     eepromDeleteAllSensors();
-    tSensor *pSensor = pFirst;
+    tSensor *pSensor = tSensor::getFirst();
     uint16_t offset = EEPROM_FIRST_SENSOR;
     uint8_t cnt = 0;
     while (pSensor)
@@ -272,7 +272,7 @@ uint8_t tSensor::SaveToEEprom()
         }
 
         cnt++;
-        pSensor = pSensor->pNext;
+        pSensor = pSensor->getNext();
     }
 
     EEPROM.write(EEPROM_NUM_OF_SENSORS, cnt);

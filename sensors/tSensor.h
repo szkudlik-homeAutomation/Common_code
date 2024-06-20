@@ -138,6 +138,8 @@ public:
    void setName(char *name) { mName = name; }
 
    static tSensor* getSensor(uint8_t sensorID);
+   static tSensor* getFirst() { return pFirst; }
+   tSensor* getNext() { return pNext; }
 
    static void Run();
 
