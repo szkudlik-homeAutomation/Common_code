@@ -14,13 +14,14 @@
 tSensorCache * tSensorCache::pFirst = NULL;
 
 
-uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
+uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize, uint8_t measuermentPeriod)
 {
 	resetTimestamp();
 	mName = pName;
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
 	mNodeID = nodeID;
+	mMeasuermentPeriod = measuermentPeriod;
 	uint8_t result = setDataBlobSize(dataBlobSize);
 	if (STATUS_SUCCESS != result)
 	{
@@ -177,6 +178,9 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 
    pStream->print(F(",\"LastUpdate\":"));
    pStream->print(getTimeSinceUpdate());
+
+   pStream->print(F(",\"Period\":"));
+   pStream->print(getMeasurementPeriod());
 
    pStream->print(F(",\"ID\":"));
    pStream->print(mSensorID);

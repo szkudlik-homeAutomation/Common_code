@@ -77,7 +77,8 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID)
    if (pSensor != NULL)
    {
 	   // local sensor
-	   result = pSensorCache->setParams(pSensor->getName(), pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
+	   result = pSensorCache->setParams(pSensor->getName(), pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0,
+			   	   	   	   	   	        pSensor->getMeasurementBlobSize(), pSensor->GetMeasurementPeriod());
    }
 
    return result;

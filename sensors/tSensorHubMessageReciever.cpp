@@ -50,7 +50,8 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     	// make copy of sensor name
         char *nameCopy = strAllocateCopy(Message->name, sizeof(Message->name));
 
-    	pSensorCache->setParams(nameCopy, Message->Header.SensorType, Message->Header.ApiVersion, SenderID, Message->Header.MeasurementBlobSize);
+    	pSensorCache->setParams(nameCopy, Message->Header.SensorType, Message->Header.ApiVersion, SenderID, Message->Header.MeasurementBlobSize,
+    							Message->Header.MeasurementPeriod);
     }
     else
     {
