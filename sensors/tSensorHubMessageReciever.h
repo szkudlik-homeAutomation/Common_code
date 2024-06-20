@@ -1,5 +1,5 @@
 /*
- * tRemoteSensorHub.h
+ * tSensorHubMessageReciever.h
  *
  *  Created on: 12 lut 2024
  *      Author: szkud
@@ -15,9 +15,9 @@
 #include "../tMessageReciever.h"
 #include "../TLE8457_serial/CommonFramesDefs.h"
 
-class tRemoteSensorHub: public tSensorHub, public tMessageReciever {
+class tSensorHubMessageReciever: public tMessageReciever {
 public:
-	tRemoteSensorHub() : tSensorHub()
+	tSensorHubMessageReciever()
 	{
 		RegisterMessageType(MessageType_SerialFrameRecieved);
 	}
