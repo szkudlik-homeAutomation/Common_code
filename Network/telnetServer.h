@@ -67,6 +67,7 @@ bool send_StopSensorRequest(Commander &Cmdr);
 bool send_ConfigureSensorRequest(Commander &Cmdr);
 bool send_saveSensorsToEeprom(Commander &Cmdr);
 bool send_restoreSensorsFromEeprom(Commander &Cmdr);
+bool send_triggerSensorList(Commander &Cmdr);
 
 #endif //CONFIG_TELNET_COMMANDS_SENSORS
 

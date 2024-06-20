@@ -25,7 +25,9 @@ protected:
     virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 
 private:
-    void HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame);
+    void HandleMessageGetSensorByIdReqest(uint8_t sender, tMessageGetSensorByIdReqest *pFrame)
+    	{ SendMessageGetSensorByIdResponse(sender, tSensor::getSensor(pFrame->SensorID)); }
+    void SendMessageGetSensorByIdResponse(uint8_t sender, tSensor *pSensor);
     void HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame);
     void HandleMsgSensorConfigure(uint8_t SenderID, tMessageSensorConfigure *Message);
     void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
@@ -33,6 +35,7 @@ private:
     void HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message);
     void HandeMsgSaveSensorsToEeprom(uint8_t SenderID);
     void HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID);
+    void HandeMsgRestoreSensorsListTrigger(uint8_t SenderID);
 };
 
 #endif /* CONFIG_SENSORS_OVER_SERIAL_COMM */

@@ -358,6 +358,24 @@ bool send_restoreSensorsFromEeprom(Commander &Cmdr)
       return false;
 }
 
+bool send_triggerSensorList(Commander &Cmdr)
+{
+	int Dst;
+    if(!Cmdr.getInt(Dst))
+    {
+      goto error;
+    }
+
+    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_LIST_TRIGGER, 0, NULL);
+    return true;
+
+    error:
+      Cmdr.println(F("Usage: triggerSensorList dst_dev"));
+      return false;
+}
+
+
+
 #endif // CONFIG_TELNET_COMMANDS_SENSORS
 #endif // CONFIG_TLE8457_COMM_LIB
 
