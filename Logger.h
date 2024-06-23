@@ -46,7 +46,7 @@ private:
 	tLogTransport *pNext;
 };
 
-#ifdef DEBUG_SERIAL
+#ifdef CONFIG_LOGGER_SERIAL
 class tSerialLogTransport : public tLogTransport
 {
 public:
@@ -54,7 +54,7 @@ public:
 	tSerialLogTransport() : tLogTransport() {Instance = this; EnableLogs();}
 	virtual ~tSerialLogTransport() {};
 
-	virtual void Log(uint8_t str) { DEBUG_SERIAL.write(str); }
+	virtual void Log(uint8_t str) { CONFIG_LOGGER_SERIAL.write(str); }
 };
 
 #endif

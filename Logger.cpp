@@ -53,7 +53,7 @@ size_t tLogger::write(uint8_t str)
 
 tLogger Logger;
 
-#ifdef DEBUG_SERIAL
+#ifdef CONFIG_LOGGER_SERIAL
 tSerialLogTransport SerialLogTransport;
 #endif
 

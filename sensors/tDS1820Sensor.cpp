@@ -89,7 +89,7 @@ uint8_t tDS1820Sensor::onSetConfig()
          {
             DEBUG_PRINT_3("             FOUND, serial: ");
             // zonk, response_handeler is not a stream... so serial only
-            printAddress((uint8_t*)getCurrentMeasurement()->Dev[i].Addr, &DEBUG_SERIAL);
+            printAddress((uint8_t*)getCurrentMeasurement()->Dev[i].Addr, &CONFIG_LOGGER_SERIAL);
             DEBUG_PRINTLN_3("");
          }
 #endif

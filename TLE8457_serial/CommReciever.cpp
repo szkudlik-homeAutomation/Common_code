@@ -123,20 +123,20 @@ void CommRecieverProcess::ProcessFrame()
 
   #ifdef DEBUG_1_ENABLE
     // printout frame
-    DEBUG_SERIAL.print(F("SenderDevId = 0x"));
-    DEBUG_SERIAL.print(mFrame.SenderDevId,HEX);
-    DEBUG_SERIAL.print(F(" DstDevId = 0x"));
-    DEBUG_SERIAL.print(mFrame.DstDevId,HEX);
-    DEBUG_SERIAL.print(F(" Seq = 0x"));
-    DEBUG_SERIAL.print(mFrame.Seq,HEX);
-    DEBUG_SERIAL.print(F(" MessageType = 0x"));
-    DEBUG_SERIAL.print(mFrame.MessageType,HEX);
-    DEBUG_SERIAL.print(F(" Data = 0x"));
+    CONFIG_LOGGER_SERIAL.print(F("SenderDevId = 0x"));
+    CONFIG_LOGGER_SERIAL.print(mFrame.SenderDevId,HEX);
+    CONFIG_LOGGER_SERIAL.print(F(" DstDevId = 0x"));
+    CONFIG_LOGGER_SERIAL.print(mFrame.DstDevId,HEX);
+    CONFIG_LOGGER_SERIAL.print(F(" Seq = 0x"));
+    CONFIG_LOGGER_SERIAL.print(mFrame.Seq,HEX);
+    CONFIG_LOGGER_SERIAL.print(F(" MessageType = 0x"));
+    CONFIG_LOGGER_SERIAL.print(mFrame.MessageType,HEX);
+    CONFIG_LOGGER_SERIAL.print(F(" Data = 0x"));
     for (uint8_t i = 0; i < CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE; i++)
     {
-      DEBUG_SERIAL.print(mFrame.Data[i],HEX);
+      CONFIG_LOGGER_SERIAL.print(mFrame.Data[i],HEX);
     }
-    DEBUG_SERIAL.println();
+    CONFIG_LOGGER_SERIAL.println();
   #endif
 
   // are we the sender?
