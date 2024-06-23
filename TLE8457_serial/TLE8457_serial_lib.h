@@ -31,6 +31,7 @@
 #endif
 
 #define DEVICE_ID_BROADCAST 0xFF
+#define MAX_NUM_OF_NODES 32
 
 /**
  * PROTOCOL
