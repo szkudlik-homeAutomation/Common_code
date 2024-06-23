@@ -6,30 +6,6 @@
 
 #include "CommonFramesDefs.h"
 
-#ifndef CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE
-#error Please define CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE
-#endif
-
-#ifndef CONFIG_NUM_OF_RETRANSMISSIONS
-#error Please define CONFIG_NUM_OF_RETRANSMISSIONS
-#endif
-
-#ifndef CONFIG_MAX_NUM_OF_RETRANSMISSIONS
-#error Please define CONFIG_MAX_NUM_OF_RETRANSMISSIONS
-#endif
-
-#ifndef CONFIG_TRANSMISSION_SPEED
-#error Please define CONFIG_TRANSMISSION_SPEED
-#endif
-
-#ifndef CONFIG_MAX_TRANSMIT_DELAY
-#error Please define CONFIG_MAX_TRANSMIT_DELAY
-#endif
-
-#ifndef CONFIG_OUTPUT_QUEUE_SIZE
-#error Please define CONFIG_OUTPUT_QUEUE_SIZE
-#endif
-
 #define DEVICE_ID_BROADCAST 0xFF
 #define MAX_NUM_OF_NODES 32
 
