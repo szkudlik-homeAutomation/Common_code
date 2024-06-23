@@ -132,7 +132,7 @@ void CommRecieverProcess::ProcessFrame()
     DEBUG_SERIAL.print(F(" MessageType = 0x"));
     DEBUG_SERIAL.print(mFrame.MessageType,HEX);
     DEBUG_SERIAL.print(F(" Data = 0x"));
-    for (uint8_t i = 0; i < COMMUNICATION_PAYLOAD_DATA_SIZE; i++)
+    for (uint8_t i = 0; i < CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE; i++)
     {
       DEBUG_SERIAL.print(mFrame.Data[i],HEX);
     }

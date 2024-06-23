@@ -6,28 +6,28 @@
 
 #include "CommonFramesDefs.h"
 
-#ifndef COMMUNICATION_PAYLOAD_DATA_SIZE
-#error Please define COMMUNICATION_PAYLOAD_DATA_SIZE
+#ifndef CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE
+#error Please define CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE
 #endif
 
-#ifndef NUM_OF_RETRANSMISSIONS
-#error Please define NUM_OF_RETRANSMISSIONS
+#ifndef CONFIG_NUM_OF_RETRANSMISSIONS
+#error Please define CONFIG_NUM_OF_RETRANSMISSIONS
 #endif
 
-#ifndef MAX_NUM_OF_RETRANSMISSIONS
-#error Please define MAX_NUM_OF_RETRANSMISSIONS
+#ifndef CONFIG_MAX_NUM_OF_RETRANSMISSIONS
+#error Please define CONFIG_MAX_NUM_OF_RETRANSMISSIONS
 #endif
 
-#ifndef TRANSMISSION_SPEED
-#error Please define TRANSMISSION_SPEED
+#ifndef CONFIG_TRANSMISSION_SPEED
+#error Please define CONFIG_TRANSMISSION_SPEED
 #endif
 
-#ifndef MAX_TRANSMIT_DELAY
-#error Please define MAX_TRANSMIT_DELAY
+#ifndef CONFIG_MAX_TRANSMIT_DELAY
+#error Please define CONFIG_MAX_TRANSMIT_DELAY
 #endif
 
-#ifndef OUTPUT_QUEUE_SIZE
-#error Please define OUTPUT_QUEUE_SIZE
+#ifndef CONFIG_OUTPUT_QUEUE_SIZE
+#error Please define CONFIG_OUTPUT_QUEUE_SIZE
 #endif
 
 #define DEVICE_ID_BROADCAST 0xFF
@@ -59,7 +59,7 @@ typedef struct
   uint8_t Seq;            // seq number. Retransmitted frame should have the same seq
   uint8_t MessageType;    // MESSAGE_TYPE*
 
-  uint8_t Data[COMMUNICATION_PAYLOAD_DATA_SIZE];  // data structure, to be mapped on tMessageType* structure
+  uint8_t Data[CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE];  // data structure, to be mapped on tMessageType* structure
 
   uint16_t crc;   // CRC, frame will be rejected if CRC is incorrect
 } tCommunicationFrame;

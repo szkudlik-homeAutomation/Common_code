@@ -27,7 +27,7 @@ typedef struct
   uint8_t Minor;
   uint8_t Patch;
 } tMessageTypeFwVesionResponse;
-C_ASSERT(sizeof(tMessageTypeFwVesionResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageTypeFwVesionResponse) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /**
  * force the note to reset. May be sent as a broadcast
@@ -52,7 +52,7 @@ typedef struct
   uint8_t  PowerState;      // state of 8 outputs, 1 means it is on
   uint8_t  TimerState;      // state of 8 timers, 1 means the output is on but there's timer pending, no timer value here
 } tMessageTypeOverviewStateResponse;
-C_ASSERT(sizeof(tMessageTypeOverviewStateResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageTypeOverviewStateResponse) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 
 /**
@@ -78,7 +78,7 @@ typedef struct
   uint16_t TimerValue;      // state of a timer. 0 means there's no timer pending
   uint16_t DefaultTimer;    // a default timer for the output.
 } tMessageTypeOutputStateResponse;
-C_ASSERT(sizeof(tMessageTypeOutputStateResponse) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageTypeOutputStateResponse) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /**
  * Sent by the central node - arbitrary set state of a single output
@@ -90,7 +90,7 @@ typedef struct
   uint8_t  State;        // state 0 or 1 to be set, where "1" means an active state
   uint16_t Timer;        // timer when the output should be turned off. In seconds, 0 means forever, 0xFFFF means default timer value
 } tMessageTypeSetOutput;
-C_ASSERT(sizeof(tMessageTypeSetOutput) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageTypeSetOutput) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 
 #define MESSAGE_TYPE_GENERAL_STATUS 0x12
@@ -110,7 +110,7 @@ typedef struct
 {
     uint8_t SensorID;
 } tMessageGetSensorByIdReqest;
-C_ASSERT(sizeof(tMessageGetSensorByIdReqest) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageGetSensorByIdReqest) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 #define MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE 0x14
 typedef struct
@@ -126,13 +126,13 @@ typedef struct
     uint8_t ConfigBlobSize;
     uint8_t MeasurementBlobSize;
 } tMessageGetSensorByIdResponseHeader;
-#define MESSAGE_SENSOR_NAME_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageGetSensorByIdResponseHeader))
+#define MESSAGE_SENSOR_NAME_SIZE (CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageGetSensorByIdResponseHeader))
 typedef struct
 {
 	tMessageGetSensorByIdResponseHeader Header;
 	uint8_t name[MESSAGE_SENSOR_NAME_SIZE];
 } tMessageGetSensorByIdResponse;
-C_ASSERT(sizeof(tMessageGetSensorByIdResponse) == COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageGetSensorByIdResponse) == CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /*
  * request for current sensor measurement
@@ -145,7 +145,7 @@ typedef struct
 {
     uint8_t SensorID;
 } tMessageGetSensorMeasurementReqest;
-C_ASSERT(sizeof(tMessageGetSensorMeasurementReqest) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageGetSensorMeasurementReqest) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /*
  * an event from a sensor
@@ -162,7 +162,7 @@ typedef struct
     uint8_t SegmentSeq;				// if "0" - first segment, next segments must have SegmentSeq++
 } tMessageSensorEventHeader;
 
-#define SENSOR_MEASUREMENT_PAYLOAD_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageSensorEventHeader))
+#define SENSOR_MEASUREMENT_PAYLOAD_SIZE (CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageSensorEventHeader))
 
 typedef struct
 {
@@ -170,7 +170,7 @@ typedef struct
 	uint8_t Payload[SENSOR_MEASUREMENT_PAYLOAD_SIZE];
 } tMessageSensorEvent;
 
-C_ASSERT(sizeof(tMessageSensorEvent) == COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageSensorEvent) == CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /* Create a sensor
  * MESSAGE_TYPE_GENERAL_STATUS will be sent back
@@ -181,7 +181,7 @@ typedef struct
     uint8_t SensorID;
     uint8_t SensorType;
 } tMessageSensorCreate;
-C_ASSERT(sizeof(tMessageSensorCreate) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageSensorCreate) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /* send a config blob to remote sensor */
 #define MESSAGE_TYPE_SENSOR_CONFIGURE 0x18
@@ -197,7 +197,7 @@ typedef struct
 	uint16_t MeasurementPeriod;
 }tMessageSensorConfigureCommonData;
 
-#define SENSOR_CONFIG_PAYLOAD_SIZE (COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageSensorConfigureHeader))
+#define SENSOR_CONFIG_PAYLOAD_SIZE (CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE - sizeof(tMessageSensorConfigureHeader))
 
 typedef struct
 {
@@ -207,7 +207,7 @@ typedef struct
 		uint8_t Payload[SENSOR_CONFIG_PAYLOAD_SIZE];	// if !LastSegment
 	};
 } tMessageSensorConfigure;
-C_ASSERT(sizeof(tMessageSensorConfigure) == COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageSensorConfigure) == CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /* Start a sensor, set events mask
  * MESSAGE_TYPE_GENERAL_STATUS will be sent back
@@ -218,7 +218,7 @@ typedef struct
     uint8_t SensorID;
     uint8_t SensorEventMask;	// bitmap
 } tMessageSensorStart;
-C_ASSERT(sizeof(tMessageSensorStart) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageSensorStart) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /* Stop a sensor
  * MESSAGE_TYPE_GENERAL_STATUS will be sent back
@@ -228,7 +228,7 @@ typedef struct
 {
     uint8_t SensorID;
 } tMessageSensorStop;
-C_ASSERT(sizeof(tMessageSensorStop) <= COMMUNICATION_PAYLOAD_DATA_SIZE);
+C_ASSERT(sizeof(tMessageSensorStop) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
 /* save/restore all sensors to/from eeprom
  * MESSAGE_TYPE_GENERAL_STATUS will be sent back

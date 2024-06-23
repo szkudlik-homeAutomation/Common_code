@@ -21,7 +21,7 @@ CommSenderProcess *CommSenderProcess::Instance = NULL;
 CommSenderProcess::CommSenderProcess(Scheduler &manager, uint8_t RandomSeed, uint8_t SenderDevId) :
     Process(manager,MEDIUM_PRIORITY,SERVICE_CONSTANTLY),
     mRandom(RandomSeed),
-    mQueue(OUTPUT_QUEUE_SIZE),
+    mQueue(CONFIG_OUTPUT_QUEUE_SIZE),
     isSending(false)
     {
 	  Instance = this;
@@ -76,8 +76,8 @@ void CommSenderProcess::service()
     // prepare another frame
     if (DequeueFrame())
     {
-      mCollisionRetransLeft = MAX_NUM_OF_RETRANSMISSIONS;
-      mRetransLeft = NUM_OF_RETRANSMISSIONS;
+      mCollisionRetransLeft = CONFIG_MAX_NUM_OF_RETRANSMISSIONS;
+      mRetransLeft = CONFIG_NUM_OF_RETRANSMISSIONS;
       CommRecieverProcess::Instance->clearSelfFrameMark();
       isSending = true;
     }
@@ -92,7 +92,7 @@ void CommSenderProcess::service()
   if (isSending)
   {
     COMM_SERIAL.write((char*)&mFrame,sizeof(mFrame));
-    uint16_t NextTimeout = (mRandom.Get() % MAX_TRANSMIT_DELAY) + frameTransmissionTime;
+    uint16_t NextTimeout = (mRandom.Get() % CONFIG_MAX_TRANSMIT_DELAY) + frameTransmissionTime;
     setPeriod(NextTimeout);
   }
 }
@@ -106,7 +106,7 @@ bool CommSenderProcess::DequeueFrame()
     mFrame.DstDevId = Item.DstDevId;
     mFrame.MessageType = Item.MessageType;
 
-    for (uint8_t i = 0; i < COMMUNICATION_PAYLOAD_DATA_SIZE; i++) mFrame.Data[i] = 0;
+    for (uint8_t i = 0; i < CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE; i++) mFrame.Data[i] = 0;
     if (Item.DataSize) memcpy(mFrame.Data,Item.Data,Item.DataSize);
 
     // set seq number
