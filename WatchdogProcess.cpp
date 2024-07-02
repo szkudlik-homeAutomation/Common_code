@@ -45,4 +45,9 @@ void tWatchdogProcess::service()
       watchdog.reset();
    }
 }
+
+
+// instantiate the watchdog process
+tWatchdogProcess WatchdogProcess(sched);
+
 #endif //CONFIG_WATCHDOG
