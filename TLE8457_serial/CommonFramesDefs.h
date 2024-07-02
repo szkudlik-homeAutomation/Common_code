@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../global.h"
+#if CONFIG_TLE8457_COMM_LIB
 
 /*
  * NOTE - backward compatibility
@@ -237,3 +239,5 @@ C_ASSERT(sizeof(tMessageSensorStop) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 #define MESSAGE_TYPE_SENSOR_RESTORE 0x1C
 
 #endif //CONFIG_SENSORS_OVER_SERIAL_COMM
+
+#endif CONFIG_TLE8457_COMM_LIB
