@@ -1,0 +1,49 @@
+menu "Home Automation System Configuration"
+
+config LOGGER
+    bool "Enable Logger"
+    default y
+    
+config LOGGER_SERIAL
+    string "Serial Port for Logger, also enable Serial Port log transport"
+    depends on LOGGER
+    default Serial
+    
+config LOGLEVEL_1
+    bool "Enable Log Level 1"
+    depends on LOGGER
+    default n
+
+config LOGLEVEL_2
+    bool "Enable Log Level 3"
+    depends on LOGGER
+    default n
+
+config LOGLEVEL_3
+    bool "Enable Log Level 3"
+    depends on LOGGER
+    default y
+
+config WATCHDOG
+    bool "Enable Watchdog Timer"
+    default y
+    
+config WORKER_PROCESS
+    bool "Enable Worker Process"
+    default y
+
+config NODE_SCAN_TASK
+    bool "Enable Node Scan Task"
+    depends on WORKER_PROCESS
+    default y
+
+rsource "Network/kconfig"
+rsource "TLE8457_serial/kconfig"
+rsource "sensors/kconfig"
+
+config SENSOR_HUB
+    bool "Enable Sensor Hub"
+    default n
+    
+
+endmenu

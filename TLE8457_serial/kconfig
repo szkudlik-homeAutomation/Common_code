@@ -1,0 +1,48 @@
+config TLE8457_COMM_LIB
+    bool "Enable TLE8457 Communication Library"
+    default y
+
+config COMMUNICATION_PAYLOAD_DATA_SIZE
+    int "Communication Payload Data Size"
+    default 20
+    depends on TLE8457_COMM_LIB
+    help
+    	Frame Payload Data Size in bytes
+ 
+config NUM_OF_RETRANSMISSIONS
+    int "Number of obligatory Retransmissions"
+    default 3
+    depends on TLE8457_COMM_LIB
+    help
+    	Each frame will be retransmitted this number of times
+    
+ config MAX_NUM_OF_RETRANSMISSIONS
+    int "Maximum Number of Retransmissions"
+    default 5
+    depends on TLE8457_COMM_LIB
+    help
+    	Maximum number of retransmissions in case of collisions 
+    	before the frame is discarded
+    	
+config TRANSMISSION_SPEED
+    int "Transmission Speed"
+    default 115200
+    depends on TLE8457_COMM_LIB
+    help
+    	Transmission Speed in bauds
+    	
+config MAX_TRANSMIT_DELAY
+    int "Maximum Transmit Delay"
+    default 100
+    depends on TLE8457_COMM_LIB
+    help
+    	to avoid collisions, the frame will be transmitted with random delay
+    	in range from 0 to this value in milliseconds
+    	
+config OUTPUT_QUEUE_SIZE
+    int "Output Queue Size"
+    default 3
+    depends on TLE8457_COMM_LIB
+    help
+    	Number of frames that can be stored in the output queue
+    	

@@ -1,0 +1,38 @@
+config SENSORS
+    bool "Enable Sensors"
+    default y
+
+config SYSTEM_STATUS_SENSOR
+    bool "Enable System Status Sensor"
+    depends on SENSORS
+    default y
+
+config DS1820_SENSOR
+    bool "Enable DS1820 Sensor"
+    depends on SENSORS
+    default n
+    
+config IMPULSE_SENSOR
+    bool "Enable Impulse Sensor"
+    depends on SENSORS
+    default n
+    
+config OUTPUT_STATE_SENSOR
+    bool "Enable Output State Sensor"
+    depends on SENSORS
+    default n
+    
+config PT100_ANALOG_SENSOR
+    bool "Enable PT100 termistor Sensor"
+    depends on SENSORS
+    default n
+    
+config WIEGAND_SENSOR  
+    bool "Enable Wiegand Sensor"
+    depends on SENSORS
+    default n
+    
+config SIMPLE_DIGITAL_INPUT_SENSOR
+    bool "Enable Simple Digital Input Sensor"
+    depends on SENSORS
+    default n
