@@ -32,10 +32,14 @@ private:
     uint8_t mNodeID;     // id of a node the sensor is located on. 0 => local sensor
     char * mName;
     void *pDataCache;
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
     void *pRemoteDataCache;  // pointer to additional data cache used for assembling incoming data (if needed)
     uint8_t mSeq;    // packet reassembly seq
+#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
     /* C-style function pointer, no point for a class and virtual method here */
-    doFormatJSON mFormatJSON;
+#if CONFIG_SENSORS_JSON_OUTPUT
+	doFormatJSON mFormatJSON;
+#endif //CONFIG_SENSORS_JSON_OUTPUT
     uint32_t mLastTimestamp;	// millis()
 
     uint8_t setDataBlobSize(uint8_t dataBlobSize);
@@ -59,11 +63,16 @@ public:
 	   mNodeID(0),
 	   mName(NULL),
 	   pDataCache(NULL),
-	   pRemoteDataCache(NULL),
+#if CONFIG_SENSORS_JSON_OUTPUT
 	   mFormatJSON(NULL),
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 	   mDataBlobSize(0),
-	   mSeq(0),
 	   mState(state_no_data_recieved)
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+	   ,
+	   pRemoteDataCache(NULL),
+	   mSeq(0)
+#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
    {
 	   pNext = pFirst; pFirst = this;
 	   resetTimestamp();
@@ -75,16 +84,18 @@ public:
        if (mState >=0)
            {
            mState = errorState;
-           resetDataSegment();
            }
    }
    bool isWorkingState() const { return mState > 0; }
    bool isPermanentError() const { return mState < 0; }
    bool isLocalSensor() const { return mNodeID == 0; }
-   bool isDataAssemblyNeeded() const { return pRemoteDataCache != NULL; }
 
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
    void resetDataSegment() {mSeq = 0;}
+   void *getAssembledData() { return pRemoteDataCache; }
    uint8_t addDataSegment(uint8_t SegmentSeq, void *Payload);
+   bool isDataAssemblyNeeded() const { return pRemoteDataCache != NULL; }
+#endif	//CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
 
    uint8_t getSensorType() const { return mSensorType; }
    uint8_t getSensorApiVersion() const { return mSensorApiVersion; }
@@ -96,14 +107,15 @@ public:
    uint8_t setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
-   void *getAssembledData() { return pRemoteDataCache; }
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 	/*
 	 * Format cached data as JSON
 	 *
 	 * note! format JSON should support all APIs that are in the system (backward compatibility)
 	 */
    uint8_t formatJSON(Stream *pStream);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 
    uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 1000; }
 

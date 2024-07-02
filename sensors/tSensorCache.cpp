@@ -27,7 +27,9 @@ uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVer
 		mState = state_create_error;
 		return STATUS_SENSOR_CREATE_ERROR;
 	}
+#if CONFIG_SENSORS_JSON_OUTPUT
 	mFormatJSON = tSensorFactory::Instance->getJSONFormatFunction(mSensorType, mSensorApiVersion);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
 	mState = state_no_data_recieved;
 
 	return STATUS_SUCCESS;
@@ -73,6 +75,7 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
         return STATUS_SENSOR_INCORRECT_STATE;
 
     mDataBlobSize = dataBlobSize;
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
     bool doubleSize = false;
 
     if (! isLocalSensor())
@@ -84,11 +87,13 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
             doubleSize = true;
         }
     }
+#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
 
     pDataCache = malloc(MemSize);
     if (NULL == pDataCache)
         return STATUS_OUT_OF_MEMORY;
 
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
     if (doubleSize)
     {
         pRemoteDataCache = (uint8_t*)pDataCache + dataBlobSize;
@@ -97,6 +102,7 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
     {
         pRemoteDataCache = NULL;
     }
+#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
 
     return STATUS_SUCCESS;
 }
@@ -116,6 +122,7 @@ uint8_t tSensorCache::setData(void *dataSrc, uint8_t dataSize)
 	return STATUS_SUCCESS;
 }
 
+#if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
    uint8_t SensorStatus = STATUS_SUCCESS;
@@ -188,7 +195,9 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 
    return STATUS_SUCCESS;
 }
+#endif CONFIG_SENSORS_JSON_OUTPUT
 
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
 uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
 {
     if (! isWorkingState())
@@ -214,4 +223,6 @@ uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
 
     return STATUS_SUCCESS;
 }
+#endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+
 #endif //CONFIG_SENSOR_HUB
