@@ -1,6 +1,25 @@
-config TLE8457_COMM_LIB
+menuconfig TLE8457_COMM_LIB
     bool "Enable TLE8457 Communication Library"
     default y
+
+choice TLE8457_SERIAL_PORT
+	prompt "Choose serial port for communication" 
+    depends on TLE8457_COMM_LIB
+	default TLE8457_SERIAL_PORT_2
+
+config TLE8457_SERIAL_PORT_1
+        bool "Serial"
+
+config TLE8457_SERIAL_PORT_2
+        bool "Serial1"
+
+config TLE8457_SERIAL_PORT_3
+        bool "Serial2"
+
+config TLE8457_SERIAL_PORT_4
+        bool "Serial3"
+
+endchoice
 
 config COMMUNICATION_PAYLOAD_DATA_SIZE
     int "Communication Payload Data Size"

@@ -4,6 +4,7 @@
 #include "../../../global.h"
 #if CONFIG_TLE8457_COMM_LIB
 
+
 #include "CommonFramesDefs.h"
 
 #define DEVICE_ID_BROADCAST 0xFF

@@ -1,4 +1,4 @@
-config SENSORS
+menuconfig SENSORS
     bool "Enable Sensors"
     default y
 

@@ -1,12 +1,10 @@
 menuconfig NETWORK
     bool "Enable TCP/IP Network Support"
     default n
-
-if NETWORK
-
+	
 config TCP_WATCHDOG
     bool "Enable TCP Watchdog"
-    depends on WATCHDOG
+    select WATCHDOG
     depends on NETWORK
     default y
     help
@@ -28,5 +26,3 @@ config HTTP_SERVER
     bool "Enable HTTP Server"
     depends on NETWORK
     default n
-    
-endif # NETWORK
