@@ -39,4 +39,4 @@ def generate_header(kconfig_path, config_file_path, header_file_path):
     print(f"Header file generated successfully at {header_file_path}")
     
     
-generate_header('Kconfig', '.config', 'GENERATED.h')
+generate_header('Kconfig', '.config', 'kconfig_generated.h')

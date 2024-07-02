@@ -1,25 +1,6 @@
 menuconfig LOGGER
     bool "Enable Logger"
     default y
-
-choice LOGGER_SERIAL_PORT
-	prompt "Choose serial port for logging" 
-    depends on LOGGER
-	default LOGGER_SERIAL_PORT_1
-
-config LOGGER_SERIAL_PORT_1
-        bool "Serial"
-
-config LOGGER_SERIAL_PORT_2
-        bool "Serial1"
-
-config LOGGER_SERIAL_PORT_3
-        bool "Serial2"
-
-config LOGGER_SERIAL_PORT_4
-        bool "Serial3"
-
-endchoice
    
 config LOGLEVEL_1
     bool "Enable Log Level 1"
@@ -36,4 +17,26 @@ config LOGLEVEL_3
     depends on LOGGER
     default y
 
+config LOGGER_TRANSPORT_SERIAL
+	bool "enable logger serial transport"
+	default y
+	depends on LOGGER
 
+choice LOGGER_SERIAL_PORT
+	prompt "Choose serial port for logging" 
+    depends on LOGGER_TRANSPORT_SERIAL
+	default LOGGER_SERIAL_PORT_1
+
+config LOGGER_SERIAL_PORT_1
+        bool "Serial"
+
+config LOGGER_SERIAL_PORT_2
+        bool "Serial1"
+
+config LOGGER_SERIAL_PORT_3
+        bool "Serial2"
+
+config LOGGER_SERIAL_PORT_4
+        bool "Serial3"
+
+endchoice

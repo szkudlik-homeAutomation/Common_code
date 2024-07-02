@@ -121,7 +121,7 @@ void CommRecieverProcess::ProcessFrame()
   }
 
 
-  #ifdef CONFIG_LOGLEVEL_1
+  #if CONFIG_LOGLEVEL_1
     // printout frame
     CONFIG_LOGGER_SERIAL.print(F("SenderDevId = 0x"));
     CONFIG_LOGGER_SERIAL.print(mFrame.SenderDevId,HEX);

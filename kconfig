@@ -1,5 +1,3 @@
-menu "Home Automation System Configuration"
-
 rsource "logger.kconfig"
 rsource "Network/kconfig"
 rsource "TLE8457_serial/kconfig"
@@ -24,4 +22,3 @@ config SENSOR_HUB
     default n
     
 
-endmenu

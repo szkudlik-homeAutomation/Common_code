@@ -84,7 +84,7 @@ uint8_t tDS1820Sensor::onSetConfig()
             DEBUG_PRINTLN_3("            ERROR device not found");
             return STATUS_CONFIG_SET_ERROR;
          }
-#ifdef CONFIG_LOGLEVEL_3
+#if CONFIG_LOGLEVEL_3
          else
          {
             DEBUG_PRINT_3("             FOUND, serial: ");
