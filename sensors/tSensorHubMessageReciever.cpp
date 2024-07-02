@@ -12,7 +12,7 @@
 #include "../lib/strAllocateCopy.h"
 
 
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
 
 void tSensorHubMessageReciever::onMessage(uint8_t type, uint16_t data, void *pData)
 {
@@ -100,4 +100,7 @@ void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageS
 	}
 }
 
-#endif //CONFIG_SENSORS_OVER_SERIAL_COMM
+// instantiate the class
+tSensorHubMessageReciever SensorHubMessageReciever;
+
+#endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER

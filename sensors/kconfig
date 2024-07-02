@@ -27,6 +27,12 @@ config SENSOR_HUB
     depends on SENSORS
     default n
 
+config SENSOR_HUB_MESSAGE_RECIEVER
+    bool "Enable handling of messages from remote sensors and caching of sensor data in sensor hub"
+    depends on SENSOR_HUB
+    depends on TLE8457_COMM_LIB
+    default n
+
 config SYSTEM_STATUS_SENSOR
     bool "Enable System Status Sensor"
     depends on SENSORS
@@ -62,4 +68,6 @@ config SIMPLE_DIGITAL_INPUT_SENSOR
     depends on SENSORS
     default n
 
+
+# CONFIG_SENSORS_JSON_OUTPUT
 
