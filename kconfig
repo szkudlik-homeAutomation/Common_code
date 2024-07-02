@@ -3,7 +3,6 @@ rsource "Network/kconfig"
 rsource "TLE8457_serial/kconfig"
 rsource "sensors/kconfig"
 
-
 config WATCHDOG
     bool "Enable Watchdog Timer"
     default y
@@ -16,9 +15,3 @@ config NODE_SCAN_TASK
     bool "Enable Node Scan Task"
     depends on WORKER_PROCESS
     default y if TLE8457_COMM_LIB
-
-config SENSOR_HUB
-    bool "Enable Sensor Hub"
-    default n
-    
-
