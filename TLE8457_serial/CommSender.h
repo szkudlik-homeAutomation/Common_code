@@ -22,7 +22,12 @@ class CommSenderProcess : public Process
   static const uint32_t frameTransmissionTime = ((( (uint32_t)11000 * (uint32_t)sizeof(tCommunicationFrame) ) / (uint32_t)CONFIG_TRANSMISSION_SPEED ) + 1);
 #endif
 
-  CommSenderProcess(Scheduler &manager, uint8_t RandomSeed, uint8_t SenderDevId);
+  CommSenderProcess(Scheduler &manager);
+
+  void SetSelfDevId(uint8_t SenderDevId) {
+	  mFrame.SenderDevId = SenderDevId;
+	  mRandom.SetSeed(SenderDevId);
+  }
 
   void Enqueue(uint8_t DstDevId, uint8_t MessageType, uint8_t DataSize, void *pData);
 

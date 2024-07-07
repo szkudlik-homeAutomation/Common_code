@@ -100,8 +100,6 @@ typedef struct {
     uint8_t Status;
 } tMesssageGeneralStatus;
 
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
-
 /**
  * Look for a sensor with a given ID
  * A node that holds the sensor in question must response with MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE
@@ -237,7 +235,5 @@ C_ASSERT(sizeof(tMessageSensorStop) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
  */
 #define MESSAGE_TYPE_SENSOR_SAVE 0x1B
 #define MESSAGE_TYPE_SENSOR_RESTORE 0x1C
-
-#endif //CONFIG_SENSORS_OVER_SERIAL_COMM
 
 #endif CONFIG_TLE8457_COMM_LIB

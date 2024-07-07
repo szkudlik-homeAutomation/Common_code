@@ -12,12 +12,22 @@ class CommRecieverProcess : public  Process
 {
  public:
   static CommRecieverProcess *Instance;
-  CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId);
+  static void SerialEventCallback()
+  {
+		if (Instance != NULL) {
+			Instance->serialEvent();
+		}
+  }
+  CommRecieverProcess(Scheduler &manager);
+  void SetSelfDevId(uint8_t SelfDevId)
+  {
+	  mSelfDevId = SelfDevId;
+	  SetState(STATE_IDLE);
+  }
 
   void clearSelfFrameMark() { mSelfFrameMark = false; }
   bool getSelfFrameMark() { return mSelfFrameMark; }
 
-  void serialEvent();
   virtual void service();
 
   private:
@@ -26,6 +36,7 @@ class CommRecieverProcess : public  Process
     static const uint8_t STATE_NEW_TRIGGER = 1;   // new data arrived when state was idle
     static const uint8_t STATE_WAIT_FOR_DATA = 2; // waiting for a frame
     static const uint8_t STATE_WAIT_FOR_IDLE = 3; // waiting for idle, keeping retrans table
+    static const uint8_t STATE_NOT_CONFIGURED = 255; // not configured, all frames are ignored
 
     uint8_t mState;
 
@@ -35,6 +46,7 @@ class CommRecieverProcess : public  Process
       uint8_t Seq;
     } tRetransTable;
 
+    void serialEvent();
     void SetState(uint8_t State);
     void CleanIncomingBuffer();
     void ProcessFrame();

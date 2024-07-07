@@ -17,20 +17,25 @@ using namespace ace_crc::crc16ccitt_nibble;
 
 
 CommSenderProcess *CommSenderProcess::Instance = NULL;
+CommSenderProcess CommSenderProcess(sched);
 
-CommSenderProcess::CommSenderProcess(Scheduler &manager, uint8_t RandomSeed, uint8_t SenderDevId) :
+CommSenderProcess::CommSenderProcess(Scheduler &manager) :
     Process(manager,MEDIUM_PRIORITY,SERVICE_CONSTANTLY),
-    mRandom(RandomSeed),
     mQueue(CONFIG_OUTPUT_QUEUE_SIZE),
     isSending(false)
     {
 	  Instance = this;
-      mFrame.SenderDevId = SenderDevId;
+      mFrame.SenderDevId = 0;
       mFrame.Seq = 0;
     };
 
 void CommSenderProcess::Enqueue(uint8_t DstDevId, uint8_t MessageType, uint8_t DataSize, void *pData)
 {
+	if (mFrame.SenderDevId == 0) {
+		DEBUG_PRINTLN_2("Sender not configured");
+		return;
+	}
+
   tQueueItem qItem;
   if (DataSize > sizeof(qItem.Data)) return;
   qItem.DstDevId = DstDevId;

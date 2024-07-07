@@ -14,13 +14,20 @@ using namespace ace_crc::crc16ccitt_nibble;
 
 CommRecieverProcess *CommRecieverProcess::Instance = NULL;
 
-CommRecieverProcess::CommRecieverProcess(Scheduler &manager, uint8_t SelfDevId)
+// instantiate the process
+CommRecieverProcess CommReciever(sched);
+
+void COMM_SERIAL_EVENT() {
+  CommRecieverProcess::SerialEventCallback();
+}
+
+CommRecieverProcess::CommRecieverProcess(Scheduler &manager)
    : Process(manager,LOW_PRIORITY,CommSenderProcess::frameTransmissionTime),
      mRetransTableHead(0),
-     mSelfDevId(SelfDevId)
+     mSelfDevId(0)
 {
   Instance = this;
-  SetState(STATE_IDLE);
+  SetState(STATE_NOT_CONFIGURED);
 }
 
 void CommRecieverProcess::CleanIncomingBuffer()
@@ -75,6 +82,10 @@ void CommRecieverProcess::service()
 
   switch (mState)
   {
+	case STATE_NOT_CONFIGURED:
+		// do nothing
+		break;
+
     case STATE_NEW_TRIGGER:
       if (COMM_SERIAL.available() < sizeof(mFrame))
       {
