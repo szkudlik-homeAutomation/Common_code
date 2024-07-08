@@ -17,10 +17,23 @@ config TCP_WATCHDOG_TIMEOUT
     help
     	TCP Watchdog timeout in seconds
 
+config IP_ADDRESES_FROM_EEPROM
+    bool "get IP addresses from EEPROM"
+    depends on NETWORK
+    default y
+    help
+    	Enable this option to get IP addresses from EEPROM
+    	requires symbols (eeprom offset):
+    	EEPROM_IP, EEPROM_IPMASK, EEPROM_GATEWAY, EEPROM_DNS, EEPROM_MAC
+
 config TELNET_SERVER
     bool "Enable Telnet Server"
     depends on NETWORK
     default n
+    help
+    	Enable this option to enable Telnet server. It is up to the application
+    	to provide the command line interface to the user.
+    	
     
 config HTTP_SERVER
     bool "Enable HTTP Server"

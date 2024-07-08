@@ -6,6 +6,12 @@
 
 tTcpServer* tTcpServer::pFirst = NULL;
 
+#if CONFIG_TCP_WATCHDOG
+tTcpServerProcess TcpServerProcess(sched, CONFIG_TCP_WATCHDOG_TIMEOUT);
+#else //CONFIG_TCP_WATCHDOG
+tTcpServerProcess TcpServerProcess(sched);
+#endif //CONFIG_TCP_WATCHDOG
+
 bool tTcpSession::Process()
 {
   if (! mEthernetClient.connected())
@@ -54,6 +60,8 @@ void tTcpServerProcess::setup()
   tTcpServer* pServer = tTcpServer::GetFirst();
   while (NULL != pServer)
   {
+    DEBUG_PRINT_3("Listening on port: ");
+    DEBUG_3(println(pServer->GetPort()));
     pServer->setup();
     pServer = pServer->GetNext();
   }
@@ -77,7 +85,9 @@ void tTcpServerProcess::service()
       // reset watchdog.
       // as Arduino Ethershield likes to hang (HW issue), restart the system if there's no new tcp sessions in last CONFIG_TCP_WATCHDOG_TIMEOUT
       // that requires an external device to make periodic connections
+#if CONFIG_TCP_WATCHDOG
       mWatchdog.Reset();
+#endif //CONFIG_TCP_WATCHDOG
 
       for (uint8_t i = 0; i < NUM_OF_CONCURRENT_SESSIONS; i++)
       {

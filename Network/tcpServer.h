@@ -17,6 +17,7 @@ public:
   void setup() { server.begin(); }
   EthernetClient Process() { return server.accept(); }
   virtual tTcpSession* NewSession(EthernetClient aEthernetClient) = 0;
+  uint16_t GetPort() { return server.getPort(); }
 
 protected:
   tTcpServer(uint16_t ServerPort) : server(ServerPort) { pNext = pFirst; pFirst = this; }
@@ -88,6 +89,7 @@ public:
     mWatchdog(WatchdogTimeout)
     { }
 #else //CONFIG_TCP_WATCHDOG
+public:
   tTcpServerProcess(Scheduler &manager) :
     Process(manager,LOW_PRIORITY,TCP_SERVER_SHEDULER_PERIOD)
     { }
@@ -106,5 +108,7 @@ private:
   tWatchdogNetwork mWatchdog;
 #endif //CONFIG_TCP_WATCHDOG
 };
+
+extern tTcpServerProcess TcpServerProcess;
 
 #endif //CONFIG_NETWORK

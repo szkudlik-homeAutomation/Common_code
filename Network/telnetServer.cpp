@@ -62,7 +62,21 @@ bool  TelnetDisableLogs(Commander &Cmdr)
    return true;
 }
 
-#if CONFIG_TLE8457_COMM_LIB
+#if !CONFIG_TLE8457_COMM_LIB
+bool send_GetVersion(Commander &Cmdr)
+{
+    Cmdr.print(F("Version is "));
+    Cmdr.println(F(FW_VERSION));
+	return true;
+}
+
+bool send_Reset(Commander &Cmdr)
+{
+    cli();
+    while(1); // let watchdog reboot the device
+}
+
+#else // CONFIG_TLE8457_COMM_LIB
 
 bool send_GetVersion(Commander &Cmdr)
 {
