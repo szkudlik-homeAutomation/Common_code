@@ -38,5 +38,10 @@ config LOGGER_SERIAL_PORT_3
 
 config LOGGER_SERIAL_PORT_4
         bool "Serial3"
-
 endchoice
+
+config LOGGER_TRANSPORT_SPEED
+    int "Logger Serial Speed"
+    default 115200
+    depends on LOGGER_TRANSPORT_SERIAL
+

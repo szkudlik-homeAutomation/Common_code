@@ -6,6 +6,15 @@ config SENSORS_FACTORY
     bool "Enable Sensors Factory"
     depends on SENSORS
     default y
+    
+config SENSORS_FACTORY_INSTANCE
+    bool "Create a default Sensors Factory Instance"
+    depends on SENSORS_FACTORY
+    default n
+    help
+      If this option is enabled, a default Sensors Factory Instance will be created.
+      If this option is disabled, the Sensors Factory Instance mmay be extended or modified
+      and must be created manually.
 
 config SYSTEM_STATUS_SENSOR
     bool "Enable System Status Sensor"

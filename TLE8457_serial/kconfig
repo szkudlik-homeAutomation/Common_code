@@ -21,6 +21,22 @@ config TLE8457_SERIAL_PORT_4
 
 endchoice
 
+config TLE8457_COMM_DEV_ID_FROM_EEPROM
+    bool "Read Device ID from EEPROM"
+    default y
+    depends on TLE8457_COMM_LIB
+    help
+        Device ID will be read from EEPROM. If this option is disabled, 
+    	Device ID must be set in AppSetupBefore()
+    	requires EEPROM_DEVICE_ID_OFFSET to be set
+
+config TLE8457_COMM_FORCE_DEV_ID
+	int "Force Device ID"
+    default 0
+    depends on TLE8457_COMM_LIB
+    help
+    	Force Device ID. Ignored if set to 0 
+
 config COMMUNICATION_PAYLOAD_DATA_SIZE
     int "Communication Payload Data Size"
     default 20
