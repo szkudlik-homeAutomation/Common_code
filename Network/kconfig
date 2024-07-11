@@ -34,8 +34,18 @@ config TELNET_SERVER
     	Enable this option to enable Telnet server. It is up to the application
     	to provide the command line interface to the user.
     	
-    
 config HTTP_SERVER
     bool "Enable HTTP Server"
     depends on NETWORK
     default n
+
+config HTTP_SERVER_INSTANCE
+    bool "create a default HTTP Server Instance"
+    depends on HTTP_SERVER
+    default 0
+    help
+    	Eneable this option to create a default HTTP Server Instance
+    	Will provide a default set of servlets
+    	If specific servlets are required, then this option should be disabled
+    	httpServer::servletFactory() should be implemented
+    	amd httpserver instance should be created manually
