@@ -1,4 +1,5 @@
 import kconfiglib
+import sys
 
 def generate_header(kconfig_path, config_file_path, header_file_path):
     """
@@ -38,5 +39,7 @@ def generate_header(kconfig_path, config_file_path, header_file_path):
 
     print(f"Header file generated successfully at {header_file_path}")
     
-    
-generate_header('Kconfig', '.config', 'kconfig_generated.h')
+
+config = sys.argv[1]
+target = sys.argv[2]
+generate_header('Kconfig', config, target)
