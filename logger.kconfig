@@ -1,4 +1,4 @@
-menuconfig LOGGER
+config LOGGER
     bool "Enable Logger"
     default y
    
@@ -19,7 +19,7 @@ config LOGLEVEL_3
 
 config LOGGER_TRANSPORT_SERIAL
 	bool "enable logger serial transport"
-	default y
+	default n
 	depends on LOGGER
 
 choice LOGGER_SERIAL_PORT
@@ -44,4 +44,3 @@ config LOGGER_TRANSPORT_SPEED
     int "Logger Serial Speed"
     default 115200
     depends on LOGGER_TRANSPORT_SERIAL
-

@@ -1,6 +1,6 @@
-menuconfig TLE8457_COMM_LIB
+config TLE8457_COMM_LIB
     bool "Enable TLE8457 Communication Library"
-    default y
+    default n
 
 choice TLE8457_SERIAL_PORT
 	prompt "Choose serial port for communication" 
@@ -33,6 +33,7 @@ config TLE8457_COMM_DEV_ID_FROM_EEPROM
 config TLE8457_COMM_FORCE_DEV_ID
 	int "Force Device ID"
     default 0
+    depends on !TLE8457_COMM_DEV_ID_FROM_EEPROM
     depends on TLE8457_COMM_LIB
     help
     	Force Device ID. Ignored if set to 0 

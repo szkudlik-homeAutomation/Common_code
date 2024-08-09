@@ -1,6 +1,6 @@
 menuconfig SENSORS
     bool "Enable Sensors"
-    default y
+    default n
 
 config SENSORS_FACTORY
     bool "Enable Sensors Factory"

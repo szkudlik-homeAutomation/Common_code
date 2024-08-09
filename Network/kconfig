@@ -1,4 +1,4 @@
-menuconfig NETWORK
+config NETWORK
     bool "Enable TCP/IP Network Support"
     default n
 	
