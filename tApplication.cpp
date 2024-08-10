@@ -18,7 +18,7 @@ tApplication *tApplication::Instance;
 
 void tApplication::Setup() {
 
-#if CONFIG_LOGGER
+#if CONFIG_LOGGER_TRANSPORT_SERIAL
 	CONFIG_LOGGER_SERIAL.begin(CONFIG_LOGGER_TRANSPORT_SPEED);
 	while (!CONFIG_LOGGER_SERIAL);
 	CONFIG_LOGGER_SERIAL.print(F("START, v"));
