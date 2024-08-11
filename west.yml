@@ -20,7 +20,7 @@ manifest:
     - name: Ethernet
       path: src/lib/Ethernet
       repo-path: EthernetLib.git
-      revision: 775fe51397bbff9a259d36fe74d7a2646403421a
+      revision: 54eb50fb74d5e7d7ce6603c7d7b182c7e5a34a42
 
     - name: RingBuf
       path: src/lib/RingBuf
