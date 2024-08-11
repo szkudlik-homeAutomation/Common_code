@@ -1,11 +1,12 @@
 #include "../../../global.h"
 #if CONFIG_HTTP_SERVER
 #include "httpServer.h"
+#include "servlets/tSensorStateServlet.h"
 
 tHttpServer *tHttpServer::Instance = NULL;
 
 
-tHttpServlet *tHttpServlet::DefaultServletFactory(String *pRequestBuffer)
+tHttpServlet *tHttpServer::DefaultServletFactory(String *pRequestBuffer)
 {
 #if CONFIG_SENSOR_STATE_SERVLET
    if (pRequestBuffer->startsWith("/sensorState")) return new tSensorStateServlet();
@@ -140,7 +141,7 @@ bool tHttpSession::doProcess()
   }
   RequestBuffer.remove(0,4);  // 4 = size of "get "
   // find the servlet
-  pServlet = tHttpServer::Instance->ServletFactory(&RequestBuffer);
+  pServlet = tHttpServer::Instance->newServlet(&RequestBuffer);
 
   if (NULL == pServlet)
   {

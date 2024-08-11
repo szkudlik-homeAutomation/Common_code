@@ -49,3 +49,9 @@ config HTTP_SERVER_INSTANCE
     	If specific servlets are required, then this option should be disabled
     	httpServer::servletFactory() should be implemented
     	amd httpserver instance should be created manually
+
+config SENSOR_STATE_SERVLET
+    bool "Enable Sensor State Servlet"
+    depends on HTTP_SERVER
+    depends on SENSORS
+    default 0
