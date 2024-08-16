@@ -1,3 +1,5 @@
+menu "Common code settings"
+
 rsource "logger.kconfig"
 rsource "Network/kconfig"
 rsource "TLE8457_serial/kconfig"
@@ -15,3 +17,6 @@ config NODE_SCAN_TASK
     bool "Enable Node Scan Task"
     depends on WORKER_PROCESS
     default y if TLE8457_COMM_LIB
+
+endmenu
+
