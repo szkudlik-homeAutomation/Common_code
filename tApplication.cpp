@@ -11,7 +11,7 @@
 #include "../Common_code/WatchdogProcess.h"
 #include "../Common_code/Network/network.h"
 #include "../Common_code/Network/tcpServer.h"
-
+#include "../Common_code/sensors/tSensor.h"
 #include "tApplication.h"
 
 tApplication *tApplication::Instance;
@@ -38,7 +38,9 @@ void tApplication::Setup() {
 #if CONFIG_NETWORK
 	TcpServerProcess.add(true);
 #endif // CONFIG_NETWORK
-
+#if CONFIG_SENSORS
+	tSensorProcess::Instance->add(true);
+#endif // CONFIG_SENSORS
 
 #if CONFIG_TLE8457_COMM_LIB
 #if TLE8457_COMM_FORCE_DEV_ID
