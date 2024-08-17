@@ -22,8 +22,8 @@ public:
 
    typedef struct
    {
-      uint8_t State[NUM_OF_OUTPUTS];
-      uint16_t Timer[NUM_OF_OUTPUTS];
+      uint8_t State[CONFIG_OUTPUT_PROCESS_NUM_OF_PINS];
+      uint16_t Timer[CONFIG_OUTPUT_PROCESS_NUM_OF_PINS];
    } tResult_api_v1;
 
    static const uint8_t API_VERSION = 1;

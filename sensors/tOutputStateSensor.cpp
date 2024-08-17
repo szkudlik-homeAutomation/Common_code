@@ -12,7 +12,7 @@
 
 tOutputStateSensor::tOutputStateSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_OUTPUT_STATES, sensorID, API_VERSION, 0, NULL)
 {
-   for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
+   for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
    {
       mResult.State[i] = 0;
    }
@@ -23,7 +23,7 @@ tOutputStateSensor::tOutputStateSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_O
 
 void tOutputStateSensor::doTriggerMeasurement()
 {
-   for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
+   for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
    {
       mResult.State[i] = tOutputProcess::get()->GetOutputState(i);
       mResult.Timer [i] = tOutputProcess::get()->GetOutputTimer(i);
@@ -42,8 +42,8 @@ uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 
    tOutputStateSensor::tResult *pResult =(tOutputStateSensor::tResult *) cache->getData();
    pStream->print(F("\"NumOfOutputs\":"));
-   pStream->print(NUM_OF_OUTPUTS);
-   for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
+   pStream->print(CONFIG_OUTPUT_PROCESS_NUM_OF_PINS);
+   for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
    {
 	  pStream->print(F(","));
       pStream->print(F("\"Out_"));

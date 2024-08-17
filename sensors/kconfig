@@ -34,7 +34,7 @@ config IMPULSE_SENSOR
 config OUTPUT_STATE_SENSOR
     bool "Enable Output State Sensor"
     depends on SENSORS
-    # tOutputProcess
+    depends on OUTPUT_PROCESS
     default n
     
 config PT100_ANALOG_SENSOR

@@ -21,7 +21,7 @@ bool tOutputSetServlet::ProcessAndResponse()
    ParametersOK &= GetParameter("Out",&Output);
    ParametersOK &= GetParameter("State",&State);
    GetParameter("Timer",&Timer);    // optional
-   ParametersOK &= (Output < NUM_OF_OUTPUTS);
+   ParametersOK &= (Output < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS);
 
    if (! ParametersOK)
    {
@@ -52,7 +52,7 @@ bool tOutputStateServlet::ProcessAndResponse()
    bool ParametersOK = true;
 
    ParametersOK &= GetParameter("Out",&Output);
-   ParametersOK &= (Output < NUM_OF_OUTPUTS);
+   ParametersOK &= (Output < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS);
 
    if (! ParametersOK)
    {
