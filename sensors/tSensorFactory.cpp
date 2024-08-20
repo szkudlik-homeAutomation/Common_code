@@ -200,7 +200,11 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
     }
 
-    pSensor->setName(pName);
+    if (NULL != pSensor)
+    {
+    	pSensor->setName(pName);
+    }
+
     return pSensor;
 }
 
