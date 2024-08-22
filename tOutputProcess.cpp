@@ -178,7 +178,7 @@ class tOutputProcess_default : public tOutputProcess
 tOutputProcess_default OutputProcess(sched);
 #endif
 
-static tOutputProcess *tOutputProcess::instance;
+static tOutputProcess *tOutputProcess::Instance;
 
 void tOutputProcess::service()
 {

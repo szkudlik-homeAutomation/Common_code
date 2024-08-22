@@ -54,16 +54,14 @@ private:
 
 class tOutputProcess : public  Process, public tMessageReciever
 {
-private:
-	static tOutputProcess *instance;
 public:
-	static tOutputProcess *get() { return instance; }
+	static tOutputProcess *Instance;
 
   tOutputProcess(Scheduler &manager) :
     Process(manager,LOW_PRIORITY,OUTPUT_SERVICE_TIME),
     tMessageReciever()
     {
-      instance = this;
+      Instance = this;
 #if CONFIG_TLE8457_COMM_LIB
       RegisterMessageType(MessageType_SerialFrameRecieved);
 #endif CONFIG_TLE8457_COMM_LIB

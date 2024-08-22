@@ -55,3 +55,14 @@ config SENSOR_STATE_SERVLET
     depends on HTTP_SERVER
     depends on SENSORS
     default 0
+    help
+    	enables a HTTP servlet to display sensor state /sensorState
+
+config OUTPUT_CONTROL_SERVLET
+    bool "Enable output control Servlet"
+    depends on HTTP_SERVER
+    depends on SENSORS
+    depends on OUTPUT_PROCESS
+    help 
+    	enables /outputState and /outputSet servlets 
+    

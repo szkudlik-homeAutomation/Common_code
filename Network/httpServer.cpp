@@ -2,6 +2,7 @@
 #if CONFIG_HTTP_SERVER
 #include "httpServer.h"
 #include "servlets/tSensorStateServlet.h"
+#include "servlets/tOutputControlServlets.h"
 
 tHttpServer *tHttpServer::Instance = NULL;
 

@@ -41,6 +41,9 @@
 #include "tWiegandSensor.h"
 #endif
 
+
+#include "tOutputStateSensor.h"
+
 static tSensorFactory* tSensorFactory::Instance;
 
 #if CONFIG_SENSORS_JSON_OUTPUT

@@ -13,6 +13,7 @@
 
 #include "servlets.h"
 #include "../../tOutputProcess.h"
+#include "../HttpServer.h"
 
 /**
  * output servlet - controlling or checking state of an output

@@ -12,6 +12,7 @@
 #include "../Common_code/Network/network.h"
 #include "../Common_code/Network/tcpServer.h"
 #include "../Common_code/sensors/tSensor.h"
+#include "../Common_code/tOutputProcess.h"
 #include "tApplication.h"
 
 tApplication *tApplication::Instance;
@@ -42,12 +43,15 @@ void tApplication::Setup() {
 	tSensorProcess::Instance->add(true);
 #endif // CONFIG_SENSORS
 
+#if CONFIG_OUTPUT_PROCESS_INSTANCE
+	tOutputProcess::Instance->add(true);
+#endif // CONFIG_OUTPUT_PROCESS_INSTANCE
+
 #if CONFIG_TLE8457_COMM_LIB
 #if TLE8457_COMM_FORCE_DEV_ID
 	CommSerialSetID(TLE8457_COMM_FORCE_DEV_ID);
 #elif CONFIG_TLE8457_COMM_DEV_ID_FROM_EEPROM
 	CommSerialSetID(EEPROM.read(EEPROM_DEVICE_ID_OFFSET));
-
 #endif
 #endif // CONFIG_TLE8457_COMM_LIB
 

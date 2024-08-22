@@ -25,8 +25,8 @@ void tOutputStateSensor::doTriggerMeasurement()
 {
    for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
    {
-      mResult.State[i] = tOutputProcess::get()->GetOutputState(i);
-      mResult.Timer [i] = tOutputProcess::get()->GetOutputTimer(i);
+      mResult.State[i] = tOutputProcess::Instance->GetOutputState(i);
+      mResult.Timer [i] = tOutputProcess::Instance->GetOutputTimer(i);
    }
 
    onMeasurementCompleted(true);
