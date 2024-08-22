@@ -54,8 +54,8 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID)
 {
    uint8_t result = STATUS_SUCCESS;
    DEBUG_PRINTLN_3("");
-   DEBUG_PRINT_3("==>Sensor register request. ID: ");
-   DEBUG_3(print(SensorID));
+   DEBUG_PRINT_3("Sensor register request. ID: ");
+   DEBUG_3(println(SensorID));
 
    tSensorCache *pSensorCache = tSensorCache::getByID(SensorID);
    if (NULL != pSensorCache)
