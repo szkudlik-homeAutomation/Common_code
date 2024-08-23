@@ -150,6 +150,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
    if (result == STATUS_SUCCESS)
    {
 	   Event.EventType = EventType;
+       Event.SensorType = pSensorCache->getSensorType();
 	   Event.dataBlobSize = pSensorCache->getDataBlobSize();
 	   Event.pDataBlob = pSensorCache->getData();
 	   tMessageReciever::Dispatch(MessageType_SensorEvent, SensorID, &Event);
