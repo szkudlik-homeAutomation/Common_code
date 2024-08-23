@@ -14,7 +14,7 @@ class tOutputProcess_default : public tOutputProcess
     virtual void setup()
     {
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 0
-		pinMode(CONFIG_OUTPUT_PROCESS_PIN0,
+    	Output[0].SetPin(CONFIG_OUTPUT_PROCESS_PIN0,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY0
 				1
 #else
@@ -24,7 +24,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 1
-		pinMode(CONFIG_OUTPUT_PROCESS_PIN1,
+    	Output[1].SetPin(CONFIG_OUTPUT_PROCESS_PIN1,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY1
 				1
 #else
@@ -34,7 +34,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 2
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN2,
+    	Output[2].SetPin(CONFIG_OUTPUT_PROCESS_PIN2,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY2
 				1
 #else
@@ -44,7 +44,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 3
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN3,
+    	Output[3].SetPin(CONFIG_OUTPUT_PROCESS_PIN3,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY3
 				1
 #else
@@ -54,7 +54,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 4
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN4,
+    	Output[4].SetPin(CONFIG_OUTPUT_PROCESS_PIN4,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY4
 				1
 #else
@@ -64,7 +64,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 5
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN5,
+    	Output[5].SetPin(CONFIG_OUTPUT_PROCESS_PIN5,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY5
 				1
 #else
@@ -74,7 +74,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 6
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN6,
+    	Output[6].SetPin(CONFIG_OUTPUT_PROCESS_PIN6,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY6
     1
 #else
@@ -84,7 +84,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 7
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN7,
+    	Output[7].SetPin(CONFIG_OUTPUT_PROCESS_PIN7,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY7
     1
 #else
@@ -94,7 +94,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 8
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN8,
+    	Output[8].SetPin(CONFIG_OUTPUT_PROCESS_PIN8,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY8
     1
 #else
@@ -104,7 +104,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 9
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN9,
+    	Output[9].SetPin(CONFIG_OUTPUT_PROCESS_PIN9,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY9
     1
 #else
@@ -114,7 +114,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 10
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN10,
+    	Output[10].SetPin(CONFIG_OUTPUT_PROCESS_PIN10,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY10
     1
 #else
@@ -124,7 +124,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 11
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN11,
+    	Output[11].SetPin(CONFIG_OUTPUT_PROCESS_PIN11,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY11
     1
 #else
@@ -134,7 +134,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 12
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN12,
+    	Output[12].SetPin(CONFIG_OUTPUT_PROCESS_PIN12,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY12
     1
 #else
@@ -144,7 +144,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 13
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN13,
+    	Output[13].SetPin(CONFIG_OUTPUT_PROCESS_PIN13,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY13
     1
 #else
@@ -154,7 +154,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 14
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN14,
+    	Output[14].SetPin(CONFIG_OUTPUT_PROCESS_PIN14,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY14
     1
 #else
@@ -164,7 +164,7 @@ class tOutputProcess_default : public tOutputProcess
 #endif
 
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 15
-        pinMode(CONFIG_OUTPUT_PROCESS_PIN15,
+    	Output[15].SetPin(CONFIG_OUTPUT_PROCESS_PIN15,
 #if CONFIG_OUTPUT_PROCESS_PIN_POLARITY15
     1
 #else
