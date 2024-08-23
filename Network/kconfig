@@ -1,0 +1,68 @@
+config NETWORK
+    bool "Enable TCP/IP Network Support"
+    default n
+	
+config TCP_WATCHDOG
+    bool "Enable TCP Watchdog"
+    select WATCHDOG
+    depends on NETWORK
+    default y
+    help
+    	reset watchdog timer on TCP/IP activity
+  
+config TCP_WATCHDOG_TIMEOUT
+    int "TCP Watchdog Timeout"
+    default 300
+    depends on TCP_WATCHDOG
+    help
+    	TCP Watchdog timeout in seconds
+
+config IP_ADDRESES_FROM_EEPROM
+    bool "get IP addresses from EEPROM"
+    depends on NETWORK
+    default y
+    help
+    	Enable this option to get IP addresses from EEPROM
+    	requires symbols (eeprom offset):
+    	EEPROM_IP, EEPROM_IPMASK, EEPROM_GATEWAY, EEPROM_DNS, EEPROM_MAC
+
+config TELNET_SERVER
+    bool "Enable Telnet Server"
+    depends on NETWORK
+    default n
+    help
+    	Enable this option to enable Telnet server. It is up to the application
+    	to provide the command line interface to the user.
+    	
+config HTTP_SERVER
+    bool "Enable HTTP Server"
+    depends on NETWORK
+    default n
+
+config HTTP_SERVER_INSTANCE
+    bool "create a default HTTP Server Instance"
+    depends on HTTP_SERVER
+    default 0
+    help
+    	Eneable this option to create a default HTTP Server Instance
+    	Will provide a default set of servlets
+    	If specific servlets are required, then this option should be disabled
+    	httpServer::servletFactory() should be implemented
+    	amd httpserver instance should be created manually
+
+config SENSOR_STATE_SERVLET
+    bool "Enable Sensor State Servlet"
+    depends on HTTP_SERVER
+    depends on SENSORS
+    default 0
+    help
+    	enables a HTTP servlet to display sensor state /sensorState
+
+config OUTPUT_CONTROL_SERVLET
+    bool "Enable output control Servlet"
+    depends on HTTP_SERVER
+    depends on SENSORS
+    depends on OUTPUT_PROCESS
+    help 
+    	enables /outputState and /outputSet servlets 
+    

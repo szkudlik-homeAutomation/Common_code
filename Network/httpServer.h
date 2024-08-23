@@ -57,12 +57,23 @@ private:
 class tHttpServer : public tTcpServer
 {
 public:
-  tHttpServer() : tTcpServer(80) {}
+  static tHttpServer *Instance;
+  tHttpServer() : tTcpServer(80) { Instance = this; }
+
+  virtual tHttpServlet *newServlet(String *pRequestBuffer)
+  {
+	  tHttpServlet *pServlet = ServletFactory(pRequestBuffer);
+	  if (NULL == pServlet)
+		  pServlet = DefaultServletFactory(pRequestBuffer);
+	  return pServlet;
+  }
 
 protected:
   virtual tTcpSession* NewSession(EthernetClient aEthernetClient) { return new tHttpSession(aEthernetClient); }
-};
+  virtual tHttpServlet * ServletFactory(String *pRequestBuffer) { return NULL; }
 
-tHttpServlet * ServletFactory(String *pRequestBuffer);
+private:
+  tHttpServlet *DefaultServletFactory(String *pRequestBuffer);
+};
 
 #endif //CONFIG_HTTP_SERVER

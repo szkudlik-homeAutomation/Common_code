@@ -1,0 +1,84 @@
+config TLE8457_COMM_LIB
+    bool "Enable TLE8457 Communication Library"
+    default n
+
+choice TLE8457_SERIAL_PORT
+	prompt "Choose serial port for communication" 
+    depends on TLE8457_COMM_LIB
+	default TLE8457_SERIAL_PORT_2
+
+config TLE8457_SERIAL_PORT_1
+        bool "Serial"
+
+config TLE8457_SERIAL_PORT_2
+        bool "Serial1"
+
+config TLE8457_SERIAL_PORT_3
+        bool "Serial2"
+
+config TLE8457_SERIAL_PORT_4
+        bool "Serial3"
+
+endchoice
+
+config TLE8457_COMM_DEV_ID_FROM_EEPROM
+    bool "Read Device ID from EEPROM"
+    default y
+    depends on TLE8457_COMM_LIB
+    help
+        Device ID will be read from EEPROM. If this option is disabled, 
+    	Device ID must be set in AppSetupBefore()
+    	requires EEPROM_DEVICE_ID_OFFSET to be set
+
+config TLE8457_COMM_FORCE_DEV_ID
+	int "Force Device ID"
+    default 0
+    depends on !TLE8457_COMM_DEV_ID_FROM_EEPROM
+    depends on TLE8457_COMM_LIB
+    help
+    	Force Device ID. Ignored if set to 0 
+
+config COMMUNICATION_PAYLOAD_DATA_SIZE
+    int "Communication Payload Data Size"
+    default 20
+    depends on TLE8457_COMM_LIB
+    help
+    	Frame Payload Data Size in bytes
+ 
+config NUM_OF_RETRANSMISSIONS
+    int "Number of obligatory Retransmissions"
+    default 3
+    depends on TLE8457_COMM_LIB
+    help
+    	Each frame will be retransmitted this number of times
+    
+ config MAX_NUM_OF_RETRANSMISSIONS
+    int "Maximum Number of Retransmissions"
+    default 5
+    depends on TLE8457_COMM_LIB
+    help
+    	Maximum number of retransmissions in case of collisions 
+    	before the frame is discarded
+    	
+config TRANSMISSION_SPEED
+    int "Transmission Speed"
+    default 115200
+    depends on TLE8457_COMM_LIB
+    help
+    	Transmission Speed in bauds
+    	
+config MAX_TRANSMIT_DELAY
+    int "Maximum Transmit Delay"
+    default 100
+    depends on TLE8457_COMM_LIB
+    help
+    	to avoid collisions, the frame will be transmitted with random delay
+    	in range from 0 to this value in milliseconds
+    	
+config OUTPUT_QUEUE_SIZE
+    int "Output Queue Size"
+    default 3
+    depends on TLE8457_COMM_LIB
+    help
+    	Number of frames that can be stored in the output queue
+    	

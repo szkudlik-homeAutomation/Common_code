@@ -6,13 +6,20 @@
 class Random
 {
   public:
+	Random() {};
+
     Random(uint8_t Seed)
     {
-      x++;
-      a = Seed;
-      b = Seed * Seed;
-      c = Seed * Seed * Seed;
+        SetSeed(Seed);
     }
+
+    void SetSeed(uint8_t Seed)
+	{
+		x++;
+		a = Seed;
+		b = Seed * Seed;
+		c = Seed * Seed * Seed;
+	}
 
     uint8_t Get()
     {

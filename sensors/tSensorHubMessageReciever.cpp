@@ -1,20 +1,20 @@
 /*
- * tRemoteSensorHub.cpp
+ * tSensorHubMessageReciever.cpp
  *
  *  Created on: 12 lut 2024
  *      Author: szkud
  */
 
-#include "tRemoteSensorHub.h"
+#include "tSensorHubMessageReciever.h"
 #include "tSensorCache.h"
 #include "../TLE8457_serial/CommonFramesDefs.h"
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../lib/strAllocateCopy.h"
 
 
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
 
-void tRemoteSensorHub::onMessage(uint8_t type, uint16_t data, void *pData)
+void tSensorHubMessageReciever::onMessage(uint8_t type, uint16_t data, void *pData)
 {
 	if (type != MessageType_SerialFrameRecieved)
         return;
@@ -33,7 +33,7 @@ void tRemoteSensorHub::onMessage(uint8_t type, uint16_t data, void *pData)
         break;
     }
 }
-void tRemoteSensorHub::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSensorByIdResponse *Message)
+void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSensorByIdResponse *Message)
 {
     // called every time when MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE is recieved
     // check if sensor cache for incoming sensor exits
@@ -72,7 +72,7 @@ void tRemoteSensorHub::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSens
     }
 }
 
-void tRemoteSensorHub::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
+void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
 {
     uint8_t result;
 	tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
@@ -82,7 +82,7 @@ void tRemoteSensorHub::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEven
 	// no data assembly?
 	if (Message->Header.LastSegment && Message->Header.SegmentSeq == 0 && !pSensorCache->isDataAssemblyNeeded())
 	{
-		onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorCache->getDataBlobSize(), Message->Payload);
+		tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorCache->getDataBlobSize(), Message->Payload);
 		return;
 	}
 
@@ -100,4 +100,7 @@ void tRemoteSensorHub::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEven
 	}
 }
 
-#endif //CONFIG_SENSORS_OVER_SERIAL_COMM
+// instantiate the class
+tSensorHubMessageReciever SensorHubMessageReciever;
+
+#endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER

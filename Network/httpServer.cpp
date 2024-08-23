@@ -1,7 +1,24 @@
 #include "../../../global.h"
 #if CONFIG_HTTP_SERVER
 #include "httpServer.h"
+#include "servlets/tSensorStateServlet.h"
+#include "servlets/tOutputControlServlets.h"
 
+tHttpServer *tHttpServer::Instance = NULL;
+
+
+tHttpServlet *tHttpServer::DefaultServletFactory(String *pRequestBuffer)
+{
+#if CONFIG_SENSOR_STATE_SERVLET
+   if (pRequestBuffer->startsWith("/sensorState")) return new tSensorStateServlet();
+#endif // CONFIG_SENSOR_STATE_SERVLET
+
+#if CONFIG_OUTPUT_CONTROL_SERVLET
+   if (pRequestBuffer->startsWith("/outputState")) return new tOutputStateServlet();
+   if (pRequestBuffer->startsWith("/outputSet")) return new tOutputSetServlet();
+#endif
+   return NULL;
+}
 
 void tHttpServlet::SendResponse400()
 {
@@ -125,7 +142,7 @@ bool tHttpSession::doProcess()
   }
   RequestBuffer.remove(0,4);  // 4 = size of "get "
   // find the servlet
-  pServlet = ServletFactory(&RequestBuffer);
+  pServlet = tHttpServer::Instance->newServlet(&RequestBuffer);
 
   if (NULL == pServlet)
   {
@@ -158,4 +175,9 @@ void tHttpServlet::SendVersionAndPageClose()
    pOwner->SendFlashString(PSTR(FW_VERSION));
    pOwner->SendFlashString(PSTR("</body></html>"));
 }
+
+#if CONFIG_HTTP_SERVER_INSTANCE
+tHttpServer HttpServer;
+#endif //CONFIG_HTTP_SERVER_INSTANCE
+
 #endif //CONFIG_HTTP_SERVER

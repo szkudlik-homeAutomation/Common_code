@@ -7,15 +7,9 @@
 
 #pragma once
 
-//TODO - move to app code, split
-
 #include "../../global.h"
 
 #if !CONFIG_LOGGER
-
-#undef DEBUG_1_ENABLE
-#undef DEBUG_2_ENABLE
-#undef DEBUG_3_ENABLE
 
 #define LOG_PRINTLN(x)
 #define LOG_PRINT(x)
@@ -31,7 +25,7 @@
 
 #endif // !CONFIG_LOGGER
 
-#ifdef DEBUG_1_ENABLE
+#if CONFIG_LOGLEVEL_1
 #define DEBUG_PRINTLN_1(x) tLogger::Instance->println(F(x))
 #define DEBUG_PRINT_1(x) tLogger::Instance->print(F(x))
 #define DEBUG_1(x) tLogger::Instance->x
@@ -41,7 +35,7 @@
 #define DEBUG_1(x)
 #endif
 
-#ifdef DEBUG_2_ENABLE
+#if CONFIG_LOGLEVEL_2
 #define DEBUG_PRINTLN_2(x) tLogger::Instance->println(F(x))
 #define DEBUG_PRINT_2(x) tLogger::Instance->print(F(x))
 #define DEBUG_2(x) tLogger::Instance->x
@@ -51,7 +45,7 @@
 #define DEBUG_2(x)
 #endif
 
-#ifdef DEBUG_3_ENABLE
+#if CONFIG_LOGLEVEL_3
 #define DEBUG_PRINTLN_3(x) tLogger::Instance->println(F(x))
 #define DEBUG_PRINT_3(x) tLogger::Instance->print(F(x))
 #define DEBUG_3(x) tLogger::Instance->x
@@ -61,4 +55,3 @@
 #define DEBUG_3(x)
 #endif
 int getFreeRam();
-

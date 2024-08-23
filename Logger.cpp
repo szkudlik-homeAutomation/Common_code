@@ -13,7 +13,6 @@
 
 tLogTransport* tLogTransport::pFirst = NULL;
 tLogger *tLogger::Instance = NULL;
-tSerialLogTransport *tSerialLogTransport::Instance = NULL;
 
 tLogTransport::~tLogTransport()
 {
@@ -50,12 +49,12 @@ size_t tLogger::write(uint8_t str)
 	}
 }
 
-
 tLogger Logger;
 
-#ifdef DEBUG_SERIAL
+#if CONFIG_LOGGER_TRANSPORT_SERIAL
+tSerialLogTransport *tSerialLogTransport::Instance = NULL;
 tSerialLogTransport SerialLogTransport;
-#endif
+#endif // CONFIG_LOGGER_TRANSPORT_SERIAL
 
 
 #endif // CONFIG_LOGGER

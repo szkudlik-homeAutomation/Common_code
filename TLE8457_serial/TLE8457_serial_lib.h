@@ -6,31 +6,22 @@
 
 #include "CommonFramesDefs.h"
 
-#ifndef COMMUNICATION_PAYLOAD_DATA_SIZE
-#error Please define COMMUNICATION_PAYLOAD_DATA_SIZE
-#endif
-
-#ifndef NUM_OF_RETRANSMISSIONS
-#error Please define NUM_OF_RETRANSMISSIONS
-#endif
-
-#ifndef MAX_NUM_OF_RETRANSMISSIONS
-#error Please define MAX_NUM_OF_RETRANSMISSIONS
-#endif
-
-#ifndef TRANSMISSION_SPEED
-#error Please define TRANSMISSION_SPEED
-#endif
-
-#ifndef MAX_TRANSMIT_DELAY
-#error Please define MAX_TRANSMIT_DELAY
-#endif
-
-#ifndef OUTPUT_QUEUE_SIZE
-#error Please define OUTPUT_QUEUE_SIZE
+#if CONFIG_TLE8457_SERIAL_PORT_1
+#define COMM_SERIAL Serial
+#define COMM_SERIAL_EVENT serialEvent
+#elif CONFIG_TLE8457_SERIAL_PORT_2
+#define COMM_SERIAL Serial1
+#define COMM_SERIAL_EVENT serialEvent1
+#elif CONFIG_TLE8457_SERIAL_PORT_3
+#define COMM_SERIAL Serial2
+#define COMM_SERIAL_EVENT serialEvent2
+#elif CONFIG_TLE8457_SERIAL_PORT_4
+#define COMM_SERIAL Serial3
+#define COMM_SERIAL_EVENT serialEvent3
 #endif
 
 #define DEVICE_ID_BROADCAST 0xFF
+#define MAX_NUM_OF_NODES 32
 
 /**
  * PROTOCOL
@@ -59,7 +50,7 @@ typedef struct
   uint8_t Seq;            // seq number. Retransmitted frame should have the same seq
   uint8_t MessageType;    // MESSAGE_TYPE*
 
-  uint8_t Data[COMMUNICATION_PAYLOAD_DATA_SIZE];  // data structure, to be mapped on tMessageType* structure
+  uint8_t Data[CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE];  // data structure, to be mapped on tMessageType* structure
 
   uint16_t crc;   // CRC, frame will be rejected if CRC is incorrect
 } tCommunicationFrame;
@@ -67,4 +58,10 @@ typedef struct
 #include "CommSender.h"
 #include "CommReciever.h"
 
+static inline void CommSerialSetID(uint8_t id) {
+	CommSenderProcess::Instance->SetSelfDevId(id);
+	CommRecieverProcess::Instance->SetSelfDevId(id);
+}
+
 #endif // CONFIG_TLE8457_COMM_LIB
+

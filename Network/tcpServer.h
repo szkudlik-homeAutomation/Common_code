@@ -17,6 +17,7 @@ public:
   void setup() { server.begin(); }
   EthernetClient Process() { return server.accept(); }
   virtual tTcpSession* NewSession(EthernetClient aEthernetClient) = 0;
+  uint16_t GetPort() { return server.getPort(); }
 
 protected:
   tTcpServer(uint16_t ServerPort) : server(ServerPort) { pNext = pFirst; pFirst = this; }
@@ -69,7 +70,9 @@ private:
 class tTcpServerProcess : public Process
 {
 private:
-   class tWatchdogNetwork : public tWatchdogItem
+
+#if CONFIG_TCP_WATCHDOG
+	class tWatchdogNetwork : public tWatchdogItem
    {
    public:
       tWatchdogNetwork(uint16_t NumOfSeconds) : tWatchdogItem(NumOfSeconds) {}
@@ -79,11 +82,18 @@ private:
          DEBUG_PRINTLN_3("=========>!!!!!!! Watchdog for tTcpServerProcess timeout");
       }
    };
+
 public:
   tTcpServerProcess(Scheduler &manager, uint16_t WatchdogTimeout) :
     Process(manager,LOW_PRIORITY,TCP_SERVER_SHEDULER_PERIOD),
     mWatchdog(WatchdogTimeout)
     { }
+#else //CONFIG_TCP_WATCHDOG
+public:
+  tTcpServerProcess(Scheduler &manager) :
+    Process(manager,LOW_PRIORITY,TCP_SERVER_SHEDULER_PERIOD)
+    { }
+#endif //CONFIG_TCP_WATCHDOG
 
 protected:
   virtual void setup();
@@ -93,8 +103,12 @@ protected:
   static uint8_t const TCP_SERVER_SHEDULER_PERIOD = 10;     //ms
   tTcpSession* clients[NUM_OF_CONCURRENT_SESSIONS];
 
+#if CONFIG_TCP_WATCHDOG
 private:
   tWatchdogNetwork mWatchdog;
+#endif //CONFIG_TCP_WATCHDOG
 };
+
+extern tTcpServerProcess TcpServerProcess;
 
 #endif //CONFIG_NETWORK

@@ -7,7 +7,7 @@
 
 
 #include "../../../global.h"
-#if CONFIG_SENSORS
+#if CONFIG_SENSORS_FACTORY
 
 #include "tSensorFactory.h"
 #include "tSensor.h"
@@ -40,6 +40,9 @@
 #if CONFIG_WIEGAND_SENSOR
 #include "tWiegandSensor.h"
 #endif
+
+
+#include "tOutputStateSensor.h"
 
 static tSensorFactory* tSensorFactory::Instance;
 
@@ -200,8 +203,16 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
     }
 
-    pSensor->setName(pName);
+    if (NULL != pSensor)
+    {
+    	pSensor->setName(pName);
+    }
+
     return pSensor;
 }
 
-#endif //CONFIG_SENSORS
+#if CONFIG_SENSORS_FACTORY_INSTANCE
+tSensorFactory SensorFactory;
+#endif // CONFIG_SENSORS_FACTORY_INSTANCE
+
+#endif // CONFIG_SENSORS_FACTORY

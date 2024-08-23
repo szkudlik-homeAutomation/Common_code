@@ -13,6 +13,21 @@
 #include "helpers.h"
 #include "Print.h"
 
+
+#if CONFIG_LOGGER_TRANSPORT_SERIAL
+
+#if CONFIG_LOGGER_SERIAL_PORT_1
+#define CONFIG_LOGGER_SERIAL Serial
+#elif CONFIG_LOGGER_SERIAL_PORT_2
+#define CONFIG_LOGGER_SERIAL Serial1
+#elif CONFIG_LOGGER_SERIAL_PORT_3
+#define CONFIG_LOGGER_SERIAL Serial2
+#elif CONFIG_LOGGER_SERIAL_PORT_4
+#define CONFIG_LOGGER_SERIAL Serial3
+#endif
+
+#endif // CONFIG_LOGGER_TRANSPORT_SERIAL
+
 class tLogger : public Print {
 public:
 	static tLogger *Instance;
@@ -46,7 +61,7 @@ private:
 	tLogTransport *pNext;
 };
 
-#ifdef DEBUG_SERIAL
+#if CONFIG_LOGGER_TRANSPORT_SERIAL
 class tSerialLogTransport : public tLogTransport
 {
 public:
@@ -54,10 +69,10 @@ public:
 	tSerialLogTransport() : tLogTransport() {Instance = this; EnableLogs();}
 	virtual ~tSerialLogTransport() {};
 
-	virtual void Log(uint8_t str) { DEBUG_SERIAL.write(str); }
+	virtual void Log(uint8_t str) { CONFIG_LOGGER_SERIAL.write(str); }
 };
 
-#endif
+#endif // CONFIG_LOGGER_TRANSPORT_SERIAL
 
 
 #endif // CONFIG_LOGGER

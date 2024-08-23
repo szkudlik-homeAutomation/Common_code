@@ -11,7 +11,7 @@
 class tSensor;
 #include "tSensorCache.h"
 
-#if CONFIG_SENSORS
+#if CONFIG_SENSORS_FACTORY
 
 
 class tSensorFactory {
@@ -46,4 +46,4 @@ protected:
 
 };
 
-#endif //CONFIG_SENSORS
+#endif //CONFIG_SENSORS_FACTORY

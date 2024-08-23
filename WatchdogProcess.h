@@ -50,4 +50,7 @@ class tWatchdogProcess : public  Process
   private:
   Watchdog watchdog;
 };
+
+extern tWatchdogProcess WatchdogProcess;
+
 #endif // CONFIG_WATCHDOG

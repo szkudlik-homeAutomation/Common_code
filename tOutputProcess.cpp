@@ -4,12 +4,185 @@
 #include "tOutputProcess.h"
 #include "TLE8457_serial/tOutgoingFrames.h"
 #include "TLE8457_serial/TLE8457_serial_lib.h"
+#include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 
-static tOutputProcess *tOutputProcess::instance;
+#if CONFIG_OUTPUT_PROCESS_INSTANCE
+class tOutputProcess_default : public tOutputProcess
+{
+	public:
+    tOutputProcess_default(Scheduler &manager) : tOutputProcess(manager) {}
+    virtual void setup()
+    {
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 0
+    	Output[0].SetPin(CONFIG_OUTPUT_PROCESS_PIN0,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY0
+				1
+#else
+				0
+#endif
+        );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 1
+    	Output[1].SetPin(CONFIG_OUTPUT_PROCESS_PIN1,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY1
+				1
+#else
+				0
+#endif
+        );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 2
+    	Output[2].SetPin(CONFIG_OUTPUT_PROCESS_PIN2,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY2
+				1
+#else
+				0
+#endif
+		);
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 3
+    	Output[3].SetPin(CONFIG_OUTPUT_PROCESS_PIN3,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY3
+				1
+#else
+				0
+#endif
+		);
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 4
+    	Output[4].SetPin(CONFIG_OUTPUT_PROCESS_PIN4,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY4
+				1
+#else
+				0
+#endif
+		);
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 5
+    	Output[5].SetPin(CONFIG_OUTPUT_PROCESS_PIN5,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY5
+				1
+#else
+				0
+#endif
+		);
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 6
+    	Output[6].SetPin(CONFIG_OUTPUT_PROCESS_PIN6,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY6
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 7
+    	Output[7].SetPin(CONFIG_OUTPUT_PROCESS_PIN7,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY7
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 8
+    	Output[8].SetPin(CONFIG_OUTPUT_PROCESS_PIN8,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY8
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 9
+    	Output[9].SetPin(CONFIG_OUTPUT_PROCESS_PIN9,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY9
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 10
+    	Output[10].SetPin(CONFIG_OUTPUT_PROCESS_PIN10,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY10
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 11
+    	Output[11].SetPin(CONFIG_OUTPUT_PROCESS_PIN11,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY11
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 12
+    	Output[12].SetPin(CONFIG_OUTPUT_PROCESS_PIN12,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY12
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 13
+    	Output[13].SetPin(CONFIG_OUTPUT_PROCESS_PIN13,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY13
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 14
+    	Output[14].SetPin(CONFIG_OUTPUT_PROCESS_PIN14,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY14
+    1
+#else
+    0
+#endif
+  );
+#endif
+
+#if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 15
+    	Output[15].SetPin(CONFIG_OUTPUT_PROCESS_PIN15,
+#if CONFIG_OUTPUT_PROCESS_PIN_POLARITY15
+    1
+#else
+    0
+#endif
+  );
+#endif
+    }
+};
+
+tOutputProcess_default OutputProcess(sched);
+#endif
+
+static tOutputProcess *tOutputProcess::Instance;
 
 void tOutputProcess::service()
 {
-	for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
+	for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
 	{
     Output[i].Tick();
 	}
@@ -19,7 +192,7 @@ void tOutputProcess::service()
 uint8_t  tOutputProcess::GetOutputStateMap()
 {
   uint8_t Map = 0;
-  for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
+  for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
   {
     if (Output[i].GetState())
       Map |= 1 << i;
@@ -31,7 +204,7 @@ uint8_t  tOutputProcess::GetOutputStateMap()
 uint8_t  tOutputProcess::GetOutputTimersStateMap()
 {
   uint8_t Map = 0;
-  for (uint8_t i = 0; i < NUM_OF_OUTPUTS; i++)
+  for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
   {
     if (Output[i].GetTimer())
       Map |= 1 << i;
@@ -68,7 +241,7 @@ void tOutputProcess::onMessage(uint8_t type, uint16_t data, void *pData)
         {
             uint16_t DefTimer;
             tMessageTypeOutputStateRequest* Message = (tMessageTypeOutputStateRequest*)(pFrame->Data);
-            if (Message->OutputID < NUM_OF_OUTPUTS)
+            if (Message->OutputID < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
             {
                 tOutgoingFrames::SendMsgOutputStateResponse(pFrame->SenderDevId,Message->OutputID,GetOutputState(Message->OutputID), GetOutputTimer(Message->OutputID),0);
             }
@@ -78,7 +251,7 @@ void tOutputProcess::onMessage(uint8_t type, uint16_t data, void *pData)
     case MESSAGE_TYPE_SET_OUTPUT:
         {
             tMessageTypeSetOutput* Message = (tMessageTypeSetOutput*)(pFrame->Data);
-            if (Message->OutId < NUM_OF_OUTPUTS)
+            if (Message->OutId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
             {
                uint16_t Timer = Message->Timer;
                SetOutput(Message->OutId,Message->State,Timer,ForceTimer);

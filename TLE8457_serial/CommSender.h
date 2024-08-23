@@ -19,10 +19,15 @@ class CommSenderProcess : public Process
 #ifdef FRAME_TRANSMISSION_TIME
   static const uint32_t frameTransmissionTime = FRAME_TRANSMISSION_TIME;
 #else
-  static const uint32_t frameTransmissionTime = ((( (uint32_t)11000 * (uint32_t)sizeof(tCommunicationFrame) ) / (uint32_t)TRANSMISSION_SPEED ) + 1);
+  static const uint32_t frameTransmissionTime = ((( (uint32_t)11000 * (uint32_t)sizeof(tCommunicationFrame) ) / (uint32_t)CONFIG_TRANSMISSION_SPEED ) + 1);
 #endif
 
-  CommSenderProcess(Scheduler &manager, uint8_t RandomSeed, uint8_t SenderDevId);
+  CommSenderProcess(Scheduler &manager);
+
+  void SetSelfDevId(uint8_t SenderDevId) {
+	  mFrame.SenderDevId = SenderDevId;
+	  mRandom.SetSeed(SenderDevId);
+  }
 
   void Enqueue(uint8_t DstDevId, uint8_t MessageType, uint8_t DataSize, void *pData);
 
@@ -34,7 +39,7 @@ private:
     uint8_t DstDevId;
     uint8_t MessageType;
     uint8_t DataSize;
-    uint8_t Data[COMMUNICATION_PAYLOAD_DATA_SIZE];
+    uint8_t Data[CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE];
   } tQueueItem;
 
   ArduinoQueue<tQueueItem> mQueue;

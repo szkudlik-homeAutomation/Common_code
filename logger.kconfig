@@ -1,0 +1,46 @@
+config LOGGER
+    bool "Enable Logger"
+    default y
+   
+config LOGLEVEL_1
+    bool "Enable Log Level 1"
+    depends on LOGGER
+    default n
+
+config LOGLEVEL_2
+    bool "Enable Log Level 3"
+    depends on LOGGER
+    default n
+
+config LOGLEVEL_3
+    bool "Enable Log Level 3"
+    depends on LOGGER
+    default y
+
+config LOGGER_TRANSPORT_SERIAL
+	bool "enable logger serial transport"
+	default n
+	depends on LOGGER
+
+choice LOGGER_SERIAL_PORT
+	prompt "Choose serial port for logging" 
+    depends on LOGGER_TRANSPORT_SERIAL
+	default LOGGER_SERIAL_PORT_1
+
+config LOGGER_SERIAL_PORT_1
+        bool "Serial"
+
+config LOGGER_SERIAL_PORT_2
+        bool "Serial1"
+
+config LOGGER_SERIAL_PORT_3
+        bool "Serial2"
+
+config LOGGER_SERIAL_PORT_4
+        bool "Serial3"
+endchoice
+
+config LOGGER_TRANSPORT_SPEED
+    int "Logger Serial Speed"
+    default 115200
+    depends on LOGGER_TRANSPORT_SERIAL

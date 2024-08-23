@@ -11,6 +11,8 @@
 #include "tIncomingFrameHanlder.h"
 #include "tOutgoingFrames.h"
 
+tIncomingFrameHanlder IncomingFrameHandler;
+
 void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
 {
     if (type != MessageType_SerialFrameRecieved)

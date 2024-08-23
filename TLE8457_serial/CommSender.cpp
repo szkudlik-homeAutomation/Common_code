@@ -17,20 +17,25 @@ using namespace ace_crc::crc16ccitt_nibble;
 
 
 CommSenderProcess *CommSenderProcess::Instance = NULL;
+CommSenderProcess CommSenderProcess(sched);
 
-CommSenderProcess::CommSenderProcess(Scheduler &manager, uint8_t RandomSeed, uint8_t SenderDevId) :
+CommSenderProcess::CommSenderProcess(Scheduler &manager) :
     Process(manager,MEDIUM_PRIORITY,SERVICE_CONSTANTLY),
-    mRandom(RandomSeed),
-    mQueue(OUTPUT_QUEUE_SIZE),
+    mQueue(CONFIG_OUTPUT_QUEUE_SIZE),
     isSending(false)
     {
 	  Instance = this;
-      mFrame.SenderDevId = SenderDevId;
+      mFrame.SenderDevId = 0;
       mFrame.Seq = 0;
     };
 
 void CommSenderProcess::Enqueue(uint8_t DstDevId, uint8_t MessageType, uint8_t DataSize, void *pData)
 {
+	if (mFrame.SenderDevId == 0) {
+		DEBUG_PRINTLN_2("Sender not configured");
+		return;
+	}
+
   tQueueItem qItem;
   if (DataSize > sizeof(qItem.Data)) return;
   qItem.DstDevId = DstDevId;
@@ -76,8 +81,8 @@ void CommSenderProcess::service()
     // prepare another frame
     if (DequeueFrame())
     {
-      mCollisionRetransLeft = MAX_NUM_OF_RETRANSMISSIONS;
-      mRetransLeft = NUM_OF_RETRANSMISSIONS;
+      mCollisionRetransLeft = CONFIG_MAX_NUM_OF_RETRANSMISSIONS;
+      mRetransLeft = CONFIG_NUM_OF_RETRANSMISSIONS;
       CommRecieverProcess::Instance->clearSelfFrameMark();
       isSending = true;
     }
@@ -92,7 +97,7 @@ void CommSenderProcess::service()
   if (isSending)
   {
     COMM_SERIAL.write((char*)&mFrame,sizeof(mFrame));
-    uint16_t NextTimeout = (mRandom.Get() % MAX_TRANSMIT_DELAY) + frameTransmissionTime;
+    uint16_t NextTimeout = (mRandom.Get() % CONFIG_MAX_TRANSMIT_DELAY) + frameTransmissionTime;
     setPeriod(NextTimeout);
   }
 }
@@ -106,7 +111,7 @@ bool CommSenderProcess::DequeueFrame()
     mFrame.DstDevId = Item.DstDevId;
     mFrame.MessageType = Item.MessageType;
 
-    for (uint8_t i = 0; i < COMMUNICATION_PAYLOAD_DATA_SIZE; i++) mFrame.Data[i] = 0;
+    for (uint8_t i = 0; i < CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE; i++) mFrame.Data[i] = 0;
     if (Item.DataSize) memcpy(mFrame.Data,Item.Data,Item.DataSize);
 
     // set seq number

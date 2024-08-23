@@ -7,15 +7,6 @@
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "tMessageReciever.h"
 
-/*
- * requires NUM_OF_OUTPUTS defined
- * create a new class and override setup. Init all Output[] objets
- *
- *  Output[OUT_ID_xxx].SetPin(OUT_PIN_xxx,OUT_PIN_POLARITY_xxx);
- */
-
-
-
 #define OUTPUT_SERVICE_TIME 1000  // 1 second
 
 #define DEFAULT_TIMER 0xFFFF
@@ -26,6 +17,7 @@ class tOutput
 public:
   tOutput() :mPin(PIN_NOT_ASSIGNED) {}
 
+  // polarity 1 means active high, 0 means active low
   void SetPin(uint8_t pin, uint8_t Polarity) { mPin = pin; mPolarity = Polarity; pinMode(mPin, OUTPUT); SetState(0); }
 
   void Set(uint8_t State, uint16_t Timer, bool timerLongerOnly)
@@ -62,16 +54,14 @@ private:
 
 class tOutputProcess : public  Process, public tMessageReciever
 {
-private:
-	static tOutputProcess *instance;
 public:
-	static tOutputProcess *get() { return instance; }
+	static tOutputProcess *Instance;
 
   tOutputProcess(Scheduler &manager) :
     Process(manager,LOW_PRIORITY,OUTPUT_SERVICE_TIME),
     tMessageReciever()
     {
-      instance = this;
+      Instance = this;
 #if CONFIG_TLE8457_COMM_LIB
       RegisterMessageType(MessageType_SerialFrameRecieved);
 #endif CONFIG_TLE8457_COMM_LIB
@@ -93,26 +83,26 @@ public:
 
   void SetOutput(uint8_t outputId, uint8_t State, uint16_t timer, bool timerLongerOnly)
   {
-    if (outputId < NUM_OF_OUTPUTS) Output[outputId].Set(State,timer,timerLongerOnly);
+    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS) Output[outputId].Set(State,timer,timerLongerOnly);
   }
 
   void ToggleOutput(uint8_t outputId, uint16_t timer)
   {
-    if (outputId < NUM_OF_OUTPUTS) Output[outputId].Toggle(timer);
+    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS) Output[outputId].Toggle(timer);
   }
 
   uint8_t  GetOutputStateMap();
   uint8_t  GetOutputTimersStateMap();
   uint8_t  GetOutputState(uint8_t outputId)
   {
-    if (outputId < NUM_OF_OUTPUTS)
+    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
       return (Output[outputId].GetState());
     else return 0;
   }
 
   uint16_t GetOutputTimer(uint8_t outputId)
   {
-    if (outputId < NUM_OF_OUTPUTS)
+    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
       return (Output[outputId].GetTimer());
     else return 0;
   }
@@ -120,7 +110,7 @@ public:
 
   virtual void service();
 protected:
-  tOutput Output[NUM_OF_OUTPUTS];
+  tOutput Output[CONFIG_OUTPUT_PROCESS_NUM_OF_PINS];
 
 protected:
     virtual void onMessage(uint8_t type, uint16_t data, void *pData);
