@@ -47,6 +47,18 @@ config WIEGAND_SENSOR
     depends on SENSORS
     default n
     
+config CONFIG_WIEGAND_D0_PIN
+    int "pin to be used as D0" 
+    default 2
+    depends on SENSORS
+    depends on WIEGAND_SENSOR
+    
+config CONFIG_WIEGAND_D1_PIN
+    int "pin to be used as D1" 
+    default 3
+    depends on SENSORS
+    depends on WIEGAND_SENSOR
+    
 config SIMPLE_DIGITAL_INPUT_SENSOR
     bool "Enable Simple Digital Input Sensor"
     depends on SENSORS
