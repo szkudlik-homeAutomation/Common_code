@@ -8,11 +8,12 @@
 #include "../../global.h"
 
 #include "../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
-#include "../Common_code/WatchdogProcess.h"
-#include "../Common_code/Network/network.h"
-#include "../Common_code/Network/tcpServer.h"
-#include "../Common_code/sensors/tSensor.h"
-#include "../Common_code/tOutputProcess.h"
+#include "WatchdogProcess.h"
+#include "Network/network.h"
+#include "Network/tcpServer.h"
+#include "sensors/tSensor.h"
+#include "tOutputProcess.h"
+#include "TLE8457_serial/TLE8457_serial_lib.h"
 #include "tApplication.h"
 
 tApplication *tApplication::Instance;

@@ -16,8 +16,9 @@ config WORKER_PROCESS
 
 config NODE_SCAN_TASK
     bool "Enable Node Scan Task"
+	default y 
     depends on WORKER_PROCESS
-    default y if TLE8457_COMM_LIB
+    depends on TLE8457_COMM_LIB
 
 endmenu
 
