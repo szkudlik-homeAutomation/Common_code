@@ -17,10 +17,10 @@ using namespace ace_crc::crc16ccitt_nibble;
 
 
 CommSenderProcess *CommSenderProcess::Instance = NULL;
-CommSenderProcess CommSenderProcess(sched);
+CommSenderProcess CommSenderProcess;
 
-CommSenderProcess::CommSenderProcess(Scheduler &manager) :
-    Process(manager,MEDIUM_PRIORITY,SERVICE_CONSTANTLY),
+CommSenderProcess::CommSenderProcess() :
+    Process(MEDIUM_PRIORITY,SERVICE_CONSTANTLY),
     mQueue(CONFIG_OUTPUT_QUEUE_SIZE),
     isSending(false)
     {

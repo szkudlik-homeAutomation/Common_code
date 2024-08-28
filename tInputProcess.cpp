@@ -83,7 +83,7 @@ uint8_t tButton::Process()
 class tInputProcess_defaut : public tInputProcess
 {
 public:
-    tInputProcess_defaut(Scheduler &manager) : tInputProcess(manager) {}
+    tInputProcess_defaut() : tInputProcess() {}
 
     virtual void setup()
     {
@@ -250,6 +250,6 @@ public:
 
 };
 
-tInputProcess_defaut InputProcess(sched);
+tInputProcess_defaut InputProcess;
 
 #endif INPUT_PROCESS_INSTANCE

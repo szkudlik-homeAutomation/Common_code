@@ -57,8 +57,7 @@ class tOutputProcess : public  Process, public tMessageReciever
 public:
 	static tOutputProcess *Instance;
 
-  tOutputProcess(Scheduler &manager) :
-    Process(manager,LOW_PRIORITY,OUTPUT_SERVICE_TIME),
+  tOutputProcess() : Process(LOW_PRIORITY,OUTPUT_SERVICE_TIME),
     tMessageReciever()
     {
       Instance = this;

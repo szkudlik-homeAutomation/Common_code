@@ -10,7 +10,7 @@
 class tOutputProcess_default : public tOutputProcess
 {
 	public:
-    tOutputProcess_default(Scheduler &manager) : tOutputProcess(manager) {}
+    tOutputProcess_default() : tOutputProcess() {}
     virtual void setup()
     {
 #if CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > 0
@@ -175,7 +175,7 @@ class tOutputProcess_default : public tOutputProcess
     }
 };
 
-tOutputProcess_default OutputProcess(sched);
+tOutputProcess_default OutputProcess;
 #endif
 
 static tOutputProcess *tOutputProcess::Instance;

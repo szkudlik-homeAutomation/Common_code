@@ -7,9 +7,9 @@
 tTcpServer* tTcpServer::pFirst = NULL;
 
 #if CONFIG_TCP_WATCHDOG
-tTcpServerProcess TcpServerProcess(sched, CONFIG_TCP_WATCHDOG_TIMEOUT);
+tTcpServerProcess TcpServerProcess(CONFIG_TCP_WATCHDOG_TIMEOUT);
 #else //CONFIG_TCP_WATCHDOG
-tTcpServerProcess TcpServerProcess(sched);
+tTcpServerProcess TcpServerProcess;
 #endif //CONFIG_TCP_WATCHDOG
 
 bool tTcpSession::Process()

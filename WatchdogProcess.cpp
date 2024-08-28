@@ -48,6 +48,6 @@ void tWatchdogProcess::service()
 
 
 // instantiate the watchdog process
-tWatchdogProcess WatchdogProcess(sched);
+tWatchdogProcess WatchdogProcess;
 
 #endif //CONFIG_WATCHDOG

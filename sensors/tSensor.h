@@ -49,8 +49,8 @@ class tSensor;
 class tSensorProcess : public Process
 {
 public:
-    tSensorProcess(Scheduler &manager) :
-        Process(manager,MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME)
+    tSensorProcess() :
+        Process(MEDIUM_PRIORITY,SENSOR_PROCESS_SERVICE_TIME)
     {
         Instance = this;
     }

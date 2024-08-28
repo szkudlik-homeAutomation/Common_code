@@ -15,7 +15,7 @@ manifest:
     - name: ArduinoProcessScheduler    
       path: src/lib/ArduinoProcessScheduler
       repo-path: ArduinoProcessScheduler.git
-      revision: 4d50a460d9fbabf550fe90f7084e12fd4ac0b45d
+      revision: 8e484c056dc77ccf22aebc4962a37513aabeabbc
 
     - name: Ethernet
       path: src/lib/Ethernet

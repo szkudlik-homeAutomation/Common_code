@@ -52,8 +52,7 @@ class tInputProcess : public Process
 {
   public:
 	static tInputProcess *Instance;
-    tInputProcess(Scheduler &manager) :
-    Process(manager,LOW_PRIORITY,DIGITAL_INPUT_PROCESS_SERVICE_TIME) { Instance = this; }
+    tInputProcess() : Process(LOW_PRIORITY,DIGITAL_INPUT_PROCESS_SERVICE_TIME) { Instance = this; }
   
   virtual void service();
   

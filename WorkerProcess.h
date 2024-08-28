@@ -21,7 +21,7 @@ class WorkerProcess: public Process
 {
   public:
 	static WorkerProcess *Instance;
-    WorkerProcess(Scheduler &manager) : Process(manager,LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) { Instance = this; }
+    WorkerProcess() : Process(LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) { Instance = this; }
 
     void Enqueue(WorkerTask *pWorkerTask);
 

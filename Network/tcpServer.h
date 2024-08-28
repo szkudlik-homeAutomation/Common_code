@@ -84,14 +84,13 @@ private:
    };
 
 public:
-  tTcpServerProcess(Scheduler &manager, uint16_t WatchdogTimeout) :
-    Process(manager,LOW_PRIORITY,TCP_SERVER_SHEDULER_PERIOD),
+  tTcpServerProcess(uint16_t WatchdogTimeout) :
+    Process(LOW_PRIORITY,TCP_SERVER_SHEDULER_PERIOD),
     mWatchdog(WatchdogTimeout)
     { }
 #else //CONFIG_TCP_WATCHDOG
 public:
-  tTcpServerProcess(Scheduler &manager) :
-    Process(manager,LOW_PRIORITY,TCP_SERVER_SHEDULER_PERIOD)
+  tTcpServerProcess() : Process(LOW_PRIORITY,TCP_SERVER_SHEDULER_PERIOD)
     { }
 #endif //CONFIG_TCP_WATCHDOG
 

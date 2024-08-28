@@ -18,7 +18,7 @@ class CommRecieverProcess : public  Process
 			Instance->serialEvent();
 		}
   }
-  CommRecieverProcess(Scheduler &manager);
+  CommRecieverProcess();
   void SetSelfDevId(uint8_t SelfDevId)
   {
 	  mSelfDevId = SelfDevId;

@@ -22,7 +22,7 @@ class CommSenderProcess : public Process
   static const uint32_t frameTransmissionTime = ((( (uint32_t)11000 * (uint32_t)sizeof(tCommunicationFrame) ) / (uint32_t)CONFIG_TRANSMISSION_SPEED ) + 1);
 #endif
 
-  CommSenderProcess(Scheduler &manager);
+  CommSenderProcess();
 
   void SetSelfDevId(uint8_t SenderDevId) {
 	  mFrame.SenderDevId = SenderDevId;

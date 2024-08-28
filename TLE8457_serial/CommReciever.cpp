@@ -15,14 +15,14 @@ using namespace ace_crc::crc16ccitt_nibble;
 CommRecieverProcess *CommRecieverProcess::Instance = NULL;
 
 // instantiate the process
-CommRecieverProcess CommReciever(sched);
+CommRecieverProcess CommReciever;
 
 void COMM_SERIAL_EVENT() {
   CommRecieverProcess::SerialEventCallback();
 }
 
-CommRecieverProcess::CommRecieverProcess(Scheduler &manager)
-   : Process(manager,LOW_PRIORITY,CommSenderProcess::frameTransmissionTime),
+CommRecieverProcess::CommRecieverProcess()
+   : Process(LOW_PRIORITY,CommSenderProcess::frameTransmissionTime),
      mRetransTableHead(0),
      mSelfDevId(0)
 {
