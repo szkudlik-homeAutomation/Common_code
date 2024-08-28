@@ -5,6 +5,7 @@ rsource "Network/kconfig"
 rsource "TLE8457_serial/kconfig"
 rsource "sensors/kconfig"
 rsource "kconfig.outputprocess"
+rsource "kconfig.inputprocess"
 
 config WATCHDOG
     bool "Enable Watchdog Timer"

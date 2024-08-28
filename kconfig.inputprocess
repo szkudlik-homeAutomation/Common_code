@@ -1,0 +1,257 @@
+menuconfig INPUT_PROCESS
+    bool "Enable Input Process"
+    default n
+    help
+       Enable the Input Process to control the digital input pins.
+
+config INPUT_PROCESS_NUM_OF_PINS
+    int "Number of input Pins"
+    depends on INPUT_PROCESS
+    range 1 16
+    default 1
+
+config INPUT_PROCESS_INSTANCE
+    bool "instaniate Output Process"
+    depends on INPUT_PROCESS
+    default y
+    
+config INPUT_PROCESS_PIN0
+    int "Input Pin 0"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 0
+    default 1
+
+config INPUT_PROCESS_PIN1
+    int "Input Pin 1"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 1
+    default 2
+    
+config INPUT_PROCESS_PIN2
+    int "Input Pin 2"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 2
+    default 3
+
+config INPUT_PROCESS_PIN3
+    int "Input Pin 3"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 3
+    default 4
+ 
+config INPUT_PROCESS_PIN4
+    int "Input Pin 4"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 4
+    default 5
+    
+config INPUT_PROCESS_PIN5   
+    int "Input Pin 5"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 5
+    default 6
+
+config INPUT_PROCESS_PIN6
+    int "Input Pin 6"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 6
+    default 7
+
+config INPUT_PROCESS_PIN7
+    int "Input Pin 7"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 7
+    default 8
+ 
+config INPUT_PROCESS_PIN8
+    int "Input Pin 8"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 8
+    default 9
+
+config INPUT_PROCESS_PIN9
+    int "Input Pin 9"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 9
+    default 10
+
+config INPUT_PROCESS_PIN10
+    int "Input Pin 10"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 10
+    default 11
+
+config INPUT_PROCESS_PIN11
+    int "Input Pin 11"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 11
+    default 12
+
+config INPUT_PROCESS_PIN12
+    int "Input Pin 12"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 12
+    default 13
+    
+config INPUT_PROCESS_PIN13
+    int "Input Pin 13"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 13
+    default 14
+ 
+config INPUT_PROCESS_PIN14
+    int "Input Pin 14"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 14
+    default 15
+  
+config INPUT_PROCESS_PIN15
+    int "Input Pin 15"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 15
+    default 16
+  
+config INPUT_PROCESS_PIN16
+    int "Input Pin 16"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 16
+    default 17
+  
+
+config INPUT_PROCESS_PIN_POLARITY0
+    bool "Input Pin 0 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 0
+    default y
+
+config INPUT_PROCESS_PIN_POLARITY1
+    bool "Input Pin 1 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 1
+    default y
+    
+config INPUT_PROCESS_PIN_POLARITY2
+    bool "Input Pin 2 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 2
+    default y
+
+config INPUT_PROCESS_PIN_POLARITY3
+    bool "Input Pin 3 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 3
+    default y
+ 
+config INPUT_PROCESS_PIN_POLARITY4
+    bool "Input Pin 4 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 4
+    default y
+    
+config INPUT_PROCESS_PIN_POLARITY5   
+    bool "Input Pin 5 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 5
+    default y
+
+config INPUT_PROCESS_PIN_POLARITY6
+    bool "Input Pin 6 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 6
+    default y
+
+config INPUT_PROCESS_PIN_POLARITY7
+    bool "Input Pin 7 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 7
+    default y
+ 
+config INPUT_PROCESS_PIN_POLARITY8
+    bool "Input Pin 8 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 8
+    default y
+
+config INPUT_PROCESS_PIN_POLARITY9
+    bool "Input Pin 9 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 9
+    default y
+
+config INPUT_PROCESS_PIN_POLARITY10
+    bool "Input Pin 10 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 10
+    default y
+
+config INPUT_PROCESS_PIN_POLARITY11
+    bool "Input Pin 11 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 11
+    default y
+
+config INPUT_PROCESS_PIN_POLARITY12
+    bool "Input Pin 12 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 12
+    default y
+    
+config INPUT_PROCESS_PIN_POLARITY13
+    bool "Input Pin 13 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 13
+    default y
+ 
+config INPUT_PROCESS_PIN_POLARITY14
+    bool "Input Pin 14 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 14
+    default y
+  
+config INPUT_PROCESS_PIN_POLARITY15
+    bool "Input Pin 15 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 15
+    default y
+  
+config INPUT_PROCESS_PIN_POLARITY16
+    bool "Input Pin 16 active low"
+    depends on INPUT_PROCESS_INSTANCE
+    depends on INPUT_PROCESS
+    depends on INPUT_PROCESS_NUM_OF_PINS > 16
+    default 17
+  
+ 

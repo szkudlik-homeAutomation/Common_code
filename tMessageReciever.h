@@ -34,6 +34,16 @@ static const uint8_t MessageType_SensorEvent   = 1;
         void *pDataBlob;
     };
 
+/* a button event - digital input process */
+static const uint8_t MessageType_DigialInputEvent   = 2;
+    typedef struct tDigialInputEvent
+    {
+        uint16_t ShortClick;
+        uint16_t LongClick;
+        uint16_t DoubleClick;
+    };
+
+
 // NOTE - app specific event types start from 16
 
 
