@@ -1,5 +1,19 @@
 #include "telnetServer.h"
 
+
+/*
+ * global telnet commands
+ *
+ * to add app specific commands, define specific macros, like below
+ * put them in global.h or appDefs .h file
+ *
+ *   #define TELNET_APP_SPECIFIC_INCLUDE "../tOutputProcess.h"
+ *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE \
+ *        {"enableLogs",      TelnetEnablseLogs,             "enable logs on telnet console"},   \
+ *        {"disableLogs",     TelnetDisableLogs,            "enable logs on telnet console"},
+ *
+ */
+
 #include "../../../global.h"
 #if CONFIG_TELNET_SERVER
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
@@ -13,6 +27,9 @@
 #include "../sensors/tSensor.h"
 #endif //CONFIG_TELNET_COMMANDS_SENSORS
 // must be static-global (why? - only 1 telnet session may be active)
+#if TELNET_APP_SPECIFIC_INCLUDE
+#include TELNET_APP_SPECIFIC_INCLUDE
+#endif // TELNET_APP_SPECIFIC_INCLUDE
 Commander cmd;
 
 tTelnetSession *pTelnetSession = NULL;
@@ -50,40 +67,26 @@ void tTelnetSession::Log(uint8_t str)
       cmd.getOutputPort()->write(str);
 }
 
-bool TelnetEnableLogs(Commander &Cmdr)
+static bool TelnetEnableLogs(Commander &Cmdr)
 {
    if (pTelnetSession) pTelnetSession->EnableLogs();
    return true;
 }
 
-bool  TelnetDisableLogs(Commander &Cmdr)
+static bool TelnetDisableLogs(Commander &Cmdr)
 {
    if (pTelnetSession) pTelnetSession->DisableLogs();
    return true;
 }
 
-#if !CONFIG_TLE8457_COMM_LIB
-bool send_GetVersion(Commander &Cmdr)
-{
-    Cmdr.print(F("Version is "));
-    Cmdr.println(F(FW_VERSION));
-	return true;
-}
+#if CONFIG_TLE8457_COMM_LIB
 
-bool send_Reset(Commander &Cmdr)
-{
-    cli();
-    while(1); // let watchdog reboot the device
-}
-
-#else // CONFIG_TLE8457_COMM_LIB
-
-bool send_GetVersion(Commander &Cmdr)
+static bool send_GetVersion_remote(Commander &Cmdr)
 {
   int Dst;
   if(Cmdr.getInt(Dst))
   {
-	  tOutgoingFrames::SendMsgVersionRequest(Dst);
+      tOutgoingFrames::SendMsgVersionRequest(Dst);
   }
   else
   {
@@ -94,12 +97,12 @@ bool send_GetVersion(Commander &Cmdr)
   return true;
 }
 
-bool send_Reset(Commander &Cmdr)
+static bool send_Reset_remote(Commander &Cmdr)
 {
   int Dst;
   if(Cmdr.getInt(Dst))
   {
-	  tOutgoingFrames::SendMsgReset(Dst);
+      tOutgoingFrames::SendMsgReset(Dst);
   }
   else
   {
@@ -110,8 +113,26 @@ bool send_Reset(Commander &Cmdr)
   return true;
 }
 
+#else // CONFIG_TLE8457_COMM_LIB
+
+static bool send_GetVersion_local(Commander &Cmdr)
+{
+    Cmdr.print(F("Version is "));
+    Cmdr.println(F(FW_VERSION));
+    return true;
+}
+
+static bool send_Reset_local(Commander &Cmdr)
+{
+    cli();
+    while(1); // let watchdog reboot the device
+}
+
+#endif //CONFIG_TLE8457_COMM_LIB
+
+#if CONFIG_TLE8457_COMM_LIB
 #if CONFIG_OUTPUT_PROCESS
-bool send_stateOverviewHandler(Commander &Cmdr)
+static bool send_stateOverviewHandler(Commander &Cmdr)
 {
 
   int Dst;
@@ -128,7 +149,7 @@ bool send_stateOverviewHandler(Commander &Cmdr)
   return true;
 }
 
-bool send_OutputStateHandler(Commander &Cmdr)
+static bool send_OutputStateHandler(Commander &Cmdr)
 {
 
   int Dst;
@@ -150,7 +171,7 @@ error:
   return false;
 }
 
-bool send_SetOutputHandler(Commander &Cmdr)
+static bool send_SetOutputHandler(Commander &Cmdr)
 {
   int Dst;
   int OutId;
@@ -182,7 +203,7 @@ error:
 }
 
 #if CONFIG_NODE_SCAN_TASK
-bool trigger_ScanNodes(Commander &Cmdr)
+static bool trigger_ScanNodes(Commander &Cmdr)
 {
    NodeScanTask::trigger();
 }
@@ -191,7 +212,7 @@ bool trigger_ScanNodes(Commander &Cmdr)
 #endif // CONFIG_OUTPUT_PROCESS
 
 #if CONFIG_TELNET_COMMANDS_SENSORS
-bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
+static bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
 {
     int Dst = DEVICE_ID_BROADCAST;
     int SensorId;
@@ -212,7 +233,7 @@ bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
     return false;
 }
 
-bool send_CreateSensorRequest(Commander &Cmdr)
+static bool send_CreateSensorRequest(Commander &Cmdr)
 {
     int Dst;
     int SensorType;
@@ -242,7 +263,7 @@ bool send_CreateSensorRequest(Commander &Cmdr)
     return false;
 }
 
-bool send_ConfigureSensorRequest(Commander &Cmdr)
+static bool send_ConfigureSensorRequest(Commander &Cmdr)
 {
     int Dst = DEVICE_ID_BROADCAST;
     int SensorId;
@@ -271,7 +292,7 @@ bool send_ConfigureSensorRequest(Commander &Cmdr)
     return false;
 }
 
-bool send_StartSensorRequest(Commander &Cmdr)
+static bool send_StartSensorRequest(Commander &Cmdr)
 {
     int Dst = DEVICE_ID_BROADCAST;
     int SensorId;
@@ -297,7 +318,7 @@ bool send_StartSensorRequest(Commander &Cmdr)
     return false;
 }
 
-bool send_StopSensorRequest(Commander &Cmdr)
+static bool send_StopSensorRequest(Commander &Cmdr)
 {
     int Dst = DEVICE_ID_BROADCAST;
     int SensorId;
@@ -319,7 +340,7 @@ bool send_StopSensorRequest(Commander &Cmdr)
     return false;
 }
 
-bool send_GetSensorMeasurementReqest(Commander &Cmdr)
+static bool send_GetSensorMeasurementReqest(Commander &Cmdr)
 {
     int Dst = DEVICE_ID_BROADCAST;
     int SensorId;
@@ -340,7 +361,7 @@ bool send_GetSensorMeasurementReqest(Commander &Cmdr)
     return false;
 }
 
-bool send_saveSensorsToEeprom(Commander &Cmdr)
+static bool send_saveSensorsToEeprom(Commander &Cmdr)
 {
 	int Dst;
     if(!Cmdr.getInt(Dst))
@@ -356,7 +377,7 @@ bool send_saveSensorsToEeprom(Commander &Cmdr)
       return false;
 }
 
-bool send_restoreSensorsFromEeprom(Commander &Cmdr)
+static bool send_restoreSensorsFromEeprom(Commander &Cmdr)
 {
 	int Dst;
     if(!Cmdr.getInt(Dst))
@@ -377,10 +398,17 @@ bool send_restoreSensorsFromEeprom(Commander &Cmdr)
 
 const commandList_t TelnetCommands[] = {
   {"enableLogs",      TelnetEnableLogs,             "enable logs on telnet console"},
-  {"disableLogs",     TelnetDisableLogs,            "enable logs on telnet console"},
-  {"GetVersion",      send_GetVersion,              "show version"},
-  {"Reset",           send_Reset,                   "reset the system"},
-#if CONFIG_NODE_SCAN_TASK
+  {"disableLogs",     TelnetDisableLogs,            "disables logs on telnet console"},
+#if CONFIG_TLE8457_COMM_LIB
+  {"GetVersion",      send_GetVersion_remote,              "show version"},
+  {"Reset",           send_Reset_remote,                   "reset the system"},
+#else // CONFIG_TLE8457_COMM_LIB
+  {"GetVersion",      send_GetVersion_local,              "show version"},
+  {"Reset",           send_Reset_local,                   "reset the system"},
+#endif // CONFIG_TLE8457_COMM_LIB
+
+
+  #if CONFIG_NODE_SCAN_TASK
   {"ScanActiveNodes", trigger_ScanNodes,            "Scan the bus for nodes from 1 to 32"},
 #endif //CONFIG_NODE_SCAN_TASK
 #if CONFIG_TLE8457_COMM_LIB
@@ -401,9 +429,9 @@ const commandList_t TelnetCommands[] = {
 #endif // CONFIG_TELNET_COMMANDS_SENSORS
 #endif //CONFIG_TLE8457_COMM_LIB
 
-#ifdef TELNET_LOCAL_COMMANDS
-	TELNET_LOCAL_COMMANDS
-#endif //TELNET_LOCAL_COMMANDS
+#ifdef TELNET_APP_SPECIFIC_COMMANDS_CODE
+  TELNET_APP_SPECIFIC_COMMANDS_CODE
+#endif //TELNET_APP_SPECIFIC_COMMANDS_CODE
 
 };
 
