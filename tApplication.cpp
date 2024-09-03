@@ -14,7 +14,27 @@
 #include "sensors/tSensor.h"
 #include "tOutputProcess.h"
 #include "TLE8457_serial/TLE8457_serial_lib.h"
+#include "tWorkerProcess.h"
 #include "tApplication.h"
+#include "Network/httpServer.h"
+
+
+#if CONFIG_WORKER_PROCESS
+tWorkerProcess WorkerProcess;
+#endif
+
+#if CONFIG_TLE8457_COMM_LIB
+// instantiate the process
+CommRecieverProcess CommReciever;
+CommSenderProcess CommSenderProcess;
+#endif // CONFIG_TLE8457_COMM_LIB
+
+
+#if CONFIG_HTTP_SERVER_INSTANCE
+tHttpServer HttpServer;
+#endif //CONFIG_HTTP_SERVER_INSTANCE
+
+
 
 tApplication *tApplication::Instance;
 
@@ -61,6 +81,9 @@ void tApplication::Setup() {
 #endif
 #endif // CONFIG_TLE8457_COMM_LIB
 
+#if CONFIG_WORKER_PROCESS
+	tWorkerProcess::Instance->add();
+#endif // CONFIG_WORKER_PROCESS
 
 	AppSetupAfter();
 

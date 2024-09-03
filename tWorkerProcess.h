@@ -17,11 +17,11 @@ public:
 };
 
 
-class WorkerProcess: public Process
+class tWorkerProcess: public Process
 {
   public:
-	static WorkerProcess *Instance;
-    WorkerProcess() : Process(LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) { Instance = this; }
+	static tWorkerProcess *Instance;
+    tWorkerProcess() : Process(LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) { Instance = this; }
 
     void Enqueue(WorkerTask *pWorkerTask);
 

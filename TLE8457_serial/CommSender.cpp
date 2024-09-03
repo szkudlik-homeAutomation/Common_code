@@ -17,7 +17,6 @@ using namespace ace_crc::crc16ccitt_nibble;
 
 
 CommSenderProcess *CommSenderProcess::Instance = NULL;
-CommSenderProcess CommSenderProcess;
 
 CommSenderProcess::CommSenderProcess() :
     Process(MEDIUM_PRIORITY,SERVICE_CONSTANTLY),

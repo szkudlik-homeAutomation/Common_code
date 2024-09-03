@@ -14,9 +14,6 @@ using namespace ace_crc::crc16ccitt_nibble;
 
 CommRecieverProcess *CommRecieverProcess::Instance = NULL;
 
-// instantiate the process
-CommRecieverProcess CommReciever;
-
 void COMM_SERIAL_EVENT() {
   CommRecieverProcess::SerialEventCallback();
 }

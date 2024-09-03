@@ -6,7 +6,7 @@
 
 #include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
 #include "../../lib/ArduinoQueue/ArduinoQueue.h"
-#include "../WorkerProcess.h"
+#include "../tWorkerProcess.h"
 #include "../tMessageReciever.h"
 
 class NodeScanTask : public WorkerTask, public tMessageReciever
@@ -19,7 +19,7 @@ public:
    virtual ~NodeScanTask() {}
 
    virtual bool Process(uint32_t * pNextServiceDelay);
-   static void trigger() { WorkerProcess::Instance->Enqueue(new NodeScanTask()); }
+   static void trigger() { tWorkerProcess::Instance->Enqueue(new NodeScanTask()); }
 
 protected:
    virtual void onMessage(uint8_t type, uint16_t data, void *pData);

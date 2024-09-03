@@ -176,8 +176,4 @@ void tHttpServlet::SendVersionAndPageClose()
    pOwner->SendFlashString(PSTR("</body></html>"));
 }
 
-#if CONFIG_HTTP_SERVER_INSTANCE
-tHttpServer HttpServer;
-#endif //CONFIG_HTTP_SERVER_INSTANCE
-
 #endif //CONFIG_HTTP_SERVER
