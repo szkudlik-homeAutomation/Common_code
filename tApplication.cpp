@@ -49,6 +49,11 @@ void tApplication::Setup() {
 #endif // CONFIG_OUTPUT_PROCESS_INSTANCE
 
 #if CONFIG_TLE8457_COMM_LIB
+	  COMM_SERIAL.begin(CONFIG_TRANSMISSION_SPEED);
+	  while (!COMM_SERIAL);
+
+	  CommSenderProcess::Instance->add();
+	  CommRecieverProcess::Instance->add();
 #if CONFIG_TLE8457_COMM_FORCE_DEV_ID
 	CommSerialSetID(CONFIG_TLE8457_COMM_FORCE_DEV_ID);
 #elif CONFIG_TLE8457_COMM_DEV_ID_FROM_EEPROM
