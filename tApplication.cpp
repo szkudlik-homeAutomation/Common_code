@@ -17,7 +17,8 @@
 #include "tWorkerProcess.h"
 #include "tApplication.h"
 #include "Network/httpServer.h"
-
+#include "sensors/tSensorHubMessageReciever.h"
+#include "WatchdogProcess.h"
 
 #if CONFIG_WORKER_PROCESS
 tWorkerProcess WorkerProcess;
@@ -34,6 +35,20 @@ CommSenderProcess CommSenderProcess;
 tHttpServer HttpServer;
 #endif //CONFIG_HTTP_SERVER_INSTANCE
 
+
+
+#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+tSensorHubMessageReciever SensorHubMessageReciever;
+#endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+
+
+#if CONFIG_WATCHDOG
+tWatchdogProcess WatchdogProcess;
+#endif //CONFIG_WATCHDOG
+
+#if CONFIG_SENSORS
+tSensorProcess SensorProcess;
+#endif //CONFIG_SENSORS
 
 
 tApplication *tApplication::Instance;

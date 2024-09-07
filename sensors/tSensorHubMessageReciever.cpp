@@ -100,7 +100,4 @@ void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageS
 	}
 }
 
-// instantiate the class
-tSensorHubMessageReciever SensorHubMessageReciever;
-
 #endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER

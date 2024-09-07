@@ -360,7 +360,4 @@ uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
     return STATUS_SUCCESS;
 }
 
-// instantiate the sensor process
-tSensorProcess SensorProcess;
-
 #endif //CONFIG_SENSORS

@@ -47,7 +47,4 @@ void tWatchdogProcess::service()
 }
 
 
-// instantiate the watchdog process
-tWatchdogProcess WatchdogProcess;
-
 #endif //CONFIG_WATCHDOG
