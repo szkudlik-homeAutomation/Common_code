@@ -53,7 +53,7 @@ config HTTP_SERVER_INSTANCE
 config SENSOR_STATE_SERVLET
     bool "Enable Sensor State Servlet"
     depends on HTTP_SERVER
-    depends on SENSORS
+    select SENSORS
     default 0
     help
     	enables a HTTP servlet to display sensor state /sensorState
@@ -61,8 +61,7 @@ config SENSOR_STATE_SERVLET
 config OUTPUT_CONTROL_SERVLET
     bool "Enable output control Servlet"
     depends on HTTP_SERVER
-    depends on SENSORS
-    depends on OUTPUT_PROCESS
+    select OUTPUT_PROCESS
     help 
     	enables /outputState and /outputSet servlets 
     
