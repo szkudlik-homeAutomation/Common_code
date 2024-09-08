@@ -79,9 +79,9 @@ void tApplication::Setup() {
 	tSensorProcess::Instance->add(true);
 #endif // CONFIG_SENSORS
 
-#if CONFIG_OUTPUT_PROCESS_INSTANCE
+#if CONFIG_OUTPUT_PROCESS
 	tOutputProcess::Instance->add(true);
-#endif // CONFIG_OUTPUT_PROCESS_INSTANCE
+#endif // CONFIG_OUTPUT_PROCESS
 
 #if CONFIG_TLE8457_COMM_LIB
 	  COMM_SERIAL.begin(CONFIG_TRANSMISSION_SPEED);
