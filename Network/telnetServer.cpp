@@ -5,17 +5,47 @@
  * global telnet commands
  *
  * to add app specific commands, define specific macros, like below
- * put them in global.h or appDefs .h file
+ * TELNET_APP_SPECIFIC_INCLUDE must be in globally included file
+ * TELNET_APP_SPECIFIC_COMMANDS_CODE should be in file included by TELNET_APP_SPECIFIC_INCLUDE
  *
- *   #define TELNET_APP_SPECIFIC_INCLUDE "../tOutputProcess.h"
+ *   #define TELNET_APP_SPECIFIC_INCLUDE "../../../telnet_app_specific.h"
+ *
  *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE \
  *        {"enableLogs",      TelnetEnablseLogs,             "enable logs on telnet console"},   \
  *        {"disableLogs",     TelnetDisableLogs,            "enable logs on telnet console"},
  *
+ *
+ * note1: there may be only 1 file extra included. If you need more, you should include them from  it
+ *
+ * note2: in case of conditional compiling:
+ *
+ *#if CONFIG_OPTION1
+ *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE1 \
+ *        {"option1A",      TelnetOption1A,             "option1A"},   \
+ *        {"option1B",      TelnetOption1B,             "option1B"},
+ *#else
+ *	#define TELNET_APP_SPECIFIC_COMMANDS_CODE1
+ *#endif
+ *
+ *#if CONFIG_OPTION2
+ *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE2 \
+ *        {"option2A",      TelnetOption2A,             "option2A"},   \
+ *        {"option2B",      TelnetOption2B,             "option2B"},
+ *#else
+ *	#define TELNET_APP_SPECIFIC_COMMANDS_CODE1
+ *#endif
+ *
+ *
+ * #define TELNET_APP_SPECIFIC_COMMANDS_CODE TELNET_APP_SPECIFIC_COMMANDS_CODE1 ## TELNET_APP_SPECIFIC_COMMANDS_CODE2
  */
 
 #include "../../../global.h"
 #if CONFIG_TELNET_SERVER
+
+#ifdef TELNET_APP_SPECIFIC_INCLUDE
+#include TELNET_APP_SPECIFIC_INCLUDE
+#endif // TELNET_APP_SPECIFIC_INCLUDE
+
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/tOutgoingFrames.h"
 
@@ -27,9 +57,6 @@
 #include "../sensors/tSensor.h"
 #endif //CONFIG_TELNET_COMMANDS_SENSORS
 // must be static-global (why? - only 1 telnet session may be active)
-#if TELNET_APP_SPECIFIC_INCLUDE
-#include TELNET_APP_SPECIFIC_INCLUDE
-#endif // TELNET_APP_SPECIFIC_INCLUDE
 Commander cmd;
 
 tTelnetSession *pTelnetSession = NULL;
