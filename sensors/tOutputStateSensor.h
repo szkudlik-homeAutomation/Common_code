@@ -31,7 +31,7 @@ public:
 
 protected:
    virtual void doTriggerMeasurement();
-
+   virtual uint8_t onSetConfig();
 private:
    tResult mResult;
 };

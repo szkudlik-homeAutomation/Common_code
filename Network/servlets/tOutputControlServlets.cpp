@@ -36,8 +36,14 @@ bool tOutputSetServlet::ProcessAndResponse()
    DEBUG_PRINT_3(" Timer=");
    DEBUG_3(println(Timer,DEC));
 
-   tOutputProcess::Instance->SetOutput(Output,State,Timer,tOutputProcess::ForceTimer);
-   SendResponse200();
+   if (NULL != tOutputProcess::Instance) {
+	   tOutputProcess::Instance->SetOutput(Output,State,Timer,tOutputProcess::ForceTimer);
+	   SendResponse200();
+   }
+   else
+   {
+	   SendResponse501();
+   }
 
 return false;
 }
@@ -50,6 +56,12 @@ bool tOutputStateServlet::ProcessAndResponse()
    uint16_t TimerValue;
    uint16_t DefaultTimer = 1000;
    bool ParametersOK = true;
+
+   if (NULL == tOutputProcess::Instance)
+   {
+     SendResponse501();
+     return false;
+   }
 
    ParametersOK &= GetParameter("Out",&Output);
    ParametersOK &= (Output < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS);

@@ -21,6 +21,14 @@ tOutputStateSensor::tOutputStateSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_O
    mMeasurementBlobSize = sizeof(mResult);
 }
 
+uint8_t tOutputStateSensor::onSetConfig()
+{
+	if (NULL == tOutputProcess::Instance)
+		return STATUS_SENSOR_CREATE_ERROR;
+
+	return STATUS_SUCCESS;
+}
+
 void tOutputStateSensor::doTriggerMeasurement()
 {
    for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
