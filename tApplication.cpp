@@ -62,45 +62,73 @@ void tApplication::Setup() {
 	CONFIG_LOGGER_SERIAL.println(FW_VERSION);
 #endif
 
+    DEBUG_PRINT_1("AppSetupBefore...");
 	AppSetupBefore();
+	DEBUG_PRINTLN_1("...done");
 
 #if CONFIG_WATCHDOG
+  DEBUG_PRINT_1("WatchdogProcess...");
   WatchdogProcess.add(true);
+  DEBUG_PRINTLN_1("...done");
 #endif
 
 #if CONFIG_IP_ADDRESES_FROM_EEPROM
   // NOTE! if net is not set from eeprom, it should be set in AppSetupBefore
+    DEBUG_PRINT_1("NetworkHwInitFromEeprom...");
 	NetworkHwInitFromEeprom();
+    DEBUG_PRINTLN_1("...done");
 #endif
 #if CONFIG_NETWORK
+    DEBUG_PRINT_1("TcpServerProcess...");
 	TcpServerProcess.add(true);
+    DEBUG_PRINTLN_1("...done");
 #endif // CONFIG_NETWORK
 #if CONFIG_SENSORS
-	tSensorProcess::Instance->add(true);
+    DEBUG_PRINT_1("tSensorProcess...");
+    if (tSensorProcess::Instance)
+    	tSensorProcess::Instance->add(true);
+    else
+    	DEBUG_PRINTLN_3("!!!! No tSensorProcess::Instance!");
+
+    DEBUG_PRINTLN_1("...done");
 #endif // CONFIG_SENSORS
 
 #if CONFIG_OUTPUT_PROCESS
-	tOutputProcess::Instance->add(true);
+    DEBUG_PRINT_1("tOutputProcess...");
+    if (tOutputProcess::Instance)
+    	tOutputProcess::Instance->add(true);
+    else
+    	DEBUG_PRINTLN_3("!!!! No tOutputProcess::Instance!");
+
+    DEBUG_PRINTLN_1("...done");
 #endif // CONFIG_OUTPUT_PROCESS
 
 #if CONFIG_TLE8457_COMM_LIB
+      DEBUG_PRINT_1("TLE8457_COMM...");
 	  COMM_SERIAL.begin(CONFIG_TRANSMISSION_SPEED);
 	  while (!COMM_SERIAL);
 
+      DEBUG_PRINT_1("CommSenderProcess...");
 	  CommSenderProcess::Instance->add();
+      DEBUG_PRINT_1("CommRecieverProcess...");
 	  CommRecieverProcess::Instance->add();
 #if CONFIG_TLE8457_COMM_FORCE_DEV_ID
 	CommSerialSetID(CONFIG_TLE8457_COMM_FORCE_DEV_ID);
 #elif CONFIG_TLE8457_COMM_DEV_ID_FROM_EEPROM
 	CommSerialSetID(EEPROM.read(EEPROM_DEVICE_ID_OFFSET));
 #endif
+    DEBUG_PRINTLN_1("...done");
 #endif // CONFIG_TLE8457_COMM_LIB
 
 #if CONFIG_WORKER_PROCESS
+    DEBUG_PRINT_1("tWorkerProcess...");
 	tWorkerProcess::Instance->add();
+    DEBUG_PRINTLN_1("...done");
 #endif // CONFIG_WORKER_PROCESS
 
+    DEBUG_PRINT_1("AppSetupAfter...");
 	AppSetupAfter();
+    DEBUG_PRINTLN_1("...done");
 
 #ifdef CONFIG_LOGGER_SERIAL
   CONFIG_LOGGER_SERIAL.print(F("Free RAM: "));
