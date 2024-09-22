@@ -34,6 +34,13 @@ void tHttpServlet::SendResponse200()
   pOwner->SendFlashString(PSTR("\r\n"));
 }
 
+void tHttpServlet::SendResponse501()
+{
+	  pOwner->SendFlashString(PSTR("HTTP/1.1 501 Not Implemented\r\nContent-Type: text/plain\r\n\r\nOK\r\nVersion: "));
+	  pOwner->SendFlashString(PSTR(FW_VERSION));
+	  pOwner->SendFlashString(PSTR("\r\n"));
+}
+
 bool tHttpServlet::GetParameter(const char * Param, uint16_t *pValue)
 {
   char *pParamString = NULL;
