@@ -70,24 +70,34 @@ public:
   static const bool ForceTimer = false;
 
 
-  void SetOutput(uint8_t outputId, uint8_t State)
+  uint8_t SetOutput(uint8_t outputId, uint8_t State)
   {
-     SetOutput(outputId, State, 0, false);
+     return SetOutput(outputId, State, 0, false);
   }
 
-  void SetOutput(uint8_t outputId, uint8_t State, uint16_t timer)
+  uint8_t SetOutput(uint8_t outputId, uint8_t State, uint16_t timer)
   {
-     SetOutput(outputId, State, timer, false);
+     return SetOutput(outputId, State, timer, false);
   }
 
-  void SetOutput(uint8_t outputId, uint8_t State, uint16_t timer, bool timerLongerOnly)
+  uint8_t SetOutput(uint8_t outputId, uint8_t State, uint16_t timer, bool timerLongerOnly)
   {
-    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS) Output[outputId].Set(State,timer,timerLongerOnly);
+    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
+    {
+    	Output[outputId].Set(State,timer,timerLongerOnly);
+    	return STATUS_SUCCESS;
+    }
+    return STATUS_UNSUPPORTED;
   }
 
-  void ToggleOutput(uint8_t outputId, uint16_t timer)
+  uint8_t ToggleOutput(uint8_t outputId, uint16_t timer)
   {
-    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS) Output[outputId].Toggle(timer);
+    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
+    {
+    	Output[outputId].Toggle(timer);
+    	return STATUS_SUCCESS;
+    }
+    return STATUS_UNSUPPORTED;
   }
 
   uint8_t  GetOutputStateMap();

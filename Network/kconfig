@@ -61,7 +61,15 @@ config SENSOR_STATE_SERVLET
 config OUTPUT_CONTROL_SERVLET
     bool "Enable output control Servlet"
     depends on HTTP_SERVER
-    select OUTPUT_PROCESS
     help 
     	enables /outputState and /outputSet servlets 
+
+config OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
+    bool "Enable setting output state using TLE8457 serial interface"
+    depends on HTTP_SERVER
+    depends on OUTPUT_CONTROL_SERVLET
+    depends on TLE8457_COMM_LIB
+    help 
+    	/outputState and /outputSet servlets should use remote TLE8457 serial 
+    	instead of local process control 
     
