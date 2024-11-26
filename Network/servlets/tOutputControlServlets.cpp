@@ -78,7 +78,6 @@ bool tOutputStateServlet::ProcessAndResponse()
    uint16_t Output;  // output iD
    uint8_t State;
    uint16_t TimerValue;
-   uint16_t DefaultTimer = 1000;
    bool ParametersOK = true;
 
    ParametersOK &= GetParameter("Out",&Output);
@@ -114,10 +113,8 @@ bool tOutputStateServlet::ProcessAndResponse()
    DEBUG_2(print(State,DEC));
    DEBUG_PRINT_2(" Timer=");
    DEBUG_2(print(TimerValue,DEC));
-   DEBUG_PRINT_2(" DefaultTimer=");
-   DEBUG_2(println(DefaultTimer,DEC));
 
-   sendJsonResponse(0, Output, State, TimerValue, DefaultTimer);
+   sendJsonResponse(0, Output, State, TimerValue, 0);
 
    return false;
 }
