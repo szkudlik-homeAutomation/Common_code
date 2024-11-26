@@ -38,6 +38,13 @@ config TLE8457_COMM_FORCE_DEV_ID
     help
     	Force Device ID. Ignored if set to 0 
 
+config TLE8457_MAX_NUM_OF_NODES
+    int "Maximum Number of Nodes"
+    default 32
+    depends on TLE8457_COMM_LIB
+    help
+    	Maximum number of nodes in the network
+
 config COMMUNICATION_PAYLOAD_DATA_SIZE
     int "Communication Payload Data Size"
     default 20

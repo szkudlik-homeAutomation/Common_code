@@ -28,7 +28,7 @@ private:
    static const uint16_t REQUEST_SENDING_PERIOD = 600;  // 600ms
    static const uint16_t RESPONSE_WAIT_PERIOD   = 2000;  // 2s
 
-   uint8_t mCurrentNodeID;  // if == MAX_NUM_OF_NODES - waiting for responses
+   uint8_t mCurrentNodeID;  // if == CONFIG_TLE8457_MAX_NUM_OF_NODES - waiting for responses
    uint32_t mActiveNodesMap;
 };
 #endif // CONFIG_NODE_SCAN_TASK

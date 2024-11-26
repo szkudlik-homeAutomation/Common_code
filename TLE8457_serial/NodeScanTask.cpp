@@ -12,13 +12,13 @@ bool NodeScanTask::Process(uint32_t *pNextServiceDelay)
 {
    *pNextServiceDelay = REQUEST_SENDING_PERIOD;
 
-   if (mCurrentNodeID < MAX_NUM_OF_NODES)
+   if (mCurrentNodeID < CONFIG_TLE8457_MAX_NUM_OF_NODES)
    {
        // send a frame
        mCurrentNodeID++;
        tOutgoingFrames::SendMsgVersionRequest(mCurrentNodeID);  // staring from 1
    }
-   else if (mCurrentNodeID == MAX_NUM_OF_NODES)
+   else if (mCurrentNodeID == CONFIG_TLE8457_MAX_NUM_OF_NODES)
    {
       *pNextServiceDelay = RESPONSE_WAIT_PERIOD;
        mCurrentNodeID++;
