@@ -61,7 +61,7 @@ public:
   static tHttpServer *Instance;
   tHttpServer() : tTcpServer(80) { Instance = this; }
 
-  virtual tHttpServlet *newServlet(String *pRequestBuffer)
+  tHttpServlet *newServlet(String *pRequestBuffer)
   {
 	  tHttpServlet *pServlet = ServletFactory(pRequestBuffer);
 	  if (NULL == pServlet)
@@ -70,8 +70,8 @@ public:
   }
 
 protected:
-  virtual tTcpSession* NewSession(EthernetClient aEthernetClient) { return new tHttpSession(aEthernetClient); }
-  virtual tHttpServlet * ServletFactory(String *pRequestBuffer) { return NULL; }
+  virtual tTcpSession *NewSession(EthernetClient aEthernetClient) { return new tHttpSession(aEthernetClient); }
+  virtual tHttpServlet *ServletFactory(String *pRequestBuffer) { return NULL; }
 
 private:
   tHttpServlet *DefaultServletFactory(String *pRequestBuffer);
