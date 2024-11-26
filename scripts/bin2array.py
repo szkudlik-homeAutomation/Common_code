@@ -60,9 +60,9 @@ if __name__ == "__main__":
     out_h_file=open(args.output + '.h', 'w')
     
     out_c_file.write("#include <avr/pgmspace.h>\n")
-    out_h_file.write("#ifndef HTTP_RAW_BINARIES\n#define HTTP_RAW_BINARIES\nextern \"C\" {\n")
-    
+
+    out_h_file.write("#pragma once\nextern \"C\" {\n")
     for filename in args.filename:
         convert(filename,out_c_file,out_h_file)
+    out_h_file.write("}\n")
     
-    out_h_file.write("\n}\n#endif\n")
