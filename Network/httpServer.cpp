@@ -14,7 +14,12 @@ tHttpServlet *tHttpServer::DefaultServletFactory(String *pRequestBuffer)
 #endif // CONFIG_SENSOR_STATE_SERVLET
 
 #if CONFIG_OUTPUT_CONTROL_SERVLET
+#if CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
+   if (pRequestBuffer->startsWith("/outputState")) return new tOutputStateTLE8457Servlet();
+#else // CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
    if (pRequestBuffer->startsWith("/outputState")) return new tOutputStateServlet();
+#endif // CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
+
    if (pRequestBuffer->startsWith("/outputSet")) return new tOutputSetServlet();
 #endif
    return NULL;

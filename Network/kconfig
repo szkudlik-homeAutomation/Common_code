@@ -71,5 +71,15 @@ config OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
     depends on TLE8457_COMM_LIB
     help 
     	/outputState and /outputSet servlets should use remote TLE8457 serial 
-    	instead of local process control 
-    
+    	instead of local process control
+    	if no dev param is provided, then the local process control is used
+    	
+config OUTPUT_CONTROL_SERVLET_TLE8457_SERIAL_TIMEOUT
+    int "Timeout for requesting a state from a remote device [ms]"
+    depends on HTTP_SERVER
+    depends on OUTPUT_CONTROL_SERVLET
+    depends on TLE8457_COMM_LIB
+    depends on OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
+    default 5000
+    	
+   
