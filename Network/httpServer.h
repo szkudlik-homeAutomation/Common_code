@@ -66,12 +66,19 @@ public:
 	  tHttpServlet *pServlet = ServletFactory(pRequestBuffer);
 	  if (NULL == pServlet)
 		  pServlet = DefaultServletFactory(pRequestBuffer);
+	  if (NULL == pServlet)
+		  pServlet = getDefaultServlet(pRequestBuffer);
 	  return pServlet;
   }
 
 protected:
   virtual tTcpSession *NewSession(EthernetClient aEthernetClient) { return new tHttpSession(aEthernetClient); }
+
+  /* user - specific servlet factory */
   virtual tHttpServlet *ServletFactory(String *pRequestBuffer) { return NULL; }
+
+  /* default servlet - in case of a page not found */
+  virtual tHttpServlet *getDefaultServlet(String *pRequestBuffer) { return NULL; }
 
 private:
   tHttpServlet *DefaultServletFactory(String *pRequestBuffer);
