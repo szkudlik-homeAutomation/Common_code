@@ -8,35 +8,25 @@
  * TELNET_APP_SPECIFIC_INCLUDE must be in globally included file
  * TELNET_APP_SPECIFIC_COMMANDS_CODE should be in file included by TELNET_APP_SPECIFIC_INCLUDE
  *
- *   #define TELNET_APP_SPECIFIC_INCLUDE "../../../telnet_app_specific.h"
- *
- *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE \
- *        {"enableLogs",      TelnetEnablseLogs,             "enable logs on telnet console"},   \
- *        {"disableLogs",     TelnetDisableLogs,            "enable logs on telnet console"},
+ * note: there may be only 1 file extra included. If you need more, you should include them from  it
  *
  *
- * note1: there may be only 1 file extra included. If you need more, you should include them from  it
+ *#define TELNET_APP_SPECIFIC_INCLUDE "../../../telnet_app_specific.h"
  *
- * note2: in case of conditional compiling:
  *
  *#if CONFIG_OPTION1
- *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE1 \
+ *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE \
  *        {"option1A",      TelnetOption1A,             "option1A"},   \
  *        {"option1B",      TelnetOption1B,             "option1B"},
- *#else
- *	#define TELNET_APP_SPECIFIC_COMMANDS_CODE1
  *#endif
  *
  *#if CONFIG_OPTION2
- *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE2 \
+ *   #define TELNET_APP_SPECIFIC_COMMANDS_CODE1 \
  *        {"option2A",      TelnetOption2A,             "option2A"},   \
  *        {"option2B",      TelnetOption2B,             "option2B"},
- *#else
- *	#define TELNET_APP_SPECIFIC_COMMANDS_CODE1
  *#endif
  *
- *
- * #define TELNET_APP_SPECIFIC_COMMANDS_CODE TELNET_APP_SPECIFIC_COMMANDS_CODE1 ## TELNET_APP_SPECIFIC_COMMANDS_CODE2
+ * ...
  */
 
 #include "../../../global.h"
@@ -459,6 +449,26 @@ const commandList_t TelnetCommands[] = {
 #ifdef TELNET_APP_SPECIFIC_COMMANDS_CODE
   TELNET_APP_SPECIFIC_COMMANDS_CODE
 #endif //TELNET_APP_SPECIFIC_COMMANDS_CODE
+
+#ifdef TELNET_APP_SPECIFIC_COMMANDS_CODE1
+  TELNET_APP_SPECIFIC_COMMANDS_CODE1
+#endif //TELNET_APP_SPECIFIC_COMMANDS_CODE1
+
+#ifdef TELNET_APP_SPECIFIC_COMMANDS_CODE2
+  TELNET_APP_SPECIFIC_COMMANDS_CODE2
+#endif //TELNET_APP_SPECIFIC_COMMANDS_CODE2
+
+#ifdef TELNET_APP_SPECIFIC_COMMANDS_CODE3
+  TELNET_APP_SPECIFIC_COMMANDS_CODE3
+#endif //TELNET_APP_SPECIFIC_COMMANDS_CODE3
+
+#ifdef TELNET_APP_SPECIFIC_COMMANDS_CODE4
+  TELNET_APP_SPECIFIC_COMMANDS_CODE4
+#endif //TELNET_APP_SPECIFIC_COMMANDS_CODE4
+
+#ifdef TELNET_APP_SPECIFIC_COMMANDS_CODE5
+  TELNET_APP_SPECIFIC_COMMANDS_CODE5
+#endif //TELNET_APP_SPECIFIC_COMMANDS_CODE5
 
 };
 
