@@ -21,6 +21,7 @@ class tHttpServlet
     void SendResponse400();
     void SendResponse200();
     void SendResponse501();
+    void SendResponse503();
     void SendVersionAndPageClose();
 
     bool GetParameter(const char * Param) { return (NULL != FindParameter(Param,NULL,NULL)); }
