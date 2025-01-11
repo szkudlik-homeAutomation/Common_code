@@ -43,6 +43,13 @@ static const uint8_t MessageType_DigialInputEvent   = 2;
         uint16_t DoubleClick;
     };
 
+/* a message from a worker task - work item finished */
+class WorkerTask;
+static const uint8_t MessageType_WorkerTaskFinishedEvent = 3;
+typedef struct tWorkerTaskFinishedEvent {
+	WorkerTask *pTask;
+};
+
 
 // NOTE - app specific event types start from 16
 

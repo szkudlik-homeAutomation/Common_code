@@ -14,6 +14,8 @@ public:
    virtual ~WorkerTask() {}
 
    virtual bool Process(uint32_t * pNextServiceDelay) = 0;
+
+   uint16_t cookie;
 };
 
 
@@ -23,7 +25,7 @@ class tWorkerProcess: public Process
 	static tWorkerProcess *Instance;
     tWorkerProcess() : Process(LOW_PRIORITY,SERVICE_SECONDLY,RUNTIME_FOREVER), pCurrentWorkerTask(NULL) { Instance = this; }
 
-    void Enqueue(WorkerTask *pWorkerTask);
+    void Enqueue(WorkerTask *pWorkerTask, uint16_t cookie = 0);
 
 protected:
   virtual void service();
