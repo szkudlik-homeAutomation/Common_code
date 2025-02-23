@@ -212,9 +212,7 @@ bool tOutputStateTLE8457Servlet::ProcessAndResponse()
 
       case STATUS_TIMEOUT:
       default:
-    	  pOwner->SendFlashString(PSTR("HTTP/1.1 424 OK\r\nContent-Type: text/plain\r\n\r\n424 No data from remote device\r\nVersion: "));
-    	  pOwner->SendFlashString(PSTR(FW_VERSION));
-    	  pOwner->SendFlashString(PSTR("\r\n"));
+    	  SendResponse424();
           return false;
    }
 

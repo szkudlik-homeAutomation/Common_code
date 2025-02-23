@@ -34,23 +34,30 @@ void tHttpServlet::SendResponse400()
 
 void tHttpServlet::SendResponse200()
 {
-  pOwner->SendFlashString(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nOK\r\nVersion: "));
+  pOwner->SendFlashString(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n200 OK\r\nVersion: "));
   pOwner->SendFlashString(PSTR(FW_VERSION));
   pOwner->SendFlashString(PSTR("\r\n"));
 }
 
 void tHttpServlet::SendResponse501()
 {
-	  pOwner->SendFlashString(PSTR("HTTP/1.1 501 Not Implemented\r\nContent-Type: text/plain\r\n\r\nOK\r\nVersion: "));
+	  pOwner->SendFlashString(PSTR("HTTP/1.1 501 Not Implemented\r\nContent-Type: text/plain\r\n\r\n501 Not implemented\r\nVersion: "));
 	  pOwner->SendFlashString(PSTR(FW_VERSION));
 	  pOwner->SendFlashString(PSTR("\r\n"));
 }
 
 void tHttpServlet::SendResponse503()
 {
-	  pOwner->SendFlashString(PSTR("HTTP/1.1 503 Server busy\r\nContent-Type: text/plain\r\n\r\nBUSY\r\nVersion: "));
+	  pOwner->SendFlashString(PSTR("HTTP/1.1 503 Server busy\r\nContent-Type: text/plain\r\n\r\n503 BUSY\r\nVersion: "));
 	  pOwner->SendFlashString(PSTR(FW_VERSION));
 	  pOwner->SendFlashString(PSTR("\r\n"));
+}
+
+void tHttpServlet::SendResponse424()
+{
+	pOwner->SendFlashString(PSTR("HTTP/1.1 424 OK\r\nContent-Type: text/plain\r\n\r\n424 No data from remote device\r\nVersion: "));
+	pOwner->SendFlashString(PSTR(FW_VERSION));
+	pOwner->SendFlashString(PSTR("\r\n"));
 }
 
 bool tHttpServlet::GetParameter(const char * Param, uint16_t *pValue)

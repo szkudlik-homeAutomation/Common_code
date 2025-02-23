@@ -19,6 +19,7 @@ class tHttpServlet
     tHttpSession *pOwner;
 
     void SendResponse400();
+    void SendResponse424();
     void SendResponse200();
     void SendResponse501();
     void SendResponse503();
