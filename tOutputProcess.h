@@ -48,7 +48,7 @@ private:
   uint8_t mPin;
   uint16_t mTimer;
   uint8_t mState   : 1,
-         mPolarity : 1,
+         mPolarity : 1,	// 0 - active low, 1 - active high
          Reserved  : 6;
 };
 

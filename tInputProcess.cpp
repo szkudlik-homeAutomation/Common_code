@@ -89,160 +89,160 @@ public:
     {
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 0
         mButton[0].SetPin(CONFIG_INPUT_PROCESS_PIN0,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY0
-                1
-#else
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW0
                 0
+#else
+                1
 #endif
         );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 1
         mButton[1].SetPin(CONFIG_INPUT_PROCESS_PIN1,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY1
-                1
-#else
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW1
                 0
+#else
+                1
 #endif
         );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 2
         mButton[2].SetPin(CONFIG_INPUT_PROCESS_PIN2,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY2
-                1
-#else
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW2
                 0
+#else
+                1
 #endif
         );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 3
         mButton[3].SetPin(CONFIG_INPUT_PROCESS_PIN3,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY3
-                1
-#else
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW3
                 0
+#else
+                1
 #endif
         );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 4
         mButton[4].SetPin(CONFIG_INPUT_PROCESS_PIN4,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY4
-                1
-#else
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW4
                 0
+#else
+                1
 #endif
         );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 5
         mButton[5].SetPin(CONFIG_INPUT_PROCESS_PIN5,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY5
-                1
-#else
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW5
                 0
+#else
+                1
 #endif
         );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 6
         mButton[6].SetPin(CONFIG_INPUT_PROCESS_PIN6,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY6
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW6
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 7
         mButton[7].SetPin(CONFIG_INPUT_PROCESS_PIN7,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY7
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW7
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 8
         mButton[8].SetPin(CONFIG_INPUT_PROCESS_PIN8,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY8
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW8
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 9
         mButton[9].SetPin(CONFIG_INPUT_PROCESS_PIN9,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY9
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW9
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 10
         mButton[10].SetPin(CONFIG_INPUT_PROCESS_PIN10,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY10
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW10
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 11
         mButton[11].SetPin(CONFIG_INPUT_PROCESS_PIN11,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY11
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW11
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 12
         mButton[12].SetPin(CONFIG_INPUT_PROCESS_PIN12,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY12
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW12
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 13
         mButton[13].SetPin(CONFIG_INPUT_PROCESS_PIN13,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY13
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW13
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 14
         mButton[14].SetPin(CONFIG_INPUT_PROCESS_PIN14,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY14
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW14
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif
 
 #if CONFIG_INPUT_PROCESS_NUM_OF_PINS > 15
         mButton[15].SetPin(CONFIG_INPUT_PROCESS_PIN15,
-#if CONFIG_INPUT_PROCESS_PIN_POLARITY15
-    1
+#if CONFIG_INPUT_PROCESS_PIN_ACTIVE_LOW15
+        		0
 #else
-    0
+				1
 #endif
   );
 #endif

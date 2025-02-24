@@ -135,119 +135,119 @@ config OUTPUT_PROCESS_PIN16
     default 17
   
 
-config OUTPUT_PROCESS_PIN_POLARITY0
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW0
     bool "Output Pin 0 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 0
-    default n
+    default y
 
-config OUTPUT_PROCESS_PIN_POLARITY1
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW1
     bool "Output Pin 1 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 1
-    default n
+    default y
     
-config OUTPUT_PROCESS_PIN_POLARITY2
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW2
     bool "Output Pin 2 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 2
-    default n
+    default y
 
-config OUTPUT_PROCESS_PIN_POLARITY3
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW3
     bool "Output Pin 3 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 3
-    default n
+    default y
  
-config OUTPUT_PROCESS_PIN_POLARITY4
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW4
     bool "Output Pin 4 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 4
-    default n
+    default y
     
-config OUTPUT_PROCESS_PIN_POLARITY5   
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW5   
     bool "Output Pin 5 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 5
-    default n
+    default y
 
-config OUTPUT_PROCESS_PIN_POLARITY6
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW6
     bool "Output Pin 6 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 6
-    default n
+    default y
 
-config OUTPUT_PROCESS_PIN_POLARITY7
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW7
     bool "Output Pin 7 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 7
-    default n
+    default y
  
-config OUTPUT_PROCESS_PIN_POLARITY8
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW8
     bool "Output Pin 8 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 8
-    default n
+    default y
 
-config OUTPUT_PROCESS_PIN_POLARITY9
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW9
     bool "Output Pin 9 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 9
-    default n
+    default y
 
-config OUTPUT_PROCESS_PIN_POLARITY10
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW10
     bool "Output Pin 10 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 10
-    default n
+    default y
 
-config OUTPUT_PROCESS_PIN_POLARITY11
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW11
     bool "Output Pin 11 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 11
-    default n
+    default y
 
-config OUTPUT_PROCESS_PIN_POLARITY12
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW12
     bool "Output Pin 12 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 12
-    default n
+    default y
     
-config OUTPUT_PROCESS_PIN_POLARITY13
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW13
     bool "Output Pin 13 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 13
-    default n
+    default y
  
-config OUTPUT_PROCESS_PIN_POLARITY14
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW14
     bool "Output Pin 14 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 14
-    default n
+    default y
   
-config OUTPUT_PROCESS_PIN_POLARITY15
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW15
     bool "Output Pin 15 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 15
-    default n
+    default y
   
-config OUTPUT_PROCESS_PIN_POLARITY16
+config OUTPUT_PROCESS_PIN_ACTIVE_LOW16
     bool "Output Pin 16 active low"
     depends on OUTPUT_PROCESS_INSTANCE
     depends on OUTPUT_PROCESS

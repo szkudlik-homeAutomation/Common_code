@@ -135,119 +135,119 @@ config INPUT_PROCESS_PIN16
     default 17
   
 
-config INPUT_PROCESS_PIN_POLARITY0
+config INPUT_PROCESS_PIN_ACTIVE_LOW0
     bool "Input Pin 0 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 0
     default y
 
-config INPUT_PROCESS_PIN_POLARITY1
+config INPUT_PROCESS_PIN_ACTIVE_LOW1
     bool "Input Pin 1 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 1
     default y
     
-config INPUT_PROCESS_PIN_POLARITY2
+config INPUT_PROCESS_PIN_ACTIVE_LOW2
     bool "Input Pin 2 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 2
     default y
 
-config INPUT_PROCESS_PIN_POLARITY3
+config INPUT_PROCESS_PIN_ACTIVE_LOW3
     bool "Input Pin 3 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 3
     default y
  
-config INPUT_PROCESS_PIN_POLARITY4
+config INPUT_PROCESS_PIN_ACTIVE_LOW4
     bool "Input Pin 4 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 4
     default y
     
-config INPUT_PROCESS_PIN_POLARITY5   
+config INPUT_PROCESS_PIN_ACTIVE_LOW5   
     bool "Input Pin 5 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 5
     default y
 
-config INPUT_PROCESS_PIN_POLARITY6
+config INPUT_PROCESS_PIN_ACTIVE_LOW6
     bool "Input Pin 6 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 6
     default y
 
-config INPUT_PROCESS_PIN_POLARITY7
+config INPUT_PROCESS_PIN_ACTIVE_LOW7
     bool "Input Pin 7 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 7
     default y
  
-config INPUT_PROCESS_PIN_POLARITY8
+config INPUT_PROCESS_PIN_ACTIVE_LOW8
     bool "Input Pin 8 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 8
     default y
 
-config INPUT_PROCESS_PIN_POLARITY9
+config INPUT_PROCESS_PIN_ACTIVE_LOW9
     bool "Input Pin 9 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 9
     default y
 
-config INPUT_PROCESS_PIN_POLARITY10
+config INPUT_PROCESS_PIN_ACTIVE_LOW10
     bool "Input Pin 10 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 10
     default y
 
-config INPUT_PROCESS_PIN_POLARITY11
+config INPUT_PROCESS_PIN_ACTIVE_LOW11
     bool "Input Pin 11 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 11
     default y
 
-config INPUT_PROCESS_PIN_POLARITY12
+config INPUT_PROCESS_PIN_ACTIVE_LOW12
     bool "Input Pin 12 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 12
     default y
     
-config INPUT_PROCESS_PIN_POLARITY13
+config INPUT_PROCESS_PIN_ACTIVE_LOW13
     bool "Input Pin 13 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 13
     default y
  
-config INPUT_PROCESS_PIN_POLARITY14
+config INPUT_PROCESS_PIN_ACTIVE_LOW14
     bool "Input Pin 14 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 14
     default y
   
-config INPUT_PROCESS_PIN_POLARITY15
+config INPUT_PROCESS_PIN_ACTIVE_LOW15
     bool "Input Pin 15 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS
     depends on INPUT_PROCESS_NUM_OF_PINS > 15
     default y
   
-config INPUT_PROCESS_PIN_POLARITY16
+config INPUT_PROCESS_PIN_ACTIVE_LOW16
     bool "Input Pin 16 active low"
     depends on INPUT_PROCESS_INSTANCE
     depends on INPUT_PROCESS

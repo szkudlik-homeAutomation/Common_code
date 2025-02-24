@@ -44,7 +44,7 @@ private:
    uint8_t mLastClickTime; // number of ticks the last short click occured
                           // 0 - the click occured during the last tick
                           // 255 - overflow, button is active for an unspecified time
-   uint8_t mActiveState;
+   uint8_t mActiveState;	// 0 - active low, 1 - active high
 };
 
 
