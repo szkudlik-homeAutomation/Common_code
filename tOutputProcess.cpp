@@ -284,4 +284,16 @@ void tOutput::SetState(uint8_t State)
   }
 
 }
+
+void tOutput::SetPin(uint8_t pin, uint8_t Polarity) {
+	  if (pin != PIN_NOT_ASSIGNED)
+	  {
+		  mPin = pin;
+		  mPolarity = Polarity;
+		  pinMode(mPin, OUTPUT);
+		  SetState(0);
+	  }
+}
+
 #endif // CONFIG_OUTPUT_PROCESS
+

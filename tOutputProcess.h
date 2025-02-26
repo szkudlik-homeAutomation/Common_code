@@ -18,7 +18,7 @@ public:
   tOutput() :mPin(PIN_NOT_ASSIGNED) {}
 
   // polarity 1 means active high, 0 means active low
-  void SetPin(uint8_t pin, uint8_t Polarity) { mPin = pin; mPolarity = Polarity; pinMode(mPin, OUTPUT); SetState(0); }
+  void SetPin(uint8_t pin, uint8_t Polarity);
 
   void Set(uint8_t State, uint16_t Timer, bool timerLongerOnly)
   {

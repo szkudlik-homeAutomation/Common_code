@@ -16,106 +16,157 @@ config OUTPUT_PROCESS_INSTANCE
     default y
     
 config OUTPUT_PROCESS_PIN0
-    int "Output Pin 0"
+    int "Physical pin for output 0"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 0
     default 1
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
 
 config OUTPUT_PROCESS_PIN1
-    int "Output Pin 1"
+    int "Physical pin for output 1"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 1
     default 2
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
     
 config OUTPUT_PROCESS_PIN2
-    int "Output Pin 2"
+    int "Physical pin for output 2"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 2
     default 3
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
 
 config OUTPUT_PROCESS_PIN3
-    int "Output Pin 3"
+    int "Physical pin for output 3"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 3
     default 4
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
  
 config OUTPUT_PROCESS_PIN4
-    int "Output Pin 4"
+    int "Physical pin for output 4"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 4
     default 5
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
     
 config OUTPUT_PROCESS_PIN5   
-    int "Output Pin 5"
+    int "Physical pin for output 5"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 5
     default 6
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
 
 config OUTPUT_PROCESS_PIN6
-    int "Output Pin 6"
+    int "Physical pin for output 6"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 6
     default 7
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
 
 config OUTPUT_PROCESS_PIN7
-    int "Output Pin 7"
+    int "Physical pin for output 7"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 7
     default 8
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
  
 config OUTPUT_PROCESS_PIN8
-    int "Output Pin 8"
+    int "Physical pin for output 8"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 8
     default 9
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
 
 config OUTPUT_PROCESS_PIN9
-    int "Output Pin 9"
+    int "Physical pin for output 9"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 9
     default 10
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
 
 config OUTPUT_PROCESS_PIN10
-    int "Output Pin 10"
+    int "Physical pin for output 10"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 10
     default 11
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
 
 config OUTPUT_PROCESS_PIN11
-    int "Output Pin 11"
+    int "Physical pin for output 11"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 11
     default 12
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
 
 config OUTPUT_PROCESS_PIN12
-    int "Output Pin 12"
+    int "Physical pin for output 12"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 12
     default 13
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
     
 config OUTPUT_PROCESS_PIN13
-    int "Output Pin 13"
+    int "Physical pin for output 13"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 13
     default 14
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
  
 config OUTPUT_PROCESS_PIN14
-    int "Output Pin 14"
+    int "Physical pin for output 14"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 14
     default 15
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
   
 config OUTPUT_PROCESS_PIN15
-    int "Output Pin 15"
+    int "Physical pin for output 15"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 15
     default 16
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
   
 config OUTPUT_PROCESS_PIN16
-    int "Output Pin 16"
+    int "Physical pin for output 16"
     depends on OUTPUT_PROCESS
     depends on OUTPUT_PROCESS_NUM_OF_PINS > 16
     default 17
+    help
+    	set 255 to use pin as a virtual pin
+    	with no physical pin assigned
   
 
 config OUTPUT_PROCESS_PIN_ACTIVE_LOW0
