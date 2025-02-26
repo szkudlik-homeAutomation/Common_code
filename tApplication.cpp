@@ -13,6 +13,7 @@
 #include "Network/tcpServer.h"
 #include "sensors/tSensor.h"
 #include "tOutputProcess.h"
+#include "tInputProcess.h"
 #include "TLE8457_serial/TLE8457_serial_lib.h"
 #include "tWorkerProcess.h"
 #include "tApplication.h"
@@ -102,6 +103,16 @@ void tApplication::Setup() {
 
     DEBUG_PRINTLN_1("...done");
 #endif // CONFIG_OUTPUT_PROCESS
+
+#if CONFIG_INPUT_PROCESS
+    DEBUG_PRINT_1("tInputProcess...");
+    if (tInputProcess::Instance)
+    	tInputProcess::Instance->add(true);
+    else
+    	DEBUG_PRINTLN_3("!!!! No tInputProcess::Instance!");
+
+    DEBUG_PRINTLN_1("...done");
+#endif // CONFIG_INPUT_PROCESS
 
 #if CONFIG_TLE8457_COMM_LIB
       DEBUG_PRINT_1("TLE8457_COMM...");
