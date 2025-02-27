@@ -64,7 +64,7 @@ public:
 
 class tSensor {
 public:
-#if CONFIG_EEPROM_SENSORS
+#if CONFIG_SENSORS_STORE_IN_EEPROM
     /*
      * save all existing sensors to eeprom
      */
@@ -74,7 +74,7 @@ public:
      * all sensor already existing sensors will be ignored
      */
     static uint8_t RestoreFromEEprom();
-#endif //CONFIG_EEPROM_SENSORS
+#endif //CONFIG_SENSORS_STORE_IN_EEPROM
 
 	/* process and set config. The config must be set before
 	 *  - by sensor's specific functions
@@ -141,7 +141,7 @@ public:
 
    static void Run();
 
-#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
    /* send a serial frame with current measurement and SensorEventType as event type
     * if odDemand = false - frame will be sent only sensor is registered to such events
     *
@@ -149,7 +149,7 @@ public:
     *
     */
    void sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType);
-#endif //CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#endif //CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
     * For identification, API version must be increased every time the config OR the result data format changes

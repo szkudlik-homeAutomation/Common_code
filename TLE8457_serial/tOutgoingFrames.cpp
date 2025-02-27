@@ -98,7 +98,7 @@ bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8
 }
 #endif // CONFIG_OUTPUT_PROCESS
 
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 
 static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
 		void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment)
@@ -120,7 +120,9 @@ static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorI
 
     CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_EVENT, sizeof(tMessageSensorEvent), &Message);
 }
+#endif CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 
+#if CONFIG_SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
 static bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod)
 {
 	tMessageSensorConfigure Msg;
@@ -148,7 +150,7 @@ static bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t Sen
 	CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CONFIGURE, sizeof(Msg), &Msg);
 }
 
-#endif //CONFIG_SENSORS_OVER_SERIAL_COMM
+#endif //CONFIG_SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
 
 
 #endif // CONFIG_TLE8457_COMM_LIB

@@ -34,6 +34,14 @@ config TELNET_SERVER
     	Enable this option to enable Telnet server. It is up to the application
     	to provide the command line interface to the user.
     	
+config TELNET_COMMANDS_SENSORS
+    bool "Enable Telnet Commands for Sensors"
+    depends on TELNET_SERVER
+    select SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
+    default n
+    help
+    	Enable this option to provide commands to control sensor values via Telnet
+    
 config HTTP_SERVER
     bool "Enable HTTP Server"
     depends on NETWORK
@@ -53,7 +61,7 @@ config HTTP_SERVER_INSTANCE
 config SENSOR_STATE_SERVLET
     bool "Enable Sensor State Servlet"
     depends on HTTP_SERVER
-    select SENSORS
+    select CONFIG_SENSOR_HUB
     default 0
     help
     	enables a HTTP servlet to display sensor state /sensorState
