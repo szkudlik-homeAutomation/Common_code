@@ -9,7 +9,7 @@
 
 #include "../../../global.h"
 
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
 #include "tSensorHub.h"
 #include "../tMessageReciever.h"
@@ -28,4 +28,4 @@ private:
    void HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSensorByIdResponse *Message);
 };
 
-#endif // CONFIG_SENSORS_OVER_SERIAL_COMM
+#endif // CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS

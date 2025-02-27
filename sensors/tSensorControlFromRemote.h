@@ -9,7 +9,7 @@
 
 #include "../../../global.h"
 
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_REMOTE_CONTROL
 
 #include "tSensor.h"
 #include "../tMessageReciever.h"
@@ -31,8 +31,10 @@ private:
     void HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message);
     void HandleMsgSensorStop(uint8_t SenderID, tMessageSensorStop *Message);
     void HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message);
+#if CONFIG_SENSORS_STORE_IN_EEPROM
     void HandeMsgSaveSensorsToEeprom(uint8_t SenderID);
     void HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID);
+#endif CONFIG_SENSORS_STORE_IN_EEPROM
 };
 
-#endif /* CONFIG_SENSORS_OVER_SERIAL_COMM */
+#endif /* CONFIG_SENSOR_REMOTE_CONTROL */
