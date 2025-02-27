@@ -76,12 +76,47 @@ config SENSOR_HUB_MESSAGE_RECIEVER
     select TLE8457_COMM_LIB
     default n
 
+config SENSOR_SEND_EVENTS_USING_SERIAL
+	bool "Enable sendng sensor events using serial communication"
+    depends on SENSORS
+	depends on TLE8457_COMM_LIB
+	default n
+	help
+		Enables sending sensor events to the central station
+		Idivdual sensors will send events periodically depending on configuraion
+		or on demand
+
+config SENSOR_EVENTS_SERIAL_RECIEVER_ID
+	int "Reciever ID of the sensor events"
+	depends on SENSOR_SEND_EVENTS_USING_SERIAL
+	default 1
+
+config SENSORS_CONTROL_OVER_SERIAL_COMM
+	bool "Enable dynamic creation/deletion/start/stop of sensors using serial communication"
+    depends on SENSORS
+	depends on TLE8457_COMM_LIB
+	default n
+	help
+		this is independent from SENSOR_SEND_EVENTS_USING_SERIAL
+
+config EEPROM_SENSORS
+	bool "Enable dynamic saving and restoring of all sensors to eeprom"
+	default n 
+    depends on SENSORS
+	help
+		to be used when sensors are dynamically created from the central node
+		requires eeprom offsets: EEPROM_NUM_OF_SENSORS, EEPROM_FIRST_SENSOR
+
 config SENSORS_JSON_OUTPUT
     bool "Enable JSON output for sensors"
     depends on SENSORS
     depends on SENSOR_HUB
     default y
+	help
+		this settings is enabling a huge part of code translating 
+		binary format from all sensors & all versions to JSON
 
+		
 choice SENSOR_EVENTS_TYPE
     prompt "Source of Sensor Events"
     depends on SENSORS

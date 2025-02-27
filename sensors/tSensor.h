@@ -141,7 +141,7 @@ public:
 
    static void Run();
 
-#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
    /* send a serial frame with current measurement and SensorEventType as event type
     * if odDemand = false - frame will be sent only sensor is registered to such events
     *
@@ -149,7 +149,7 @@ public:
     *
     */
    void sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType);
-#endif //CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#endif //CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 protected:
    /* ApiVersion - the sensor may be located on remote node, and its version may not match the central node
     * For identification, API version must be increased every time the config OR the result data format changes
