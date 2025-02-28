@@ -35,12 +35,12 @@ uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVer
 	return STATUS_SUCCESS;
 }
 
-tSensorCache *tSensorCache::getByID(uint8_t SensorID)
+tSensorCache *tSensorCache::getByID(uint8_t SensorID, uint8_t NodeID)
 {
    tSensorCache *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
    {
-      if (pSensorDesc->mSensorID == SensorID)
+      if ((pSensorDesc->mSensorID == SensorID) && (pSensorDesc->mNodeID = NodeID))
       {
          return pSensorDesc;
       }

@@ -10,7 +10,6 @@
 
 #if CONFIG_SENSOR_HUB
 
-
 /**
  * tSensorCache is an instance describing a sensor that may run on a different node
  * It is used by SensorHub to keep track and present data from all sensors in the
@@ -119,8 +118,8 @@ public:
 
    uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 1000; }
 
-   static tSensorCache *getByID(uint8_t SensorID);
-   static tSensorCache *getByName(const char * pSensorName);
+   static tSensorCache *getByID(uint8_t SensorID, uint8_t NodeID);
+   static tSensorCache *getByName(const char * pSensorName, uint8_t NodeID);
 
 
    static tSensorCache *getFirst() { return pFirst; }

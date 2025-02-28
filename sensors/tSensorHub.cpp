@@ -27,9 +27,9 @@ uint8_t tSensorHub::getSensorID(const char * pSensorName)
    return pSensorCache->GetSensorID();
 }
 
-const char *tSensorHub::getSensorName(uint8_t SensorID)
+const char *tSensorHub::getSensorName(uint8_t SensorID, uint8_t NodeID)
 {
-   tSensorCache *pSensorCache = tSensorCache::getByID(SensorID);
+   tSensorCache *pSensorCache = tSensorCache::getByID(SensorID, NodeID);
    if (NULL == pSensorCache)
    {
       return NULL;
@@ -37,9 +37,9 @@ const char *tSensorHub::getSensorName(uint8_t SensorID)
    return (pSensorCache->GetName());
 }
 
-uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize, void **pDataBlob)
+uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID, uint8_t NodeID, uint8_t *dataBlobSize, void **pDataBlob)
 {
-   tSensorCache *pSensorCache = tSensorCache::getByID(SensorID);
+   tSensorCache *pSensorCache = tSensorCache::getByID(SensorID, NodeID);
    if (NULL == pSensorCache)
    {
       return STATUS_UNKNOWN_SENSOR_ID;
@@ -50,14 +50,16 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize
 }
 
 
-uint8_t tSensorHub::RegisterSensor(uint8_t SensorID)
+uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, uint8_t NodeID)
 {
    uint8_t result = STATUS_SUCCESS;
    DEBUG_PRINTLN_3("");
    DEBUG_PRINT_3("Sensor register request. ID: ");
-   DEBUG_3(println(SensorID));
+   DEBUG_3(print(SensorID));
+   DEBUG_PRINT_3(" on node: ");
+   DEBUG_3(println(NodeID));
 
-   tSensorCache *pSensorCache = tSensorCache::getByID(SensorID);
+   tSensorCache *pSensorCache = tSensorCache::getByID(SensorID, NodeID);
    if (NULL != pSensorCache)
    {
 	   DEBUG_PRINTLN_3("-----> Sensor already registgered ");

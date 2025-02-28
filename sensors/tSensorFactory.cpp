@@ -133,7 +133,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
 	Status = pSensor->setConfig(measurementPeriod, ApiVersion, pConfigBlob, configBlobSize);
 	if (STATUS_SUCCESS != Status)
 	{
-		// sensor cannot be delted, this situation is more/less fatal
+		// sensor cannot be deleted, this situation is more/less fatal
 		return NULL;
 	}
 

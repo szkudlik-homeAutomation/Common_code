@@ -26,7 +26,7 @@ public:
 	}
 	static tSensorHub *Instance;
 
-	uint8_t RegisterSensor(uint8_t SensorID);
+	uint8_t RegisterSensor(uint8_t SensorID, uint8_t NodeID);
 
 	/*
 	 * Get an ID of a sensor by name
@@ -40,13 +40,13 @@ public:
 	/**
 	 * return a pointer to sensor name or NULL if the sensor does not exist
 	 */
-	const char *getSensorName(uint8_t SensorID);
+	const char *getSensorName(uint8_t SensorID, uint8_t NodeID);
 
 	/**
 	 * get cached sensor data
 	 * get data from a sensor stored locally
 	 */
-	uint8_t getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize, void **pDataBlob);
+	uint8_t getCachedSensorData(uint8_t SensorID, uint8_t NodeID, uint8_t *dataBlobSize, void **pDataBlob);
 
 #if CONFIG_SENSORS_JSON_OUTPUT
 	/**
