@@ -74,6 +74,7 @@ public:
   }
 
 protected:
+  bool isServlet(const String &servlet) const;
   virtual tTcpSession *NewSession(EthernetClient aEthernetClient) { return new tHttpSession(aEthernetClient); }
 
   /* user - specific servlet factory */
