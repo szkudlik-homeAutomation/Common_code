@@ -154,7 +154,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
 	DEBUG_PRINT_3("Creating sensor type ");
 	DEBUG_3(print(SensorType,DEC));
 	DEBUG_PRINT_3(" ID ");
-	DEBUG_3(print(SensorID,DEC));
+	DEBUG_3(println(SensorID,DEC));
 
 	tSensor *pSensor = NULL;
     switch (SensorType)
