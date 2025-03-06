@@ -122,10 +122,11 @@ tSensor* tSensor::getSensor(uint8_t sensorID)
 void tSensor::onMeasurementCompleted(bool Status)
 {
   misMeasurementValid = Status;
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
+  // sensor with IDs > 1 won't generate local events, either directly nor through sensorhub
 	if (getSensorID() == 1)
 	{
-#endif //REMOTE_SENSORS_TEST
+#endif //CONFIG_REMOTE_SENSORS_TEST
 
 #if CONFIG_SENSOR_HUB
   if (Status)
@@ -157,12 +158,12 @@ void tSensor::onMeasurementCompleted(bool Status)
   tMessageReciever::Dispatch(MessageType_SensorEvent, getSensorID(), &Event);
 #endif //CONFIG_SENSOR_GENERATE_EVENTS
 
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
 	}
-#endif //REMOTE_SENSORS_TEST
+#endif //CONFIG_REMOTE_SENSORS_TEST
 
 #if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
-  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	// EV_TYPE_MEASUREMENT_ERROR will be sent if ! isMeasurementValid()
+  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	//todo EV_TYPE_MEASUREMENT_ERROR will be sent if ! isMeasurementValid()
 #endif // CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 }
 

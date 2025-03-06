@@ -104,12 +104,14 @@ config SENSOR_HUB_FOR_REMOTE_SENSORS
         This setting is enabling the sensor hub to cache sensor data
         and to handle messages from remote sensors
         usually this setting is enabled on the central controller
+        when enabled sensor hub will handle messages:
+        MESSAGE_TYPE_SENSOR_EVENT - a measure completed, thold exdeeded etc.
+        MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE - handled as "sensor detected"
 
 config SENSOR_SEND_EVENTS_USING_SERIAL
 	bool "Enable sendng sensor events using serial communication"
 	depends on TLE8457_COMM_LIB
 	depends on SENSORS
-	default n
 	help
 		setting to be set on the node where sensors are running
 		Enables sending sensor events to the central station
@@ -128,7 +130,6 @@ config SENSOR_REMOTE_CONTROL
 	bool "Enable dynamic creation/deletion/start/stop of sensors using serial communication"
     depends on SENSORS
 	depends on TLE8457_COMM_LIB
-	default n
 	help
 		setting to be set on the node where sensors are running
 		this is independent from SENSOR_SEND_EVENTS_USING_SERIAL
@@ -144,6 +145,7 @@ config SENSORS_STORE_IN_EEPROM
 
 config SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
     bool "Enbable sending control messages using serial communication"
+    depends on SENSORS
     depends on TLE8457_COMM_LIB
     default 0
     help
@@ -161,3 +163,17 @@ config SENSORS_JSON_OUTPUT
 		this settings is enabling a huge part of code translating 
 		binary format from enabled sensors
 
+config REMOTE_SENSORS_TEST
+	bool "debug option, enable testing remote sensors on a single node"
+	depends on SENSORS
+	imply SENSOR_REMOTE_CONTROL
+	imply SENSOR_SEND_EVENTS_USING_SERIAL
+	default n
+	help
+		this options enables testing remote sensors
+		The system will handle all local sensors with ID > 1
+		as if there were "remote", meaning:
+		 - IDs > 1 won't generate local events, either directly nor through sensorhub
+		 - IDs > 1 won't be registered in sensorHub locally
+		the above allows testing communication with such sensors through serial communication only
+		regardless they are running on the same node
