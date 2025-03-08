@@ -20,3 +20,10 @@
 #define ATOMIC(CODE) {uint8_t sreg = SREG; noInterrupts(); {CODE} SREG = sreg;}
 
 #define C_ASSERT(e) typedef char __C_ASSERT__[(e)?1:-1]
+
+#define stringify_literal( x ) # x
+#define stringify_expanded( x ) stringify_literal( x )
+
+#define CONCATENATE_FW_VERSION(A,B,C) stringify_expanded(A) "." stringify_expanded(B) "." stringify_expanded(C)
+
+#define FW_VERSION CONCATENATE_FW_VERSION(FW_VERSION_MAJOR,FW_VERSION_MINOR,FW_VERSION_PATCH)
