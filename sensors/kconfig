@@ -126,14 +126,29 @@ config SENSOR_EVENTS_SERIAL_RECIEVER_ID
 	    Reciever ID of the sensor events, sensor events will be sent to this ID 
 	    Usually the ID of the central station
 
-config SENSOR_REMOTE_CONTROL
+config SENSOR_BASIC_REMOTE_CONTROL
+	bool "enables basic commands for remote control of sensors"
+	depends on TELNET_SERVER
+	depends on TLE8457_COMM_LIB
+	help
+        Enable this option to provide basic commands to control sensor via Telnet
+        get sensor by id, get sensor value
+        
+confis SENSOR_ADVANCED_REMOTE_CONTROL
 	bool "Enable dynamic creation/deletion/start/stop of sensors using serial communication"
-    depends on SENSORS
+    selects SENSOR_BASIC_REMOTE_CONTROL
 	depends on TLE8457_COMM_LIB
 	help
 		setting to be set on the node where sensors are running
 		this is independent from SENSOR_SEND_EVENTS_USING_SERIAL
 
+config SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
+    bool "Enable saving and restoring of all sensors to eeprom using serial communication"
+    selects SENSOR_BASIC_REMOTE_CONTROL
+	depends on TLE8457_COMM_LIB
+    help
+    	allow on demand saving and restoring of all sensors to eeprom
+        
 config SENSORS_STORE_IN_EEPROM
 	bool "Enable dynamic saving and restoring of all sensors to eeprom"
 	default n 
@@ -166,7 +181,7 @@ config SENSORS_JSON_OUTPUT
 config REMOTE_SENSORS_TEST
 	bool "debug option, enable testing remote sensors on a single node"
 	depends on SENSORS
-	imply SENSOR_REMOTE_CONTROL
+	imply SENSOR_BASIC_REMOTE_CONTROL
 	imply SENSOR_SEND_EVENTS_USING_SERIAL
 	default n
 	help
