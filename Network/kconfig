@@ -42,7 +42,7 @@ config HTTP_SERVER
 config HTTP_SERVER_INSTANCE
     bool "create a default HTTP Server Instance"
     depends on HTTP_SERVER
-    default 0
+    default y
     help
     	Eneable this option to create a default HTTP Server Instance
     	Will provide a default set of servlets
