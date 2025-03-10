@@ -413,7 +413,7 @@ static bool send_restoreSensorsFromEeprom(Commander &Cmdr)
       goto error;
     }
 
-    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSOR_SAVE");
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSOR_RESTORE");
     CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_RESTORE, 0, NULL);
     return true;
 
