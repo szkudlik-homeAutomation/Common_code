@@ -53,6 +53,7 @@ config HTTP_SERVER_INSTANCE
 config OUTPUT_CONTROL_SERVLET
     bool "Enable output control Servlet"
     depends on HTTP_SERVER
+    depends on OUTPUT_PROCESS
     help 
     	enables /outputState and /outputSet servlets 
 
