@@ -50,14 +50,6 @@ config HTTP_SERVER_INSTANCE
     	httpServer::servletFactory() should be implemented
     	amd httpserver instance should be created manually
 
-config SENSOR_STATE_SERVLET
-    bool "Enable Sensor State Servlet"
-    depends on HTTP_SERVER
-    select SENSORS
-    default 0
-    help
-    	enables a HTTP servlet to display sensor state /sensorState
-
 config OUTPUT_CONTROL_SERVLET
     bool "Enable output control Servlet"
     depends on HTTP_SERVER
