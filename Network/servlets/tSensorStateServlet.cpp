@@ -7,11 +7,6 @@
 
 #include "../../../../global.h"
 #if CONFIG_SENSOR_STATE_SERVLET
-
-#if !CONFIG_SENSOR_HUB
-#error CONFIG_SENSOR_STATE_SERVLET requires CONFIG_SENSOR_HUB
-#endif
-
 #include "tSensorStateServlet.h"
 #include "../../sensors/tSensorHub.h"
 

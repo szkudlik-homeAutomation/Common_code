@@ -26,8 +26,12 @@ public:
     static bool SendMsgOutputStateResponse(uint8_t RecieverID, uint8_t  OutputID, uint8_t  PowerState, uint16_t TimerValue, uint16_t DefaultTimer);
     static bool SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8_t  State, uint16_t Timer);
 #endif // CONFIG_OUTPUT_PROCESS
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+
+#if CONFIG_SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
     static bool SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod);
+#endif // SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
+
+#if CONFIG_SENSORS_OVER_SERIAL_COMM
     static bool SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
     		    void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment);
 #endif //CONFIG_SENSORS_OVER_SERIAL_COMM

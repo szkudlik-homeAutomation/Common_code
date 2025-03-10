@@ -56,21 +56,26 @@ bool send_SetOutputHandler(Commander &Cmdr);
 #if CONFIG_NODE_SCAN_TASK
 bool trigger_ScanNodes(Commander &Cmdr);
 #endif //CONFIG_NODE_SCAN_TASK
-
 #endif // CONFIG_OUTPUT_PROCESS
+#endif // CONFIG_TLE8457_COMM_LIB
+//TODO do this in kconfig rules
+
+
 #if CONFIG_TELNET_COMMANDS_SENSORS
 bool send_GetSensorByIdReqestHandler(Commander &Cmdr);
 bool send_GetSensorMeasurementReqest(Commander &Cmdr);
+#endif CONFIG_TELNET_COMMANDS_SENSORS
+
+#if CONFIG_TELNET_COMMANDS_SENSORS_REMOTE_CONTROL
 bool send_CreateSensorRequest(Commander &Cmdr);
 bool send_StartSensorRequest(Commander &Cmdr);
 bool send_StopSensorRequest(Commander &Cmdr);
 bool send_ConfigureSensorRequest(Commander &Cmdr);
+#endif CONFIG_TELNET_COMMANDS_SENSORS_REMOTE_CONTROL
+
+#if CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
 bool send_saveSensorsToEeprom(Commander &Cmdr);
 bool send_restoreSensorsFromEeprom(Commander &Cmdr);
-
-#endif //CONFIG_TELNET_COMMANDS_SENSORS
-
-#endif //CONFIG_TLE8457_COMM_LIB
-
+#endif CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
 
 #endif //CONFIG_TELNET_SERVER
