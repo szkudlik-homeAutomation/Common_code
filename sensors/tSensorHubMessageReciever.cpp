@@ -53,6 +53,8 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     {
         // sensor has been seen before. Check if the sensor looks identical as before
     	// skip local sensors
+
+    	// TODO: check more deeply sensor state, runninh/stopped etc. Modify status
 #if CONFIG_REMOTE_SENSORS_TEST
     	if (1 != Message->SensorID)
     		// in remote sensor testing all IDs > 1 are "remote"

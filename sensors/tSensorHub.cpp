@@ -121,6 +121,8 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
 void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
 	uint8_t result;
+
+	DEBUG_PRINTLN_2(">>> ON SENSOR EVENT<<<");
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS
    tSensorEvent Event;
 #endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
@@ -136,6 +138,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
 
    if (EventType == EV_TYPE_MEASUREMENT_ERROR)
    {
+	  DEBUG_PRINTLN_2(">>> Sensor error reported <<<");
       pSensorCache->setError(tSensorCache::state_sensor_error_reported);
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS
       Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
@@ -146,7 +149,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
 #endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
       return;
    }
-
+   DEBUG_PRINTLN_2(">>> Data recieved correctly <<<");
    result = pSensorCache->setData(pDataBlob, dataBlobSize);
 
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS
