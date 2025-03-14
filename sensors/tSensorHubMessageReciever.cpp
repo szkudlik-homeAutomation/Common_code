@@ -76,8 +76,14 @@ void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageS
 {
     uint8_t result;
 	tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
-	if (!pSensorCache)
+	if (!pSensorCache) {
+		// the sensor is not yet know. Send discovery request
+	    tMessageGetSensorByIdReqest getSensorMessage;
+	    getSensorMessage.SensorID = Message->Header.SensorID;
+	    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST");
+	    CommSenderProcess::Instance->Enqueue(SenderID, MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST, sizeof(getSensorMessage), &getSensorMessage);
 		return;
+	}
 
 	// no data assembly?
 	if (Message->Header.LastSegment && Message->Header.SegmentSeq == 0 && !pSensorCache->isDataAssemblyNeeded())
