@@ -188,8 +188,10 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    pStream->print(F(",\"ID\":"));
    pStream->print(mSensorID);
 
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
    pStream->print(F(",\"NodeID\":"));
    pStream->print(mNodeID);
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
    pStream->print(F("}}"));
 
