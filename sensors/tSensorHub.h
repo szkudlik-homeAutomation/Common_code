@@ -26,7 +26,8 @@ public:
 	}
 	static tSensorHub *Instance;
 
-	uint8_t RegisterSensor(uint8_t SensorID);
+	/* note! name string is NOT copied, need point to static var */
+	uint8_t RegisterSensor(uint8_t SensorID, const char *pSensorName);
 
 	/*
 	 * Get an ID of a sensor by name

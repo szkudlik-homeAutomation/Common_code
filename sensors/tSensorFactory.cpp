@@ -119,11 +119,12 @@ doFormatJSON tSensorFactory::getJSONFormatFunction(uint8_t SensorType, uint8_t a
 }
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
-tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char *pName, uint8_t ApiVersion, void *pConfigBlob,
+tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
+		  char *pSensorName, uint8_t ApiVersion, void *pConfigBlob,
 	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart)
 {
 	uint8_t Status;
-	tSensor *pSensor = CreateSensor(SensorType, SensorID, pName);
+	tSensor *pSensor = CreateSensor(SensorType, SensorID);
 	if (NULL == pSensor)
 	{
 		DEBUG_PRINTLN_3(" error: cannot create sensor");
@@ -145,12 +146,12 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
     if (SensorID == 1)
     	//sensors with ID > 1 won't be registered in sensorHub locally
 #endif // CONFIG_REMOTE_SENSORS_TEST
-    	tSensorHub::Instance->RegisterSensor(SensorID);
+    	tSensorHub::Instance->RegisterSensor(SensorID, pSensorName);
 #endif // CONFIG_SENSOR_HUB
 	return pSensor;
 }
 
-tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char *pName)
+tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
 {
 	DEBUG_PRINT_3("Creating sensor type ");
 	DEBUG_3(print(SensorType,DEC));
@@ -202,11 +203,6 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
 	#endif //CONFIG_WIEGAND_SENSOR
           default:
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
-    }
-
-    if (NULL != pSensor)
-    {
-    	pSensor->setName(pName);
     }
 
     return pSensor;

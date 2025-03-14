@@ -132,11 +132,6 @@ public:
    uint8_t getMeasurementBlobSize() const { return mMeasurementBlobSize; }
    uint8_t *getConfigBlob() { return mConfigBlobPtr; }
 
-   const char *getName() const { return mName; }
-
-   /* NOTE name is not copied */
-   void setName(char *name) { mName = name; }
-
    static tSensor* getSensor(uint8_t sensorID);
 
    static void Run();
@@ -188,7 +183,6 @@ private:
    uint8_t mSerialEventsMask;
    uint8_t mConfigBlobSize;
    void *mConfigBlobPtr;
-   char *mName;
 
    static tSensor* pFirst;
    tSensor* pNext;

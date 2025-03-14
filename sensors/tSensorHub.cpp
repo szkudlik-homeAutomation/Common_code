@@ -50,7 +50,7 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize
 }
 
 
-uint8_t tSensorHub::RegisterSensor(uint8_t SensorID)
+uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, const char *pSensorName)
 {
    uint8_t result = STATUS_SUCCESS;
    DEBUG_PRINTLN_3("");
@@ -80,7 +80,7 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID)
    if (pSensor != NULL)
    {
 	   // local sensor
-	   result = pSensorCache->setParams(pSensor->getName(), pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
+	   result = pSensorCache->setParams(pSensorName, pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
    }
 
    return result;
