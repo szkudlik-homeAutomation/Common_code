@@ -18,12 +18,10 @@
  */
 
 #include "../../../global.h"
-#if CONFIG_SENSORS
 
-#include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
+// setting for both control and sensor runner
 
-/* sensor time tick - 100ms */
-#define SENSOR_PROCESS_SERVICE_TIME 100
+#if CONFIG_SENSORS || CONFIG_SENSORS_CONTROL_NODE
 
 #define SENSOR_TYPE_DS1820 1
 #define SENSOR_TYPE_IMPULSE 2
@@ -43,6 +41,14 @@
 #define EV_TYPE_THOLD_EXCEEDED 3
 #define EV_TYPE_SENSOR_STATE_CHANGE 4
 
+#endif // CONFIG_SENSORS || CONFIG_SENSORS_CONTROL_NODE
+
+#if CONFIG_SENSORS
+
+#include "../../lib/ArduinoProcessScheduler/src/ProcessScheduler.h"
+
+/* sensor time tick - 100ms */
+#define SENSOR_PROCESS_SERVICE_TIME 100
 
 class tSensor;
 
