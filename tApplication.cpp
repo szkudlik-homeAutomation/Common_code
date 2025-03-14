@@ -142,6 +142,11 @@ void tApplication::Setup() {
     DEBUG_PRINTLN_1("...done");
 #endif // CONFIG_WORKER_PROCESS
 
+
+#if CONFIG_SENSORS_RESTORE_FROM_EEPROM_AT_STARTUP
+    tSensor::RestoreFromEEprom();
+#endif CONFIG_SENSORS_RESTORE_FROM_EEPROM_AT_STARTUP
+
     DEBUG_PRINT_1("AppSetupAfter...");
 	AppSetupAfter();
     DEBUG_PRINTLN_1("...done");

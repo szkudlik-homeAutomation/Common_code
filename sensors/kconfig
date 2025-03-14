@@ -240,6 +240,13 @@ config SENSORS_STORE_IN_EEPROM
 		requires eeprom offsets: 
 			EEPROM_NUM_OF_SENSORS, EEPROM_FIRST_SENSOR
 		and EEPROM_SENSOR_STORAGE_SIZE to be defined
+		
+config SENSORS_RESTORE_FROM_EEPROM_AT_STARTUP
+	bool "Enable restoring of sensors from eeprom at startup"
+    default n
+    depends on SENSORS_STORE_IN_EEPROM
+    help
+        restores sensors from eeprom at startup
 
 
 config SENSORS_JSON_OUTPUT
