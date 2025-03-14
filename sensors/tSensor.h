@@ -74,6 +74,10 @@ public:
      * all sensor already existing sensors will be ignored
      */
     static uint8_t RestoreFromEEprom();
+
+    /* remove all sensors from eeprom */
+    static uint8_t DeleteAllSensorsFromEeprom();
+
 #endif //CONFIG_SENSORS_STORE_IN_EEPROM
 
 	/* process and set config. The config must be set before

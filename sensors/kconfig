@@ -237,7 +237,9 @@ config SENSORS_STORE_IN_EEPROM
     depends on SENSORS
 	help
 		to be used when sensors are dynamically created from the central node
-		requires eeprom offsets: EEPROM_NUM_OF_SENSORS, EEPROM_FIRST_SENSOR
+		requires eeprom offsets: 
+			EEPROM_NUM_OF_SENSORS, EEPROM_FIRST_SENSOR
+		and EEPROM_SENSOR_STORAGE_SIZE to be defined
 
 
 config SENSORS_JSON_OUTPUT

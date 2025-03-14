@@ -234,17 +234,31 @@ void tSensorProcess::setup() {}
 
 #if CONFIG_SENSORS_STORE_IN_EEPROM
 
+
+uint8_t tSensor::DeleteAllSensorsFromEeprom()
+{
+    EEPROM.write(EEPROM_NUM_OF_SENSORS, 0);
+}
+
+typedef struct
+{
+	uint8_t configBlobApiVersion : 5,
+		    eventMask : 3;
+
+	uint8_t configBlobSize;
+	uint16_t measurementPeriod;
+	uint8_t sensorID;
+	uint8_t sensorType;
+} tEepromSensorEntry;
+
 uint8_t tSensor::SaveToEEprom()
 {
-    eepromDeleteAllSensors();
+    DeleteAllSensorsFromEeprom();
     tSensor *pSensor = pFirst;
     uint16_t offset = EEPROM_FIRST_SENSOR;
     uint8_t cnt = 0;
     while (pSensor)
     {
-        if (! pSensor->isRunning())
-            continue; 
-
         tEepromSensorEntry Entry;
         Entry.configBlobApiVersion = pSensor->getSensorApiVersion();
         Entry.configBlobSize = pSensor->getConfigBlobSize();
@@ -252,23 +266,20 @@ uint8_t tSensor::SaveToEEprom()
         Entry.measurementPeriod = pSensor->GetMeasurementPeriod();
         Entry.sensorID = pSensor->getSensorID();
         Entry.sensorType = pSensor->getSensorType();
-        Entry.nameSize = strlen(pSensor->getName());
+
+        // check is there's enough space in eeprom
+
+        if (offset + sizeof(Entry) + Entry.configBlobSize >= EEPROM_FIRST_SENSOR + EEPROM_SENSOR_STORAGE_SIZE)
+        {
+            return STATUS_OUT_OF_MEMORY;
+        }
+
         EEPROM.put(offset,Entry);
         offset += sizeof(Entry);
-        if (offset >= EEPROM.length())
-            return STATUS_OUT_OF_MEMORY;
 
-        for (int i = 0; i < Entry.nameSize; i++)
-        {
-            EEPROM.write(offset++, *(pSensor->getName()+i));
-            if (offset >= EEPROM.length())
-                return STATUS_OUT_OF_MEMORY;
-        }
         for (int i = 0; i < Entry.configBlobSize; i++)
         {
             EEPROM.write(offset++, *(pSensor->getConfigBlob()+i));
-            if (offset >= EEPROM.length())
-                return STATUS_OUT_OF_MEMORY;
         }
 
         cnt++;
@@ -292,17 +303,8 @@ uint8_t tSensor::RestoreFromEEprom()
 
         EEPROM.get(offset, Entry);
         offset += sizeof(Entry);
-        name = malloc(Entry.nameSize + 1);
-        if (NULL == name)
-            return STATUS_OUT_OF_MEMORY;
-        for (int i = 0; i < Entry.nameSize; i++)
-        {
-            *(name + i) = EEPROM.read(offset++);
-        }
-        *(name +  Entry.nameSize) = 0;
 
-        //name won't be copied
-        tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Entry.sensorType, Entry.sensorID, name);
+        tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Entry.sensorType, Entry.sensorID);
         if (NULL == pSensor)
         {
         	// fatal, anyway. No recovery needed
@@ -310,7 +312,8 @@ uint8_t tSensor::RestoreFromEEprom()
         }
 
         /* copy the config */
-        if (pSensor->getConfigBlobSize() != Entry.configBlobSize)
+        if ((pSensor->getConfigBlobSize() != Entry.configBlobSize) ||
+        	(pSensor->getSensorApiVersion() != Entry.configBlobApiVersion))
         {
         	return STATUS_SENSOR_CREATE_ERROR;
         }
@@ -325,6 +328,7 @@ uint8_t tSensor::RestoreFromEEprom()
         if (Result != STATUS_SUCCESS)
         	return Result;
 
+        pSensor->setSensorSerialEventsMask(Entry.eventMask);
         Result = pSensor->Start();
         if (Result != STATUS_SUCCESS)
         	return Result;
