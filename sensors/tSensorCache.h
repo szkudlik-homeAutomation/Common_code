@@ -14,7 +14,6 @@
 /**
  * tSensorCache is an instance describing a sensor that may run on a different node
  * It is used by SensorHub to keep track and present data from all sensors in the
- * system (from all nodes)
  *
  * tSensorCache keeps a copy (cache) of current data produced by the sensor
  */
@@ -103,8 +102,18 @@ public:
    uint8_t setData(void *dataSrc, uint8_t dataSize);
    char * GetName() { return mName; }
    uint8_t GetSensorID() const { return mSensorID; }
-   /* note! name string is NOT copied, need point to static var */
-   uint8_t setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
+
+
+   // set a name based on a given progmem offset
+   void setNameProgmem(const char * pName) {};
+
+   // set a name from eeprom from given Eeprom offset
+   void setNameEeprom(uint16_t offset, uint8_t len) {}
+
+   // generate a unique name based on sensor ID
+   void generateName();
+
+   uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
 

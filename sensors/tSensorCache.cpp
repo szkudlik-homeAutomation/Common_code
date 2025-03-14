@@ -14,10 +14,9 @@
 tSensorCache * tSensorCache::pFirst = NULL;
 
 
-uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
+uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
 {
 	resetTimestamp();
-	mName = pName;
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
 	mNodeID = nodeID;
@@ -33,6 +32,16 @@ uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVer
 	mState = state_no_data_recieved;
 
 	return STATUS_SUCCESS;
+}
+
+const char UnknownNameStr[] PROGMEM = "UNKNOWN_XX";
+void tSensorCache::generateName()
+{
+	uint8_t UnknownNameSize = strlen_P(UnknownNameStr);
+	mName = malloc(UnknownNameSize+1);
+	strcpy_P(mName, UnknownNameStr);
+	mName[UnknownNameSize-1] = (mSensorID % 10) + '0';
+	mName[UnknownNameSize-2] = (mSensorID / 10) + '0';
 }
 
 tSensorCache *tSensorCache::getByID(uint8_t SensorID)

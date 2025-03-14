@@ -46,8 +46,10 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
         if (NULL == pSensorCache)
         	// error??
         	return;
-//TODO at this point sensor name need to be retrieved from a local dictionary
-    	pSensorCache->setParams("REMOTE NAME", Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
+    	pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
+
+    	// unknown yet sensor - generate name
+    	pSensorCache->generateName();
     }
     else
     {
