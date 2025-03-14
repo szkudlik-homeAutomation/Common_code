@@ -65,7 +65,7 @@ void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SET_OUTPUT");
            break;
 #endif //CONFIG_OUTPUT_PROCESS
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_BASIC_REMOTE_CONTROL
        case MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST:
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST");
            break;
@@ -79,7 +79,7 @@ void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_SENSOR_EVENT");
            LogMsgSensorEvent(SenderDevId,(tMessageSensorEvent*)(pFrame->Data));
            break;
-#endif //CONFIG_SENSORS_OVER_SERIAL_COMM
+#endif //CONFIG_SENSOR_BASIC_REMOTE_CONTROL
 
     }
 }
@@ -138,7 +138,7 @@ void tIncomingFrameHanlder::LogMsgOutputStateResponse(uint8_t SenderID, tMessage
 
 #endif // CONFIG_OUTPUT_PROCESS
 
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_BASIC_REMOTE_CONTROL
 void tIncomingFrameHanlder::LogMsgGetSensorByIdResponse(uint8_t SenderID, tMessageGetSensorByIdResponse *Message)
 {
 	LOG_PRINT("Sensor ID ");
@@ -198,5 +198,5 @@ void tIncomingFrameHanlder::LogMsgSensorEvent(uint8_t SenderID, tMessageSensorEv
         tLogger::Instance->DisableLogsForce();
 }
 
-#endif // CONFIG_SENSORS_OVER_SERIAL_COMM
+#endif // CONFIG_SENSOR_BASIC_REMOTE_CONTROL
 #endif // CONFIG_TLE8457_COMM_LIB

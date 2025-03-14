@@ -6,7 +6,7 @@
  */
 
 #include "../../../global.h"
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_BASIC_REMOTE_CONTROL
 
 #include "tSensorControlFromRemote.h"
 #include "tSensorFactory.h"
@@ -29,6 +29,10 @@ void tSensorControlFromRemote::onMessage(uint8_t type, uint16_t data, void *pDat
     case MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST:
         HandleMessageGetSensorByIdReqest(pFrame->SenderDevId, (tMessageGetSensorByIdReqest *)pFrame->Data);
         break;
+    case MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST:
+        HandleMsgGetSensorMeasurementReqest(SenderDevId,(tMessageGetSensorMeasurementReqest*)(pFrame->Data));
+        break;
+#if CONFIG_SENSOR_ADVANCED_REMOTE_CONTROL
     case MESSAGE_TYPE_SENSOR_CREATE:
         HandleMsgSensorCreate(pFrame->SenderDevId, (tMessageSensorCreate *)pFrame->Data);
         break;
@@ -41,15 +45,15 @@ void tSensorControlFromRemote::onMessage(uint8_t type, uint16_t data, void *pDat
     case MESSAGE_TYPE_SENSOR_STOP:
         HandleMsgSensorStop(pFrame->SenderDevId, (tMessageSensorStop *)pFrame->Data);
         break;
-    case MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST:
-        HandleMsgGetSensorMeasurementReqest(SenderDevId,(tMessageGetSensorMeasurementReqest*)(pFrame->Data));
-        break;
+#endif CONFIG_SENSOR_ADVANCED_REMOTE_CONTROL
+#if CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
     case MESSAGE_TYPE_SENSOR_SAVE:
     	HandeMsgSaveSensorsToEeprom(SenderDevId);
     	break;
     case MESSAGE_TYPE_SENSOR_RESTORE:
     	HandeMsgRestoreSensorsFromEeprom(SenderDevId);
     	break;
+#endif CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
     }
 }
 
@@ -76,6 +80,19 @@ void tSensorControlFromRemote::HandleMessageGetSensorByIdReqest(uint8_t sender, 
           CommSenderProcess::Instance->Enqueue(sender, MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE, sizeof(Response), &Response);
     }
 }
+
+
+void tSensorControlFromRemote::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message)
+{
+    /* get data blob from sensor and send it in one or more frames */
+    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
+    if (NULL == pSensor)
+        return;
+
+    pSensor->sendSerialMsgSensorEvent(true, EV_TYPE_MEASUREMENT_COMPLETED);
+}
+
+#if CONFIG_SENSOR_ADVANCED_REMOTE_CONTROL
 
 void tSensorControlFromRemote::HandleMsgSensorCreate(uint8_t sender, tMessageSensorCreate *pFrame)
 {
@@ -117,7 +134,6 @@ void tSensorControlFromRemote::HandleMsgSensorConfigure(uint8_t SenderID, tMessa
     }
 }
 
-
 void tSensorControlFromRemote::HandleMsgSensorStart(uint8_t SenderID, tMessageSensorStart *Message)
 {
     tSensor *pSensor = tSensor::getSensor(Message->SensorID);
@@ -156,15 +172,8 @@ void tSensorControlFromRemote::HandleMsgSensorStop(uint8_t SenderID, tMessageSen
     tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 
-void tSensorControlFromRemote::HandleMsgGetSensorMeasurementReqest(uint8_t SenderID, tMessageGetSensorMeasurementReqest *Message)
-{
-    /* get data blob from sensor and send it in one or more frames */
-    tSensor *pSensor = tSensor::getSensor(Message->SensorID);
-    if (NULL == pSensor)
-        return;
-
-    pSensor->sendSerialMsgSensorEvent(true, EV_TYPE_MEASUREMENT_COMPLETED);
-}
+#endif CONFIG_SENSOR_ADVANCED_REMOTE_CONTROL
+#if CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
 
 void tSensorControlFromRemote::HandeMsgSaveSensorsToEeprom(uint8_t SenderID)
 {
@@ -180,4 +189,6 @@ void tSensorControlFromRemote::HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID
     tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 
-#endif // CONFIG_SENSORS_OVER_SERIAL_COMM
+#endif CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
+
+#endif // CONFIG_SENSOR_BASIC_REMOTE_CONTROL

@@ -12,7 +12,7 @@
 #include "../lib/strAllocateCopy.h"
 
 
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
 void tSensorHubMessageReciever::onMessage(uint8_t type, uint16_t data, void *pData)
 {
@@ -54,10 +54,11 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     }
     else
     {
-        // sensor has been seen before. Check
+        // sensor has been seen before. Check if the sensor looks identical as before
     	// skip local sensors
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
     	if (1 != Message->Header.SensorID)
+    		// in remote sensor testing all IDs > 1 are "remote"
 #else
     	if (! pSensorCache->isLocalSensor())
 #endif
@@ -100,4 +101,4 @@ void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageS
 	}
 }
 
-#endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif //CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS

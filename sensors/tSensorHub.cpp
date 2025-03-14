@@ -66,13 +66,16 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID)
    // add sensor to repository
    pSensorCache = new tSensorCache(SensorID);
 
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
    tSensor *pSensor = NULL;
    if(SensorID == 1)
+	   // sensors with IDs > 1 won't be registered in sensorHub locally.
+	   // but they may be registetred by handling MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE
+	   // don't try to look for IDs > 1 localy when handling such message
 	   pSensor = tSensor::getSensor(SensorID);
-#else
+#else // CONFIG_REMOTE_SENSORS_TEST
    tSensor *pSensor = tSensor::getSensor(SensorID);
-#endif
+#endif // CONFIG_REMOTE_SENSORS_TEST
 
    if (pSensor != NULL)
    {

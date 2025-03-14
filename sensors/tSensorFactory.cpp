@@ -141,9 +141,10 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
 		pSensor->Start();
 
 #if CONFIG_SENSOR_HUB
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
     if (SensorID == 1)
-#endif // REMOTE_SENSORS_TEST
+    	//sensors with ID > 1 won't be registered in sensorHub locally
+#endif // CONFIG_REMOTE_SENSORS_TEST
     	tSensorHub::Instance->RegisterSensor(SensorID);
 #endif // CONFIG_SENSOR_HUB
 	return pSensor;
@@ -154,7 +155,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID, char
 	DEBUG_PRINT_3("Creating sensor type ");
 	DEBUG_3(print(SensorType,DEC));
 	DEBUG_PRINT_3(" ID ");
-	DEBUG_3(print(SensorID,DEC));
+	DEBUG_3(println(SensorID,DEC));
 
 	tSensor *pSensor = NULL;
     switch (SensorType)

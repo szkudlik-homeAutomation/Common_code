@@ -32,10 +32,10 @@ private:
     uint8_t mNodeID;     // id of a node the sensor is located on. 0 => local sensor
     char * mName;
     void *pDataCache;
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     void *pRemoteDataCache;  // pointer to additional data cache used for assembling incoming data (if needed)
     uint8_t mSeq;    // packet reassembly seq
-#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     /* C-style function pointer, no point for a class and virtual method here */
 #if CONFIG_SENSORS_JSON_OUTPUT
 	doFormatJSON mFormatJSON;
@@ -68,11 +68,11 @@ public:
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 	   mDataBlobSize(0),
 	   mState(state_no_data_recieved)
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 	   ,
 	   pRemoteDataCache(NULL),
 	   mSeq(0)
-#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
    {
 	   pNext = pFirst; pFirst = this;
 	   resetTimestamp();
@@ -90,12 +90,12 @@ public:
    bool isPermanentError() const { return mState < 0; }
    bool isLocalSensor() const { return mNodeID == 0; }
 
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
    void resetDataSegment() {mSeq = 0;}
    void *getAssembledData() { return pRemoteDataCache; }
    uint8_t addDataSegment(uint8_t SegmentSeq, void *Payload);
    bool isDataAssemblyNeeded() const { return pRemoteDataCache != NULL; }
-#endif	//CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif	//CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
    uint8_t getSensorType() const { return mSensorType; }
    uint8_t getSensorApiVersion() const { return mSensorApiVersion; }

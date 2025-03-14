@@ -75,7 +75,7 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
         return STATUS_SENSOR_INCORRECT_STATE;
 
     mDataBlobSize = dataBlobSize;
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     bool doubleSize = false;
 
     if (! isLocalSensor())
@@ -87,13 +87,13 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
             doubleSize = true;
         }
     }
-#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
     pDataCache = malloc(MemSize);
     if (NULL == pDataCache)
         return STATUS_OUT_OF_MEMORY;
 
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     if (doubleSize)
     {
         pRemoteDataCache = (uint8_t*)pDataCache + dataBlobSize;
@@ -102,7 +102,7 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
     {
         pRemoteDataCache = NULL;
     }
-#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
     return STATUS_SUCCESS;
 }
@@ -197,7 +197,7 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 }
 #endif CONFIG_SENSORS_JSON_OUTPUT
 
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
 {
     if (! isWorkingState())
@@ -223,6 +223,6 @@ uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
 
     return STATUS_SUCCESS;
 }
-#endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif //CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
 #endif //CONFIG_SENSOR_HUB

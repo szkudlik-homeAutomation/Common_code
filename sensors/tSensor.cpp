@@ -16,9 +16,9 @@
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/tOutgoingFrames.h"
 
-#if CONFIG_EEPROM_SENSORS
+#if CONFIG_SENSORS_STORE_IN_EEPROM
 #include "../../../GlobalDefs/Eeprom.h"
-#endif // CONFIG_EEPROM_SENSORS
+#endif // CONFIG_SENSORS_STORE_IN_EEPROM
 
 tSensor* tSensor::pFirst = NULL;
 tSensorProcess *tSensorProcess::Instance;
@@ -122,10 +122,11 @@ tSensor* tSensor::getSensor(uint8_t sensorID)
 void tSensor::onMeasurementCompleted(bool Status)
 {
   misMeasurementValid = Status;
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
+  // sensor with IDs > 1 won't generate local events, either directly nor through sensorhub
 	if (getSensorID() == 1)
 	{
-#endif //REMOTE_SENSORS_TEST
+#endif //CONFIG_REMOTE_SENSORS_TEST
 
 #if CONFIG_SENSOR_HUB
   if (Status)
@@ -157,16 +158,16 @@ void tSensor::onMeasurementCompleted(bool Status)
   tMessageReciever::Dispatch(MessageType_SensorEvent, getSensorID(), &Event);
 #endif //CONFIG_SENSOR_GENERATE_EVENTS
 
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
 	}
-#endif //REMOTE_SENSORS_TEST
+#endif //CONFIG_REMOTE_SENSORS_TEST
 
-#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
-  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	// EV_TYPE_MEASUREMENT_ERROR will be sent if ! isMeasurementValid()
-#endif // CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
+  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	//todo EV_TYPE_MEASUREMENT_ERROR will be sent if ! isMeasurementValid()
+#endif // CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 }
 
-#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 {
 	if (misMeasurementValid)
@@ -180,7 +181,7 @@ void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 			{
 				lastSegment = (pos + SENSOR_MEASUREMENT_PAYLOAD_SIZE) >= mMeasurementBlobSize;
 
-				tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), SensorEventType, onDemand,
+				tOutgoingFrames::SendSensorEvent(CONFIG_SENSOR_EVENTS_SERIAL_RECIEVER_ID, getSensorID(), SensorEventType, onDemand,
 						(uint8_t*)mCurrentMeasurementBlob+pos,
 						lastSegment ? mMeasurementBlobSize - pos : SENSOR_MEASUREMENT_PAYLOAD_SIZE,
 						seq, lastSegment);
@@ -195,7 +196,7 @@ void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 			tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
 	}
 }
-#endif //CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#endif //CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 
 void tSensor::Run()
 {
@@ -232,7 +233,7 @@ void tSensorProcess::service()
 
 void tSensorProcess::setup() {}
 
-#if CONFIG_EEPROM_SENSORS
+#if CONFIG_SENSORS_STORE_IN_EEPROM
 
 uint8_t tSensor::SaveToEEprom()
 {
@@ -332,7 +333,7 @@ uint8_t tSensor::RestoreFromEEprom()
 
     return STATUS_SUCCESS;
 }
-#endif // CONFIG_EEPROM_SENSORS
+#endif // CONFIG_SENSORS_STORE_IN_EEPROM
 
 
 uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
