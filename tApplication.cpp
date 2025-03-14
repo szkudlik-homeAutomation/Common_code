@@ -19,6 +19,7 @@
 #include "tApplication.h"
 #include "Network/httpServer.h"
 #include "sensors/tSensorHubMessageReciever.h"
+#include "sensors/tSensorControlFromRemote.h"
 #include "WatchdogProcess.h"
 
 #if CONFIG_WORKER_PROCESS
@@ -50,6 +51,10 @@ tWatchdogProcess WatchdogProcess;
 #if CONFIG_SENSORS
 tSensorProcess SensorProcess;
 #endif //CONFIG_SENSORS
+
+#if CONFIG_SENSOR_BASIC_REMOTE_CONTROL
+tSensorControlFromRemote SensorControlFromRemote;
+#endif CONFIG_SENSOR_BASIC_REMOTE_CONTROL
 
 
 tApplication *tApplication::Instance;
