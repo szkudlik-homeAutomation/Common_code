@@ -38,33 +38,30 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     // called every time when MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE is recieved
     // check if sensor cache for incoming sensor exits
 
-    tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
+    tSensorCache *pSensorCache = tSensorCache::getByID(Message->SensorID);
     if (NULL == pSensorCache)
     {
         // remote sensor seen for the first time
-    	pSensorCache = new tSensorCache(Message->Header.SensorID);
+    	pSensorCache = new tSensorCache(Message->SensorID);
         if (NULL == pSensorCache)
         	// error??
         	return;
-
-    	// make copy of sensor name
-        char *nameCopy = strAllocateCopy(Message->name, sizeof(Message->name));
-
-    	pSensorCache->setParams(nameCopy, Message->Header.SensorType, Message->Header.ApiVersion, SenderID, Message->Header.MeasurementBlobSize);
+//TODO at this point sensor name need to be retrieved from a local dictionary
+    	pSensorCache->setParams("REMOTE NAME", Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
     }
     else
     {
         // sensor has been seen before. Check if the sensor looks identical as before
     	// skip local sensors
 #if CONFIG_REMOTE_SENSORS_TEST
-    	if (1 != Message->Header.SensorID)
+    	if (1 != Message->SensorID)
     		// in remote sensor testing all IDs > 1 are "remote"
 #else
     	if (! pSensorCache->isLocalSensor())
 #endif
     	{
-            if ((pSensorCache->getSensorType() != Message->Header.SensorType) ||
-                (pSensorCache->getSensorApiVersion() != Message->Header.ApiVersion) ||
+            if ((pSensorCache->getSensorType() != Message->SensorType) ||
+                (pSensorCache->getSensorApiVersion() != Message->ApiVersion) ||
                 (pSensorCache->getNodeID() != SenderID))
             {
                 pSensorCache->setError(tSensorCache::state_inconsistent_params);

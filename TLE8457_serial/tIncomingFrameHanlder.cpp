@@ -142,32 +142,27 @@ void tIncomingFrameHanlder::LogMsgOutputStateResponse(uint8_t SenderID, tMessage
 void tIncomingFrameHanlder::LogMsgGetSensorByIdResponse(uint8_t SenderID, tMessageGetSensorByIdResponse *Message)
 {
 	LOG_PRINT("Sensor ID ");
-	LOG(print(Message->Header.SensorID, DEC));
+	LOG(print(Message->SensorID, DEC));
 	LOG_PRINT(" found on node ");
 	LOG(println(SenderID,DEC));
-	LOG_PRINT(" ->sensor name: ");
-	char nameCpy[sizeof(Message->name) + 1];
-	memset(nameCpy, 0, sizeof(nameCpy));
-	strncpy(nameCpy, Message->name, sizeof(Message->name));
-	LOG(println(nameCpy));
 	LOG_PRINT(" ->sensor type: ");
-	LOG(println(Message->Header.SensorType,DEC));
+	LOG(println(Message->SensorType,DEC));
 	LOG_PRINT(" ->API version: ");
-	LOG(println(Message->Header.ApiVersion,DEC));
+	LOG(println(Message->ApiVersion,DEC));
 	LOG_PRINT(" ->MeasurementPeriod: ");
-	LOG(println(Message->Header.MeasurementPeriod,DEC));
+	LOG(println(Message->MeasurementPeriod,DEC));
 	LOG_PRINT(" ->Config blob size: ");
-	LOG(println(Message->Header.ConfigBlobSize,DEC));
+	LOG(println(Message->ConfigBlobSize,DEC));
 	LOG_PRINT(" ->measurement blob size: ");
-	LOG(println(Message->Header.MeasurementBlobSize,DEC));
+	LOG(println(Message->MeasurementBlobSize,DEC));
 	LOG_PRINT(" ->isConfigured: ");
-	LOG(print(Message->Header.isConfigured,DEC));
+	LOG(print(Message->isConfigured,DEC));
 	LOG_PRINT(" isRunning: ");
-	LOG(print(Message->Header.isRunning,DEC));
+	LOG(print(Message->isRunning,DEC));
 	LOG_PRINT(" isMeasurementValid: ");
-	LOG(print(Message->Header.isMeasurementValid,DEC));
+	LOG(print(Message->isMeasurementValid,DEC));
 	LOG_PRINT(" EventMask: ");
-	LOG(println(Message->Header.EventsMask,BIN));
+	LOG(println(Message->EventsMask,BIN));
 }
 
 void tIncomingFrameHanlder::LogMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
