@@ -35,23 +35,25 @@ void tSensorHubMessageReciever::onMessage(uint8_t type, uint16_t data, void *pDa
 }
 void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSensorByIdResponse *Message)
 {
+    uint8_t result;
     // called every time when MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE is recieved
-    // check if sensor cache for incoming sensor exits
 
     tSensorCache *pSensorCache = tSensorCache::getByID(Message->SensorID);
     if (NULL == pSensorCache)
     {
-        // remote sensor seen for the first time
+        // remote sensor seen for the first time, has no pre-created cache entry so name is not known
     	pSensorCache = new tSensorCache(Message->SensorID);
         if (NULL == pSensorCache)
         	// error??
         	return;
-    	pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
 
     	// unknown yet sensor - generate name
     	pSensorCache->generateName();
     }
-    else
+
+	result = pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
+
+    if (result == STATUS_SENSOR_INCORRECT_STATE)
     {
         // sensor has been seen before. Check if the sensor looks identical as before
     	// skip local sensors
@@ -78,7 +80,7 @@ void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageS
 {
     uint8_t result;
 	tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
-	if (!pSensorCache) {
+	if (!pSensorCache || !pSensorCache->isDetected()) {
 		// the sensor is not yet know. Send discovery request
 	    tMessageGetSensorByIdReqest getSensorMessage;
 	    getSensorMessage.SensorID = Message->Header.SensorID;

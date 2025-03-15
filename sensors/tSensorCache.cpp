@@ -16,6 +16,9 @@ tSensorCache * tSensorCache::pFirst = NULL;
 
 uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
 {
+	if (isDetected())
+		return STATUS_SENSOR_INCORRECT_STATE;
+
 	resetTimestamp();
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
@@ -34,14 +37,23 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 	return STATUS_SUCCESS;
 }
 
-const char UnknownNameStr[] PROGMEM = "UNKNOWN_XX";
 void tSensorCache::generateName()
 {
-	uint8_t UnknownNameSize = strlen_P(UnknownNameStr);
-	mName = malloc(UnknownNameSize+1);
-	strcpy_P(mName, UnknownNameStr);
-	mName[UnknownNameSize-1] = (mSensorID % 10) + '0';
-	mName[UnknownNameSize-2] = (mSensorID / 10) + '0';
+	mName = malloc(3);
+	mName[1] = (mSensorID % 10) + '0';
+	mName[0] = (mSensorID / 10) + '0';
+	mName[2] = 0;
+}
+
+void tSensorCache::setNameProgmem(const __FlashStringHelper *pName)
+{
+	mName = malloc(strlen_P((const char *)pName)+1);
+	strcpy_P(mName, (const char *)pName);
+}
+
+void setNameEeprom(uint16_t offset, uint8_t len)
+{
+
 }
 
 tSensorCache *tSensorCache::getByID(uint8_t SensorID)
@@ -156,6 +168,10 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    pStream->print(F(",\"StateString\":"));
    switch (mState)
    {
+   case state_not_seen:
+   	   pStream->print(F("\"sensor not detected\""));
+   	   break;
+
    case state_no_data_recieved:
    	   pStream->print(F("\"no_data_recieved\""));
    	   break;

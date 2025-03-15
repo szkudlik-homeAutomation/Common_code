@@ -26,10 +26,10 @@ public:
 
 	/* create a sensor. Do initialize, configure and register in sensor hub (if present)
 	 * pSensorName is a name the sensor will be regitered in sensor hub, ignored if there's no sensor hub in the system
-	 * pSensorName must point to static - won't be copied, so use static variable
+	 * pSensorName a nem of the sensor in PROGMEM
 	 * pConfigBlob will be copied to sensor internals
 	 */
-	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, char *pSensorName, uint8_t ApiVersion, void *pConfigBlob,
+	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, const __FlashStringHelper *pSensorName, uint8_t ApiVersion, void *pConfigBlob,
 					      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart);
 
 #if CONFIG_SENSORS_JSON_OUTPUT

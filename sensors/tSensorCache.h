@@ -46,6 +46,7 @@ private:
 
 public:
 	// >0 - working states
+    static const int8_t state_not_seen = 0;		// entry created with name, but the seneor has not yet been seen
 	static const int8_t state_no_data_recieved = 1;		// dected, all metadata set, no payload data seen yet
 	static const int8_t state_working = 2;				//
 	static const int8_t state_timeout = 3;
@@ -66,7 +67,7 @@ public:
 	   mFormatJSON(NULL),
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 	   mDataBlobSize(0),
-	   mState(state_no_data_recieved)
+	   mState(state_not_seen)
 #if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 	   ,
 	   pRemoteDataCache(NULL),
@@ -85,7 +86,8 @@ public:
            mState = errorState;
            }
    }
-   bool isWorkingState() const { return mState > 0; }
+   bool isDetected() const { return mState != state_not_seen; }
+   bool isWorkingState() const { return mState >= state_no_data_recieved; }
    bool isPermanentError() const { return mState < 0; }
    bool isLocalSensor() const { return mNodeID == 0; }
 
@@ -105,10 +107,10 @@ public:
 
 
    // set a name based on a given progmem offset
-   void setNameProgmem(const char * pName) {};
+   void setNameProgmem(const __FlashStringHelper *pName);
 
    // set a name from eeprom from given Eeprom offset
-   void setNameEeprom(uint16_t offset, uint8_t len) {}
+   void setNameEeprom(uint16_t offset, uint8_t len);
 
    // generate a unique name based on sensor ID
    void generateName();
