@@ -10,7 +10,7 @@ menuconfig SENSORS_CONTROL_NODE
 		note! code not affected direclty by this opiton
 
 config SENSORS_CONTROL_NODE_CONTROL_REMOTE_SENSORS
-    bool "Enable Sensors Control of sensors on remote nodes"
+    bool "Enable Control node sending messages to contro remote nodes"
     depends on SENSORS_CONTROL_NODE
     depends on TLE8457_COMM_LIB
     select SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES 
@@ -194,6 +194,7 @@ config SENSOR_SEND_EVENTS_USING_SERIAL
 	bool "Enable sendng sensor events using serial communication"
 	depends on TLE8457_COMM_LIB
 	depends on SENSORS
+	select SENSOR_BASIC_REMOTE_CONTROL
 	help
 		setting to be set on the node where sensors are running
 		Enables sending sensor events to the central station
