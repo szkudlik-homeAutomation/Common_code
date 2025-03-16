@@ -40,11 +40,12 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_PREFIX;
 uint8_t tSensorCache::generateName()
 {
-	uint8_t len = strlen_P(SensorPrefix);
-	mName = malloc(len+3);
+	uint8_t len = strlen_P(SensorPrefix) + 3;
+	mName = malloc(len);
 	if (!mName)
 		return STATUS_OUT_OF_MEMORY;
 
+	strcpy_P(mName, SensorPrefix);
 	mName[len-3] = (mSensorID / 10) + '0';
 	mName[len-2] = (mSensorID % 10) + '0';
 	mName[len-1] = 0;

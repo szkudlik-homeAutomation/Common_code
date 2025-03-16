@@ -192,7 +192,7 @@ void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 	else
 	{
 		if (onDemand || (mSerialEventsMask & (1 << EV_TYPE_MEASUREMENT_ERROR)))
-			tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
+			tOutgoingFrames::SendSensorEvent(CONFIG_SENSOR_EVENTS_SERIAL_RECIEVER_ID, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
 	}
 }
 #endif //CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
