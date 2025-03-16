@@ -121,7 +121,7 @@ doFormatJSON tSensorFactory::getJSONFormatFunction(uint8_t SensorType, uint8_t a
 
 tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
 		  const __FlashStringHelper *pSensorName, uint8_t ApiVersion, void *pConfigBlob,
-	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart)
+	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart, uint8_t eventMask)
 {
 	uint8_t Status;
 	tSensor *pSensor = CreateSensor(SensorType, SensorID);
@@ -137,6 +137,8 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
 		// sensor cannot be delted, this situation is more/less fatal
 		return NULL;
 	}
+
+	pSensor->setSensorSerialEventsMask(eventMask);
 
 	if(autoStart)
 		pSensor->Start();

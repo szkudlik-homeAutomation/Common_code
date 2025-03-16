@@ -30,7 +30,7 @@ public:
 	 * pConfigBlob will be copied to sensor internals
 	 */
 	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, const __FlashStringHelper *pSensorName, uint8_t ApiVersion, void *pConfigBlob,
-					      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart);
+					      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart, uint8_t eventMask);
 
 #if CONFIG_SENSORS_JSON_OUTPUT
    /* get a function pointer to JSON encoder for given sensor type and API version. Null if no matching function found */
