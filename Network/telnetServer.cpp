@@ -54,7 +54,7 @@ tTelnetSession *pTelnetSession = NULL;
 tTelnetSession::tTelnetSession(EthernetClient aEthernetClient,commandList_t *pTelnetCommands, uint8_t NumOfTelnetCommands)
    : tTcpSession(aEthernetClient, TELNET_SESSION_TIMEOUT), tLogTransport()
 {
-  DEBUG_PRINTLN_3("TELNET Session started");
+  DEBUG_PRINTLN_2("TELNET Session started");
   cmd.begin(&mEthernetClient, pTelnetCommands, NumOfTelnetCommands);
   cmd.commandPrompt(ON); //enable the command prompt
   cmd.echo(false);     //Echo incoming characters to theoutput port
@@ -242,6 +242,7 @@ static bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
 
     tMessageGetSensorByIdReqest Message;
     Message.SensorID = SensorId;
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST");
     CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_GET_SENSOR_BY_ID_REQUEST, sizeof(Message), &Message);
 
     return true;
@@ -250,6 +251,30 @@ static bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
     return false;
 }
 
+static bool send_GetSensorMeasurementReqest(Commander &Cmdr)
+{
+    int Dst = DEVICE_ID_BROADCAST;
+    int SensorId;
+
+    if(!Cmdr.getInt(SensorId))
+    {
+      goto error;
+    }
+    Cmdr.getInt(Dst);
+
+    tMessageGetSensorMeasurementReqest Message;
+    Message.SensorID = SensorId;
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST");
+    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST, sizeof(Message), &Message);
+
+    return true;
+  error:
+    Cmdr.println(F("Usage: GetSensorMeasurement sensor_id [dst_dev = broadcast]"));
+    return false;
+}
+#endif CONFIG_TELNET_COMMANDS_SENSORS
+
+#if CONFIG_TELNET_COMMANDS_SENSORS_REMOTE_CONTROL
 static bool send_CreateSensorRequest(Commander &Cmdr)
 {
     int Dst;
@@ -273,6 +298,7 @@ static bool send_CreateSensorRequest(Commander &Cmdr)
     tMessageSensorCreate Msg;
     Msg.SensorID = SensorId;
     Msg.SensorType = SensorType;
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSOR_CREATE");
     CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_CREATE, sizeof(Msg), &Msg);
     return true;
   error:
@@ -356,28 +382,9 @@ static bool send_StopSensorRequest(Commander &Cmdr)
     Cmdr.println(F("Usage: StopSensor sensor_id [dev_id = broadcast]"));
     return false;
 }
+#endif CONFIG_TELNET_COMMANDS_SENSORS_REMOTE_CONTROL
 
-static bool send_GetSensorMeasurementReqest(Commander &Cmdr)
-{
-    int Dst = DEVICE_ID_BROADCAST;
-    int SensorId;
-
-    if(!Cmdr.getInt(SensorId))
-    {
-      goto error;
-    }
-    Cmdr.getInt(Dst);
-
-    tMessageGetSensorMeasurementReqest Message;
-    Message.SensorID = SensorId;
-    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_MEASUREMENT_REQUEST, sizeof(Message), &Message);
-
-    return true;
-  error:
-    Cmdr.println(F("Usage: GetSensorMeasurement sensor_id [dst_dev = broadcast]"));
-    return false;
-}
-
+#if CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
 static bool send_saveSensorsToEeprom(Commander &Cmdr)
 {
 	int Dst;
@@ -386,6 +393,7 @@ static bool send_saveSensorsToEeprom(Commander &Cmdr)
       goto error;
     }
 
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSOR_SAVE");
     CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_SAVE, 0, NULL);
     return true;
 
@@ -402,6 +410,7 @@ static bool send_restoreSensorsFromEeprom(Commander &Cmdr)
       goto error;
     }
 
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSOR_RESTORE");
     CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_RESTORE, 0, NULL);
     return true;
 
@@ -409,8 +418,8 @@ static bool send_restoreSensorsFromEeprom(Commander &Cmdr)
       Cmdr.println(F("Usage: RestoreSensorsFromEeprom dst_dev"));
       return false;
 }
+#endif CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
 
-#endif // CONFIG_TELNET_COMMANDS_SENSORS
 #endif // CONFIG_TLE8457_COMM_LIB
 
 const commandList_t TelnetCommands[] = {
@@ -437,12 +446,16 @@ const commandList_t TelnetCommands[] = {
 #if CONFIG_TELNET_COMMANDS_SENSORS
   {"GetSensorById",   send_GetSensorByIdReqestHandler,"GetSensorById sensor_id [dst_dev = broadcast]"},
   {"GetSensorMeasurement",  send_GetSensorMeasurementReqest, "GetSensorMeasurement sensor_id [dst_dev = broadcast]"},
+#if CONFIG_TELNET_COMMANDS_SENSORS_REMOTE_CONTROL
   {"CreateSensor", send_CreateSensorRequest, "CreateSensor dev_id sensor_type sensor_id"},
   {"StartSensor", send_StartSensorRequest, "StartSensor sensor_id [sensor_ev_mask = EV_TYPE_MEASUREMENT_COMPLETED] [dev_id = broadcast]"},
   {"StopSensor", send_StopSensorRequest, "StopSensor sensor_id [dev_id = broadcast]"},
   {"ConfigureSensor", send_ConfigureSensorRequest, "ConfigureSensor sensor_id period [dev_id = broadcast]"},
+#endif //CONFIG_TELNET_COMMANDS_SENSORS_REMOTE_CONTROL
+#if CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
   {"SaveSensorsToEeprom", send_saveSensorsToEeprom, "SaveSensorsToEeprom dst_dev"},
   {"RestoreSensorsFromEeprom", send_restoreSensorsFromEeprom, "RestoreSensorsFromEeprom dst_dev"},
+#endif CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
 #endif // CONFIG_TELNET_COMMANDS_SENSORS
 #endif //CONFIG_TLE8457_COMM_LIB
 

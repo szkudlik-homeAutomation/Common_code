@@ -19,6 +19,7 @@
 #include "tApplication.h"
 #include "Network/httpServer.h"
 #include "sensors/tSensorHubMessageReciever.h"
+#include "sensors/tSensorControlFromRemote.h"
 #include "WatchdogProcess.h"
 
 #if CONFIG_WORKER_PROCESS
@@ -38,9 +39,9 @@ tHttpServer HttpServer;
 
 
 
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 tSensorHubMessageReciever SensorHubMessageReciever;
-#endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif //CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
 
 #if CONFIG_WATCHDOG
@@ -50,6 +51,10 @@ tWatchdogProcess WatchdogProcess;
 #if CONFIG_SENSORS
 tSensorProcess SensorProcess;
 #endif //CONFIG_SENSORS
+
+#if CONFIG_SENSOR_BASIC_REMOTE_CONTROL
+tSensorControlFromRemote SensorControlFromRemote;
+#endif CONFIG_SENSOR_BASIC_REMOTE_CONTROL
 
 
 tApplication *tApplication::Instance;
@@ -136,6 +141,11 @@ void tApplication::Setup() {
 	tWorkerProcess::Instance->add();
     DEBUG_PRINTLN_1("...done");
 #endif // CONFIG_WORKER_PROCESS
+
+
+#if CONFIG_SENSORS_RESTORE_FROM_EEPROM_AT_STARTUP
+    tSensor::RestoreFromEEprom();
+#endif CONFIG_SENSORS_RESTORE_FROM_EEPROM_AT_STARTUP
 
     DEBUG_PRINT_1("AppSetupAfter...");
 	AppSetupAfter();

@@ -14,10 +14,12 @@
 tSensorCache * tSensorCache::pFirst = NULL;
 
 
-uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
+uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
 {
+	if (isDetected())
+		return STATUS_SENSOR_INCORRECT_STATE;
+
 	resetTimestamp();
-	mName = pName;
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
 	mNodeID = nodeID;
@@ -33,6 +35,38 @@ uint8_t tSensorCache::setParams(char * pName, uint8_t SensorType, uint8_t ApiVer
 	mState = state_no_data_recieved;
 
 	return STATUS_SUCCESS;
+}
+
+const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_PREFIX;
+uint8_t tSensorCache::generateName()
+{
+	uint8_t len = strlen_P(SensorPrefix) + 3;
+	mName = malloc(len);
+	if (!mName)
+		return STATUS_OUT_OF_MEMORY;
+
+	strcpy_P(mName, SensorPrefix);
+	mName[len-3] = (mSensorID / 10) + '0';
+	mName[len-2] = (mSensorID % 10) + '0';
+	mName[len-1] = 0;
+
+	return STATUS_SUCCESS;
+}
+
+uint8_t tSensorCache::setNameProgmem(const __FlashStringHelper *pName)
+{
+	mName = malloc(strlen_P((const char *)pName)+1);
+	if (!mName)
+		return STATUS_OUT_OF_MEMORY;
+
+	strcpy_P(mName, (const char *)pName);
+
+	return STATUS_SUCCESS;
+}
+
+void setNameEeprom(uint16_t offset, uint8_t len)
+{
+
 }
 
 tSensorCache *tSensorCache::getByID(uint8_t SensorID)
@@ -75,7 +109,7 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
         return STATUS_SENSOR_INCORRECT_STATE;
 
     mDataBlobSize = dataBlobSize;
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     bool doubleSize = false;
 
     if (! isLocalSensor())
@@ -87,13 +121,13 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
             doubleSize = true;
         }
     }
-#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
     pDataCache = malloc(MemSize);
     if (NULL == pDataCache)
         return STATUS_OUT_OF_MEMORY;
 
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     if (doubleSize)
     {
         pRemoteDataCache = (uint8_t*)pDataCache + dataBlobSize;
@@ -102,7 +136,7 @@ uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
     {
         pRemoteDataCache = NULL;
     }
-#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
     return STATUS_SUCCESS;
 }
@@ -147,6 +181,10 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    pStream->print(F(",\"StateString\":"));
    switch (mState)
    {
+   case state_not_seen:
+   	   pStream->print(F("\"sensor not detected\""));
+   	   break;
+
    case state_no_data_recieved:
    	   pStream->print(F("\"no_data_recieved\""));
    	   break;
@@ -188,8 +226,10 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    pStream->print(F(",\"ID\":"));
    pStream->print(mSensorID);
 
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
    pStream->print(F(",\"NodeID\":"));
    pStream->print(mNodeID);
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
    pStream->print(F("}}"));
 
@@ -197,7 +237,7 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 }
 #endif CONFIG_SENSORS_JSON_OUTPUT
 
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
 {
     if (! isWorkingState())
@@ -223,6 +263,6 @@ uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
 
     return STATUS_SUCCESS;
 }
-#endif //CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif //CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
 #endif //CONFIG_SENSOR_HUB

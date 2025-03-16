@@ -14,7 +14,6 @@
 /**
  * tSensorCache is an instance describing a sensor that may run on a different node
  * It is used by SensorHub to keep track and present data from all sensors in the
- * system (from all nodes)
  *
  * tSensorCache keeps a copy (cache) of current data produced by the sensor
  */
@@ -32,10 +31,10 @@ private:
     uint8_t mNodeID;     // id of a node the sensor is located on. 0 => local sensor
     char * mName;
     void *pDataCache;
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     void *pRemoteDataCache;  // pointer to additional data cache used for assembling incoming data (if needed)
     uint8_t mSeq;    // packet reassembly seq
-#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     /* C-style function pointer, no point for a class and virtual method here */
 #if CONFIG_SENSORS_JSON_OUTPUT
 	doFormatJSON mFormatJSON;
@@ -47,6 +46,7 @@ private:
 
 public:
 	// >0 - working states
+    static const int8_t state_not_seen = 0;		// entry created with name, but the seneor has not yet been seen
 	static const int8_t state_no_data_recieved = 1;		// dected, all metadata set, no payload data seen yet
 	static const int8_t state_working = 2;				//
 	static const int8_t state_timeout = 3;
@@ -67,12 +67,12 @@ public:
 	   mFormatJSON(NULL),
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 	   mDataBlobSize(0),
-	   mState(state_no_data_recieved)
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+	   mState(state_not_seen)
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 	   ,
 	   pRemoteDataCache(NULL),
 	   mSeq(0)
-#endif CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
    {
 	   pNext = pFirst; pFirst = this;
 	   resetTimestamp();
@@ -86,16 +86,17 @@ public:
            mState = errorState;
            }
    }
-   bool isWorkingState() const { return mState > 0; }
+   bool isDetected() const { return mState != state_not_seen; }
+   bool isWorkingState() const { return mState >= state_no_data_recieved; }
    bool isPermanentError() const { return mState < 0; }
    bool isLocalSensor() const { return mNodeID == 0; }
 
-#if CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
    void resetDataSegment() {mSeq = 0;}
    void *getAssembledData() { return pRemoteDataCache; }
    uint8_t addDataSegment(uint8_t SegmentSeq, void *Payload);
    bool isDataAssemblyNeeded() const { return pRemoteDataCache != NULL; }
-#endif	//CONFIG_SENSOR_HUB_MESSAGE_RECIEVER
+#endif	//CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
    uint8_t getSensorType() const { return mSensorType; }
    uint8_t getSensorApiVersion() const { return mSensorApiVersion; }
@@ -103,8 +104,18 @@ public:
    uint8_t setData(void *dataSrc, uint8_t dataSize);
    char * GetName() { return mName; }
    uint8_t GetSensorID() const { return mSensorID; }
-   /* note! name string is NOT copied, need point to static var */
-   uint8_t setParams(char * pName, uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
+
+
+   // set a name based on a given progmem offset
+   uint8_t setNameProgmem(const __FlashStringHelper *pName);
+
+   // set a name from eeprom from given Eeprom offset
+   uint8_t setNameEeprom(uint16_t offset, uint8_t len);
+
+   // generate a unique name based on sensor ID
+   uint8_t generateName();
+
+   uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
 

@@ -26,7 +26,8 @@ public:
 	}
 	static tSensorHub *Instance;
 
-	uint8_t RegisterSensor(uint8_t SensorID);
+	/* name from progmem */
+	uint8_t RegisterSensor(uint8_t SensorID, const __FlashStringHelper *pSensorName);
 
 	/*
 	 * Get an ID of a sensor by name

@@ -16,9 +16,9 @@
 #include "../TLE8457_serial/TLE8457_serial_lib.h"
 #include "../TLE8457_serial/tOutgoingFrames.h"
 
-#if CONFIG_EEPROM_SENSORS
+#if CONFIG_SENSORS_STORE_IN_EEPROM
 #include "../../../GlobalDefs/Eeprom.h"
-#endif // CONFIG_EEPROM_SENSORS
+#endif // CONFIG_SENSORS_STORE_IN_EEPROM
 
 tSensor* tSensor::pFirst = NULL;
 tSensorProcess *tSensorProcess::Instance;
@@ -96,8 +96,7 @@ tSensor::tSensor(uint8_t SensorType, uint8_t sensorID, uint8_t ApiVersion, uint8
 	  mConfigBlobPtr(ConfigBlobPtr),
 	  mPartialConfigSeq(0),
 	  mSerialEventsMask(0),
-	  misMeasurementValid(false),
-	  mName(NULL)
+	  misMeasurementValid(false)
 {
    pNext = pFirst;
    pFirst = this;
@@ -122,10 +121,11 @@ tSensor* tSensor::getSensor(uint8_t sensorID)
 void tSensor::onMeasurementCompleted(bool Status)
 {
   misMeasurementValid = Status;
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
+  // sensor with IDs > 1 won't generate local events, either directly nor through sensorhub
 	if (getSensorID() == 1)
 	{
-#endif //REMOTE_SENSORS_TEST
+#endif //CONFIG_REMOTE_SENSORS_TEST
 
 #if CONFIG_SENSOR_HUB
   if (Status)
@@ -157,16 +157,16 @@ void tSensor::onMeasurementCompleted(bool Status)
   tMessageReciever::Dispatch(MessageType_SensorEvent, getSensorID(), &Event);
 #endif //CONFIG_SENSOR_GENERATE_EVENTS
 
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
 	}
-#endif //REMOTE_SENSORS_TEST
+#endif //CONFIG_REMOTE_SENSORS_TEST
 
-#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
-  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	// EV_TYPE_MEASUREMENT_ERROR will be sent if ! isMeasurementValid()
-#endif // CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
+  sendSerialMsgSensorEvent(false, EV_TYPE_MEASUREMENT_COMPLETED);	//todo EV_TYPE_MEASUREMENT_ERROR will be sent if ! isMeasurementValid()
+#endif // CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 }
 
-#if CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 {
 	if (misMeasurementValid)
@@ -180,7 +180,7 @@ void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 			{
 				lastSegment = (pos + SENSOR_MEASUREMENT_PAYLOAD_SIZE) >= mMeasurementBlobSize;
 
-				tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), SensorEventType, onDemand,
+				tOutgoingFrames::SendSensorEvent(CONFIG_SENSOR_EVENTS_SERIAL_RECIEVER_ID, getSensorID(), SensorEventType, onDemand,
 						(uint8_t*)mCurrentMeasurementBlob+pos,
 						lastSegment ? mMeasurementBlobSize - pos : SENSOR_MEASUREMENT_PAYLOAD_SIZE,
 						seq, lastSegment);
@@ -192,10 +192,10 @@ void tSensor::sendSerialMsgSensorEvent(bool onDemand, uint8_t SensorEventType)
 	else
 	{
 		if (onDemand || (mSerialEventsMask & (1 << EV_TYPE_MEASUREMENT_ERROR)))
-			tOutgoingFrames::SendSensorEvent(DEVICE_ID_BROADCAST, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
+			tOutgoingFrames::SendSensorEvent(CONFIG_SENSOR_EVENTS_SERIAL_RECIEVER_ID, getSensorID(), EV_TYPE_MEASUREMENT_ERROR, onDemand, NULL, 0, 0, 1);
 	}
 }
-#endif //CONFIG_SENSOR_GENERATE_SERIAL_EVENTS
+#endif //CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 
 void tSensor::Run()
 {
@@ -232,19 +232,33 @@ void tSensorProcess::service()
 
 void tSensorProcess::setup() {}
 
-#if CONFIG_EEPROM_SENSORS
+#if CONFIG_SENSORS_STORE_IN_EEPROM
+
+
+uint8_t tSensor::DeleteAllSensorsFromEeprom()
+{
+    EEPROM.write(EEPROM_NUM_OF_SENSORS, 0);
+}
+
+typedef struct
+{
+	uint8_t configBlobApiVersion : 5,
+		    eventMask : 3;
+
+	uint8_t configBlobSize;
+	uint16_t measurementPeriod;
+	uint8_t sensorID;
+	uint8_t sensorType;
+} tEepromSensorEntry;
 
 uint8_t tSensor::SaveToEEprom()
 {
-    eepromDeleteAllSensors();
+    DeleteAllSensorsFromEeprom();
     tSensor *pSensor = pFirst;
     uint16_t offset = EEPROM_FIRST_SENSOR;
     uint8_t cnt = 0;
     while (pSensor)
     {
-        if (! pSensor->isRunning())
-            continue; 
-
         tEepromSensorEntry Entry;
         Entry.configBlobApiVersion = pSensor->getSensorApiVersion();
         Entry.configBlobSize = pSensor->getConfigBlobSize();
@@ -252,23 +266,20 @@ uint8_t tSensor::SaveToEEprom()
         Entry.measurementPeriod = pSensor->GetMeasurementPeriod();
         Entry.sensorID = pSensor->getSensorID();
         Entry.sensorType = pSensor->getSensorType();
-        Entry.nameSize = strlen(pSensor->getName());
+
+        // check is there's enough space in eeprom
+
+        if (offset + sizeof(Entry) + Entry.configBlobSize >= EEPROM_FIRST_SENSOR + EEPROM_SENSOR_STORAGE_SIZE)
+        {
+            return STATUS_OUT_OF_MEMORY;
+        }
+
         EEPROM.put(offset,Entry);
         offset += sizeof(Entry);
-        if (offset >= EEPROM.length())
-            return STATUS_OUT_OF_MEMORY;
 
-        for (int i = 0; i < Entry.nameSize; i++)
-        {
-            EEPROM.write(offset++, *(pSensor->getName()+i));
-            if (offset >= EEPROM.length())
-                return STATUS_OUT_OF_MEMORY;
-        }
         for (int i = 0; i < Entry.configBlobSize; i++)
         {
             EEPROM.write(offset++, *(pSensor->getConfigBlob()+i));
-            if (offset >= EEPROM.length())
-                return STATUS_OUT_OF_MEMORY;
         }
 
         cnt++;
@@ -292,17 +303,8 @@ uint8_t tSensor::RestoreFromEEprom()
 
         EEPROM.get(offset, Entry);
         offset += sizeof(Entry);
-        name = malloc(Entry.nameSize + 1);
-        if (NULL == name)
-            return STATUS_OUT_OF_MEMORY;
-        for (int i = 0; i < Entry.nameSize; i++)
-        {
-            *(name + i) = EEPROM.read(offset++);
-        }
-        *(name +  Entry.nameSize) = 0;
 
-        //name won't be copied
-        tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Entry.sensorType, Entry.sensorID, name);
+        tSensor *pSensor = tSensorFactory::Instance->CreateSensor(Entry.sensorType, Entry.sensorID);
         if (NULL == pSensor)
         {
         	// fatal, anyway. No recovery needed
@@ -310,7 +312,8 @@ uint8_t tSensor::RestoreFromEEprom()
         }
 
         /* copy the config */
-        if (pSensor->getConfigBlobSize() != Entry.configBlobSize)
+        if ((pSensor->getConfigBlobSize() != Entry.configBlobSize) ||
+        	(pSensor->getSensorApiVersion() != Entry.configBlobApiVersion))
         {
         	return STATUS_SENSOR_CREATE_ERROR;
         }
@@ -325,6 +328,7 @@ uint8_t tSensor::RestoreFromEEprom()
         if (Result != STATUS_SUCCESS)
         	return Result;
 
+        pSensor->setSensorSerialEventsMask(Entry.eventMask);
         Result = pSensor->Start();
         if (Result != STATUS_SUCCESS)
         	return Result;
@@ -332,7 +336,7 @@ uint8_t tSensor::RestoreFromEEprom()
 
     return STATUS_SUCCESS;
 }
-#endif // CONFIG_EEPROM_SENSORS
+#endif // CONFIG_SENSORS_STORE_IN_EEPROM
 
 
 uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)

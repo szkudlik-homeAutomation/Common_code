@@ -29,10 +29,10 @@ private:
     void LogMsgOverviewStateResponse(uint8_t SenderID, tMessageTypeOverviewStateResponse* Message);
     void LogMsgOutputStateResponse(uint8_t SenderID, tMessageTypeOutputStateResponse* Message);
 #endif //CONFIG_OUTPUT_PROCESS
-#if CONFIG_SENSORS_OVER_SERIAL_COMM
+#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     void LogMsgGetSensorByIdResponse(uint8_t SenderID, tMessageGetSensorByIdResponse *Message);
     void LogMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message);
-#endif //CONFIG_SENSORS_OVER_SERIAL_COMM
+#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
 };
 

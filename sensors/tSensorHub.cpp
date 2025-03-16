@@ -50,7 +50,7 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize
 }
 
 
-uint8_t tSensorHub::RegisterSensor(uint8_t SensorID)
+uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, const __FlashStringHelper *pSensorName)
 {
    uint8_t result = STATUS_SUCCESS;
    DEBUG_PRINTLN_3("");
@@ -66,18 +66,23 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID)
    // add sensor to repository
    pSensorCache = new tSensorCache(SensorID);
 
-#if REMOTE_SENSORS_TEST
+#if CONFIG_REMOTE_SENSORS_TEST
    tSensor *pSensor = NULL;
    if(SensorID == 1)
+	   // sensors with IDs > 1 won't be registered in sensorHub locally.
+	   // but they may be registetred by handling MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE
+	   // don't try to look for IDs > 1 localy when handling such message
 	   pSensor = tSensor::getSensor(SensorID);
-#else
+#else // CONFIG_REMOTE_SENSORS_TEST
    tSensor *pSensor = tSensor::getSensor(SensorID);
-#endif
+#endif // CONFIG_REMOTE_SENSORS_TEST
 
    if (pSensor != NULL)
    {
 	   // local sensor
-	   result = pSensorCache->setParams(pSensor->getName(), pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
+	   result = pSensorCache->setNameProgmem(pSensorName);
+	   if (result == STATUS_SUCCESS)
+		   result = pSensorCache->setParams(pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
    }
 
    return result;
@@ -118,6 +123,8 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
 void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
 	uint8_t result;
+
+	DEBUG_PRINTLN_2(">>> ON SENSOR EVENT<<<");
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS
    tSensorEvent Event;
 #endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
@@ -133,6 +140,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
 
    if (EventType == EV_TYPE_MEASUREMENT_ERROR)
    {
+	  DEBUG_PRINTLN_2(">>> Sensor error reported <<<");
       pSensorCache->setError(tSensorCache::state_sensor_error_reported);
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS
       Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
@@ -143,7 +151,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
 #endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
       return;
    }
-
+   DEBUG_PRINTLN_2(">>> Data recieved correctly <<<");
    result = pSensorCache->setData(pDataBlob, dataBlobSize);
 
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS

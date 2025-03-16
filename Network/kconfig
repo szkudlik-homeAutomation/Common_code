@@ -42,21 +42,13 @@ config HTTP_SERVER
 config HTTP_SERVER_INSTANCE
     bool "create a default HTTP Server Instance"
     depends on HTTP_SERVER
-    default 0
+    default y
     help
     	Eneable this option to create a default HTTP Server Instance
     	Will provide a default set of servlets
     	If specific servlets are required, then this option should be disabled
     	httpServer::servletFactory() should be implemented
     	amd httpserver instance should be created manually
-
-config SENSOR_STATE_SERVLET
-    bool "Enable Sensor State Servlet"
-    depends on HTTP_SERVER
-    select SENSORS
-    default 0
-    help
-    	enables a HTTP servlet to display sensor state /sensorState
 
 config OUTPUT_CONTROL_SERVLET
     bool "Enable output control Servlet"
