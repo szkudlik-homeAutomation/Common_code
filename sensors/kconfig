@@ -190,6 +190,17 @@ config SENSOR_HUB_FOR_REMOTE_SENSORS
         MESSAGE_TYPE_SENSOR_EVENT - a measure completed, thold exdeeded etc.
         MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE - handled as "sensor detected"
 
+config SENSOR_HUB_AUTONAME_PREFIX
+    string "prefix for detected sensors in sensor hub"
+    depends on SENSORS
+    depends on SENSOR_HUB
+    depends on SENSOR_HUB_FOR_REMOTE_SENSORS
+    default "Sensor_"
+	help
+	    When an unknown sensor is detected, it will be named as
+	    prefix + sensor ID
+
+
 config SENSOR_SEND_EVENTS_USING_SERIAL
 	bool "Enable sendng sensor events using serial communication"
 	depends on TLE8457_COMM_LIB

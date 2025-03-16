@@ -35,7 +35,7 @@ void tSensorHubMessageReciever::onMessage(uint8_t type, uint16_t data, void *pDa
 }
 void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessageGetSensorByIdResponse *Message)
 {
-    uint8_t result;
+    uint8_t result = STATUS_SUCCESS;
     // called every time when MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE is recieved
 
     tSensorCache *pSensorCache = tSensorCache::getByID(Message->SensorID);
@@ -48,10 +48,11 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
         	return;
 
     	// unknown yet sensor - generate name
-    	pSensorCache->generateName();
+    	result = pSensorCache->generateName();
     }
 
-	result = pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
+    if (STATUS_SUCCESS == result)
+    	result = pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
 
     if (result == STATUS_SENSOR_INCORRECT_STATE)
     {

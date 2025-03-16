@@ -80,8 +80,9 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, const __FlashStringHelper *
    if (pSensor != NULL)
    {
 	   // local sensor
-	   pSensorCache->setNameProgmem(pSensorName);
-	   result = pSensorCache->setParams(pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
+	   result = pSensorCache->setNameProgmem(pSensorName);
+	   if (result == STATUS_SUCCESS)
+		   result = pSensorCache->setParams(pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
    }
 
    return result;

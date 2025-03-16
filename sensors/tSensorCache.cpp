@@ -37,18 +37,30 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 	return STATUS_SUCCESS;
 }
 
-void tSensorCache::generateName()
+const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_PREFIX;
+uint8_t tSensorCache::generateName()
 {
-	mName = malloc(3);
-	mName[1] = (mSensorID % 10) + '0';
-	mName[0] = (mSensorID / 10) + '0';
-	mName[2] = 0;
+	uint8_t len = strlen_P(SensorPrefix);
+	mName = malloc(len+3);
+	if (!mName)
+		return STATUS_OUT_OF_MEMORY;
+
+	mName[len-3] = (mSensorID / 10) + '0';
+	mName[len-2] = (mSensorID % 10) + '0';
+	mName[len-1] = 0;
+
+	return STATUS_SUCCESS;
 }
 
-void tSensorCache::setNameProgmem(const __FlashStringHelper *pName)
+uint8_t tSensorCache::setNameProgmem(const __FlashStringHelper *pName)
 {
 	mName = malloc(strlen_P((const char *)pName)+1);
+	if (!mName)
+		return STATUS_OUT_OF_MEMORY;
+
 	strcpy_P(mName, (const char *)pName);
+
+	return STATUS_SUCCESS;
 }
 
 void setNameEeprom(uint16_t offset, uint8_t len)

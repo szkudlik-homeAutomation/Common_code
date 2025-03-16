@@ -107,13 +107,13 @@ public:
 
 
    // set a name based on a given progmem offset
-   void setNameProgmem(const __FlashStringHelper *pName);
+   uint8_t setNameProgmem(const __FlashStringHelper *pName);
 
    // set a name from eeprom from given Eeprom offset
-   void setNameEeprom(uint16_t offset, uint8_t len);
+   uint8_t setNameEeprom(uint16_t offset, uint8_t len);
 
    // generate a unique name based on sensor ID
-   void generateName();
+   uint8_t generateName();
 
    uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
