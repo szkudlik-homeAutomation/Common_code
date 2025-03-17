@@ -47,9 +47,6 @@ uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
    pStream->print(pResult->Uptime);
    pStream->print(F(", \"FreeMem\":"));
    pStream->print(pResult->FreeMemory);
-   pStream->print(F(", \"Version\":\""));
-   pStream->print(F(FW_VERSION));
-   pStream->print(F("\""));
 
    return STATUS_SUCCESS;
 }
