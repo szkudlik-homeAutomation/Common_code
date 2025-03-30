@@ -20,9 +20,20 @@ public:
 
 protected:
     virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob) = 0;
-private:
+
    uint8_t mSensorID;
    uint8_t mSensorType;
+};
+
+class tSensorLoggerTxt : public tSensorLogger
+{
+public:
+	tSensorLoggerTxt(uint8_t SensorType) : tSensorLogger(SensorType) {}
+
+	tSensorLoggerTxt(uint8_t SensorType, uint8_t SensorID): tSensorLogger(SensorType, SensorID) {}
+
+protected:
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
 
 #endif // CONFIG_SENSORS
