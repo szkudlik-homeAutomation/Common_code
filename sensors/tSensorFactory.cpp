@@ -41,6 +41,9 @@
 #include "tWiegandSensor.h"
 #endif
 
+#if CONFIG_SHT3_DIS_SENSOR
+#include "tSht3Sensor.h"
+#endif
 
 #include "tOutputStateSensor.h"
 
@@ -203,6 +206,12 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
         	  pSensor = new tWiegandSensor(SensorID);
               break;
 	#endif //CONFIG_WIEGAND_SENSOR
+	#if CONFIG_SHT3_DIS_SENSOR
+          case SENSOR_TYPE_SHT3:
+        	  pSensor = new tSht3Sensor(SensorID);
+        	  break;
+	#endif //CONFIG_SHT3_DIS_SENSOR
+
           default:
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
     }

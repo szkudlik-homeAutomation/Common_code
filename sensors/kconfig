@@ -128,6 +128,18 @@ config PT100_ANALOG_SENSOR
     depends on SENSORS
     default n
     
+config SHT3_DIS_SENSOR  
+    bool "Enable Sensiron SHT3x-DIS Sensor"
+    depends on SENSORS
+    default n
+    help
+     Humidity and Temperature Sensor
+
+config SHT3_DIS_SENSOR_MEASURE_PERIOD  
+    int "Enable Sensiron SHT3x-DIS Sensor Measure Period, in seconds"
+    depends on SHT3_DIS_SENSOR
+    default 2
+    	
 config WIEGAND_SENSOR  
     bool "Enable Wiegand Sensor"
     depends on SENSORS
