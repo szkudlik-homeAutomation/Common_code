@@ -57,5 +57,15 @@ manifest:
       repo-path: Wiegand-Protocol-Library-for-Arduino.git
       revision: 66a1b619fac1d4de712c340f3cef4b2073b0e996
 
+    - name: sht3x
+      path: src/lib/sht3x
+      repo-path: arduino-i2c-sht3x
+      revision: e3a55be28ac6fcf357645eab1bd5f9485254fd6c
+
+    - name: sensiron_core
+      path: src/lib/sensiron_core
+      repo-path: Sensirion-arduino-core
+      revision: 0b6e552beadedcd0f402dd368e8f36d1c88195df
+    
 
 
