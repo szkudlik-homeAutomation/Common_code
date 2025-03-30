@@ -60,7 +60,7 @@ manifest:
     - name: sht3x
       path: src/lib/sht3x
       repo-path: arduino-i2c-sht3x
-      revision: e3a55be28ac6fcf357645eab1bd5f9485254fd6c
+      revision: 201c99b16803594222704193865a2b7863734375
 
     - name: sensiron_core
       path: src/lib/sensiron_core
