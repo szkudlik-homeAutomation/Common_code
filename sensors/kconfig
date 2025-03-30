@@ -133,6 +133,13 @@ config WIEGAND_SENSOR
     depends on SENSORS
     default n
     
+config SHT3_DIS_SENSOR  
+    bool "Enable Sensiron SHT3x-DIS Sensor"
+    depends on SENSORS
+    default n
+    help
+     Humidity and Temperature Sensor
+    	
 config WIEGAND_D0_PIN
     int "pin to be used as D0" 
     default 2
