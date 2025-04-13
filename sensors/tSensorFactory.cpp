@@ -138,6 +138,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
 	if (STATUS_SUCCESS != Status)
 	{
 		// sensor cannot be delted, this situation is more/less fatal
+		DEBUG_PRINTLN_3(" error: cannot set sensor config");
 		return NULL;
 	}
 
