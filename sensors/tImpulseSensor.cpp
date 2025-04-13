@@ -100,12 +100,12 @@ void tImpulseSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, ui
 
     tImpulseSensor::tResult *pResult = (tImpulseSensor::tResult *)pDataBlob;
 
-    DEBUG_PRINT_3("SensorID: ");
-    DEBUG_3(print(SensorID));
-    DEBUG_PRINT_3(" impulse count: ");
-    DEBUG_3(print(pResult->Count));
-    DEBUG_PRINT_3(" Sum: ");
-    DEBUG_3(println(pResult->Sum));
+    LOG_PRINT("SensorID: ");
+    LOG(print(SensorID));
+    LOG_PRINT(" impulse count: ");
+    LOG(print(pResult->Count));
+    LOG_PRINT(" Sum: ");
+    LOG(println(pResult->Sum));
 }
 
 #endif // CONFIG_IMPULSE_SENSOR

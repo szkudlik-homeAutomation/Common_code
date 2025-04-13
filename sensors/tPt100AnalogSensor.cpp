@@ -135,10 +135,10 @@ void tPt100SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint
 
     tPt100AnalogSensor::tResult *pResult = (tPt100AnalogSensor::tResult *)pDataBlob;
 
-    DEBUG_PRINT_3("PT100 Measurement completed. SensorID: ");
-    DEBUG_3(print(SensorID));
-    DEBUG_PRINT_3(" Temp: ");
-    DEBUG_3(println(pResult->Temperature));
+    LOG_PRINT("PT100 Measurement completed. SensorID: ");
+    LOG(print(SensorID));
+    LOG_PRINT(" Temp: ");
+    LOG(println(pResult->Temperature));
 }
 
 #endif //CONFIG_PT100_ANALOG_SENSOR

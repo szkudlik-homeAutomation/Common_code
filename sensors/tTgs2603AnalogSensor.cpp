@@ -51,7 +51,7 @@ void tTgs2603AnalogLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, ui
 
     tTgs2603AnalogSensor::tResult *pResult = (tTgs2603AnalogSensor::tResult *)pDataBlob;
 
-    LOG_PRINT("Tgs2603 Measurement completed. SensorID: ");
+    LOG_PRINT("Tgs2603 SensorID: ");
     LOG(print(SensorID));
     LOG_PRINT(" Odour: ");
     LOG(println(pResult->Odour));

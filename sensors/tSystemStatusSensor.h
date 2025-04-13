@@ -12,6 +12,7 @@
 
 #include "tSensor.h"
 #include "tSensorCache.h"
+#include "tSensorLogger.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
@@ -38,4 +39,15 @@ private:
    tResult mResult;
    uint8_t tickCnt;
 };
+
+class tSystemStatusSensorLogger : public tSensorLogger
+{
+public:
+	tSystemStatusSensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_SYSTEM_STATUS, sensorID) {}
+	tSystemStatusSensorLogger() : tSensorLogger(SENSOR_TYPE_SYSTEM_STATUS, 0) {}
+protected:
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+};
+
+
 #endif //CONFIG_SYSTEM_STATUS_SENSOR

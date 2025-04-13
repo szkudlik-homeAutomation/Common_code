@@ -201,12 +201,12 @@ void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uin
         return;
 
     tDS1820Sensor::tResult *pResult = (tDS1820Sensor::tResult *)pDataBlob;
-    DEBUG_PRINT_3("Measurement completed. SensorID: ");
-    DEBUG_3(print(SensorID));
-    DEBUG_PRINT_3(" devs: ");
-    DEBUG_3(print(pResult->NumOfDevices));
-    DEBUG_PRINT_3(" Avg: ");
-    DEBUG_3(print(pResult->Avg));
+    LOG_PRINT("Measurement completed. SensorID: ");
+    LOG(print(SensorID));
+    LOG_PRINT(" devs: ");
+    LOG(print(pResult->NumOfDevices));
+    LOG_PRINT(" Avg: ");
+    LOG(print(pResult->Avg));
     uint8_t NumOfItems;
     if (pResult->Avg) {
        NumOfItems = 1;
@@ -217,12 +217,12 @@ void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uin
     }
     for (int i = 0; i < NumOfItems; i++)
     {
-       DEBUG_PRINT_3(" dev: ");
-       DEBUG_3(print(i));
-       DEBUG_PRINT_3(" temp: ");
-       DEBUG_3(print(((float)(pResult)->Dev[i].Temperature) / 10));
+       LOG_PRINT(" dev: ");
+       LOG(print(i));
+       LOG_PRINT(" temp: ");
+       LOG(print(((float)(pResult)->Dev[i].Temperature) / 10));
     }
-    DEBUG_PRINTLN_3("");
+    LOG_PRINTLN("");
 
 }
 
