@@ -134,12 +134,19 @@ config SHT3_DIS_SENSOR
     default n
     help
      Humidity and Temperature Sensor
-
+     
 config SHT3_DIS_SENSOR_MEASURE_PERIOD  
     int "Enable Sensiron SHT3x-DIS Sensor Measure Period, in seconds"
     depends on SHT3_DIS_SENSOR
     default 2
-    	
+   
+config TGS2603_ODOUR_SENSOR  
+    bool "Enable TGS2603 ODOUR Sensor"
+    depends on SENSORS
+    default n
+    help
+     for detection of Odor and Air Contaminants
+
 config WIEGAND_SENSOR  
     bool "Enable Wiegand Sensor"
     depends on SENSORS

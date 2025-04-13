@@ -13,37 +13,15 @@
 #include "tSensor.h"
 #include "tSensorHub.h"
 
-#if CONFIG_DS1820_SENSOR
 #include "tDS1820Sensor.h"
-#endif
-
-#if CONFIG_IMPULSE_SENSOR
 #include "tImpulseSensor.h"
-#endif
-
-#if CONFIG_PT100_ANALOG_SENSOR
 #include "tPt100AnalogSensor.h"
-#endif
-
-#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
 #include "tSimpleDigitalInputSensor.h"
-#endif
-
-#if CONFIG_OUTPUT_STATE_SENSOR
 #include "tOutputStateSensor.h"
-#endif
-
-#if CONFIG_SYSTEM_STATUS_SENSOR
 #include "tSystemStatusSensor.h"
-#endif
-
-#if CONFIG_WIEGAND_SENSOR
 #include "tWiegandSensor.h"
-#endif
-
-#if CONFIG_SHT3_DIS_SENSOR
 #include "tSht3Sensor.h"
-#endif
+#include "tTgs2603AnalogSensor.h"
 
 #include "tOutputStateSensor.h"
 
@@ -212,6 +190,11 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
         	  pSensor = new tSht3Sensor(SensorID);
         	  break;
 	#endif //CONFIG_SHT3_DIS_SENSOR
+	#if CONFIG_TGS2603_ODOUR_SENSOR
+          case SENSOR_TYPE_TGS2603:
+        	  pSensor = new tTgs2603AnalogSensor(SensorID);
+        	  break;
+	#endif
 
           default:
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
