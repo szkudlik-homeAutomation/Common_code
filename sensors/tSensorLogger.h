@@ -10,6 +10,8 @@
 class tSensorLogger : public tMessageReciever
 {
 public:
+	tSensorLogger()	:  mSensorType(0), mSensorID(0), tMessageReciever()
+    	{ RegisterMessageType(MessageType_SensorEvent); }
     tSensorLogger(uint8_t SensorType) : mSensorType(SensorType), mSensorID(0), tMessageReciever()
         { RegisterMessageType(MessageType_SensorEvent); }
 
@@ -28,6 +30,8 @@ protected:
 class tSensorLoggerTxt : public tSensorLogger
 {
 public:
+	tSensorLoggerTxt() : tSensorLogger() {}
+
 	tSensorLoggerTxt(uint8_t SensorType) : tSensorLogger(SensorType) {}
 
 	tSensorLoggerTxt(uint8_t SensorType, uint8_t SensorID): tSensorLogger(SensorType, SensorID) {}

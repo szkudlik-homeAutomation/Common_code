@@ -27,6 +27,7 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 {
 	if (mState != SENSOR_CREATED)
 	{
+		DEBUG_PRINTLN_3(" error: incorrect sensor state");
 		return STATUS_CONFIG_SET_ERROR;
 	}
 

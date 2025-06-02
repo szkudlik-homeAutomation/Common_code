@@ -34,6 +34,23 @@ void tSystemStatusSensor::doTriggerMeasurement()
 	onMeasurementCompleted(true);
 }
 
+void tSystemStatusSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
+{
+    if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
+        //TODO
+        return;
+
+    tSystemStatusSensor::tResult *pResult = (tSystemStatusSensor::tResult *)pDataBlob;
+
+    LOG_PRINT("tSystemStatusSensor SensorID: ");
+    LOG(print(SensorID));
+    LOG_PRINT(" FreeMemory: ");
+    LOG(print(pResult->FreeMemory));
+    LOG_PRINT(" Uptime: ");
+    LOG(println(pResult->Uptime));
+}
+
+
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 {

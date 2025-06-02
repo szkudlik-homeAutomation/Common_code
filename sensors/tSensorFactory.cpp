@@ -13,34 +13,13 @@
 #include "tSensor.h"
 #include "tSensorHub.h"
 
-#if CONFIG_DS1820_SENSOR
 #include "tDS1820Sensor.h"
-#endif
-
-#if CONFIG_IMPULSE_SENSOR
 #include "tImpulseSensor.h"
-#endif
-
-#if CONFIG_PT100_ANALOG_SENSOR
 #include "tPt100AnalogSensor.h"
-#endif
-
-#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
 #include "tSimpleDigitalInputSensor.h"
-#endif
-
-#if CONFIG_OUTPUT_STATE_SENSOR
 #include "tOutputStateSensor.h"
-#endif
-
-#if CONFIG_SYSTEM_STATUS_SENSOR
 #include "tSystemStatusSensor.h"
-#endif
-
-#if CONFIG_WIEGAND_SENSOR
 #include "tWiegandSensor.h"
-#endif
-
 
 #include "tOutputStateSensor.h"
 
@@ -135,6 +114,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
 	if (STATUS_SUCCESS != Status)
 	{
 		// sensor cannot be delted, this situation is more/less fatal
+		DEBUG_PRINTLN_3(" error: cannot set sensor config");
 		return NULL;
 	}
 
