@@ -8,24 +8,31 @@
 #pragma once
 
 #include "../../../global.h"
-#if CONFIG_SYSTEM_STATUS_SENSOR
-
 #include "tSensor.h"
 #include "tSensorCache.h"
 #include "tSensorLogger.h"
 
-#if CONFIG_SENSORS_JSON_OUTPUT
+#if CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
 uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
+#endif //CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
 
-class tSystemStatusSensor: public tSensor {
+#if CONFIG_SYSTEM_STATUS_SENSOR || CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
+class tSystemStatusSensorTypes
+{
 public:
-   typedef struct
-   {
-   	   uint16_t FreeMemory;
-   	   uint16_t Uptime;
-   } tResult_api_v1;
+	   typedef struct
+	   {
+	   	   uint16_t FreeMemory;
+	   	   uint16_t Uptime;
+	   } tResult_api_v1;
 
+
+};
+#endif
+
+#if CONFIG_SYSTEM_STATUS_SENSOR
+class tSystemStatusSensor: public tSensor, public tSystemStatusSensorTypes {
+public:
    static const uint8_t API_VERSION = 1;
    typedef tResult_api_v1 tResult;
 

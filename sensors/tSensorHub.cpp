@@ -66,6 +66,10 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, const __FlashStringHelper *
    // add sensor to repository
    pSensorCache = new tSensorCache(SensorID);
 
+#if CONFIG_SENSORS
+
+   // this system has also local sensors, check if the sensor is local
+
 #if CONFIG_REMOTE_SENSORS_TEST
    tSensor *pSensor = NULL;
    if(SensorID == 1)
@@ -74,7 +78,7 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, const __FlashStringHelper *
 	   // don't try to look for IDs > 1 localy when handling such message
 	   pSensor = tSensor::getSensor(SensorID);
 #else // CONFIG_REMOTE_SENSORS_TEST
-   tSensor *pSensor = tSensor::getSensor(SensorID);
+     tSensor *pSensor = tSensor::getSensor(SensorID);
 #endif // CONFIG_REMOTE_SENSORS_TEST
 
    if (pSensor != NULL)
@@ -85,6 +89,7 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, const __FlashStringHelper *
 		   result = pSensorCache->setParams(pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
    }
 
+#endif //CONFIG_SENSORS
    return result;
 }
 
