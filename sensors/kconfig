@@ -64,6 +64,7 @@ config SENSOR_STATE_SERVLET
     depends on SENSORS_CONTROL_NODE
     depends on SENSOR_HUB
     depends on HTTP_SEVLETS_SENSORS
+    depends on SENSORS_JSON_OUTPUT
     default y
     help
     	enables a HTTP servlet to display sensor state /sensorState
