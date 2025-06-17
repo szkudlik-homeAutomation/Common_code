@@ -328,3 +328,14 @@ config REMOTE_SENSORS_TEST
 		 - IDs > 1 won't be registered in sensorHub locally
 		the above allows testing communication with such sensors through serial communication only
 		regardless they are running on the same node
+
+config SENSOR_LOGGER
+    bool "Enable Sensor Logger, debug functionality"
+    default n
+    help
+        Enable this option to provide sensor logger functionality
+        Sensor logger will log sensor values to the log file
+        It is independent from other sensor settings and can be used
+        on any node that recieves sensors events
+
+        
