@@ -6,9 +6,27 @@
  */
 
 #include "../../../global.h"
+#include "tPt100AnalogSensor.h"
+
+#if CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
+uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache){
+   if (cache->getDataBlobSize() != sizeof(tPt100AnalogSensorTypes::tResult_api_v1))
+   {
+         return STATUS_JSON_ENCODE_ERROR;
+   }
+
+   tPt100AnalogSensorTypes::tResult_api_v1 *pResult =
+		   (tPt100AnalogSensorTypes::tResult_api_v1 *) cache->getData();
+   pStream->print(F("\"Temperature\":"));
+   pStream->print(pResult->Temperature);
+   return STATUS_SUCCESS;
+}
+#endif CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
+
+
+
 #if CONFIG_PT100_ANALOG_SENSOR
 
-#include "tPt100AnalogSensor.h"
 
 //const float pt100Table[] PROGMEM = {
 ///*0,*/100.000,100.391,100.781,101.172,101.562,101.953,102.343,102.733,103.123,103.513,
@@ -88,20 +106,6 @@
 // R pt = AnalogRead * 0.529 - 3;
 
 
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache){
-   if (cache->getDataBlobSize() != sizeof(tPt100AnalogSensor::tResult))
-   {
-         return STATUS_JSON_ENCODE_ERROR;
-   }
-
-   tPt100AnalogSensor::tResult *pResult =(tPt100AnalogSensor::tResult *) cache->getData();
-   pStream->print(F("\"Temperature\":"));
-   pStream->print(pResult->Temperature);
-   return STATUS_SUCCESS;
-}
-#endif CONFIG_SENSORS_JSON_OUTPUT
 
 void tPt100AnalogSensor::doTimeTick()
 {
