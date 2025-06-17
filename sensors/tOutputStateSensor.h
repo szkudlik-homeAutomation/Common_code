@@ -8,23 +8,34 @@
 #pragma once
 
 #include "../../../global.h"
-#if CONFIG_OUTPUT_STATE_SENSOR
 #include "tSensor.h"
 #include "tSensorCache.h"
 
-#if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
 
-class tOutputStateSensor : public tSensor {
+#if CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
+uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+#endif //CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
+
+#if CONFIG_OUTPUT_STATE_SENSOR || CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
+class tOutputStateSensorTypes
+{
+public:
+
+	   static const uint8_t MAX_NUM_OF_PINS = 16;
+	   typedef struct
+	   {
+		   uint8_t NumOfPins;
+	       uint8_t State[MAX_NUM_OF_PINS];
+	       uint16_t Timer[MAX_NUM_OF_PINS];
+	   } tResult_api_v1;
+
+};
+#endif
+
+#if CONFIG_OUTPUT_STATE_SENSOR
+class tOutputStateSensor : public tSensor, public tOutputStateSensorTypes {
 public:
    tOutputStateSensor(uint8_t sensorID);
-
-   typedef struct
-   {
-      uint8_t State[CONFIG_OUTPUT_PROCESS_NUM_OF_PINS];
-      uint16_t Timer[CONFIG_OUTPUT_PROCESS_NUM_OF_PINS];
-   } tResult_api_v1;
 
    static const uint8_t API_VERSION = 1;
    typedef tResult_api_v1 tResult;

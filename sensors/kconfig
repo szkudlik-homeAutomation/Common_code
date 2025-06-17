@@ -296,7 +296,6 @@ config IMPULSE_SENSOR_JSON_OUTPUT
 config OUTPUT_STATE_SENSOR_JSON_OUTPUT
     bool "Enable Output State Sensor JSON output"
     depends on SENSORS_JSON_OUTPUT
-    depends on OUTPUT_PROCESS
     default y if OUTPUT_STATE_SENSOR
     
 config PT100_ANALOG_SENSOR_JSON_OUTPUT
