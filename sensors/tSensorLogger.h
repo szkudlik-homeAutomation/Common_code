@@ -1,8 +1,7 @@
 #pragma once
 
 #include "../../../global.h"
-#if CONFIG_SENSORS
-
+#if CONFIG_SENSOR_LOGGER
 
 #include "../tMessageReciever.h"
 
@@ -40,4 +39,4 @@ protected:
     virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
 
-#endif // CONFIG_SENSORS
+#endif // CONFIG_SENSOR_LOGGER
