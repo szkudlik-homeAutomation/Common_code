@@ -41,8 +41,12 @@
 
 #if CONFIG_OUTPUT_PROCESS
 #include "../tOutputProcess.h"
-#include "../TLE8457_serial/NodeScanTask.h"
 #endif //CONFIG_OUTPUT_PROCESS
+
+#if CONFIG_NODE_SCAN_TASK
+#include "../TLE8457_serial/NodeScanTask.h"
+#endif CONFIG_NODE_SCAN_TASK
+
 #if CONFIG_TELNET_COMMANDS_SENSORS
 #include "../sensors/tSensor.h"
 #endif //CONFIG_TELNET_COMMANDS_SENSORS
@@ -219,14 +223,14 @@ error:
   return false;
 }
 
+#endif // CONFIG_OUTPUT_PROCESS
+
 #if CONFIG_NODE_SCAN_TASK
 static bool trigger_ScanNodes(Commander &Cmdr)
 {
    NodeScanTask::trigger();
 }
 #endif //CONFIG_NODE_SCAN_TASK
-
-#endif // CONFIG_OUTPUT_PROCESS
 
 #if CONFIG_TELNET_COMMANDS_SENSORS
 static bool send_GetSensorByIdReqestHandler(Commander &Cmdr)
