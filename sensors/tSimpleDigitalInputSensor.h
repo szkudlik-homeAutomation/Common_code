@@ -8,28 +8,36 @@
 #pragma once
 
 #include "../../../global.h"
-#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
-
 #include "tSensor.h"
 #include "tSensorCache.h"
 
-#if CONFIG_SENSORS_JSON_OUTPUT
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
 uint8_t SimpleDigitalInputSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
-class tSimpleDigitalInputSensor: public tSensor {
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR || CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
+class tSimpleDigitalInputSensorTypes
+{
 public:
-   typedef struct
-   {
-      uint8_t Pin;
-      uint8_t ActiveState;
-   } tConfig_api_v1;
+	   typedef struct
+	   {
+	      uint8_t Pin;
+	      uint8_t ActiveState;
+	   } tConfig_api_v1;
 
-   typedef struct
-   {
-      uint8_t State;
-   } tResult_api_v1;
+	   typedef struct
+	   {
+	      uint8_t State;
+	   } tResult_api_v1;
 
+};
+#endif
+
+
+#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+
+class tSimpleDigitalInputSensor: public tSensor, public tSimpleDigitalInputSensorTypes {
+public:
    static const uint8_t API_VERSION = 1;
    typedef tConfig_api_v1 tConfig;
    typedef tResult_api_v1 tResult;
