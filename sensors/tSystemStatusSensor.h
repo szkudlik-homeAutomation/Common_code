@@ -16,7 +16,7 @@
 uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
 #endif //CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
 
-#if CONFIG_SYSTEM_STATUS_SENSOR || CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
+#if CONFIG_SYSTEM_STATUS_SENSOR || CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER
 class tSystemStatusSensorTypes
 {
 public:
@@ -29,6 +29,18 @@ public:
 
 };
 #endif
+
+#if CONFIG_SENSOR_LOGGER
+class tSystemStatusSensorLogger : public tSensorLogger
+{
+public:
+	tSystemStatusSensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_SYSTEM_STATUS, sensorID) {}
+	tSystemStatusSensorLogger() : tSensorLogger(SENSOR_TYPE_SYSTEM_STATUS, 0) {}
+protected:
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+};
+#endif
+
 
 #if CONFIG_SYSTEM_STATUS_SENSOR
 class tSystemStatusSensor: public tSensor, public tSystemStatusSensorTypes {
@@ -45,15 +57,6 @@ protected:
 private:
    tResult mResult;
    uint8_t tickCnt;
-};
-
-class tSystemStatusSensorLogger : public tSensorLogger
-{
-public:
-	tSystemStatusSensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_SYSTEM_STATUS, sensorID) {}
-	tSystemStatusSensorLogger() : tSensorLogger(SENSOR_TYPE_SYSTEM_STATUS, 0) {}
-protected:
-    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
 
 
