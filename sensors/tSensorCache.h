@@ -18,7 +18,7 @@
  * tSensorCache keeps a copy (cache) of current data produced by the sensor
  */
 class tSensorCache;
-typedef uint8_t (*doFormatJSON)(Stream *pStream, tSensorCache *cache);
+#include "tSensorJsonOutput.h"
 
 class tSensorCache
 {
