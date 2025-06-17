@@ -7,49 +7,55 @@
 
 #pragma once
 
-
 #include "../../../global.h"
-#if CONFIG_DS1820_SENSOR
-
 #include "tSensor.h"
 #include "tSensorCache.h"
 #include "tSensorLogger.h"
 
+#if CONFIG_DS1820_SENSOR_JSON_OUTPUT
+uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+#endif //CONFIG_DS1820_SENSOR_JSON_OUTPUT
+
+#if CONFIG_DS1820_SENSOR || CONFIG_DS1820_SENSOR_JSON_OUTPUT
+
+class tDS1820SensorTypes {
+public:
+	   typedef uint8_t DeviceAddress[8];
+
+	   typedef struct
+	   {
+	      DeviceAddress Addr;
+	      int16_t Temperature;        // in celcius, 1 decimal position
+	   } tDs1820Data;
+
+	   typedef struct
+	   {
+	      uint8_t NumOfDevices;
+	      uint8_t Avg;
+	      tDs1820Data Dev[0];
+	                     // size of the array is 1 if Avg = 1
+	                     // or NumOfDevices if Avg = 0
+	   } tResult_api_v1;
+
+	   typedef struct
+	   {
+	      uint8_t Pin;   // pin the oneWire bus is connected to
+	      uint8_t Avg;   // if true, measurements from all valid devices on the wire will be taken as average
+	   } tConfig_api_v1;
+
+	   static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
+};
+#endif
+
+
+#if CONFIG_DS1820_SENSOR
+
 class DallasTemperature;
 
-#if CONFIG_SENSORS_JSON_OUTPUT
-
-uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
-
-#endif //CONFIG_SENSORS_JSON_OUTPUT
-
-
-class tDS1820Sensor: public tSensor {
+class tDS1820Sensor : public tSensor, public tDS1820SensorTypes {
 public:
    static const uint8_t MAX_DS1820_DEVICES_ON_BUS = 8;
    static const uint8_t DS1820_INVALID_ID = 0xFF;
-
-   typedef uint8_t DeviceAddress[8];
-   typedef struct
-   {
-      uint8_t Pin;   // pin the oneWire bus is connected to
-      uint8_t Avg;   // if true, measurements from all valid devices on the wire will be taken as average
-   } tConfig_api_v1;
-
-   typedef struct
-   {
-      DeviceAddress Addr;
-      int16_t Temperature;        // in celcius, 1 decimal position
-   } tDs1820Data;
-
-   typedef struct
-   {
-      uint8_t NumOfDevices;
-      uint8_t Avg;
-      tDs1820Data Dev[0];
-                     // size of the array is 1 if Avg = 1
-                     // or NumOfDevices if Avg = 0
-   } tResult_api_v1;
 
    static const uint8_t API_VERSION = 1;
    typedef tConfig_api_v1 tConfig;
@@ -60,9 +66,6 @@ public:
 
 
    tDS1820Sensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DS1820, sensorID, API_VERSION, sizeof(Config), &Config) {}
-
-   static void printAddress(uint8_t* pDeviceAddress, Stream *pStream);
-
 
    tResult *getCurrentMeasurement() { return (tResult *)mCurrentMeasurementBlob;}
    uint8_t compareAddr(uint8_t* pDeviceAddress1, uint8_t* pDeviceAddress2);
