@@ -100,7 +100,7 @@ doFormatJSON tSensorFactory::getJSONFormatFunction(uint8_t SensorType, uint8_t a
 
 tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
 		  const __FlashStringHelper *pSensorName, uint8_t ApiVersion, void *pConfigBlob,
-	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart, uint8_t eventMask)
+	      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart, uint8_t serialEventMask)
 {
 	uint8_t Status;
 	tSensor *pSensor = CreateSensor(SensorType, SensorID);
@@ -118,7 +118,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
 		return NULL;
 	}
 
-	pSensor->setSensorSerialEventsMask(eventMask);
+	pSensor->setSensorSerialEventsMask(serialEventMask);
 
 	if(autoStart)
 		pSensor->Start();

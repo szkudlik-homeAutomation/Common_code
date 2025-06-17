@@ -28,9 +28,11 @@ public:
 	 * pSensorName is a name the sensor will be regitered in sensor hub, ignored if there's no sensor hub in the system
 	 * pSensorName a nem of the sensor in PROGMEM
 	 * pConfigBlob will be copied to sensor internals
+	 * autoStart if true the sensor will start immediately, otherwise a pSensor->start() must be called
+	 * serialEventMask a mask of events that sensor will sent over serial communication
 	 */
 	tSensor *CreateSensor(uint8_t SensorType, uint8_t SensorID, const __FlashStringHelper *pSensorName, uint8_t ApiVersion, void *pConfigBlob,
-					      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart, uint8_t eventMask);
+					      uint8_t configBlobSize, uint16_t measurementPeriod, bool autoStart, uint8_t serialEventMask);
 
 #if CONFIG_SENSORS_JSON_OUTPUT
    /* get a function pointer to JSON encoder for given sensor type and API version. Null if no matching function found */
