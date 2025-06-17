@@ -52,6 +52,10 @@ void tSystemStatusSensor::doTriggerMeasurement()
 
 	onMeasurementCompleted(true);
 }
+#endif //CONFIG_SYSTEM_STATUS_SENSOR
+
+
+#if CONFIG_SENSOR_LOGGER
 
 void tSystemStatusSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
@@ -59,7 +63,8 @@ void tSystemStatusSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventTyp
         //TODO
         return;
 
-    tSystemStatusSensor::tResult *pResult = (tSystemStatusSensor::tResult *)pDataBlob;
+    tSystemStatusSensorTypes::tResult_api_v1 *pResult =
+    		(tSystemStatusSensorTypes::tResult_api_v1 *)pDataBlob;
 
     LOG_PRINT("tSystemStatusSensor SensorID: ");
     LOG(print(SensorID));
@@ -69,4 +74,4 @@ void tSystemStatusSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventTyp
     LOG(println(pResult->Uptime));
 }
 
-#endif //CONFIG_SYSTEM_STATUS_SENSOR
+#endif
