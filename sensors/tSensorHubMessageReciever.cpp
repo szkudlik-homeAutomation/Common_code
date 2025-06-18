@@ -58,7 +58,7 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     }
 
     if (STATUS_SUCCESS == result)
-    	result = pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
+    	result = pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize, Message->MeasurementPeriod);
 
     if (result == STATUS_SENSOR_INCORRECT_STATE)
     {

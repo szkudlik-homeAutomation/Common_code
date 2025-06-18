@@ -84,9 +84,21 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, const __FlashStringHelper *
    if (pSensor != NULL)
    {
 	   // local sensor
-	   result = pSensorCache->setNameProgmem(pSensorName);
-	   if (result == STATUS_SUCCESS)
-		   result = pSensorCache->setParams(pSensor->getSensorType(), pSensor->getSensorApiVersion(), 0, pSensor->getMeasurementBlobSize());
+	   if(pSensor->isConfigured())
+	   {
+		   result = pSensorCache->setNameProgmem(pSensorName);
+		   if (result == STATUS_SUCCESS)
+			   result = pSensorCache->setParams(
+					   pSensor->getSensorType(),
+					   pSensor->getSensorApiVersion(),
+					   0,
+					   pSensor->getMeasurementBlobSize(),
+					   pSensor->GetMeasurementPeriod());
+	   }
+	   else
+	   {
+		   result = STATUS_SENSOR_INCORRECT_STATE;
+	   }
    }
 
 #endif //CONFIG_SENSORS

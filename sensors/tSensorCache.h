@@ -29,6 +29,7 @@ private:
     uint8_t mDataBlobSize;
     uint8_t mSensorApiVersion;
     uint8_t mNodeID;     // id of a node the sensor is located on. 0 => local sensor
+    uint16_t mMeasurementPeriod;
     char * mName;
     void *pDataCache;
 #if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
@@ -119,7 +120,7 @@ public:
    uint8_t generateName();
 
    uint8_t setAsDetected();
-   uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
+   uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize, uint16_t measurementPeriod);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
 
@@ -132,7 +133,7 @@ public:
    uint8_t formatJSON(Stream *pStream);
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
-   uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 1000; }
+   uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 100; }
 
    static tSensorCache *getByID(uint8_t SensorID);
    static tSensorCache *getByName(const char * pSensorName);
