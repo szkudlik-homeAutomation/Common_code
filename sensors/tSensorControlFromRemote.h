@@ -36,6 +36,7 @@ private:
 #if CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
     void HandeMsgSaveSensorsToEeprom(uint8_t SenderID);
     void HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID);
+    void HandeMsgCleanSensorsFromEeprom(uint8_t SenderID);
 #endif CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
 };
 

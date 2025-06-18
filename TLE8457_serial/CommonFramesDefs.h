@@ -224,10 +224,11 @@ typedef struct
 } tMessageSensorStop;
 C_ASSERT(sizeof(tMessageSensorStop) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 
-/* save/restore all sensors to/from eeprom
+/* save/restore/clean all sensors to/from eeprom
  * MESSAGE_TYPE_GENERAL_STATUS will be sent back
  */
-#define MESSAGE_TYPE_SENSOR_SAVE 0x1B
-#define MESSAGE_TYPE_SENSOR_RESTORE 0x1C
+#define MESSAGE_TYPE_SENSORS_SAVE 0x1B
+#define MESSAGE_TYPE_SENSORS_RESTORE 0x1C
+#define MESSAGE_TYPE_SENSORS_CLEAN 0x1D
 
 #endif CONFIG_TLE8457_COMM_LIB
