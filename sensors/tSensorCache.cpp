@@ -19,7 +19,7 @@ uint8_t tSensorCache::setAsDetected()
 	mState = state_not_configured;
 }
 
-uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
+uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize, uint16_t measurementPeriod)
 {
 	if (isConfigured())
 		return STATUS_SENSOR_INCORRECT_STATE;
@@ -28,6 +28,7 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
 	mNodeID = nodeID;
+	mMeasurementPeriod = measurementPeriod;
 	uint8_t result = setDataBlobSize(dataBlobSize);
 	if (STATUS_SUCCESS != result)
 	{
@@ -224,6 +225,10 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 
 	   pStream->print(F(",\"SensorStatus\":"));
 	   pStream->print(SensorStatus);
+
+
+	   pStream->print(F(",\"Period\":"));
+	   pStream->print(mMeasurementPeriod);
 
 	   pStream->print(F(",\"LastUpdate\":"));
 	   pStream->print(getTimeSinceUpdate());
