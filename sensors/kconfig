@@ -241,7 +241,6 @@ config SENSOR_EVENTS_SERIAL_RECIEVER_ID
 
 config SENSOR_BASIC_REMOTE_CONTROL
 	bool "enables basic commands for remote control of sensors"
-	depends on TELNET_SERVER
 	depends on TLE8457_COMM_LIB
 	help
         Enable this option to provide basic commands to control sensor via Telnet
