@@ -130,6 +130,9 @@ void tPt100AnalogSensor::doTriggerMeasurement()
    }
 }
 
+#endif //CONFIG_PT100_ANALOG_SENSOR
+
+#if CONFIG_SENSOR_LOGGER
 
 void tPt100SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
@@ -137,7 +140,8 @@ void tPt100SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint
         //TODO
         return;
 
-    tPt100AnalogSensor::tResult *pResult = (tPt100AnalogSensor::tResult *)pDataBlob;
+    tPt100AnalogSensorTypes::tResult_api_v1 *pResult =
+    		(tPt100AnalogSensorTypes::tResult_api_v1 *)pDataBlob;
 
     LOG_PRINT("PT100 Measurement completed. SensorID: ");
     LOG(print(SensorID));
@@ -145,4 +149,4 @@ void tPt100SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint
     LOG(println(pResult->Temperature));
 }
 
-#endif //CONFIG_PT100_ANALOG_SENSOR
+#endif CONFIG_SENSOR_LOGGER
