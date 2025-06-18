@@ -158,6 +158,16 @@ uint8_t tSensorCache::setData(void *dataSrc, uint8_t dataSize)
 	return STATUS_SUCCESS;
 }
 
+void tSensorCache::UpdateTimeout()
+{
+	if (!isWorkingState())
+		return;
+	if (getTimeSinceUpdate() > 2*mMeasurementPeriod)
+		mState = state_timeout;
+	else
+		mState = state_working;
+}
+
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
@@ -166,6 +176,7 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 	   return STATUS_JSON_ENCODE_ERROR;
 
    // note that the sensor may be located on a remote machine, use cached data
+   UpdateTimeout();
    pStream->print(F("\""));
    pStream->print(GetName());
    pStream->print(F("\":{\"SensorData\":{"));
