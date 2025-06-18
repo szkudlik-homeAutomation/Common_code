@@ -22,7 +22,6 @@ class tSensorCache;
 
 class tSensorCache
 {
-private:
     int8_t mState;
     uint8_t mSensorID;
     uint8_t mSensorType;
@@ -43,7 +42,7 @@ private:
     uint32_t mLastTimestamp;	// millis()
 
     uint8_t setDataBlobSize(uint8_t dataBlobSize);
-    void resetTimestamp() { mLastTimestamp = millis();}
+    void resetTimestamp() { mLastTimestamp = millis(); UpdateTimeout(); }
 
 public:
 	// >0 - working states
@@ -90,6 +89,7 @@ public:
    }
    bool isDetected() const { return mState > state_not_seen; }
    bool isWorkingState() const { return mState >= state_no_data_recieved; }
+   bool isTimeout() const { return mState == state_timeout; }
    bool isConfigured() const { return mState > state_not_configured; }
    bool isPermanentError() const { return mState < 0; }
    bool isLocalSensor() const { return mNodeID == 0; }
@@ -104,6 +104,7 @@ public:
    uint8_t getSensorType() const { return mSensorType; }
    uint8_t getSensorApiVersion() const { return mSensorApiVersion; }
    uint8_t getNodeID() const { return mNodeID; }
+   void UpdateTimeout();
    uint8_t setData(void *dataSrc, uint8_t dataSize);
    char * GetName() { return mName; }
    uint8_t GetSensorID() const { return mSensorID; }
