@@ -64,12 +64,17 @@ private:
    tResult mResult;
 };
 
+#endif //CONFIG_IMPULSE_SENSOR
+
+#if CONFIG_SENSOR_LOGGER
+
 class tImpulseSensorLogger : public tSensorLogger
 {
 public:
+    tImpulseSensorLogger() : tSensorLogger(SENSOR_TYPE_IMPULSE, 0) {}
     tImpulseSensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_IMPULSE, sensorID) {}
 protected:
     virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
+#endif CONFIG_SENSOR_LOGGER
 
-#endif //CONFIG_IMPULSE_SENSOR
