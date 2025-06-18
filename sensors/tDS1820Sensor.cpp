@@ -196,13 +196,17 @@ uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
    return DS1820_INVALID_ID;
 }
 
+#endif // CONFIG_DS1820_SENSOR
+
+#if CONFIG_SENSOR_LOGGER
+
 void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
     if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
         //TODO
         return;
 
-    tDS1820Sensor::tResult *pResult = (tDS1820Sensor::tResult *)pDataBlob;
+    tDS1820SensorTypes::tResult_api_v1 *pResult = (tDS1820SensorTypes::tResult_api_v1 *)pDataBlob;
     LOG_PRINT("Measurement completed. SensorID: ");
     LOG(print(SensorID));
     LOG_PRINT(" devs: ");
@@ -227,6 +231,5 @@ void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uin
     LOG_PRINTLN("");
 
 }
+#endif CONFIG_SENSOR_LOGGER
 
-
-#endif // CONFIG_DS1820_SENSOR
