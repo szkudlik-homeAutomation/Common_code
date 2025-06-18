@@ -64,10 +64,6 @@ uint8_t tSensorCache::setNameProgmem(const __FlashStringHelper *pName)
 	return STATUS_SUCCESS;
 }
 
-void setNameEeprom(uint16_t offset, uint8_t len)
-{
-
-}
 
 tSensorCache *tSensorCache::getByID(uint8_t SensorID)
 {
