@@ -47,9 +47,10 @@ private:
 public:
 	// >0 - working states
     static const int8_t state_not_seen = 0;		// entry created with name, but the seneor has not yet been seen
-	static const int8_t state_no_data_recieved = 1;		// dected, all metadata set, no payload data seen yet
-	static const int8_t state_working = 2;				//
-	static const int8_t state_timeout = 3;
+    static const int8_t state_not_configured = 1; // seen, but config not set yet
+	static const int8_t state_no_data_recieved = 2;		// dected, all metadata set, no payload data seen yet
+	static const int8_t state_working = 3;				//
+	static const int8_t state_timeout = 4;
 	static const int8_t state_sensor_error_reported = 5;
 	static const int8_t state_data_transfer_error = 6;
 
@@ -86,8 +87,9 @@ public:
            mState = errorState;
            }
    }
-   bool isDetected() const { return mState != state_not_seen; }
+   bool isDetected() const { return mState > state_not_seen; }
    bool isWorkingState() const { return mState >= state_no_data_recieved; }
+   bool isConfigured() const { return mState > state_not_configured; }
    bool isPermanentError() const { return mState < 0; }
    bool isLocalSensor() const { return mNodeID == 0; }
 
@@ -116,6 +118,7 @@ public:
    // generate a unique name based on sensor ID
    uint8_t generateName();
 
+   uint8_t setAsDetected();
    uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }

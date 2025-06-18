@@ -51,6 +51,12 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     	result = pSensorCache->generateName();
     }
 
+    if (!Message->isConfigured && STATUS_SUCCESS == result)
+    {
+    	result = pSensorCache->setAsDetected();
+    	return result; // not configured yet, skip config
+    }
+
     if (STATUS_SUCCESS == result)
     	result = pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize);
 
@@ -81,7 +87,7 @@ void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageS
 {
     uint8_t result;
 	tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
-	if (!pSensorCache || !pSensorCache->isDetected()) {
+	if (!pSensorCache || !pSensorCache->isConfigured()) {
 		// the sensor is not yet know. Send discovery request
 	    tMessageGetSensorByIdReqest getSensorMessage;
 	    getSensorMessage.SensorID = Message->Header.SensorID;
