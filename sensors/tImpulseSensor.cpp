@@ -92,13 +92,16 @@ void tImpulseSensor::CleanSum()
 	);
 }
 
+#endif // CONFIG_IMPULSE_SENSOR
+#if CONFIG_SENSOR_LOGGER
+
 void tImpulseSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
     if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
         //TODO
         return;
 
-    tImpulseSensor::tResult *pResult = (tImpulseSensor::tResult *)pDataBlob;
+    tImpulseSensorTypes::tResult_api_v1 *pResult = (tImpulseSensorTypes::tResult_api_v1 *)pDataBlob;
 
     LOG_PRINT("SensorID: ");
     LOG(print(SensorID));
@@ -108,4 +111,4 @@ void tImpulseSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, ui
     LOG(println(pResult->Sum));
 }
 
-#endif // CONFIG_IMPULSE_SENSOR
+#endif CONFIG_SENSOR_LOGGER
