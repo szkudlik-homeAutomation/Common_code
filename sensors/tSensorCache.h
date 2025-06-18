@@ -110,7 +110,8 @@ public:
    uint8_t setNameProgmem(const __FlashStringHelper *pName);
 
    // set a name from eeprom from given Eeprom offset
-   uint8_t setNameEeprom(uint16_t offset, uint8_t len);
+   //TODO
+   //uint8_t setNameEeprom(uint16_t offset, uint8_t len);
 
    // generate a unique name based on sensor ID
    uint8_t generateName();
