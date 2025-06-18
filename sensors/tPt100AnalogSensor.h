@@ -60,12 +60,16 @@ private:
    float TemperatureAvg;
 };
 
+#endif // CONFIG_PT100_ANALOG_SENSOR
+#if CONFIG_SENSOR_LOGGER
+
 class tPt100SensorLogger : public tSensorLogger
 {
 public:
+    tPt100SensorLogger() : tSensorLogger(SENSOR_TYPE_PT100_ANALOG, 0) {}
     tPt100SensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_PT100_ANALOG, sensorID) {}
 protected:
     virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
 
-#endif // CONFIG_PT100_ANALOG_SENSOR
+#endif CONFIG_SENSOR_LOGGER
