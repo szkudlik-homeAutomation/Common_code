@@ -65,11 +65,14 @@ public:
 
   tHttpServlet *newServlet(String *pRequestBuffer)
   {
-	  tHttpServlet *pServlet = ServletFactory(pRequestBuffer);
+	  String LowerRequestBuffer = pRequestBuffer->substring(0, 30);
+	  LowerRequestBuffer.toLowerCase();
+
+	  tHttpServlet *pServlet = ServletFactory(&LowerRequestBuffer);
 	  if (NULL == pServlet)
-		  pServlet = DefaultServletFactory(pRequestBuffer);
+		  pServlet = DefaultServletFactory(&LowerRequestBuffer);
 	  if (NULL == pServlet)
-		  pServlet = getDefaultServlet(pRequestBuffer);
+		  pServlet = getDefaultServlet(&LowerRequestBuffer);
 	  return pServlet;
   }
 

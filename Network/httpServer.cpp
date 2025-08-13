@@ -10,17 +10,17 @@ tHttpServer *tHttpServer::Instance = NULL;
 tHttpServlet *tHttpServer::DefaultServletFactory(String *pRequestBuffer)
 {
 #if CONFIG_SENSOR_STATE_SERVLET
-   if (pRequestBuffer->startsWith("/sensorState")) return new tSensorStateServlet();
+   if (pRequestBuffer->startsWith("/sensorstate")) return new tSensorStateServlet();
 #endif // CONFIG_SENSOR_STATE_SERVLET
 
 #if CONFIG_OUTPUT_CONTROL_SERVLET
 #if CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
-   if (pRequestBuffer->startsWith("/outputState")) return new tOutputStateTLE8457Servlet();
+   if (pRequestBuffer->startsWith("/outputstate")) return new tOutputStateTLE8457Servlet();
 #else // CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
-   if (pRequestBuffer->startsWith("/outputState")) return new tOutputStateServlet();
+   if (pRequestBuffer->startsWith("/outputstate")) return new tOutputStateServlet();
 #endif // CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
 
-   if (pRequestBuffer->startsWith("/outputSet")) return new tOutputSetServlet();
+   if (pRequestBuffer->startsWith("/outputset")) return new tOutputSetServlet();
 #endif
    return NULL;
 }
