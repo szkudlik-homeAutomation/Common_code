@@ -238,10 +238,10 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 	   pStream->print(SensorStatus);
 
 
-	   pStream->print(F(",\"Period\":"));
+	   pStream->print(F(",\"Period_100ms\":"));
 	   pStream->print(mMeasurementPeriod);
 
-	   pStream->print(F(",\"LastUpdate\":"));
+	   pStream->print(F(",\"LastUpdate_100ms\":"));
 	   pStream->print(getTimeSinceUpdate());
 
 	   #if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS

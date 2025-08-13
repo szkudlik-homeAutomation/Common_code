@@ -121,6 +121,8 @@ public:
    uint8_t generateName();
 
    uint8_t setAsDetected();
+
+   //measurementPeriod in 0.1s
    uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize, uint16_t measurementPeriod);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
@@ -134,6 +136,7 @@ public:
    uint8_t formatJSON(Stream *pStream);
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
+   // time sice last sensor update in 1/10h of seconds
    uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 100; }
 
    static tSensorCache *getByID(uint8_t SensorID);
