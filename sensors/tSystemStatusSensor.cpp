@@ -6,9 +6,28 @@
  */
 
 #include "../../../global.h"
-#if CONFIG_SYSTEM_STATUS_SENSOR
-
 #include "tSystemStatusSensor.h"
+
+#if CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
+uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
+{
+   if (cache->getDataBlobSize() != sizeof(tSystemStatusSensorTypes::tResult_api_v1))
+   {
+		 return STATUS_JSON_ENCODE_ERROR;
+   }
+
+   tSystemStatusSensorTypes::tResult_api_v1 *pResult =
+		   (tSystemStatusSensorTypes::tResult_api_v1 *) cache->getData();
+   pStream->print(F("\"Uptime\":"));
+   pStream->print(pResult->Uptime);
+   pStream->print(F(", \"FreeMem\":"));
+   pStream->print(pResult->FreeMemory);
+
+   return STATUS_SUCCESS;
+}
+#endif //CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
+
+#if CONFIG_SYSTEM_STATUS_SENSOR
 
 tSystemStatusSensor::tSystemStatusSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_SYSTEM_STATUS, sensorID, API_VERSION, 0, NULL)
 {
@@ -33,6 +52,10 @@ void tSystemStatusSensor::doTriggerMeasurement()
 
 	onMeasurementCompleted(true);
 }
+#endif //CONFIG_SYSTEM_STATUS_SENSOR
+
+
+#if CONFIG_SENSOR_LOGGER
 
 void tSystemStatusSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
@@ -40,7 +63,8 @@ void tSystemStatusSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventTyp
         //TODO
         return;
 
-    tSystemStatusSensor::tResult *pResult = (tSystemStatusSensor::tResult *)pDataBlob;
+    tSystemStatusSensorTypes::tResult_api_v1 *pResult =
+    		(tSystemStatusSensorTypes::tResult_api_v1 *)pDataBlob;
 
     LOG_PRINT("tSystemStatusSensor SensorID: ");
     LOG(print(SensorID));
@@ -50,22 +74,4 @@ void tSystemStatusSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventTyp
     LOG(println(pResult->Uptime));
 }
 
-
-#if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
-{
-   if (cache->getDataBlobSize() != sizeof(tSystemStatusSensor::tResult))
-   {
-		 return STATUS_JSON_ENCODE_ERROR;
-   }
-
-   tSystemStatusSensor::tResult *pResult =(tSystemStatusSensor::tResult *) cache->getData();
-   pStream->print(F("\"Uptime\":"));
-   pStream->print(pResult->Uptime);
-   pStream->print(F(", \"FreeMem\":"));
-   pStream->print(pResult->FreeMemory);
-
-   return STATUS_SUCCESS;
-}
-#endif //CONFIG_SENSORS_JSON_OUTPUT
-#endif //CONFIG_SYSTEM_STATUS_SENSOR
+#endif

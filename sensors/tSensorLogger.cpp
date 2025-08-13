@@ -1,5 +1,5 @@
 #include "../../../global.h"
-#if CONFIG_SENSORS
+#if CONFIG_SENSOR_LOGGER
 
 #include "tSensorLogger.h"
 
@@ -36,4 +36,4 @@ void tSensorLoggerTxt::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_
 	LOG(println());
 }
 
-#endif //CONFIG_SENSORS
+#endif //CONFIG_SENSOR_LOGGER

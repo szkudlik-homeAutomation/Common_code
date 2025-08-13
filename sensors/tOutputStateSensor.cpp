@@ -5,53 +5,27 @@
  *      Author: szkud
  */
 #include "../../../global.h"
-#if CONFIG_OUTPUT_STATE_SENSOR
-
 #include "tOutputStateSensor.h"
 #include "../tOutputProcess.h"
 
-tOutputStateSensor::tOutputStateSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_OUTPUT_STATES, sensorID, API_VERSION, 0, NULL)
-{
-   for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
-   {
-      mResult.State[i] = 0;
-   }
 
-   mCurrentMeasurementBlob = (void*) &mResult;
-   mMeasurementBlobSize = sizeof(mResult);
-}
-
-uint8_t tOutputStateSensor::onSetConfig()
-{
-	if (NULL == tOutputProcess::Instance)
-		return STATUS_SENSOR_CREATE_ERROR;
-
-	return STATUS_SUCCESS;
-}
-
-void tOutputStateSensor::doTriggerMeasurement()
-{
-   for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
-   {
-      mResult.State[i] = tOutputProcess::Instance->GetOutputState(i);
-      mResult.Timer [i] = tOutputProcess::Instance->GetOutputTimer(i);
-   }
-
-   onMeasurementCompleted(true);
-}
-
-#if CONFIG_SENSORS_JSON_OUTPUT
+#if CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
 uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 {
-   if (cache->getDataBlobSize() != sizeof(tOutputStateSensor::tResult))
+   if (cache->getDataBlobSize() != sizeof(tOutputStateSensorTypes::tResult_api_v1))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tOutputStateSensor::tResult *pResult =(tOutputStateSensor::tResult *) cache->getData();
+   tOutputStateSensorTypes::tResult_api_v1 *pResult =
+		   (tOutputStateSensorTypes::tResult_api_v1 *) cache->getData();
+
+   if (pResult->NumOfPins > tOutputStateSensorTypes::MAX_NUM_OF_PINS)
+	   return STATUS_JSON_ENCODE_ERROR;
+
    pStream->print(F("\"NumOfOutputs\":"));
-   pStream->print(CONFIG_OUTPUT_PROCESS_NUM_OF_PINS);
-   for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
+   pStream->print(pResult->NumOfPins);
+   for (uint8_t i = 0; i < pResult->NumOfPins; i++)
    {
 	  pStream->print(F(","));
       pStream->print(F("\"Out_"));
@@ -65,5 +39,42 @@ uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 
    return STATUS_SUCCESS;
 }
-#endif //CONFIG_SENSORS_JSON_OUTPUT
+#endif
+
+#if CONFIG_OUTPUT_STATE_SENSOR
+tOutputStateSensor::tOutputStateSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_OUTPUT_STATES, sensorID, API_VERSION, 0, NULL)
+{
+   mCurrentMeasurementBlob = (void*) &mResult;
+   mMeasurementBlobSize = sizeof(mResult);
+}
+
+uint8_t tOutputStateSensor::onSetConfig()
+{
+	if (NULL == tOutputProcess::Instance)
+		return STATUS_SENSOR_CREATE_ERROR;
+
+	if (CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > MAX_NUM_OF_PINS)
+		return STATUS_SENSOR_CREATE_ERROR;
+
+	for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
+	{
+	     mResult.State[i] = 0;
+	}
+
+    mResult.NumOfPins = CONFIG_OUTPUT_PROCESS_NUM_OF_PINS;
+
+    return STATUS_SUCCESS;
+}
+
+void tOutputStateSensor::doTriggerMeasurement()
+{
+   for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
+   {
+      mResult.State[i] = tOutputProcess::Instance->GetOutputState(i);
+      mResult.Timer [i] = tOutputProcess::Instance->GetOutputTimer(i);
+   }
+
+   onMeasurementCompleted(true);
+}
+
 #endif //CONFIG_OUTPUT_STATE_SENSOR

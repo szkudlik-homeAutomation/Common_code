@@ -6,24 +6,22 @@
  */
 
 #include "../../../global.h"
-
-#if CONFIG_DS1820_SENSOR
-
 #include "tDS1820Sensor.h"
 #include "../../lib/OneWire/OneWire.h"
 #include "../../lib/ds1820/DallasTemperature.h"
 
-#if CONFIG_SENSORS_JSON_OUTPUT
+
+#if CONFIG_DS1820_SENSOR_JSON_OUTPUT
 uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 {
-   if (cache->getDataBlobSize() < sizeof(tDS1820Sensor::tResult))
+   if (cache->getDataBlobSize() < sizeof(tDS1820SensorTypes::tResult_api_v1))
    {
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   tDS1820Sensor::tResult *pResult =(tDS1820Sensor::tResult *) cache->getData();
-   uint8_t MeasurementBlobSize = sizeof(tDS1820Sensor::tResult) +
-         (sizeof(tDS1820Sensor::tDs1820Data) * pResult->NumOfDevices);
+   tDS1820SensorTypes::tResult_api_v1 *pResult =(tDS1820SensorTypes::tResult_api_v1 *) cache->getData();
+   uint8_t MeasurementBlobSize = sizeof(tDS1820SensorTypes::tResult_api_v1) +
+         (sizeof(tDS1820SensorTypes::tDs1820Data) * pResult->NumOfDevices);
    if (cache->getDataBlobSize() != MeasurementBlobSize)
    {
          return STATUS_JSON_ENCODE_ERROR;
@@ -44,7 +42,7 @@ uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
       {
          pStream->print(F(","));
          pStream->print(F("\"Temperature_"));
-         tDS1820Sensor::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
+         tDS1820SensorTypes::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
          pStream->print(F("\":"));
          pStream->print((float)pResult->Dev[i].Temperature / 10);
       }
@@ -52,7 +50,19 @@ uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
 
    return STATUS_SUCCESS;
 }
-#endif //CONFIG_SENSORS_JSON_OUTPUT
+
+void tDS1820SensorTypes::printAddress(uint8_t* pDeviceAddress, Stream *pStream)
+{
+  for (uint8_t i = 0; i < 8; i++)
+  {
+    if (pDeviceAddress[i] < 16) pStream->print("0");
+    pStream->print(pDeviceAddress[i], HEX);
+  }
+}
+
+#endif CONFIG_DS1820_SENSOR_JSON_OUTPUT
+
+#if CONFIG_DS1820_SENSOR
 
 uint8_t tDS1820Sensor::onSetConfig()
 {
@@ -159,14 +169,6 @@ void tDS1820Sensor::doTimeTick()
    }
 
 }
-void tDS1820Sensor::printAddress(uint8_t* pDeviceAddress, Stream *pStream)
-{
-  for (uint8_t i = 0; i < 8; i++)
-  {
-    if (pDeviceAddress[i] < 16) pStream->print("0");
-    pStream->print(pDeviceAddress[i], HEX);
-  }
-}
 
 uint8_t tDS1820Sensor::compareAddr(uint8_t* pDeviceAddress1, uint8_t* pDeviceAddress2)
 {
@@ -194,13 +196,17 @@ uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
    return DS1820_INVALID_ID;
 }
 
+#endif // CONFIG_DS1820_SENSOR
+
+#if CONFIG_SENSOR_LOGGER
+
 void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
     if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
         //TODO
         return;
 
-    tDS1820Sensor::tResult *pResult = (tDS1820Sensor::tResult *)pDataBlob;
+    tDS1820SensorTypes::tResult_api_v1 *pResult = (tDS1820SensorTypes::tResult_api_v1 *)pDataBlob;
     LOG_PRINT("Measurement completed. SensorID: ");
     LOG(print(SensorID));
     LOG_PRINT(" devs: ");
@@ -225,6 +231,5 @@ void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uin
     LOG_PRINTLN("");
 
 }
+#endif CONFIG_SENSOR_LOGGER
 
-
-#endif // CONFIG_DS1820_SENSOR

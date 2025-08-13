@@ -13,16 +13,22 @@
 
 tSensorCache * tSensorCache::pFirst = NULL;
 
-
-uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize)
+uint8_t tSensorCache::setAsDetected()
 {
-	if (isDetected())
+	if (isDetected()) return STATUS_SENSOR_INCORRECT_STATE;
+	mState = state_not_configured;
+}
+
+uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize, uint16_t measurementPeriod)
+{
+	if (isConfigured())
 		return STATUS_SENSOR_INCORRECT_STATE;
 
 	resetTimestamp();
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
 	mNodeID = nodeID;
+	mMeasurementPeriod = measurementPeriod;
 	uint8_t result = setDataBlobSize(dataBlobSize);
 	if (STATUS_SUCCESS != result)
 	{
@@ -30,7 +36,7 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 		return STATUS_SENSOR_CREATE_ERROR;
 	}
 #if CONFIG_SENSORS_JSON_OUTPUT
-	mFormatJSON = tSensorFactory::Instance->getJSONFormatFunction(mSensorType, mSensorApiVersion);
+	mFormatJSON = tSensorJsonOutput::Instance->getJSONFormatFunction(mSensorType, mSensorApiVersion);
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 	mState = state_no_data_recieved;
 
@@ -64,10 +70,6 @@ uint8_t tSensorCache::setNameProgmem(const __FlashStringHelper *pName)
 	return STATUS_SUCCESS;
 }
 
-void setNameEeprom(uint16_t offset, uint8_t len)
-{
-
-}
 
 tSensorCache *tSensorCache::getByID(uint8_t SensorID)
 {
@@ -156,6 +158,16 @@ uint8_t tSensorCache::setData(void *dataSrc, uint8_t dataSize)
 	return STATUS_SUCCESS;
 }
 
+void tSensorCache::UpdateTimeout()
+{
+	if (!isWorkingState())
+		return;
+	if (getTimeSinceUpdate() > 2*mMeasurementPeriod)
+		mState = state_timeout;
+	else
+		mState = state_working;
+}
+
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
@@ -164,6 +176,7 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 	   return STATUS_JSON_ENCODE_ERROR;
 
    // note that the sensor may be located on a remote machine, use cached data
+   UpdateTimeout();
    pStream->print(F("\""));
    pStream->print(GetName());
    pStream->print(F("\":{\"SensorData\":{"));
@@ -184,7 +197,9 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    case state_not_seen:
    	   pStream->print(F("\"sensor not detected\""));
    	   break;
-
+   case	state_not_configured:
+   	   pStream->print(F("\"sensor not configured\""));
+   	   break;
    case state_no_data_recieved:
    	   pStream->print(F("\"no_data_recieved\""));
    	   break;
@@ -214,22 +229,30 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    default: pStream->print(F("\"unknown\""));
    }
 
-   pStream->print(F(",\"SensorType\":"));
-   pStream->print(mSensorType);
+   if (isConfigured())
+   {
+	   pStream->print(F(",\"SensorType\":"));
+	   pStream->print(mSensorType);
 
-   pStream->print(F(",\"SensorStatus\":"));
-   pStream->print(SensorStatus);
+	   pStream->print(F(",\"SensorStatus\":"));
+	   pStream->print(SensorStatus);
 
-   pStream->print(F(",\"LastUpdate\":"));
-   pStream->print(getTimeSinceUpdate());
+
+	   pStream->print(F(",\"Period_100ms\":"));
+	   pStream->print(mMeasurementPeriod);
+
+	   pStream->print(F(",\"LastUpdate_100ms\":"));
+	   pStream->print(getTimeSinceUpdate());
+
+	   #if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
+	   pStream->print(F(",\"NodeID\":"));
+	   pStream->print(mNodeID);
+	   #endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
+   }
 
    pStream->print(F(",\"ID\":"));
    pStream->print(mSensorID);
 
-#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
-   pStream->print(F(",\"NodeID\":"));
-   pStream->print(mNodeID);
-#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
    pStream->print(F("}}"));
 

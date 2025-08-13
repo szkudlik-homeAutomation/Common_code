@@ -6,10 +6,29 @@
  */
 
 #include "../../../global.h"
-
-#if CONFIG_IMPULSE_SENSOR
 #include "tImpulseSensor.h"
 
+#if CONFIG_IMPULSE_SENSOR_JSON_OUTPUT
+uint8_t ImpulseSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
+{
+   if (cache->getDataBlobSize() != sizeof(tImpulseSensorTypes::tResult_api_v1))
+   {
+         return STATUS_JSON_ENCODE_ERROR;
+   }
+
+   tImpulseSensorTypes::tResult_api_v1 *pResult =(tImpulseSensorTypes::tResult_api_v1 *) cache->getData();
+   pStream->print(F("\"NumOfImpulses\":"));
+   pStream->print(pResult->Count);
+   pStream->print(F(","));
+   pStream->print(F("\"SumOfImpulses\":"));
+   pStream->print(pResult->Sum);
+
+   return STATUS_SUCCESS;
+}
+#endif //CONFIG_IMPULSE_SENSOR_JSON_OUTPUT
+
+
+#if CONFIG_IMPULSE_SENSOR
 
 volatile uint16_t tImpulseSensor::mCnt[3];
 uint8_t tImpulseSensor::mLastSensorNum  = 0;
@@ -73,24 +92,8 @@ void tImpulseSensor::CleanSum()
 	);
 }
 
-#if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t ImpulseSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
-{
-   if (cache->getDataBlobSize() != sizeof(tImpulseSensor::tResult))
-   {
-         return STATUS_JSON_ENCODE_ERROR;
-   }
-
-   tImpulseSensor::tResult *pResult =(tImpulseSensor::tResult *) cache->getData();
-   pStream->print(F("\"NumOfImpulses\":"));
-   pStream->print(pResult->Count);
-   pStream->print(F(","));
-   pStream->print(F("\"SumOfImpulses\":"));
-   pStream->print(pResult->Sum);
-
-   return STATUS_SUCCESS;
-}
-#endif //CONFIG_SENSORS_JSON_OUTPUT
+#endif // CONFIG_IMPULSE_SENSOR
+#if CONFIG_SENSOR_LOGGER
 
 void tImpulseSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
 {
@@ -98,7 +101,7 @@ void tImpulseSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, ui
         //TODO
         return;
 
-    tImpulseSensor::tResult *pResult = (tImpulseSensor::tResult *)pDataBlob;
+    tImpulseSensorTypes::tResult_api_v1 *pResult = (tImpulseSensorTypes::tResult_api_v1 *)pDataBlob;
 
     LOG_PRINT("SensorID: ");
     LOG(print(SensorID));
@@ -108,4 +111,4 @@ void tImpulseSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, ui
     LOG(println(pResult->Sum));
 }
 
-#endif // CONFIG_IMPULSE_SENSOR
+#endif CONFIG_SENSOR_LOGGER

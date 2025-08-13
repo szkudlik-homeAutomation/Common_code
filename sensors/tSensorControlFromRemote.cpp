@@ -47,12 +47,16 @@ void tSensorControlFromRemote::onMessage(uint8_t type, uint16_t data, void *pDat
         break;
 #endif CONFIG_SENSOR_ADVANCED_REMOTE_CONTROL
 #if CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
-    case MESSAGE_TYPE_SENSOR_SAVE:
+    case MESSAGE_TYPE_SENSORS_SAVE:
     	HandeMsgSaveSensorsToEeprom(SenderDevId);
     	break;
-    case MESSAGE_TYPE_SENSOR_RESTORE:
+    case MESSAGE_TYPE_SENSORS_RESTORE:
     	HandeMsgRestoreSensorsFromEeprom(SenderDevId);
     	break;
+    case MESSAGE_TYPE_SENSORS_CLEAN:
+    	HandeMsgCleanSensorsFromEeprom(SenderDevId);
+    	break;
+
 #endif CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL
     }
 }
@@ -183,6 +187,13 @@ void tSensorControlFromRemote::HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID
 {
 	uint8_t result;
 	result = tSensor::RestoreFromEEprom();
+    tOutgoingFrames::SendMsgStatus(SenderID, result);
+}
+
+void tSensorControlFromRemote::HandeMsgCleanSensorsFromEeprom(uint8_t SenderID)
+{
+	uint8_t result;
+	result = tSensor::DeleteAllSensorsFromEeprom();
     tOutgoingFrames::SendMsgStatus(SenderID, result);
 }
 

@@ -9,29 +9,35 @@
 
 
 #include "../../../global.h"
-#if CONFIG_PT100_ANALOG_SENSOR
 #include "tSensor.h"
 #include "tSensorCache.h"
 #include "tSensorLogger.h"
 
-#if CONFIG_SENSORS_JSON_OUTPUT
+
+#if CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
 uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
+#endif //CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
 
-
-class tPt100AnalogSensor : public tSensor {
+#if CONFIG_PT100_ANALOG_SENSOR || CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER
+class tPt100AnalogSensorTypes
+{
 public:
-   typedef struct
-   {
-      uint8_t Pin;
-      int8_t Correction;   // resistance of sensor cable
-   } tConfig_api_v1;
+	   typedef struct
+	   {
+	      uint8_t Pin;
+	      int8_t Correction;   // resistance of sensor cable
+	   } tConfig_api_v1;
 
-   typedef struct
-   {
-      int Temperature;
-   } tResult_api_v1;
+	   typedef struct
+	   {
+	      int Temperature;
+	   } tResult_api_v1;
+};
+#endif
 
+#if CONFIG_PT100_ANALOG_SENSOR
+class tPt100AnalogSensor : public tSensor, public tPt100AnalogSensorTypes {
+public:
    static const uint8_t API_VERSION = 1;
    typedef tConfig_api_v1 tConfig;
    typedef tResult_api_v1 tResult;
@@ -54,12 +60,16 @@ private:
    float TemperatureAvg;
 };
 
+#endif // CONFIG_PT100_ANALOG_SENSOR
+#if CONFIG_SENSOR_LOGGER
+
 class tPt100SensorLogger : public tSensorLogger
 {
 public:
+    tPt100SensorLogger() : tSensorLogger(SENSOR_TYPE_PT100_ANALOG, 0) {}
     tPt100SensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_PT100_ANALOG, sensorID) {}
 protected:
     virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
 
-#endif // CONFIG_PT100_ANALOG_SENSOR
+#endif CONFIG_SENSOR_LOGGER

@@ -397,8 +397,8 @@ static bool send_saveSensorsToEeprom(Commander &Cmdr)
       goto error;
     }
 
-    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSOR_SAVE");
-    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_SAVE, 0, NULL);
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSORS_SAVE");
+    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSORS_SAVE, 0, NULL);
     return true;
 
     error:
@@ -414,14 +414,32 @@ static bool send_restoreSensorsFromEeprom(Commander &Cmdr)
       goto error;
     }
 
-    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSOR_RESTORE");
-    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSOR_RESTORE, 0, NULL);
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSORS_RESTORE");
+    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSORS_RESTORE, 0, NULL);
     return true;
 
     error:
       Cmdr.println(F("Usage: RestoreSensorsFromEeprom dst_dev"));
       return false;
 }
+
+static bool send_cleanSensorsFromEeprom(Commander &Cmdr)
+{
+	int Dst;
+    if(!Cmdr.getInt(Dst))
+    {
+      goto error;
+    }
+
+    DEBUG_PRINTLN_2("SENDING MESSAGE_TYPE_SENSORS_CLEAN");
+    CommSenderProcess::Instance->Enqueue(Dst, MESSAGE_TYPE_SENSORS_CLEAN, 0, NULL);
+    return true;
+
+    error:
+      Cmdr.println(F("Usage: CleanSensorsFromEeprom dst_dev"));
+      return false;
+}
+
 #endif CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
 
 #endif // CONFIG_TLE8457_COMM_LIB
@@ -459,6 +477,7 @@ const commandList_t TelnetCommands[] = {
 #if CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
   {"SaveSensorsToEeprom", send_saveSensorsToEeprom, "SaveSensorsToEeprom dst_dev"},
   {"RestoreSensorsFromEeprom", send_restoreSensorsFromEeprom, "RestoreSensorsFromEeprom dst_dev"},
+  {"CleanSensorsFromEeprom", send_cleanSensorsFromEeprom, "CleanSensorsFromEeprom dst_dev"},
 #endif CONFIG_TELNET_COMMANDS_SENSORS_EEPROM_CONTROL
 #endif // CONFIG_TELNET_COMMANDS_SENSORS
 #endif //CONFIG_TLE8457_COMM_LIB
