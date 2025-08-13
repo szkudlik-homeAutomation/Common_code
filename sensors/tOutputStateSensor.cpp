@@ -61,7 +61,7 @@ uint8_t tOutputStateSensor::onSetConfig()
 	     mResult.State[i] = 0;
 	}
 
-    mResult->NumOfPins = CONFIG_OUTPUT_PROCESS_NUM_OF_PINS;
+    mResult.NumOfPins = CONFIG_OUTPUT_PROCESS_NUM_OF_PINS;
 
     return STATUS_SUCCESS;
 }
