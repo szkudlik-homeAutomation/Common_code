@@ -13,7 +13,7 @@
 #include "tSensorLogger.h"
 
 #if CONFIG_IMPULSE_SENSOR_JSON_OUTPUT
-uint8_t ImpulseSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+uint8_t ImpulseSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache, bool forAggregation);
 #endif //CONFIG_IMPULSE_SENSOR_JSON_OUTPUT
 
 #if CONFIG_IMPULSE_SENSOR || CONFIG_IMPULSE_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER

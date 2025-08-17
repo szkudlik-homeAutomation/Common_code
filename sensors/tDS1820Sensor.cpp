@@ -12,7 +12,7 @@
 
 
 #if CONFIG_DS1820_SENSOR_JSON_OUTPUT
-uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
+uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache, bool forAggregation)
 {
    if (cache->getDataBlobSize() < sizeof(tDS1820SensorTypes::tResult_api_v1))
    {
@@ -27,25 +27,42 @@ uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
          return STATUS_JSON_ENCODE_ERROR;
    }
 
-   pStream->print(F("\"NumOfDevs\":"));
-   pStream->print(pResult->NumOfDevices);
-   pStream->print(F(",\"Avg\":"));
-   pStream->print(pResult->Avg);
-   if (pResult->Avg)
+   if (!forAggregation)
    {
-      pStream->print(F(",\"AvgTemperature\":"));
-      pStream->print((float)pResult->Dev[0].Temperature / 10);
+	   pStream->print(F("\"NumOfDevs\":"));
+	   pStream->print(pResult->NumOfDevices);
+	   pStream->print(F(",\"Avg\":"));
+	   pStream->print(pResult->Avg);
+	   if (pResult->Avg)
+	   {
+	      pStream->print(F(",\"AvgTemperature\":"));
+	      pStream->print((float)pResult->Dev[0].Temperature / 10);
+	   }
+	   else
+	   {
+	      for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
+	      {
+	         pStream->print(F(","));
+	         pStream->print(F("\"Temperature_"));
+	         tDS1820SensorTypes::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
+	         pStream->print(F("\":"));
+	         pStream->print((float)pResult->Dev[i].Temperature / 10);
+	      }
+	   }
    }
-   else
+   else // forAggregation
    {
-      for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
-      {
-         pStream->print(F(","));
-         pStream->print(F("\"Temperature_"));
-         tDS1820SensorTypes::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
-         pStream->print(F("\":"));
-         pStream->print((float)pResult->Dev[i].Temperature / 10);
-      }
+	    if (!pResult->Avg)
+	    {
+	      for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
+	      {
+		     pStream->print(F("\""));
+	         tDS1820SensorTypes::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
+	         pStream->print(F("\":"));
+	         pStream->print((float)pResult->Dev[i].Temperature / 10);
+	         pStream->print(F(","));
+	      }
+	    }
    }
 
    return STATUS_SUCCESS;

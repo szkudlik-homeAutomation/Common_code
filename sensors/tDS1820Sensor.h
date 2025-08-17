@@ -13,7 +13,7 @@
 #include "tSensorLogger.h"
 
 #if CONFIG_DS1820_SENSOR_JSON_OUTPUT
-uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache, bool forAggregation);
 #endif //CONFIG_DS1820_SENSOR_JSON_OUTPUT
 
 #if CONFIG_DS1820_SENSOR || CONFIG_DS1820_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER

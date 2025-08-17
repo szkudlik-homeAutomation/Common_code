@@ -231,6 +231,41 @@ config SENSOR_HUB_AUTONAME_PREFIX
 	    When an unknown sensor is detected, it will be named as
 	    prefix + sensor ID
 
+config SENSOR_HUB_AGGREGATE
+	bool
+	depends on SENSOR_HUB
+	default y if SENSOR_HUB_AGGREGATE_SYSTEM_STATUS || SENSOR_HUB_AGGREGATE_DS1820
+
+config SENSOR_HUB_AGGREGATE_SYSTEM_STATUS
+	bool "Generate a JSON entry aggregating all system statuses"
+    depends on SENSOR_HUB
+	default n
+		
+config SENSOR_HUB_AGGREGATE_SYSTEM_STATUS_NAME
+	string "name of aggregated entry for system statuses"
+	depends on SENSOR_HUB_AGGREGATE_SYSTEM_STATUS
+	default "System_statuses"
+
+config SENSOR_HUB_AGGREGATE_SYSTEM_STATUS_HIDE_INDIVIDUALS
+	bool "when system statuses are presented aggregated, hide individual sensors"
+	depends on SENSOR_HUB_AGGREGATE_SYSTEM_STATUS
+	default n
+
+config SENSOR_HUB_AGGREGATE_DS1820
+	bool "Generate a virtual sensor aggregating all D"
+    depends on SENSOR_HUB
+	default n
+		
+config SENSOR_HUB_AGGREGATE_DS1820_NAME
+	string "name of aggregated virtual sensor for DS1820"
+	depends on SENSOR_HUB_AGGREGATE_DS1820
+	default "Temperatures"
+
+config SENSOR_HUB_AGGREGATE_DS1820_HIDE_INDIVIDUALS
+	bool "hide individual sensors when DS1820 are presented aggregated"
+	depends on SENSOR_HUB_AGGREGATE_DS1820
+	default n
+
 config SENSOR_EVENTS_SERIAL_RECIEVER_ID
 	int "Reciever ID of the sensor events"
 	depends on SENSOR_SEND_EVENTS_USING_SERIAL

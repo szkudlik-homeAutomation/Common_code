@@ -5,7 +5,7 @@
 #if CONFIG_SENSORS_JSON_OUTPUT
 
 class tSensorCache;
-typedef uint8_t (*doFormatJSON)(Stream *pStream, tSensorCache *cache);
+typedef uint8_t (*doFormatJSON)(Stream *pStream, tSensorCache *cache, bool forAggregation);
 
 class tSensorJsonOutput
 {

@@ -15,7 +15,7 @@
 
 
 #if CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
-uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache, bool forAggregation);
 #endif //CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
 
 #if CONFIG_PT100_ANALOG_SENSOR || CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER

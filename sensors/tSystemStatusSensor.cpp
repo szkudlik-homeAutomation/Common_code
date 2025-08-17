@@ -9,7 +9,7 @@
 #include "tSystemStatusSensor.h"
 
 #if CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
-uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
+uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache, bool forAggregation)
 {
    if (cache->getDataBlobSize() != sizeof(tSystemStatusSensorTypes::tResult_api_v1))
    {

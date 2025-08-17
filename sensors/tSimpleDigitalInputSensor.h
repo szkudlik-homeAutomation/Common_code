@@ -12,7 +12,7 @@
 #include "tSensorCache.h"
 
 #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
-uint8_t SimpleDigitalInputSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+uint8_t SimpleDigitalInputSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache, bool forAggregation);
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
 #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR || CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT

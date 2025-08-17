@@ -168,6 +168,22 @@ void tSensorCache::UpdateTimeout()
 		mState = state_working;
 }
 
+#if CONFIG_SENSOR_HUB_AGGREGATE
+uint8_t tSensorCache::formatJSONAggregate(Stream *pStream)
+{
+	   UpdateTimeout();
+
+	   if (mState == state_working)
+	   {
+		   if (NULL != mFormatJSON)
+		   {
+			   mFormatJSON(pStream, this, true);
+		   }
+	   }
+	   return STATUS_SUCCESS;
+}
+#endif //CONFIG_SENSOR_HUB_AGGREGATE
+
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
@@ -185,7 +201,7 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    {
 	   if (NULL != mFormatJSON)
 	   {
-		   SensorStatus = mFormatJSON(pStream, this);
+		   SensorStatus = mFormatJSON(pStream, this, false);
 	   }
    }
 

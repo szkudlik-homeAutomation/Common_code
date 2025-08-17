@@ -106,22 +106,17 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, const __FlashStringHelper *
 }
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, Stream *pStream)
-{
-   tSensorCache *pSensorCache = tSensorCache::getByID(SensorID);
-   if (NULL == pSensorCache)
-   {
-      return STATUS_UNKNOWN_SENSOR_ID;
-   }
-
-   return pSensorCache->formatJSON(pStream);
-}
-
 uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
 {
    tSensorCache *pSensorCache = tSensorCache::getFirst();
    while(NULL != pSensorCache)
    {
+	#if CONFIG_SENSOR_HUB_AGGREGATE_DS1820_HIDE_INDIVIDUALS
+	   if (pSensorCache->mSensorType == SENSOR_TYPE_DS1820)
+	   {
+		   continue;
+	   }
+	#endif // CONFIG_SENSOR_HUB_AGGREGATE_DS1820_SHOW_INDIVIDUALS
       uint8_t result = pSensorCache->formatJSON(pStream);
       pSensorCache = pSensorCache->getNext();
       if (result == STATUS_SUCCESS)
@@ -133,6 +128,31 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
 		  pStream->print("\r\n");
       }
    }
+
+#if CONFIG_SENSOR_HUB_AGGREGATE
+   const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AGGREGATE_DS1820_NAME;
+
+#if CONFIG_SENSOR_HUB_AGGREGATE_DS1820
+   uint8_t Ds1820SensorCount = 0;
+   pStream->print(F(",\""));
+   pStream->print(SensorPrefix);
+   pStream->print(F("\":{"));
+
+   pSensorCache = tSensorCache::getFirst();
+	while (NULL != pSensorCache) {
+		if (pSensorCache->getSensorType() == SENSOR_TYPE_DS1820) {
+			Ds1820SensorCount++;
+			pSensorCache->formatJSONAggregate(pStream);
+		}
+		pSensorCache = pSensorCache->getNext();
+	}
+	pStream->print(F("\"AggregatedSensors\":"));
+	pStream->print(Ds1820SensorCount);
+	pStream->print(F("}\r\n"));
+#endif // CONFIG_SENSOR_HUB_AGGREGATE_DS1820
+
+#endif // CONFIG_SENSOR_HUB_AGGREGATE
+
 }
 
 #endif // CONFIG_SENSORS_JSON_OUTPUT
