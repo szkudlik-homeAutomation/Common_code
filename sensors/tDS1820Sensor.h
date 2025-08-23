@@ -11,9 +11,16 @@
 #include "tSensor.h"
 #include "tSensorCache.h"
 #include "tSensorLogger.h"
+#include "tSensorJsonOutput.h"
 
 #if CONFIG_DS1820_SENSOR_JSON_OUTPUT
-uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+class tSensorJsonFormatter_DS1820_api_1 : public tSensorJsonFormatter
+{
+public:
+	tSensorJsonFormatter_DS1820_api_1() : tSensorJsonFormatter() {}
+protected:
+	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+};
 #endif //CONFIG_DS1820_SENSOR_JSON_OUTPUT
 
 #if CONFIG_DS1820_SENSOR || CONFIG_DS1820_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER

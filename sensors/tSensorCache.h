@@ -37,7 +37,7 @@ class tSensorCache
 #endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     /* C-style function pointer, no point for a class and virtual method here */
 #if CONFIG_SENSORS_JSON_OUTPUT
-	doFormatJSON mFormatJSON;
+    tSensorJsonFormatter *mFormatJSON;
 #endif //CONFIG_SENSORS_JSON_OUTPUT
     uint32_t mLastTimestamp;	// millis()
 
@@ -88,7 +88,9 @@ public:
            }
    }
    bool isDetected() const { return mState > state_not_seen; }
-   bool isWorkingState() const { return mState >= state_no_data_recieved; }
+   bool isWorkingState() const { return mState > state_no_data_recieved; }
+   bool isWorkingOrReadyState() const { return mState >= state_no_data_recieved; }
+
    bool isTimeout() const { return mState == state_timeout; }
    bool isConfigured() const { return mState > state_not_configured; }
    bool isPermanentError() const { return mState < 0; }

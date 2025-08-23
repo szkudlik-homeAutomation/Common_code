@@ -9,7 +9,7 @@
 #include "tPt100AnalogSensor.h"
 
 #if CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
-uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache){
+uint8_t tSensorJsonFormatter_AnalogSensor_api_1::FormatJSON(Stream *pStream, tSensorCache *cache){
    if (cache->getDataBlobSize() != sizeof(tPt100AnalogSensorTypes::tResult_api_v1))
    {
          return STATUS_JSON_ENCODE_ERROR;

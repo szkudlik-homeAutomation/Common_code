@@ -12,7 +12,7 @@
 
 
 #if CONFIG_DS1820_SENSOR_JSON_OUTPUT
-uint8_t DS1820SensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
+uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() < sizeof(tDS1820SensorTypes::tResult_api_v1))
    {

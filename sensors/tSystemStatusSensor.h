@@ -13,7 +13,13 @@
 #include "tSensorLogger.h"
 
 #if CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
-uint8_t SystemStatusSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+class tSensorJsonFormatter_SystemStatus_api_1 : public tSensorJsonFormatter
+{
+public:
+	tSensorJsonFormatter_SystemStatus_api_1() : tSensorJsonFormatter() {}
+protected:
+	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+};
 #endif //CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
 
 #if CONFIG_SYSTEM_STATUS_SENSOR || CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER
