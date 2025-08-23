@@ -62,9 +62,14 @@ public:
     * get all sensor data as JSON
     * get data from a sensor stored locally, formatted in JSON, and stream them to provided (tcp)stream
     *
-    * this procedure will also prepare aggregated JSON entries if configured
     */
    uint8_t getCachedSensorsDataJson(Stream *pStream);
+
+   /*
+    * as above, but for aggregated sensors
+    */
+   uint8_t getCachedAggregatedSensorsDataJson(Stream *pStream);
+
 
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 

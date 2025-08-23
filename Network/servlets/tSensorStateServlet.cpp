@@ -17,7 +17,15 @@ bool tSensorStateServlet::ProcessAndResponse()
 
    tSensorHub::Instance->getCachedSensorsDataJson(&pOwner->mEthernetClient);
 
-   pOwner->SendFlashString(PSTR("}}\r\n"));
+   pOwner->SendFlashString(PSTR("}\r\n"));
+
+#if CONFIG_SENSOR_HUB_AGGREGATE
+   pOwner->SendFlashString(PSTR(",\"AggregatedSensors\":{\r\n"));
+   tSensorHub::Instance->getCachedAggregatedSensorsDataJson(&pOwner->mEthernetClient);
+   pOwner->SendFlashString(PSTR("}\r\n"));
+#endif //CONFIG_SENSOR_HUB_AGGREGATE
+
+   pOwner->SendFlashString(PSTR("}\r\n"));
 
    return false;
 }

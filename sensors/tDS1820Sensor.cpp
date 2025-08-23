@@ -14,6 +14,9 @@
 #if CONFIG_DS1820_SENSOR_JSON_OUTPUT
 uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
+#if CONFIG_SENSOR_HUB_AGGREGATE_DS1820_HIDE_INDIVIDUALS
+	return STATUS_SUCCESS;
+#else //CONFIG_SENSOR_HUB_AGGREGATE_DS1820_HIDE_INDIVIDUALS
    if (cache->getDataBlobSize() < sizeof(tDS1820SensorTypes::tResult_api_v1))
    {
          return STATUS_JSON_ENCODE_ERROR;
@@ -49,7 +52,43 @@ uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCa
    }
 
    return STATUS_SUCCESS;
+#endif CONFIG_SENSOR_HUB_AGGREGATE_DS1820_HIDE_INDIVIDUALS
 }
+
+#if CONFIG_SENSOR_HUB_AGGREGATE_DS1820
+uint8_t tSensorJsonFormatter_DS1820_api_1::FormatAggreatedPrefix(Stream *pStream)
+{
+	const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AGGREGATE_DS1820_NAME;
+
+	mDs1820AggregatedCount = 0;
+	pStream->print(F(",\""));
+	pStream->print(SensorPrefix);
+	pStream->print(F("\":{"));
+}
+
+uint8_t tSensorJsonFormatter_DS1820_api_1::FormatAggreatedJSON(Stream *pStream, tSensorCache *cache)
+{
+	mDs1820AggregatedCount++;
+    tDS1820SensorTypes::tResult_api_v1 *pResult =(tDS1820SensorTypes::tResult_api_v1 *) cache->getData();
+
+    for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
+    {
+	   pStream->print(F("\""));
+       tDS1820SensorTypes::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
+       pStream->print(F("\":"));
+       pStream->print((float)pResult->Dev[i].Temperature / 10);
+       pStream->print(F(","));
+    }
+}
+
+uint8_t tSensorJsonFormatter_DS1820_api_1::FormatAggreatedSuffix(Stream *pStream)
+{
+	pStream->print(F("\"AggregatedSensors\":"));
+	pStream->print(mDs1820AggregatedCount);
+	pStream->print(F("}\r\n"));
+}
+#endif //CONFIG_SENSOR_HUB_AGGREGATE_DS1820
+
 
 void tDS1820SensorTypes::printAddress(uint8_t* pDeviceAddress, Stream *pStream)
 {

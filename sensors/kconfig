@@ -234,7 +234,22 @@ config SENSOR_HUB_AUTONAME_PREFIX
 config SENSOR_HUB_AGGREGATE
 	bool
 	depends on SENSOR_HUB
-	default y
+	default y if SENSOR_HUB_AGGREGATE_DS1820
+
+config SENSOR_HUB_AGGREGATE_DS1820
+	bool "Generate a virtual sensor aggregating all DS1820"
+    depends on SENSOR_HUB
+	default n
+		
+config SENSOR_HUB_AGGREGATE_DS1820_NAME
+	string "name of aggregated virtual sensor for DS1820"
+	depends on SENSOR_HUB_AGGREGATE_DS1820
+	default "Temperatures"
+
+config SENSOR_HUB_AGGREGATE_DS1820_HIDE_INDIVIDUALS
+	bool "hide individual sensors when DS1820 are presented aggregated"
+	depends on SENSOR_HUB_AGGREGATE_DS1820
+	default n
 
 config SENSOR_EVENTS_SERIAL_RECIEVER_ID
 	int "Reciever ID of the sensor events"

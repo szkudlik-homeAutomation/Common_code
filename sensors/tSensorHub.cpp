@@ -135,6 +135,10 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
    }
 }
 
+uint8_t tSensorHub::getCachedAggregatedSensorsDataJson(Stream *pStream)
+{
+}
+
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
 void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)

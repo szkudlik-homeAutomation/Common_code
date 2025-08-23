@@ -17,9 +17,21 @@
 class tSensorJsonFormatter_DS1820_api_1 : public tSensorJsonFormatter
 {
 public:
-	tSensorJsonFormatter_DS1820_api_1() : tSensorJsonFormatter() {}
+	tSensorJsonFormatter_DS1820_api_1() : tSensorJsonFormatter() {
+#if CONFIG_SENSOR_HUB_AGGREGATE_DS1820_HIDE_INDIVIDUALS
+        mHidden = true;
+#endif //CONFIG_SENSOR_HUB_AGGREGATE_DS1820_HIDE_INDIVIDUALS
+    }
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+#if CONFIG_SENSOR_HUB_AGGREGATE_DS1820
+    virtual uint8_t FormatAggreatedPrefix(Stream *pStream) override;
+    virtual uint8_t FormatAggreatedJSON(Stream *pStream, tSensorCache *cache) override;
+    virtual uint8_t FormatAggreatedSuffix(Stream *pStream) override;
+
+    uint8_t mDs1820AggregatedCount;
+
+#endif //CONFIG_SENSOR_HUB_AGGREGATE_DS1820
 };
 #endif //CONFIG_DS1820_SENSOR_JSON_OUTPUT
 
