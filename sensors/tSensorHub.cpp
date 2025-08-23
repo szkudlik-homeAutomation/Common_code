@@ -152,7 +152,7 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
       return;
    }
 
-   if (! pSensorCache->isWorkingState() )
+   if (! pSensorCache->isWorkingOrReadyState() )
 	   return;
 
    if (EventType == EV_TYPE_MEASUREMENT_ERROR)

@@ -88,7 +88,9 @@ public:
            }
    }
    bool isDetected() const { return mState > state_not_seen; }
-   bool isWorkingState() const { return mState >= state_no_data_recieved; }
+   bool isWorkingState() const { return mState > state_no_data_recieved; }
+   bool isWorkingOrReadyState() const { return mState >= state_no_data_recieved; }
+
    bool isTimeout() const { return mState == state_timeout; }
    bool isConfigured() const { return mState > state_not_configured; }
    bool isPermanentError() const { return mState < 0; }

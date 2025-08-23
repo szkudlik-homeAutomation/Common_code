@@ -263,7 +263,7 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 #if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
 {
-    if (! isWorkingState())
+    if (! isWorkingOrReadyState())
         return STATUS_SENSOR_INCORRECT_STATE;
 
     if (SegmentSeq != mSeq)
