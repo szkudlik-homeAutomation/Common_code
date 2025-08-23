@@ -45,16 +45,16 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 			  }
 			  break;
 	#endif //CONFIG_IMPULSE_SENSOR
-	//
-	//#if CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
-	//      case SENSOR_TYPE_PT100_ANALOG:
-	//          switch (apiVersion)
-	//          {
-	//          case 1:
-	//              return Pt100AnalogSensorJsonFormat_api_1;
-	//          }
-	//          break;
-	//#endif //CONFIG_PT100_ANALOG_SENSOR
+
+	#if CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
+	      case SENSOR_TYPE_PT100_ANALOG:
+	          switch (apiVersion)
+	          {
+	          case 1:
+	              return new tSensorJsonFormatter_AnalogSensor_api_1;
+	          }
+	          break;
+	#endif //CONFIG_PT100_ANALOG_SENSOR
 	//
 	//#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
 	//      case SENSOR_TYPE_DIGITAL_INPUT:

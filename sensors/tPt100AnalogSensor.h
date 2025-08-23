@@ -12,10 +12,16 @@
 #include "tSensor.h"
 #include "tSensorCache.h"
 #include "tSensorLogger.h"
-
+#include "tSensorJsonOutput.h"
 
 #if CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
-uint8_t Pt100AnalogSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+class tSensorJsonFormatter_AnalogSensor_api_1 : public tSensorJsonFormatter
+{
+public:
+	tSensorJsonFormatter_AnalogSensor_api_1() : tSensorJsonFormatter() {}
+protected:
+	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+};
 #endif //CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
 
 #if CONFIG_PT100_ANALOG_SENSOR || CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER
