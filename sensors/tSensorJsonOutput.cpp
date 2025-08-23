@@ -76,15 +76,15 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 	          break;
 	#endif //CONFIG_OUTPUT_STATE_SENSOR
 
-	//#if CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
-	//      case SENSOR_TYPE_SYSTEM_STATUS:
-	//          switch (apiVersion)
-	//          {
-	//          case 1:
-	//              return SystemStatusSensorJsonFormat_api_1;
-	//          }
-	//          break;
-	//#endif //CONFIG_SYSTEM_STATUS_SENSOR
+	#if CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
+	      case SENSOR_TYPE_SYSTEM_STATUS:
+	          switch (apiVersion)
+	          {
+	          case 1:
+	              return new tSensorJsonFormatter_SystemStatus_api_1;
+	          }
+	          break;
+	#endif //CONFIG_SYSTEM_STATUS_SENSOR
 	  default:
 		  return appSpecificCreateJsonFormatter(SensorType, apiVersion);
 	}
