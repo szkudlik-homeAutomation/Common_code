@@ -37,7 +37,7 @@ class tSensorCache
 #endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
     /* C-style function pointer, no point for a class and virtual method here */
 #if CONFIG_SENSORS_JSON_OUTPUT
-	doFormatJSON mFormatJSON;
+    tSensorJsonFormatter *mFormatJSON;
 #endif //CONFIG_SENSORS_JSON_OUTPUT
     uint32_t mLastTimestamp;	// millis()
 

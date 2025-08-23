@@ -36,7 +36,7 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 		return STATUS_SENSOR_CREATE_ERROR;
 	}
 #if CONFIG_SENSORS_JSON_OUTPUT
-	mFormatJSON = tSensorJsonOutput::Instance->getJSONFormatFunction(mSensorType, mSensorApiVersion);
+	mFormatJSON = tSensorJsonFormatterFactory::Instance->createJsonFormatter(mSensorType, mSensorApiVersion);
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 	mState = state_no_data_recieved;
 
@@ -185,7 +185,7 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    {
 	   if (NULL != mFormatJSON)
 	   {
-		   SensorStatus = mFormatJSON(pStream, this);
+		   SensorStatus = mFormatJSON->FormatJSON(pStream, this);
 	   }
    }
 
