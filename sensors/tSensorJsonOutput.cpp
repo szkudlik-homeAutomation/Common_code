@@ -66,16 +66,16 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 	          break;
 	#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
 
-	//#if CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
-	//      case SENSOR_TYPE_OUTPUT_STATES:
-	//          switch (apiVersion)
-	//          {
-	//          case 1:
-	//              return OutputStateSensorJsonFormat_api_1;
-	//          }
-	//          break;
-	//#endif //CONFIG_OUTPUT_STATE_SENSOR
-	//
+	#if CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
+	      case SENSOR_TYPE_OUTPUT_STATES:
+	          switch (apiVersion)
+	          {
+	          case 1:
+	              return new tSensorJsonFormatter_OutputState_api_1;
+	          }
+	          break;
+	#endif //CONFIG_OUTPUT_STATE_SENSOR
+
 	//#if CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
 	//      case SENSOR_TYPE_SYSTEM_STATUS:
 	//          switch (apiVersion)

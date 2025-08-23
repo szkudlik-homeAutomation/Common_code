@@ -13,7 +13,13 @@
 
 
 #if CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
-uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache);
+class tSensorJsonFormatter_OutputState_api_1 : public tSensorJsonFormatter
+{
+public:
+	tSensorJsonFormatter_OutputState_api_1() : tSensorJsonFormatter() {}
+protected:
+	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+};
 #endif //CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
 
 #if CONFIG_OUTPUT_STATE_SENSOR || CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT

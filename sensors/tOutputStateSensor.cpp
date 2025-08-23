@@ -10,7 +10,7 @@
 
 
 #if CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
-uint8_t OutputStateSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
+uint8_t tSensorJsonFormatter_OutputState_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() != sizeof(tOutputStateSensorTypes::tResult_api_v1))
    {
