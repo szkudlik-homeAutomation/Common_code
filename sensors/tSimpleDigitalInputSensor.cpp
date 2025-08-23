@@ -9,7 +9,7 @@
 #include "tSimpleDigitalInputSensor.h"
 
 #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
-uint8_t SimpleDigitalInputSensorJsonFormat_api_1(Stream *pStream, tSensorCache *cache)
+uint8_t tSensorJsonFormatter_SimpleDigitalInput_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() != sizeof(tSimpleDigitalInputSensorTypes::tResult_api_v1))
    {

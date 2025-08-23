@@ -55,17 +55,17 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 	          }
 	          break;
 	#endif //CONFIG_PT100_ANALOG_SENSOR
-	//
-	//#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
-	//      case SENSOR_TYPE_DIGITAL_INPUT:
-	//          switch (apiVersion)
-	//          {
-	//          case 1:
-	//              return SimpleDigitalInputSensorJsonFormat_api_1;
-	//          }
-	//          break;
-	//#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
-	//
+
+	#if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
+	      case SENSOR_TYPE_DIGITAL_INPUT:
+	          switch (apiVersion)
+	          {
+	          case 1:
+	              return new tSensorJsonFormatter_SimpleDigitalInput_api_1;
+	          }
+	          break;
+	#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
+
 	//#if CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
 	//      case SENSOR_TYPE_OUTPUT_STATES:
 	//          switch (apiVersion)
