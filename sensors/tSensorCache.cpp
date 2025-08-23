@@ -168,6 +168,22 @@ void tSensorCache::UpdateTimeout()
 		mState = state_working;
 }
 
+#if CONFIG_SENSOR_HUB_AGGREGATE
+uint8_t tSensorCache::formatJSONAggregate(Stream *pStream)
+{
+	   UpdateTimeout();
+
+	   if (mState == state_working)
+	   {
+		   if (NULL != mFormatJSON)
+		   {
+			   mFormatJSON->FormatAggreatedJSON(pStream, this);
+		   }
+	   }
+	   return STATUS_SUCCESS;
+}
+#endif //CONFIG_SENSOR_HUB_AGGREGATE
+
 #if CONFIG_SENSORS_JSON_OUTPUT
 uint8_t tSensorCache::formatJSON(Stream *pStream)
 {
@@ -175,18 +191,25 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
    if (NULL == GetName())
 	   return STATUS_JSON_ENCODE_ERROR;
 
+   if (NULL == mFormatJSON)
+	   return STATUS_JSON_ENCODE_ERROR;
+
    // note that the sensor may be located on a remote machine, use cached data
    UpdateTimeout();
+
+   if (mFormatJSON->isHidden())
+   {
+      // do not output hidden sensors
+      return STATUS_SUCCESS;
+   }
+
    pStream->print(F("\""));
    pStream->print(GetName());
    pStream->print(F("\":{\"SensorData\":{"));
 
    if (mState == state_working)
    {
-	   if (NULL != mFormatJSON)
-	   {
-		   SensorStatus = mFormatJSON->FormatJSON(pStream, this);
-	   }
+	   SensorStatus = mFormatJSON->FormatJSON(pStream, this);
    }
 
    pStream->print(F("},\"GeneralData\":{\"State\":"));

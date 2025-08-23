@@ -231,6 +231,11 @@ config SENSOR_HUB_AUTONAME_PREFIX
 	    When an unknown sensor is detected, it will be named as
 	    prefix + sensor ID
 
+config SENSOR_HUB_AGGREGATE
+	bool
+	depends on SENSOR_HUB
+	default y
+
 config SENSOR_EVENTS_SERIAL_RECIEVER_ID
 	int "Reciever ID of the sensor events"
 	depends on SENSOR_SEND_EVENTS_USING_SERIAL
