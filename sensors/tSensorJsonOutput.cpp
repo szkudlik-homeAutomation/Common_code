@@ -26,15 +26,15 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 {
 	switch (SensorType)
 	{
-	//	#if CONFIG_DS1820_SENSOR_JSON_OUTPUT
-	//		  case SENSOR_TYPE_DS1820:
-	//			  switch (apiVersion)
-	//			  {
-	//			  case 1:
-	//				  return new tSensorJsonFormatter_DS1820_api_1;
-	//			  }
-	//			  break;
-	//	#endif // CONFIG_DS1820_SENSOR
+	#if CONFIG_DS1820_SENSOR_JSON_OUTPUT
+		  case SENSOR_TYPE_DS1820:
+			  switch (apiVersion)
+			  {
+			  case 1:
+				  return new tSensorJsonFormatter_DS1820_api_1;
+			  }
+			  break;
+	#endif // CONFIG_DS1820_SENSOR
 	//
 	//    #if CONFIG_IMPULSE_SENSOR_JSON_OUTPUT
 	//          case SENSOR_TYPE_IMPULSE:
