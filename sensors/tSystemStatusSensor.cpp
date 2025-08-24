@@ -25,6 +25,29 @@ uint8_t tSensorJsonFormatter_SystemStatus_api_1::FormatJSON(Stream *pStream, tSe
 
    return STATUS_SUCCESS;
 }
+
+uint8_t tSensorJsonFormatter_SystemStatus_api_2::FormatJSON(Stream *pStream, tSensorCache *cache)
+{
+   if (cache->getDataBlobSize() != sizeof(tSystemStatusSensorTypes::tResult_api_v2))
+   {
+		 return STATUS_JSON_ENCODE_ERROR;
+   }
+
+   tSystemStatusSensorTypes::tResult_api_v2 *pResult =
+		   (tSystemStatusSensorTypes::tResult_api_v2 *) cache->getData();
+   pStream->print(F("\"Uptime\":"));
+   pStream->print(pResult->Uptime);
+   pStream->print(F(", \"FreeMem\":"));
+   pStream->print(pResult->FreeMemory);
+   pStream->print(F(", \"Version\":\""));
+   pStream->print(pResult->VersionMajor);
+   pStream->print(F("."));
+   pStream->print(pResult->VersionMinor);
+   pStream->print(F("."));
+   pStream->print(pResult->VersionPatch);
+   pStream->print(F("\""));
+   return STATUS_SUCCESS;
+}
 #endif //CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
 
 #if CONFIG_SYSTEM_STATUS_SENSOR
@@ -35,7 +58,11 @@ tSystemStatusSensor::tSystemStatusSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE
    mMeasurementBlobSize = sizeof(mResult);
    mResult.Uptime = 0;
    tickCnt = 0;
+   mResult.VersionMajor = FW_VERSION_MAJOR;
+   mResult.VersionMinor = FW_VERSION_MINOR;
+   mResult.VersionPatch = FW_VERSION_PATCH;
 }
+
 void tSystemStatusSensor::doTimeTick()
 {
 	tickCnt++;
@@ -63,15 +90,35 @@ void tSystemStatusSensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventTyp
         //TODO
         return;
 
-    tSystemStatusSensorTypes::tResult_api_v1 *pResult =
-    		(tSystemStatusSensorTypes::tResult_api_v1 *)pDataBlob;
+	if (ApiVersion == 1) {
+		tSystemStatusSensorTypes::tResult_api_v1 *pResult =
+				(tSystemStatusSensorTypes::tResult_api_v1 *)pDataBlob;
 
-    LOG_PRINT("tSystemStatusSensor SensorID: ");
-    LOG(print(SensorID));
-    LOG_PRINT(" FreeMemory: ");
-    LOG(print(pResult->FreeMemory));
-    LOG_PRINT(" Uptime: ");
-    LOG(println(pResult->Uptime));
+		LOG_PRINT("tSystemStatusSensor SensorID: ");
+		LOG(print(SensorID));
+		LOG_PRINT(" FreeMemory: ");
+		LOG(print(pResult->FreeMemory));
+		LOG_PRINT(" Uptime: ");
+		LOG(println(pResult->Uptime));
+	}
+	else if (ApiVersion == 2) {
+        tSystemStatusSensorTypes::tResult_api_v2 *pResult =
+                (tSystemStatusSensorTypes::tResult_api_v2 *)pDataBlob;
+
+		LOG_PRINT("tSystemStatusSensor SensorID: ");
+		LOG(print(SensorID));
+		LOG_PRINT(" FreeMemory: ");
+		LOG(print(pResult->FreeMemory));
+		LOG_PRINT(" Uptime: ");
+		LOG(print(pResult->Uptime));
+		LOG_PRINT(" Version: ");
+		LOG(print(pResult->VersionMajor));
+		LOG(print(F(".")));
+		LOG(print(pResult->VersionMinor));
+		LOG(print(F(".")));
+		LOG(println(pResult->VersionPatch));
+	}
+
 }
 
 #endif

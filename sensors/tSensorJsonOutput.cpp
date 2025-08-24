@@ -82,6 +82,8 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 	          {
 	          case 1:
 	              return new tSensorJsonFormatter_SystemStatus_api_1;
+	          case 2:
+	              return new tSensorJsonFormatter_SystemStatus_api_2;
 	          }
 	          break;
 	#endif //CONFIG_SYSTEM_STATUS_SENSOR
