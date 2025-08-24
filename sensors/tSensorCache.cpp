@@ -237,6 +237,8 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 	   pStream->print(F(",\"SensorStatus\":"));
 	   pStream->print(SensorStatus);
 
+	   pStream->print(F(",\"ApiVersion\":"));
+	   pStream->print(mSensorApiVersion);
 
 	   pStream->print(F(",\"Period_100ms\":"));
 	   pStream->print(mMeasurementPeriod);
