@@ -140,17 +140,19 @@ void tSensor::onMeasurementCompleted(bool Status)
 #endif //CONFIG_SENSOR_HUB
 #if CONFIG_SENSOR_GENERATE_EVENTS
   tSensorEvent Event;
+  Event.SensorType = getSensorType();
+  Event.SensorID = getSensorID();
+  Event.ApiVersion = getSensorApiVersion();
+
   if (Status)
   {
       Event.EventType = EV_TYPE_MEASUREMENT_COMPLETED;
-      Event.SensorType = getSensorType();
       Event.dataBlobSize = mMeasurementBlobSize;
       Event.pDataBlob = mCurrentMeasurementBlob;
   }
   else
   {
       Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
-      Event.SensorType = getSensorType();
       Event.dataBlobSize = 0;
       Event.pDataBlob = NULL;
   }

@@ -100,6 +100,6 @@ public:
     tDS1820SensorLogger() : tSensorLogger(SENSOR_TYPE_DS1820, 0) {}
     tDS1820SensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_DS1820, sensorID) {}
 protected:
-    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob) override;
 };
 #endif CONFIG_SENSOR_LOGGER

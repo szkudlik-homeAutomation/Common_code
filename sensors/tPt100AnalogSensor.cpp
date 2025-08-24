@@ -134,7 +134,7 @@ void tPt100AnalogSensor::doTriggerMeasurement()
 
 #if CONFIG_SENSOR_LOGGER
 
-void tPt100SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
+void tPt100SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob)
 {
     if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
         //TODO

@@ -81,7 +81,7 @@ public:
     tImpulseSensorLogger() : tSensorLogger(SENSOR_TYPE_IMPULSE, 0) {}
     tImpulseSensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_IMPULSE, sensorID) {}
 protected:
-    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob) override;
 };
 #endif CONFIG_SENSOR_LOGGER
 

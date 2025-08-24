@@ -142,9 +142,6 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
 	uint8_t result;
 
 	DEBUG_PRINTLN_2(">>> ON SENSOR EVENT<<<");
-#if CONFIG_SENSOR_HUB_GENERATE_EVENTS
-   tSensorEvent Event;
-#endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
 
    tSensorCache *pSensorCache = tSensorCache::getByID(SensorID);
    if (NULL == pSensorCache)
@@ -155,13 +152,20 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
    if (! pSensorCache->isWorkingOrReadyState() )
 	   return;
 
+#if CONFIG_SENSOR_HUB_GENERATE_EVENTS
+   tSensorEvent Event;
+
+   Event.SensorType = pSensorCache->getSensorType();
+   Event.SensorID = SensorID;
+   Event.ApiVersion = pSensorCache->getSensorApiVersion();
+#endif CONFIG_SENSOR_HUB_GENERATE_EVENTS
+
    if (EventType == EV_TYPE_MEASUREMENT_ERROR)
    {
 	  DEBUG_PRINTLN_2(">>> Sensor error reported <<<");
       pSensorCache->setError(tSensorCache::state_sensor_error_reported);
 #if CONFIG_SENSOR_HUB_GENERATE_EVENTS
       Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
-      Event.SensorType = pSensorCache->getSensorType();
       Event.dataBlobSize = 0;
       Event.pDataBlob = NULL;
       tMessageReciever::Dispatch(MessageType_SensorEvent, SensorID, &Event);
@@ -175,7 +179,6 @@ void tSensorHub::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t data
    if (result == STATUS_SUCCESS)
    {
 	   Event.EventType = EventType;
-       Event.SensorType = pSensorCache->getSensorType();
 	   Event.dataBlobSize = pSensorCache->getDataBlobSize();
 	   Event.pDataBlob = pSensorCache->getData();
 	   tMessageReciever::Dispatch(MessageType_SensorEvent, SensorID, &Event);
