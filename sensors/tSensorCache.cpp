@@ -53,7 +53,7 @@ uint8_t tSensorCache::setParams(uint8_t dataBlobSize, uint16_t measurementPeriod
 
 uint8_t tSensorCache::generateName()
 {
-	static const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_PREFIX;
+	const char *SensorPrefix = mFormatJSON->getSensorTypeName();
 	static const char DevPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_DEV_PREFIX;
 	static const char IdPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_ID_PREFIX;
 

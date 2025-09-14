@@ -10,6 +10,13 @@
 
 
 #if CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
+
+const char *tSensorJsonFormatter_OutputState_api_1::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "OutputState";
+	return IdPrefix;
+}
+
 uint8_t tSensorJsonFormatter_OutputState_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() != sizeof(tOutputStateSensorTypes::tResult_api_v1))

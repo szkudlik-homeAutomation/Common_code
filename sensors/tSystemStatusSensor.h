@@ -19,12 +19,13 @@ public:
 	tSensorJsonFormatter_SystemStatus_api_1() : tSensorJsonFormatter() {}
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+	virtual const char *getSensorTypeName() override;
 };
 
-class tSensorJsonFormatter_SystemStatus_api_2 : public tSensorJsonFormatter
+class tSensorJsonFormatter_SystemStatus_api_2 : public tSensorJsonFormatter_SystemStatus_api_1
 {
 public:
-	tSensorJsonFormatter_SystemStatus_api_2() : tSensorJsonFormatter() {}
+	tSensorJsonFormatter_SystemStatus_api_2() : tSensorJsonFormatter_SystemStatus_api_1() {}
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
 };

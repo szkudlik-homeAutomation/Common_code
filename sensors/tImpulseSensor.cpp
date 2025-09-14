@@ -9,6 +9,13 @@
 #include "tImpulseSensor.h"
 
 #if CONFIG_IMPULSE_SENSOR_JSON_OUTPUT
+
+const char *tSensorJsonFormatter_ImpulseSensor_api_1::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "ImpulseCounter";
+	return IdPrefix;
+}
+
 uint8_t tSensorJsonFormatter_ImpulseSensor_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() != sizeof(tImpulseSensorTypes::tResult_api_v1))

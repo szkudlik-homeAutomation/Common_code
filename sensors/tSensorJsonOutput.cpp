@@ -22,6 +22,12 @@
 tSensorJsonFormatterFactory* tSensorJsonFormatterFactory::Instance = NULL;
 
 
+const char *tSensorJsonFormatter::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "Sensor";
+	return IdPrefix;
+}
+
 tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t SensorType, uint8_t apiVersion)
 {
 	switch (SensorType)

@@ -1,3 +1,4 @@
+
 /*
  * tDS1820Sensor.cpp
  *
@@ -12,6 +13,13 @@
 
 
 #if CONFIG_DS1820_SENSOR_JSON_OUTPUT
+
+const char *tSensorJsonFormatter_DS1820_api_1::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "DS1820";
+	return IdPrefix;
+}
+
 uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() < sizeof(tDS1820SensorTypes::tResult_api_v1))

@@ -9,6 +9,13 @@
 #include "tSystemStatusSensor.h"
 
 #if CONFIG_SYSTEM_STATUS_SENSOR_JSON_OUTPUT
+
+const char *tSensorJsonFormatter_SystemStatus_api_1::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "SystemStatus";
+	return IdPrefix;
+}
+
 uint8_t tSensorJsonFormatter_SystemStatus_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() != sizeof(tSystemStatusSensorTypes::tResult_api_v1))

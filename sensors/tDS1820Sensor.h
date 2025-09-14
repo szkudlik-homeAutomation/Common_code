@@ -20,6 +20,7 @@ public:
 	tSensorJsonFormatter_DS1820_api_1() : tSensorJsonFormatter() {}
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+	virtual const char *getSensorTypeName() override;
 };
 #endif //CONFIG_DS1820_SENSOR_JSON_OUTPUT
 
