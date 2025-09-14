@@ -130,17 +130,18 @@ void tSensor::onMeasurementCompleted(bool Status)
 #if CONFIG_SENSOR_HUB
   if (Status)
   {
-      tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), 0,  EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
   else
   {
-      tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), 0, EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
 #endif //CONFIG_SENSOR_HUB
 #if CONFIG_SENSOR_GENERATE_EVENTS
   tSensorEvent Event;
   Event.SensorType = getSensorType();
   Event.SensorID = getSensorID();
+  Event.DeviceId = 0;
   Event.ApiVersion = getSensorApiVersion();
 
   if (Status)

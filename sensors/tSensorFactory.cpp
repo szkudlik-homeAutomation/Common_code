@@ -55,7 +55,7 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
     if (SensorID == 1)
     	//sensors with ID > 1 won't be registered in sensorHub locally
 #endif // CONFIG_REMOTE_SENSORS_TEST
-    	tSensorHub::Instance->RegisterSensor(SensorID, pSensorName);
+    	tSensorHub::Instance->RegisterSensor(SensorID, 0, pSensorName);
 #endif // CONFIG_SENSOR_HUB
 	return pSensor;
 }

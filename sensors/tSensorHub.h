@@ -27,7 +27,7 @@ public:
 	static tSensorHub *Instance;
 
 	/* name from progmem */
-	uint8_t RegisterSensor(uint8_t SensorID, const __FlashStringHelper *pSensorName);
+	uint8_t RegisterSensor(uint8_t SensorID, uint8_t deviceId, const __FlashStringHelper *pSensorName);
 
 	/*
 	 * Get an ID of a sensor by name
@@ -41,13 +41,13 @@ public:
 	/**
 	 * return a pointer to sensor name or NULL if the sensor does not exist
 	 */
-	const char *getSensorName(uint8_t SensorID);
+	const char *getSensorName(uint8_t SensorID, uint8_t deviceId);
 
 	/**
 	 * get cached sensor data
 	 * get data from a sensor stored locally
 	 */
-	uint8_t getCachedSensorData(uint8_t SensorID,  uint8_t *dataBlobSize, void **pDataBlob);
+	uint8_t getCachedSensorData(uint8_t SensorID, uint8_t deviceId, uint8_t *dataBlobSize, void **pDataBlob);
 
 #if CONFIG_SENSORS_JSON_OUTPUT
 	/**
@@ -56,7 +56,7 @@ public:
 	 *
 	 * @retval SENSOR_STATUS_UNKNOWN_SENSOR
 	 */
-	uint8_t getCachedSensorDataJson(uint8_t SensorID, Stream *pStream);
+	uint8_t getCachedSensorDataJson(uint8_t SensorID, uint8_t deviceId, Stream *pStream);
 
    /**
     * get all sensor data as JSON
@@ -70,7 +70,7 @@ public:
    /*
     * to be called on sensor event, either remote or local
     */
-   void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+   void onSensorEvent(uint8_t SensorID, uint8_t deviceId, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
 };
 
 #endif //CONFIG_SENSOR_HUB

@@ -30,6 +30,7 @@ static const uint8_t MessageType_SensorEvent   = 1;
     {
     	uint8_t SensorType;
     	uint8_t SensorID; // sensor ID
+    	uint8_t DeviceId; // device ID the sensor is located on. 0 => local sensor
     	uint8_t ApiVersion; // API version of the sensor
         uint8_t EventType;
         uint8_t dataBlobSize;

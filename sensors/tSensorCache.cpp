@@ -19,7 +19,7 @@ uint8_t tSensorCache::setAsDetected()
 	mState = state_not_configured;
 }
 
-uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize, uint16_t measurementPeriod)
+uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t dataBlobSize, uint16_t measurementPeriod)
 {
 	if (isConfigured())
 		return STATUS_SENSOR_INCORRECT_STATE;
@@ -27,7 +27,6 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 	resetTimestamp();
 	mSensorType = SensorType;
 	mSensorApiVersion = ApiVersion;
-	mNodeID = nodeID;
 	mMeasurementPeriod = measurementPeriod;
 	uint8_t result = setDataBlobSize(dataBlobSize);
 	if (STATUS_SUCCESS != result)
@@ -70,13 +69,12 @@ uint8_t tSensorCache::setNameProgmem(const __FlashStringHelper *pName)
 	return STATUS_SUCCESS;
 }
 
-
-tSensorCache *tSensorCache::getByID(uint8_t SensorID)
+tSensorCache *tSensorCache::getByID(uint8_t SensorID, uint8_t deviceID)
 {
    tSensorCache *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
    {
-      if (pSensorDesc->mSensorID == SensorID)
+      if (pSensorDesc->mSensorID == SensorID && pSensorDesc->mNodeID == deviceID)
       {
          return pSensorDesc;
       }
