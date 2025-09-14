@@ -19,15 +19,26 @@ uint8_t tSensorCache::setAsDetected()
 	mState = state_not_configured;
 }
 
-uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize, uint16_t measurementPeriod)
+uint8_t tSensorCache::setSensorType(uint8_t SensorType, uint8_t ApiVersion)
+{
+	if (SENSOR_TYPE_NOT_SET != mSensorType)
+		return STATUS_SENSOR_INCORRECT_STATE;
+
+	mSensorType = SensorType;
+	mSensorApiVersion = ApiVersion;
+#if CONFIG_SENSORS_JSON_OUTPUT
+	mFormatJSON = tSensorJsonFormatterFactory::Instance->createJsonFormatter(mSensorType, mSensorApiVersion);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
+
+	return STATUS_SUCCESS;
+}
+
+uint8_t tSensorCache::setParams(uint8_t dataBlobSize, uint16_t measurementPeriod)
 {
 	if (isConfigured())
 		return STATUS_SENSOR_INCORRECT_STATE;
 
 	resetTimestamp();
-	mSensorType = SensorType;
-	mSensorApiVersion = ApiVersion;
-	mNodeID = nodeID;
 	mMeasurementPeriod = measurementPeriod;
 	uint8_t result = setDataBlobSize(dataBlobSize);
 	if (STATUS_SUCCESS != result)
@@ -35,26 +46,35 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 		mState = state_create_error;
 		return STATUS_SENSOR_CREATE_ERROR;
 	}
-#if CONFIG_SENSORS_JSON_OUTPUT
-	mFormatJSON = tSensorJsonFormatterFactory::Instance->createJsonFormatter(mSensorType, mSensorApiVersion);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
 	mState = state_no_data_recieved;
 
 	return STATUS_SUCCESS;
 }
 
-const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_PREFIX;
 uint8_t tSensorCache::generateName()
 {
-	uint8_t len = strlen_P(SensorPrefix) + 3;
-	mName = malloc(len);
+	const char *SensorPrefix = mFormatJSON->getSensorTypeName();
+	static const char DevPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_DEV_PREFIX;
+	static const char IdPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_ID_PREFIX;
+
+	uint8_t len = strlen_P(SensorPrefix) + strlen_P(DevPrefix) + strlen_P(IdPrefix)+5;
+	mName = malloc(len); // + 2*2 digits for IDs + NULL
 	if (!mName)
 		return STATUS_OUT_OF_MEMORY;
 
 	strcpy_P(mName, SensorPrefix);
-	mName[len-3] = (mSensorID / 10) + '0';
-	mName[len-2] = (mSensorID % 10) + '0';
-	mName[len-1] = 0;
+	uint8_t pos = strlen_P(SensorPrefix);
+
+	strcpy_P(mName+pos, DevPrefix);
+	pos += strlen_P(DevPrefix);
+	mName[pos++] = (mNodeID / 10) + '0';
+	mName[pos++] = (mNodeID % 10) + '0';
+
+	strcpy_P(mName+pos, IdPrefix);
+	pos += strlen_P(IdPrefix);
+	mName[pos++] = (mSensorID / 10) + '0';
+	mName[pos++] = (mSensorID % 10) + '0';
+	mName[pos] = 0;
 
 	return STATUS_SUCCESS;
 }
@@ -70,13 +90,12 @@ uint8_t tSensorCache::setNameProgmem(const __FlashStringHelper *pName)
 	return STATUS_SUCCESS;
 }
 
-
-tSensorCache *tSensorCache::getByID(uint8_t SensorID)
+tSensorCache *tSensorCache::getByID(uint8_t SensorID, uint8_t deviceID)
 {
    tSensorCache *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
    {
-      if (pSensorDesc->mSensorID == SensorID)
+      if (pSensorDesc->mSensorID == SensorID && pSensorDesc->mNodeID == deviceID)
       {
          return pSensorDesc;
       }
@@ -237,6 +256,8 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 	   pStream->print(F(",\"SensorStatus\":"));
 	   pStream->print(SensorStatus);
 
+	   pStream->print(F(",\"ApiVersion\":"));
+	   pStream->print(mSensorApiVersion);
 
 	   pStream->print(F(",\"Period_100ms\":"));
 	   pStream->print(mMeasurementPeriod);

@@ -1,3 +1,4 @@
+
 /*
  * tDS1820Sensor.cpp
  *
@@ -12,6 +13,13 @@
 
 
 #if CONFIG_DS1820_SENSOR_JSON_OUTPUT
+
+const char *tSensorJsonFormatter_DS1820_api_1::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "DS1820";
+	return IdPrefix;
+}
+
 uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() < sizeof(tDS1820SensorTypes::tResult_api_v1))
@@ -200,7 +208,7 @@ uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
 
 #if CONFIG_SENSOR_LOGGER
 
-void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
+void tDS1820SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob)
 {
     if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
         //TODO

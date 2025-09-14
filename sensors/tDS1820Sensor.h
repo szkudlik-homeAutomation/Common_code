@@ -20,6 +20,7 @@ public:
 	tSensorJsonFormatter_DS1820_api_1() : tSensorJsonFormatter() {}
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+	virtual const char *getSensorTypeName() override;
 };
 #endif //CONFIG_DS1820_SENSOR_JSON_OUTPUT
 
@@ -100,6 +101,6 @@ public:
     tDS1820SensorLogger() : tSensorLogger(SENSOR_TYPE_DS1820, 0) {}
     tDS1820SensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_DS1820, sensorID) {}
 protected:
-    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob) override;
 };
 #endif CONFIG_SENSOR_LOGGER

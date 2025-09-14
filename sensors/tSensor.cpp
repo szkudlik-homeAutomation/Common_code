@@ -31,8 +31,7 @@ uint8_t tSensor::setConfig(uint16_t measurementPeriod, uint8_t ApiVersion, void 
 		return STATUS_CONFIG_SET_ERROR;
 	}
 
-	if (ApiVersion && ApiVersion != getSensorApiVersion())
-	{
+	if (ApiVersion && ApiVersion != getSensorApiVersion() && pConfigBlob != NULL) {
 		DEBUG_PRINTLN_3(" error: api version mismatch");
 		return STATUS_CONFIG_SET_ERROR;
 	}
@@ -131,26 +130,29 @@ void tSensor::onMeasurementCompleted(bool Status)
 #if CONFIG_SENSOR_HUB
   if (Status)
   {
-      tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), 0,  EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
   else
   {
-      tSensorHub::Instance->onSensorEvent(getSensorID(), EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), 0, EV_TYPE_MEASUREMENT_ERROR, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
 #endif //CONFIG_SENSOR_HUB
 #if CONFIG_SENSOR_GENERATE_EVENTS
   tSensorEvent Event;
+  Event.SensorType = getSensorType();
+  Event.SensorID = getSensorID();
+  Event.DeviceId = 0;
+  Event.ApiVersion = getSensorApiVersion();
+
   if (Status)
   {
       Event.EventType = EV_TYPE_MEASUREMENT_COMPLETED;
-      Event.SensorType = getSensorType();
       Event.dataBlobSize = mMeasurementBlobSize;
       Event.pDataBlob = mCurrentMeasurementBlob;
   }
   else
   {
       Event.EventType = EV_TYPE_MEASUREMENT_ERROR;
-      Event.SensorType = getSensorType();
       Event.dataBlobSize = 0;
       Event.pDataBlob = NULL;
   }

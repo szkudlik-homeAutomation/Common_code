@@ -9,6 +9,13 @@
 #include "tSimpleDigitalInputSensor.h"
 
 #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
+
+const char *tSensorJsonFormatter_SimpleDigitalInput_api_1::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "DigitalInput";
+	return IdPrefix;
+}
+
 uint8_t tSensorJsonFormatter_SimpleDigitalInput_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
    if (cache->getDataBlobSize() != sizeof(tSimpleDigitalInputSensorTypes::tResult_api_v1))

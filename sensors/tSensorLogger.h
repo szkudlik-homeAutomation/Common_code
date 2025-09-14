@@ -20,7 +20,7 @@ public:
     virtual void onMessage(uint8_t type, uint16_t data, void *pData);
 
 protected:
-    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob) = 0;
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob) = 0;
 
    uint8_t mSensorID;
    uint8_t mSensorType;
@@ -36,7 +36,7 @@ public:
 	tSensorLoggerTxt(uint8_t SensorType, uint8_t SensorID): tSensorLogger(SensorType, SensorID) {}
 
 protected:
-    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob) override;
 };
 
 #endif // CONFIG_SENSOR_LOGGER

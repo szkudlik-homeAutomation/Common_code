@@ -21,6 +21,7 @@ public:
 	tSensorJsonFormatter_AnalogSensor_api_1() : tSensorJsonFormatter() {}
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+	virtual const char *getSensorTypeName() override;
 };
 #endif //CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
 
@@ -75,7 +76,7 @@ public:
     tPt100SensorLogger() : tSensorLogger(SENSOR_TYPE_PT100_ANALOG, 0) {}
     tPt100SensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_PT100_ANALOG, sensorID) {}
 protected:
-    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob) override;
 };
 
 #endif CONFIG_SENSOR_LOGGER

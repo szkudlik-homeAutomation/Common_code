@@ -19,9 +19,11 @@
  */
 class tSensorCache;
 #include "tSensorJsonOutput.h"
+#include "tSensor.h"
 
 class tSensorCache
 {
+private:
     int8_t mState;
     uint8_t mSensorID;
     uint8_t mSensorType;
@@ -59,11 +61,13 @@ public:
 	static const int8_t state_incorrect_data_size = -2;
 	static const int8_t state_inconsistent_params = -3;
 
-    tSensorCache(uint8_t ID) :
+    tSensorCache(uint8_t ID, uint8_t NodeID) :
 	   mSensorID(ID),
-	   mNodeID(0),
+	   mNodeID(NodeID),
 	   mName(NULL),
 	   pDataCache(NULL),
+	   mSensorType(SENSOR_TYPE_NOT_SET),
+	   mSensorApiVersion(0),
 #if CONFIG_SENSORS_JSON_OUTPUT
 	   mFormatJSON(NULL),
 #endif //CONFIG_SENSORS_JSON_OUTPUT
@@ -103,6 +107,7 @@ public:
    bool isDataAssemblyNeeded() const { return pRemoteDataCache != NULL; }
 #endif	//CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 
+   uint8_t setSensorType(uint8_t SensorType, uint8_t ApiVersion);
    uint8_t getSensorType() const { return mSensorType; }
    uint8_t getSensorApiVersion() const { return mSensorApiVersion; }
    uint8_t getNodeID() const { return mNodeID; }
@@ -125,7 +130,7 @@ public:
    uint8_t setAsDetected();
 
    //measurementPeriod in 0.1s
-   uint8_t setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t nodeID, uint8_t dataBlobSize, uint16_t measurementPeriod);
+   uint8_t setParams(uint8_t dataBlobSize, uint16_t measurementPeriod);
    uint8_t getDataBlobSize() const { return mDataBlobSize; }
    void *getData() { return pDataCache; }
 
@@ -141,7 +146,7 @@ public:
    // time sice last sensor update in 1/10h of seconds
    uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 100; }
 
-   static tSensorCache *getByID(uint8_t SensorID);
+   static tSensorCache *getByID(uint8_t SensorID, uint8_t deviceID);
    static tSensorCache *getByName(const char * pSensorName);
 
 

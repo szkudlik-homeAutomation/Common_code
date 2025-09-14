@@ -19,6 +19,7 @@ public:
 	tSensorJsonFormatter_OutputState_api_1() : tSensorJsonFormatter() {}
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+	virtual const char *getSensorTypeName() override;
 };
 #endif //CONFIG_OUTPUT_STATE_SENSOR_JSON_OUTPUT
 

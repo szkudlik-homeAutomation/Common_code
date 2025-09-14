@@ -16,19 +16,19 @@ void tSensorLogger::onMessage(uint8_t type, uint16_t data, void *pData)
     if ((mSensorType != 0) && (pSensorEvent->SensorType != mSensorType))
         return;
 
-    onSensorEvent(SensorID, pSensorEvent->EventType, pSensorEvent->dataBlobSize, pSensorEvent->pDataBlob);
+    onSensorEvent(SensorID, pSensorEvent->EventType, pSensorEvent->ApiVersion, pSensorEvent->dataBlobSize, pSensorEvent->pDataBlob);
 }
 
-void tSensorLoggerTxt::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
+void tSensorLoggerTxt::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob)
 {
 	uint8_t *pDataTable = pDataBlob;
 	// general log
 	LOG_PRINT("==>Sensor event, sensor ID:");
 	LOG(print(SensorID));
-	LOG_PRINT(" sensor type ");
-	LOG(print(mSensorType));
 	LOG_PRINT(" event type ");
-	LOG(println(EventType));
+	LOG(print(EventType));
+	LOG_PRINT(" Api verson  ");
+	LOG(println(ApiVersion));
 
 	LOG_PRINT("payload data: ");
 	for (uint8_t i = 0; i < dataBlobSize; i++)

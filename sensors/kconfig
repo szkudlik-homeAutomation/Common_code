@@ -223,13 +223,21 @@ config SENSOR_HUB_FOR_REMOTE_SENSORS
         MESSAGE_TYPE_SENSOR_EVENT - a measure completed, thold exdeeded etc.
         MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE - handled as "sensor detected"
 
-config SENSOR_HUB_AUTONAME_PREFIX
-    string "prefix for detected sensors in sensor hub"
+config SENSOR_HUB_AUTONAME_ID_PREFIX
+    string "prefix for device ID in detected sensors in sensor hub"
     depends on SENSOR_HUB
-    default "Sensor_"
+    default "_ID"
 	help
 	    When an unknown sensor is detected, it will be named as
-	    prefix + sensor ID
+	    sensor_type_name + ID_PREFIX + sensorID + DEV_PREFIX + device_id
+
+config SENSOR_HUB_AUTONAME_DEV_PREFIX
+    string "prefix for device ID in detected sensors in sensor hub"
+    depends on SENSOR_HUB
+    default "_DEV"
+	help
+	    When an unknown sensor is detected, it will be named as
+	    sensor_type_name + ID_PREFIX + sensorID + DEV_PREFIX + device_id
 
 config SENSOR_EVENTS_SERIAL_RECIEVER_ID
 	int "Reciever ID of the sensor events"

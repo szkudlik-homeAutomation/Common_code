@@ -22,6 +22,12 @@
 tSensorJsonFormatterFactory* tSensorJsonFormatterFactory::Instance = NULL;
 
 
+const char *tSensorJsonFormatter::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "Sensor";
+	return IdPrefix;
+}
+
 tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t SensorType, uint8_t apiVersion)
 {
 	switch (SensorType)
@@ -82,6 +88,8 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 	          {
 	          case 1:
 	              return new tSensorJsonFormatter_SystemStatus_api_1;
+	          case 2:
+	              return new tSensorJsonFormatter_SystemStatus_api_2;
 	          }
 	          break;
 	#endif //CONFIG_SYSTEM_STATUS_SENSOR

@@ -38,17 +38,23 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     uint8_t result = STATUS_SUCCESS;
     // called every time when MESSAGE_TYPE_GET_SENSOR_BY_ID_RESPONSE is recieved
 
-    tSensorCache *pSensorCache = tSensorCache::getByID(Message->SensorID);
+    tSensorCache *pSensorCache = tSensorCache::getByID(Message->SensorID, SenderID);
     if (NULL == pSensorCache)
     {
         // remote sensor seen for the first time, has no pre-created cache entry so name is not known
-    	pSensorCache = new tSensorCache(Message->SensorID);
+    	pSensorCache = new tSensorCache(Message->SensorID, SenderID);
         if (NULL == pSensorCache)
         	// error??
         	return;
 
     	// unknown yet sensor - generate name
+    	pSensorCache->setSensorType(Message->SensorType, Message->ApiVersion);
     	result = pSensorCache->generateName();
+    }
+    else
+    {
+    	// always set type and version - they may not have been set before
+    	pSensorCache->setSensorType(Message->SensorType, Message->ApiVersion);
     }
 
     if (!Message->isConfigured && STATUS_SUCCESS == result)
@@ -58,7 +64,7 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     }
 
     if (STATUS_SUCCESS == result)
-    	result = pSensorCache->setParams(Message->SensorType, Message->ApiVersion, SenderID, Message->MeasurementBlobSize, Message->MeasurementPeriod);
+    	result = pSensorCache->setParams(Message->MeasurementBlobSize, Message->MeasurementPeriod);
 
     if (result == STATUS_SENSOR_INCORRECT_STATE)
     {
@@ -86,7 +92,7 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
 void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageSensorEvent *Message)
 {
     uint8_t result;
-	tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID);
+	tSensorCache *pSensorCache = tSensorCache::getByID(Message->Header.SensorID, SenderID);
 	if (!pSensorCache || !pSensorCache->isConfigured()) {
 		// the sensor is not yet know. Send discovery request
 	    tMessageGetSensorByIdReqest getSensorMessage;
@@ -99,7 +105,7 @@ void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageS
 	// no data assembly?
 	if (Message->Header.LastSegment && Message->Header.SegmentSeq == 0 && !pSensorCache->isDataAssemblyNeeded())
 	{
-		tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorCache->getDataBlobSize(), Message->Payload);
+		tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, SenderID, Message->Header.EventType, pSensorCache->getDataBlobSize(), Message->Payload);
 		return;
 	}
 
@@ -112,7 +118,7 @@ void tSensorHubMessageReciever::HandleMsgSensorEvent(uint8_t SenderID, tMessageS
 
 	if (Message->Header.LastSegment)
 	{
-	    tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, Message->Header.EventType, pSensorCache->getDataBlobSize(), pSensorCache->getAssembledData());
+	    tSensorHub::Instance->onSensorEvent(Message->Header.SensorID, SenderID, Message->Header.EventType, pSensorCache->getDataBlobSize(), pSensorCache->getAssembledData());
         pSensorCache->resetDataSegment();
 	}
 }

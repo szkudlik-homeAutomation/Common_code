@@ -20,6 +20,7 @@ public:
 	tSensorJsonFormatter_ImpulseSensor_api_1() : tSensorJsonFormatter() {}
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+	virtual const char *getSensorTypeName() override;
 };
 #endif //CONFIG_IMPULSE_SENSOR_JSON_OUTPUT
 
@@ -81,7 +82,7 @@ public:
     tImpulseSensorLogger() : tSensorLogger(SENSOR_TYPE_IMPULSE, 0) {}
     tImpulseSensorLogger(uint8_t sensorID) : tSensorLogger(SENSOR_TYPE_IMPULSE, sensorID) {}
 protected:
-    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob);
+    virtual void onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob) override;
 };
 #endif CONFIG_SENSOR_LOGGER
 

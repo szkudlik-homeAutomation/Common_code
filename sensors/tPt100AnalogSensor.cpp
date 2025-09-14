@@ -9,6 +9,13 @@
 #include "tPt100AnalogSensor.h"
 
 #if CONFIG_PT100_ANALOG_SENSOR_JSON_OUTPUT
+
+const char *tSensorJsonFormatter_AnalogSensor_api_1::getSensorTypeName()
+{
+	static const char IdPrefix[] PROGMEM = "AnalogInput";
+	return IdPrefix;
+}
+
 uint8_t tSensorJsonFormatter_AnalogSensor_api_1::FormatJSON(Stream *pStream, tSensorCache *cache){
    if (cache->getDataBlobSize() != sizeof(tPt100AnalogSensorTypes::tResult_api_v1))
    {
@@ -134,7 +141,7 @@ void tPt100AnalogSensor::doTriggerMeasurement()
 
 #if CONFIG_SENSOR_LOGGER
 
-void tPt100SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t dataBlobSize, void *pDataBlob)
+void tPt100SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8_t ApiVersion, uint8_t dataBlobSize, void *pDataBlob)
 {
     if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
         //TODO
