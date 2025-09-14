@@ -42,18 +42,30 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 	return STATUS_SUCCESS;
 }
 
-const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_PREFIX;
 uint8_t tSensorCache::generateName()
 {
-	uint8_t len = strlen_P(SensorPrefix) + 3;
-	mName = malloc(len);
+	static const char SensorPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_PREFIX;
+	static const char DevPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_DEV_PREFIX;
+	static const char IdPrefix[] PROGMEM = CONFIG_SENSOR_HUB_AUTONAME_ID_PREFIX;
+
+	uint8_t len = strlen_P(SensorPrefix) + strlen_P(DevPrefix) + strlen_P(IdPrefix)+5;
+	mName = malloc(len); // + 2*2 digits for IDs + NULL
 	if (!mName)
 		return STATUS_OUT_OF_MEMORY;
 
 	strcpy_P(mName, SensorPrefix);
-	mName[len-3] = (mSensorID / 10) + '0';
-	mName[len-2] = (mSensorID % 10) + '0';
-	mName[len-1] = 0;
+	uint8_t pos = strlen_P(SensorPrefix);
+
+	strcpy_P(mName+pos, DevPrefix);
+	pos += strlen_P(DevPrefix);
+	mName[pos++] = (mNodeID / 10) + '0';
+	mName[pos++] = (mNodeID % 10) + '0';
+
+	strcpy_P(mName+pos, IdPrefix);
+	pos += strlen_P(IdPrefix);
+	mName[pos++] = (mSensorID / 10) + '0';
+	mName[pos++] = (mSensorID % 10) + '0';
+	mName[pos] = 0;
 
 	return STATUS_SUCCESS;
 }

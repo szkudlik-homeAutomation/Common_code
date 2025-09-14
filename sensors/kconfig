@@ -229,7 +229,22 @@ config SENSOR_HUB_AUTONAME_PREFIX
     default "Sensor_"
 	help
 	    When an unknown sensor is detected, it will be named as
-	    prefix + sensor ID
+	    SENSOR_HUB_AUTONAME_PREFIX + ID_PREFIX + sensorID + DEV_PREFIX + device_id
+config SENSOR_HUB_AUTONAME_ID_PREFIX
+    string "prefix for device ID in detected sensors in sensor hub"
+    depends on SENSOR_HUB
+    default "_ID"
+	help
+	    When an unknown sensor is detected, it will be named as
+	    SENSOR_HUB_AUTONAME_PREFIX + ID_PREFIX + sensorID + DEV_PREFIX + device_id
+
+config SENSOR_HUB_AUTONAME_DEV_PREFIX
+    string "prefix for device ID in detected sensors in sensor hub"
+    depends on SENSOR_HUB
+    default "_dev"
+	help
+	    When an unknown sensor is detected, it will be named as
+	    SENSOR_HUB_AUTONAME_PREFIX + ID_PREFIX + sensorID + DEV_PREFIX + device_id
 
 config SENSOR_EVENTS_SERIAL_RECIEVER_ID
 	int "Reciever ID of the sensor events"
