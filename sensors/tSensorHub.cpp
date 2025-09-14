@@ -65,6 +65,17 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, uint8_t deviceId, const __F
    }
    // add sensor to repository
    pSensorCache = new tSensorCache(SensorID, deviceId);
+	if (NULL == pSensorCache) {
+		DEBUG_PRINTLN_3("-----> Cannot create sensor cache ");
+		return STATUS_OUT_OF_MEMORY;
+	}
+
+   result = pSensorCache->setNameProgmem(pSensorName);
+   if (result != STATUS_SUCCESS) {
+		DEBUG_PRINTLN_3("-----> Cannot set sensor name ");
+		delete pSensorCache;
+		return result;
+	}
 
 #if CONFIG_SENSORS
 
@@ -81,16 +92,17 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, uint8_t deviceId, const __F
      tSensor *pSensor = tSensor::getSensor(SensorID);
 #endif // CONFIG_REMOTE_SENSORS_TEST
 
+   result = STATUS_SUCCESS;
    if (pSensor != NULL)
    {
+	   pSensorCache->setSensorType(
+				pSensor->getSensorType(),
+   				pSensor->getSensorApiVersion());
+
 	   // local sensor
 	   if(pSensor->isConfigured())
 	   {
-		   result = pSensorCache->setNameProgmem(pSensorName);
-		   if (result == STATUS_SUCCESS)
-			   result = pSensorCache->setParams(
-					   pSensor->getSensorType(),
-					   pSensor->getSensorApiVersion(),
+		   result = pSensorCache->setParams(
 					   pSensor->getMeasurementBlobSize(),
 					   pSensor->GetMeasurementPeriod());
 	   }

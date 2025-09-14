@@ -48,7 +48,13 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
         	return;
 
     	// unknown yet sensor - generate name
+    	pSensorCache->setSensorType(Message->SensorType, Message->ApiVersion);
     	result = pSensorCache->generateName();
+    }
+    else
+    {
+    	// always set type and version - they may not have been set before
+    	pSensorCache->setSensorType(Message->SensorType, Message->ApiVersion);
     }
 
     if (!Message->isConfigured && STATUS_SUCCESS == result)
@@ -58,7 +64,7 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
     }
 
     if (STATUS_SUCCESS == result)
-    	result = pSensorCache->setParams(Message->SensorType, Message->ApiVersion, Message->MeasurementBlobSize, Message->MeasurementPeriod);
+    	result = pSensorCache->setParams(Message->MeasurementBlobSize, Message->MeasurementPeriod);
 
     if (result == STATUS_SENSOR_INCORRECT_STATE)
     {

@@ -23,6 +23,7 @@
 
 class tSensor;
 
+#define SENSOR_TYPE_NOT_SET 0
 #define SENSOR_TYPE_DS1820 1
 #define SENSOR_TYPE_IMPULSE 2
 #define SENSOR_TYPE_PT100_ANALOG 3

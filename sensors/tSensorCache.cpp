@@ -19,14 +19,26 @@ uint8_t tSensorCache::setAsDetected()
 	mState = state_not_configured;
 }
 
-uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t dataBlobSize, uint16_t measurementPeriod)
+uint8_t tSensorCache::setSensorType(uint8_t SensorType, uint8_t ApiVersion)
+{
+	if (SENSOR_TYPE_NOT_SET != mSensorType)
+		return STATUS_SENSOR_INCORRECT_STATE;
+
+	mSensorType = SensorType;
+	mSensorApiVersion = ApiVersion;
+#if CONFIG_SENSORS_JSON_OUTPUT
+	mFormatJSON = tSensorJsonFormatterFactory::Instance->createJsonFormatter(mSensorType, mSensorApiVersion);
+#endif //CONFIG_SENSORS_JSON_OUTPUT
+
+	return STATUS_SUCCESS;
+}
+
+uint8_t tSensorCache::setParams(uint8_t dataBlobSize, uint16_t measurementPeriod)
 {
 	if (isConfigured())
 		return STATUS_SENSOR_INCORRECT_STATE;
 
 	resetTimestamp();
-	mSensorType = SensorType;
-	mSensorApiVersion = ApiVersion;
 	mMeasurementPeriod = measurementPeriod;
 	uint8_t result = setDataBlobSize(dataBlobSize);
 	if (STATUS_SUCCESS != result)
@@ -34,9 +46,6 @@ uint8_t tSensorCache::setParams(uint8_t SensorType, uint8_t ApiVersion, uint8_t 
 		mState = state_create_error;
 		return STATUS_SENSOR_CREATE_ERROR;
 	}
-#if CONFIG_SENSORS_JSON_OUTPUT
-	mFormatJSON = tSensorJsonFormatterFactory::Instance->createJsonFormatter(mSensorType, mSensorApiVersion);
-#endif //CONFIG_SENSORS_JSON_OUTPUT
 	mState = state_no_data_recieved;
 
 	return STATUS_SUCCESS;
