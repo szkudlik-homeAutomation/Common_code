@@ -281,6 +281,20 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 }
 #endif CONFIG_SENSORS_JSON_OUTPUT
 
+#if CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT
+uint8_t tSensorCache::formatJSONAggregate(Stream *pStream)
+{
+	if (mState == state_working)
+	{
+		if (NULL != mFormatJSON)
+		{
+			return mFormatJSON->formatJSONAggregate(pStream, this);
+		}
+	 }
+	return STATUS_JSON_ENCODE_ERROR;
+}
+#endif //CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT
+
 #if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
 uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
 {

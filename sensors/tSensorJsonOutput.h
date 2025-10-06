@@ -32,6 +32,10 @@ public:
 
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) = 0;
 	virtual const char *getSensorTypeName();
+#if CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT
+	// format JSON in the way that it can be used for aggregated output of multiple sensors of the same type
+	virtual uint8_t formatJSONAggregate(Stream *pStream, tSensorCache *cache) { return STATUS_UNSUPPORTED; }
+#endif
 };
 
 #endif CONFIG_SENSORS_JSON_OUTPUT

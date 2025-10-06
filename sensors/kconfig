@@ -296,6 +296,22 @@ config DS1820_SENSOR_JSON_OUTPUT
     depends on SENSORS_JSON_OUTPUT
     default y if DS1820_SENSOR
     
+config DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
+    bool "Enable DS1820 aggregated Sensor JSON output"
+    depends on SENSORS_JSON_OUTPUT
+    default n
+    help
+    	Enable this option to provide aggregated JSON output for DS1820 sensors
+        When enabled, the output will contain an array of all DS1820 devices
+        with their ID and value
+        The option is intended fo DS1820_SENSOR_JSON_OUTPUT
+        DS1820 with Avg option set won't be included in the aggregated output
+
+config SENSOR_AGGREAGETED_JSON_OUTPUT
+	bool
+    depends on SENSORS_JSON_OUTPUT
+    default y if DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
+
 config IMPULSE_SENSOR_JSON_OUTPUT
     bool "Enable Impulse Sensor JSON output"
     depends on SENSORS_JSON_OUTPUT

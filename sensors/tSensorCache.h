@@ -143,6 +143,10 @@ public:
    uint8_t formatJSON(Stream *pStream);
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
+#if CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT
+   uint8_t formatJSONAggregate(Stream *pStream);
+#endif //CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT
+
    // time sice last sensor update in 1/10h of seconds
    uint16_t getTimeSinceUpdate() { uint32_t diff = millis() - mLastTimestamp; return diff / 100; }
 
