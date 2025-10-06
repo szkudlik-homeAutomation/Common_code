@@ -21,6 +21,12 @@ public:
 protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
 	virtual const char *getSensorTypeName() override;
+#if CONFIG_DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
+	virtual uint8_t formatJSONAggregate(Stream *pStream, tSensorCache *cache) override;
+#endif
+private:
+	uint8_t verifyConsistency(tSensorCache *cache);
+	void _formatJSON(Stream *pStream, tSensorCache *cache);
 };
 #endif //CONFIG_DS1820_SENSOR_JSON_OUTPUT
 
