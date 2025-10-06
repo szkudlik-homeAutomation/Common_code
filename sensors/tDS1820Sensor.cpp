@@ -20,20 +20,32 @@ const char *tSensorJsonFormatter_DS1820_api_1::getSensorTypeName()
 	return IdPrefix;
 }
 
+uint8_t tSensorJsonFormatter_DS1820_api_1::verifyConsistency(tSensorCache *cache)
+{
+	   if (cache->getDataBlobSize() < sizeof(tDS1820SensorTypes::tResult_api_v1))
+	   {
+	         return STATUS_JSON_ENCODE_ERROR;
+	   }
+
+	   tDS1820SensorTypes::tResult_api_v1 *pResult =(tDS1820SensorTypes::tResult_api_v1 *) cache->getData();
+	   uint8_t MeasurementBlobSize = sizeof(tDS1820SensorTypes::tResult_api_v1) +
+	         (sizeof(tDS1820SensorTypes::tDs1820Data) * pResult->NumOfDevices);
+	   if (cache->getDataBlobSize() != MeasurementBlobSize)
+	   {
+	         return STATUS_JSON_ENCODE_ERROR;
+	   }
+
+	   return STATUS_SUCCESS;
+}
+
 uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
-   if (cache->getDataBlobSize() < sizeof(tDS1820SensorTypes::tResult_api_v1))
-   {
-         return STATUS_JSON_ENCODE_ERROR;
-   }
+	uint8_t Status = verifyConsistency(cache);
+
+	if (Status != STATUS_SUCCESS)
+		return Status;
 
    tDS1820SensorTypes::tResult_api_v1 *pResult =(tDS1820SensorTypes::tResult_api_v1 *) cache->getData();
-   uint8_t MeasurementBlobSize = sizeof(tDS1820SensorTypes::tResult_api_v1) +
-         (sizeof(tDS1820SensorTypes::tDs1820Data) * pResult->NumOfDevices);
-   if (cache->getDataBlobSize() != MeasurementBlobSize)
-   {
-         return STATUS_JSON_ENCODE_ERROR;
-   }
 
    pStream->print(F("\"NumOfDevs\":"));
    pStream->print(pResult->NumOfDevices);
@@ -46,18 +58,43 @@ uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCa
    }
    else
    {
-      for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
-      {
-         pStream->print(F(","));
-         pStream->print(F("\"Temperature_"));
-         tDS1820SensorTypes::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
-         pStream->print(F("\":"));
-         pStream->print((float)pResult->Dev[i].Temperature / 10);
-      }
+       pStream->print(F(","));
+	   _formatJSON(pStream, cache);
    }
 
    return STATUS_SUCCESS;
 }
+
+void tSensorJsonFormatter_DS1820_api_1::_formatJSON(Stream *pStream, tSensorCache *cache)
+{
+	tDS1820SensorTypes::tResult_api_v1 *pResult =(tDS1820SensorTypes::tResult_api_v1 *) cache->getData();
+
+    for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
+    {
+       pStream->print(F("\"Temperature_"));
+       tDS1820SensorTypes::printAddress((uint8_t*)&pResult->Dev[i].Addr,pStream);
+       pStream->print(F("\":"));
+       pStream->print((float)pResult->Dev[i].Temperature / 10);
+       if (i < (pResult->NumOfDevices - 1))
+       {
+          pStream->print(F(","));
+       }
+    }
+}
+
+#if CONFIG_DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
+uint8_t tSensorJsonFormatter_DS1820_api_1::formatJSONAggregate(Stream *pStream, tSensorCache *cache)
+{
+	uint8_t Status = verifyConsistency(cache);
+
+	if (Status != STATUS_SUCCESS)
+		return Status;
+
+	_formatJSON(pStream, cache);
+
+	return STATUS_SUCCESS;
+}
+#endif //CONFIG_DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
 
 void tDS1820SensorTypes::printAddress(uint8_t* pDeviceAddress, Stream *pStream)
 {

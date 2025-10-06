@@ -66,6 +66,17 @@ public:
 
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
+#if CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT
+   /**
+    * get aggregated sensors data as JSON
+    * get data from a sensor stored locally, formatted in JSON, and stream them to provided (tcp)stream
+    * only sensors supporting aggregated output will be included
+    *
+    */
+   uint8_t getCachedAggregatedSensorsDataJson(Stream *pStream);
+#endif // CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT
+
+
 public:
    /*
     * to be called on sensor event, either remote or local
