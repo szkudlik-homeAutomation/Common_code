@@ -131,6 +131,18 @@ config PT100_ANALOG_SENSOR
     depends on SENSORS
     default n
     
+config SHT3_DIS_SENSOR  
+    bool "Enable Sensiron SHT3x-DIS Sensor"
+    depends on SENSORS
+    default n
+    help
+     Humidity and Temperature Sensor
+
+config SHT3_DIS_SENSOR_MEASURE_PERIOD  
+    int "Enable Sensiron SHT3x-DIS Sensor Measure Period, in seconds"
+    depends on SHT3_DIS_SENSOR
+    default 2
+    	
 config WIEGAND_SENSOR  
     bool "Enable Wiegand Sensor"
     depends on SENSORS
@@ -336,6 +348,11 @@ config SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
     bool "Enable Simple Digital Input Sensor JSON output"
     depends on SENSORS_JSON_OUTPUT
     default y if SIMPLE_DIGITAL_INPUT_SENSOR
+
+config SHT3_DIS_SENSOR_JSON_OUTPUT
+    bool "Enable Sensiron SHT3x-DIS Sensor JSON output"
+    depends on SENSORS_JSON_OUTPUT
+    default y if SHT3_DIS_SENSOR
 
 config REMOTE_SENSORS_TEST
 	bool "debug option, enable testing remote sensors on a single node"

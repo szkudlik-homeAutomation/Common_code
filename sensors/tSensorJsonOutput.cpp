@@ -16,6 +16,7 @@
 #include "tOutputStateSensor.h"
 #include "tSystemStatusSensor.h"
 #include "tWiegandSensor.h"
+#include "tSht3Sensor.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT
 
@@ -93,6 +94,18 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 	          }
 	          break;
 	#endif //CONFIG_SYSTEM_STATUS_SENSOR
+
+	#if CONFIG_SHT3_DIS_SENSOR_JSON_OUTPUT
+	      case SENSOR_TYPE_SHT3:
+	    	  switch (apiVersion)
+	    	  {
+	    	  case 1:
+	    		  return new tSensorJsonFormatter_Sht3Sensor_api_1;
+	    	  }
+	    	  break;
+	#endif //CONFIG_SHT3_DIS_SENSOR_JSON_OUTPUT
+
+
 	  default:
 		  return appSpecificCreateJsonFormatter(SensorType, apiVersion);
 	}
