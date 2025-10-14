@@ -96,6 +96,11 @@ uint8_t tSensorJsonFormatter_DS1820_api_1::formatJSONAggregate(Stream *pStream, 
 }
 #endif //CONFIG_DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
 
+#endif CONFIG_DS1820_SENSOR_JSON_OUTPUT
+
+
+#if CONFIG_DS1820_SENSOR || CONFIG_DS1820_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER || CONFIG_DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
+
 void tDS1820SensorTypes::printAddress(uint8_t* pDeviceAddress, Stream *pStream)
 {
   for (uint8_t i = 0; i < 8; i++)
@@ -105,7 +110,8 @@ void tDS1820SensorTypes::printAddress(uint8_t* pDeviceAddress, Stream *pStream)
   }
 }
 
-#endif CONFIG_DS1820_SENSOR_JSON_OUTPUT
+
+#endif // CONFIG_DS1820_SENSOR || CONFIG_DS1820_SENSOR_JSON_OUTPUT || CONFIG_SENSOR_LOGGER
 
 #if CONFIG_DS1820_SENSOR
 
