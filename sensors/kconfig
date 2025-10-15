@@ -142,7 +142,14 @@ config SHT3_DIS_SENSOR_MEASURE_PERIOD
     int "Enable Sensiron SHT3x-DIS Sensor Measure Period, in seconds"
     depends on SHT3_DIS_SENSOR
     default 2
-    	
+   
+config TGS2603_ODOUR_SENSOR  
+    bool "Enable TGS2603 ODOUR Sensor"
+    depends on SENSORS
+    default n
+    help
+     for detection of Odor and Air Contaminants
+
 config WIEGAND_SENSOR  
     bool "Enable Wiegand Sensor"
     depends on SENSORS
@@ -353,6 +360,11 @@ config SHT3_DIS_SENSOR_JSON_OUTPUT
     bool "Enable Sensiron SHT3x-DIS Sensor JSON output"
     depends on SENSORS_JSON_OUTPUT
     default y if SHT3_DIS_SENSOR
+
+config TGS2603_ODOUR_SENSOR_JSON_OUTPUT  
+    bool "Enable TGS2603 ODOUR Sensor json output"
+    depends on SENSORS_JSON_OUTPUT
+    default y if TGS2603_ODOUR_SENSOR
 
 config REMOTE_SENSORS_TEST
 	bool "debug option, enable testing remote sensors on a single node"

@@ -32,6 +32,7 @@ class tSensor;
 #define SENSOR_TYPE_SYSTEM_STATUS 6
 #define SENSOR_TYPE_WIEGAND 7
 #define SENSOR_TYPE_SHT3 8
+#define SENSOR_TYPE_TGS2603 9
 
 // app sensor types should start from 128
 

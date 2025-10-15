@@ -17,6 +17,7 @@
 #include "tSystemStatusSensor.h"
 #include "tWiegandSensor.h"
 #include "tSht3Sensor.h"
+#include "tTgs2603AnalogSensor.h"
 
 #if CONFIG_SENSORS_JSON_OUTPUT
 
@@ -105,6 +106,15 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 	    	  break;
 	#endif //CONFIG_SHT3_DIS_SENSOR_JSON_OUTPUT
 
+	#if CONFIG_TGS2603_ODOUR_SENSOR_JSON_OUTPUT
+	   case SENSOR_TYPE_TGS2603:
+		   	 switch (apiVersion)
+		   	 {
+		   	 case 1:
+		   		 return new tSensorJsonFormatter_Tgs2603OdourSensor_api_1;
+		   	 }
+		   	 break;
+	#endif //CONFIG_TGS2603_ODOUR_SENSOR_JSON_OUTPUT
 
 	  default:
 		  return appSpecificCreateJsonFormatter(SensorType, apiVersion);

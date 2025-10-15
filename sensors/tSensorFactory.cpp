@@ -20,10 +20,9 @@
 #include "tOutputStateSensor.h"
 #include "tSystemStatusSensor.h"
 #include "tWiegandSensor.h"
-
 #include "tSht3Sensor.h"
-
 #include "tOutputStateSensor.h"
+#include "tTgs2603AnalogSensor.h"
 
 static tSensorFactory* tSensorFactory::Instance;
 
@@ -117,7 +116,11 @@ tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID)
         	  pSensor = new tSht3Sensor(SensorID);
         	  break;
     #endif //CONFIG_SHT3_DIS_SENSOR
-
+	#if CONFIG_TGS2603_ODOUR_SENSOR
+          case SENSOR_TYPE_TGS2603:
+        	  pSensor = new tTgs2603AnalogSensor(SensorID);
+    	  break;
+	#endif
           default:
         	  pSensor = appSpecificCreateSensor(SensorType, SensorID);
     }
