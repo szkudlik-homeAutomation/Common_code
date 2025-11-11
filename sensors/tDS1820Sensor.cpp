@@ -56,7 +56,7 @@ uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCa
       pStream->print(F(",\"AvgTemperature\":"));
       pStream->print((float)pResult->Dev[0].Temperature / 10);
    }
-   else
+   else if (pResult->NumOfDevices > 0)
    {
        pStream->print(F(","));
 	   _formatJSON(pStream, cache);
@@ -65,9 +65,12 @@ uint8_t tSensorJsonFormatter_DS1820_api_1::FormatJSON(Stream *pStream, tSensorCa
    return STATUS_SUCCESS;
 }
 
-void tSensorJsonFormatter_DS1820_api_1::_formatJSON(Stream *pStream, tSensorCache *cache)
+uint8_t tSensorJsonFormatter_DS1820_api_1::_formatJSON(Stream *pStream, tSensorCache *cache)
 {
 	tDS1820SensorTypes::tResult_api_v1 *pResult =(tDS1820SensorTypes::tResult_api_v1 *) cache->getData();
+
+	if (pResult->NumOfDevices == 0)
+		return STATUS_NO_DEVICES;
 
     for (uint8_t i = 0; i < pResult->NumOfDevices; i++)
     {
@@ -80,6 +83,8 @@ void tSensorJsonFormatter_DS1820_api_1::_formatJSON(Stream *pStream, tSensorCach
           pStream->print(F(","));
        }
     }
+
+    return STATUS_SUCCESS;
 }
 
 #if CONFIG_DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
@@ -90,9 +95,7 @@ uint8_t tSensorJsonFormatter_DS1820_api_1::formatJSONAggregate(Stream *pStream, 
 	if (Status != STATUS_SUCCESS)
 		return Status;
 
-	_formatJSON(pStream, cache);
-
-	return STATUS_SUCCESS;
+	return _formatJSON(pStream, cache);
 }
 #endif //CONFIG_DS1820_SENSOR_AGGREAGETED_JSON_OUTPUT
 

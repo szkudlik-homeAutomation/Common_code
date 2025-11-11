@@ -26,7 +26,7 @@ protected:
 #endif
 private:
 	uint8_t verifyConsistency(tSensorCache *cache);
-	void _formatJSON(Stream *pStream, tSensorCache *cache);
+	uint8_t _formatJSON(Stream *pStream, tSensorCache *cache);
 };
 #endif //CONFIG_DS1820_SENSOR_JSON_OUTPUT
 
