@@ -1,6 +1,32 @@
 #pragma once
 
 
+/*
+ Arduino nano pin mapping
+
+ ATmega328P Pin (Physical)	Port Name	Arduino Pin Number
+2	PD0	0
+3	PD1	1
+4	PD2	2
+5	PD3	3
+6	PD4	4
+11	PD5	5
+12	PD6	6
+13	PD7	7
+14	PB0	8
+15	PB1	9
+16	PB2	10
+17	PB3	11
+18	PB4	12
+19	PB5	13
+23	PC0	14 (A0)
+24	PC1	15 (A1)
+25	PC2	16 (A2)
+26	PC3	17 (A3)
+27	PC4	18 (A4)
+28	PC5	19 (A5)
+ */
+
 #include "../../global.h"
 #if CONFIG_OUTPUT_PROCESS
 
