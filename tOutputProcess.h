@@ -39,8 +39,8 @@
 
 class tOutput
 {
-   static const uint8_t PIN_NOT_ASSIGNED = 255;
 public:
+  static const uint8_t PIN_NOT_ASSIGNED = 255;
   tOutput() :mPin(PIN_NOT_ASSIGNED) {}
 
   // polarity 1 means active high, 0 means active low
