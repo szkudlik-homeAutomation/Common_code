@@ -62,5 +62,9 @@ static inline void CommSerialSetID(uint8_t id) {
 	CommRecieverProcess::Instance->SetSelfDevId(id);
 }
 
+static inline uint8_t CommSerialGetID() {
+	return CommSenderProcess::Instance->GetSelfDevId();
+}
+
 #endif // CONFIG_TLE8457_COMM_LIB
 

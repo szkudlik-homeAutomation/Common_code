@@ -27,7 +27,12 @@ class CommSenderProcess : public Process
   void SetSelfDevId(uint8_t SenderDevId) {
 	  mFrame.SenderDevId = SenderDevId;
 	  mRandom.SetSeed(SenderDevId);
+	  mSenderId = SenderDevId;
   }
+
+  uint8_t GetSelfDevId() {
+		return mFrame.SenderDevId;
+	}
 
   void Enqueue(uint8_t DstDevId, uint8_t MessageType, uint8_t DataSize, void *pData);
 
@@ -50,6 +55,7 @@ private:
   uint8_t mCollisionRetransLeft;
   uint8_t mRetransLeft;
   bool isSending;
+  uint8_t mSenderId;
 
   bool DequeueFrame();
 };
