@@ -137,7 +137,7 @@ void tSht3SensorLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, uint8
         //TODO
         return;
 
-    pResult = (tSht3SensorTypes::tResult_api_v1 *)pDataBlob;
+    tSht3SensorTypes::tResult_api_v1 *pResult = (tSht3SensorTypes::tResult_api_v1 *)pDataBlob;
 
     LOG_PRINT("tSht3Sensor Measurement completed. SensorID: ");
 	LOG(print(pResult->Temperature));

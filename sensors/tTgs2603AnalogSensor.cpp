@@ -64,7 +64,7 @@ void tTgs2603AnalogLogger::onSensorEvent(uint8_t SensorID, uint8_t EventType, ui
     if (EventType != EV_TYPE_MEASUREMENT_COMPLETED)
         return;
 
-    tTgs2603AnalogSensor::tResult *pResult = (tTgs2603AnalogSensor::tResult *)pDataBlob;
+    tTgs2603SensorTypes::tResult_api_v1 *pResult = (tTgs2603SensorTypes::tResult_api_v1 *)pDataBlob;
 
     LOG_PRINT("Tgs2603 SensorID: ");
     LOG(print(SensorID));
