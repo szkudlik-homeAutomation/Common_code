@@ -21,7 +21,16 @@ protected:
 	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
 	virtual const char *getSensorTypeName() override;
 };
-#endif //CONFIG_SENSORS_JSON_OUTPUT
+
+class tSensorJsonFormatter_SimpleDigitalInput_api_2 : public tSensorJsonFormatter_SimpleDigitalInput_api_1
+{
+public:
+	tSensorJsonFormatter_SimpleDigitalInput_api_2() : tSensorJsonFormatter_SimpleDigitalInput_api_1() {}
+protected:
+	virtual uint8_t FormatJSON(Stream *pStream, tSensorCache *cache) override;
+};
+
+#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
 
 #if CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR || CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_JSON_OUTPUT
 class tSimpleDigitalInputSensorTypes
@@ -35,8 +44,21 @@ public:
 
 	   typedef struct
 	   {
+	      uint8_t Pin[CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_NUM_OF_INPUTS];
+	      uint16_t ActiveStateBitmap;
+		  uint8_t NumOfInputs;
+	   } tConfig_api_v2;
+
+	   typedef struct
+	   {
 	      uint8_t State;
 	   } tResult_api_v1;
+
+	   typedef struct
+	   {
+	      uint16_t State;
+		  uint8_t NumOfInputs;
+	   } tResult_api_v2;
 
 };
 #endif
@@ -46,9 +68,9 @@ public:
 
 class tSimpleDigitalInputSensor: public tSensor, public tSimpleDigitalInputSensorTypes {
 public:
-   static const uint8_t API_VERSION = 1;
-   typedef tConfig_api_v1 tConfig;
-   typedef tResult_api_v1 tResult;
+   static const uint8_t API_VERSION = 2;
+   typedef tConfig_api_v2 tConfig;
+   typedef tResult_api_v2 tResult;
 
    tConfig Config;
 

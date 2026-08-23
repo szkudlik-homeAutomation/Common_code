@@ -172,6 +172,12 @@ config SIMPLE_DIGITAL_INPUT_SENSOR
     depends on SENSORS
     default n
 
+config SIMPLE_DIGITAL_INPUT_SENSOR_NUM_OF_INPUTS
+    int "number of inputs for Enable Simple Digital Input Sensor"
+    depends on SIMPLE_DIGITAL_INPUT_SENSOR
+    default 1
+    range 1 16
+
 config SENSOR_SEND_EVENTS_USING_SERIAL
 	bool "Enable sendng sensor events using serial communication"
 	depends on TLE8457_COMM_LIB

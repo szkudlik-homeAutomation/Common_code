@@ -70,6 +70,9 @@ tSensorJsonFormatter *tSensorJsonFormatterFactory::createJsonFormatter(uint8_t S
 	          {
 	          case 1:
 	              return new tSensorJsonFormatter_SimpleDigitalInput_api_1;
+	          
+	          case 2:
+	              return new tSensorJsonFormatter_SimpleDigitalInput_api_2;
 	          }
 	          break;
 	#endif //CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR
