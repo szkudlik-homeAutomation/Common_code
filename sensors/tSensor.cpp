@@ -118,7 +118,7 @@ tSensor* tSensor::getSensor(uint8_t sensorID)
    return NULL;
 }
 
-void tSensor::onMeasurementCompleted(bool Status)
+void tSensor::onMeasurementCompleted(bool Status, uint8_t SensorEventType)
 {
   misMeasurementValid = Status;
 #if CONFIG_REMOTE_SENSORS_TEST
@@ -130,7 +130,7 @@ void tSensor::onMeasurementCompleted(bool Status)
 #if CONFIG_SENSOR_HUB
   if (Status)
   {
-      tSensorHub::Instance->onSensorEvent(getSensorID(), 0,  EV_TYPE_MEASUREMENT_COMPLETED, mMeasurementBlobSize, mCurrentMeasurementBlob);
+      tSensorHub::Instance->onSensorEvent(getSensorID(), 0,  SensorEventType, mMeasurementBlobSize, mCurrentMeasurementBlob);
   }
   else
   {
@@ -146,7 +146,7 @@ void tSensor::onMeasurementCompleted(bool Status)
 
   if (Status)
   {
-      Event.EventType = EV_TYPE_MEASUREMENT_COMPLETED;
+      Event.EventType = SensorEventType;
       Event.dataBlobSize = mMeasurementBlobSize;
       Event.pDataBlob = mCurrentMeasurementBlob;
   }

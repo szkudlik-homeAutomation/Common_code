@@ -353,7 +353,7 @@ static bool send_StartSensorRequest(Commander &Cmdr)
     int Dst;
     int SensorId;
     uint8_t SensorEventMask;
-    SensorEventMask = 1 << EV_TYPE_MEASUREMENT_COMPLETED;
+    SensorEventMask = (1 << EV_TYPE_MEASUREMENT_COMPLETED) | (1 << EV_TYPE_MEASUREMENT_CHANGE);
 
     if(!Cmdr.getInt(Dst))
     {
@@ -374,7 +374,7 @@ static bool send_StartSensorRequest(Commander &Cmdr)
     return true;
   error:
 
-    Cmdr.println(F("Usage: StartSensor dev_id sensor_id [sensor_ev_mask = EV_TYPE_MEASUREMENT_COMPLETED]"));
+    Cmdr.println(F("Usage: StartSensor dev_id sensor_id [sensor_ev_mask = EV_TYPE_MEASUREMENT_COMPLETED | EV_TYPE_MEASUREMENT_CHANGE]"));
     return false;
 }
 
@@ -486,7 +486,7 @@ const commandList_t TelnetCommands[] = {
   {"GetSensorMeasurement",  send_GetSensorMeasurementReqest, "GetSensorMeasurement dev_id sensor_id"},
 #if CONFIG_TELNET_COMMANDS_SENSORS_REMOTE_CONTROL
   {"CreateSensor", send_CreateSensorRequest, "CreateSensor dev_id sensor_id sensor_type"},
-  {"StartSensor", send_StartSensorRequest, "StartSensor dev_id sensor_id [sensor_ev_mask = EV_TYPE_MEASUREMENT_COMPLETED]"},
+  {"StartSensor", send_StartSensorRequest, "StartSensor dev_id sensor_id [sensor_ev_mask =  EV_TYPE_MEASUREMENT_COMPLETED | EV_TYPE_MEASUREMENT_CHANGE]"},
   {"StopSensor", send_StopSensorRequest, "StopSensor dev_id sensor_id"},
   {"ConfigureSensor", send_ConfigureSensorRequest, "ConfigureSensor dev_id sensor_id period"},
 #endif //CONFIG_TELNET_COMMANDS_SENSORS_REMOTE_CONTROL

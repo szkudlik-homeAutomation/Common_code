@@ -38,10 +38,11 @@ class tSensor;
 
 #define SENSOR_ID_NOT_FOUND 0xff
 
-#define EV_TYPE_MEASUREMENT_COMPLETED 0
-#define EV_TYPE_MEASUREMENT_ERROR  1
-#define EV_TYPE_MEASUREMENT_CHANGE 2
-#define EV_TYPE_THOLD_EXCEEDED 3
+/* sensor events types - used in serial communication with sensor hub */
+#define EV_TYPE_MEASUREMENT_COMPLETED 0   // periodic or on-demand measurement completed successfully
+#define EV_TYPE_MEASUREMENT_ERROR  1      // measurement error - the sensor is not able to provide valid measurement
+#define EV_TYPE_MEASUREMENT_CHANGE 2      // significant change in measurement - out of scheduled measurement, the sensor has detected significant change in measurement and triggered a measurement
+#define EV_TYPE_THOLD_EXCEEDED 3 
 #define EV_TYPE_SENSOR_STATE_CHANGE 4
 
 #endif
@@ -165,7 +166,7 @@ protected:
    uint8_t mMeasurementBlobSize;
    uint8_t mPartialConfigSeq;
 
-   void onMeasurementCompleted(bool Status);
+   void onMeasurementCompleted(bool Status, uint8_t SensorEventType = EV_TYPE_MEASUREMENT_COMPLETED);
 
    virtual void doTriggerMeasurement() = 0;
    virtual uint8_t onSetConfig() { return STATUS_SUCCESS; }
