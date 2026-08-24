@@ -16,6 +16,8 @@
 #define BIT6 (1 << 6)
 #define BIT7 (1 << 7)
 
+#define MIN(a,b) (((a)<(b))?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 #define ATOMIC(CODE) {uint8_t sreg = SREG; noInterrupts(); {CODE} SREG = sreg;}
 
