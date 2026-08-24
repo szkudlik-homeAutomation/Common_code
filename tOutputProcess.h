@@ -87,6 +87,7 @@ public:
     tMessageReciever()
     {
       Instance = this;
+      mNumOfOutputs = CONFIG_OUTPUT_PROCESS_NUM_OF_PINS;  // by default, all outputs are enabled
 #if CONFIG_TLE8457_COMM_LIB
       RegisterMessageType(MessageType_SerialFrameRecieved);
 #endif CONFIG_TLE8457_COMM_LIB
@@ -108,7 +109,7 @@ public:
 
   uint8_t SetOutput(uint8_t outputId, uint8_t State, uint16_t timer, bool timerLongerOnly)
   {
-    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
+    if (outputId < mNumOfOutputs)
     {
     	Output[outputId].Set(State,timer,timerLongerOnly);
     	return STATUS_SUCCESS;
@@ -118,7 +119,7 @@ public:
 
   uint8_t ToggleOutput(uint8_t outputId, uint16_t timer)
   {
-    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
+    if (outputId < mNumOfOutputs)
     {
     	Output[outputId].Toggle(timer);
     	return STATUS_SUCCESS;
@@ -130,21 +131,25 @@ public:
   uint8_t  GetOutputTimersStateMap();
   uint8_t  GetOutputState(uint8_t outputId)
   {
-    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
+    if (outputId < mNumOfOutputs)
       return (Output[outputId].GetState());
     else return 0;
   }
 
   uint16_t GetOutputTimer(uint8_t outputId)
   {
-    if (outputId < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS)
+    if (outputId < mNumOfOutputs)
       return (Output[outputId].GetTimer());
     else return 0;
   }
 
 
   virtual void service();
+
+  uint8_t getNumOfOutputs() const { return mNumOfOutputs; }
+
 protected:
+  uint8_t mNumOfOutputs;
   tOutput Output[CONFIG_OUTPUT_PROCESS_NUM_OF_PINS];
 
 protected:

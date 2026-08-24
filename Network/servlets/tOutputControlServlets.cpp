@@ -95,7 +95,7 @@ bool tOutputStateServlet::ProcessAndResponse()
      return false;
    }
 
-   ParametersOK &= (Output < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS);
+   ParametersOK &= (Output < tOutputProcess::Instance->getNumOfOutputs());
 
    if (! ParametersOK)
    {
