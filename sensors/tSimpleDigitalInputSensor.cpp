@@ -65,20 +65,39 @@ uint8_t tSensorJsonFormatter_SimpleDigitalInput_api_2::FormatJSON(Stream *pStrea
 
 void tSimpleDigitalInputSensor::doTriggerMeasurement()
 {
-   mResult.State = 0;
-   for (uint8_t i=0; i<Config.NumOfInputs; i++)
+   onMeasurementCompleted(true);
+}
+
+void tSimpleDigitalInputSensor::doTimeTick()
+{
+   // detect per-bit state changes and notify only when any bit changes
+   uint16_t newState = 0;
+
+   for (uint8_t i = 0; i < Config.NumOfInputs; i++)
    {
-      if (digitalRead(Config.Pin[i]) == ((Config.ActiveStateBitmap & (1 << i)) ? 1 : 0))
+      uint8_t polarity = (Config.ActiveStateBitmap & (1 << i)) ? 1 : 0;
+      if (digitalRead(Config.Pin[i]) == polarity)
       {
-         mResult.State |= (1 << i);
+         newState |= (1 << i);
       }
    }
 
-   onMeasurementCompleted(true);
+   if (newState != mResult.State)
+   {
+      mResult.State = newState;
+      // At least one input changed state
+
+      onMeasurementCompleted(true, EV_TYPE_MEASUREMENT_CHANGE);
+   }
 }
 
 uint8_t tSimpleDigitalInputSensor::onSetConfig()
 {
+   if (Config.NumOfInputs > CONFIG_SIMPLE_DIGITAL_INPUT_SENSOR_NUM_OF_INPUTS)
+   {
+      return STATUS_CONFIG_SET_ERROR;
+   }
+
    for (uint8_t i=0; i<Config.NumOfInputs; i++)
    {
       pinMode(Config.Pin[i], INPUT_PULLUP);

@@ -76,9 +76,9 @@ public:
 
    tSimpleDigitalInputSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_DIGITAL_INPUT, sensorID, API_VERSION, sizeof(Config), &Config) {}
 
-   virtual void doTriggerMeasurement();
-
 protected:
+   virtual void doTimeTick();
+   virtual void doTriggerMeasurement();
    virtual uint8_t onSetConfig();
 private:
    tResult mResult;
