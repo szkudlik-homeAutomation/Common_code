@@ -48,6 +48,7 @@ public:
    typedef tResult_api_v1 tResult;
 
 protected:
+   virtual void doTimeTick();
    virtual void doTriggerMeasurement();
    virtual uint8_t onSetConfig();
 private:

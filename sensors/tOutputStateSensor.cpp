@@ -32,16 +32,22 @@ uint8_t tSensorJsonFormatter_OutputState_api_1::FormatJSON(Stream *pStream, tSen
 
    pStream->print(F("\"NumOfOutputs\":"));
    pStream->print(pResult->NumOfPins);
+
+   uint16_t timerCorrection = cache->getTimeSinceUpdate() / 10;  // convert to seconds, as timers are in seconds
+
    for (uint8_t i = 0; i < pResult->NumOfPins; i++)
    {
-	  pStream->print(F(","));
+	   pStream->print(F(","));
       pStream->print(F("\"Out_"));
       pStream->print(i);
       pStream->print(F("\":{\"State\":"));
       pStream->print(pResult->State[i]);
       pStream->print(F(",\"Timer\":"));
-      pStream->print(pResult->Timer[i]);
-   	  pStream->print(F("}"));
+      int16_t timer = pResult->Timer[i] - timerCorrection;
+      if (timer < 0) 
+         timer = 0;
+      pStream->print(timer);
+   	pStream->print(F("}"));
    }
 
    return STATUS_SUCCESS;
@@ -63,24 +69,39 @@ uint8_t tOutputStateSensor::onSetConfig()
 	if (CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > MAX_NUM_OF_PINS)
 		return STATUS_SENSOR_CREATE_ERROR;
 
-	for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
+	for (uint8_t i = 0; i < MAX_NUM_OF_PINS; i++)
 	{
 	     mResult.State[i] = 0;
 	}
 
-    mResult.NumOfPins = CONFIG_OUTPUT_PROCESS_NUM_OF_PINS;
+    mResult.NumOfPins = tOutputProcess::Instance->getNumOfOutputs();
 
     return STATUS_SUCCESS;
 }
 
-void tOutputStateSensor::doTriggerMeasurement()
+void tOutputStateSensor::doTimeTick()
 {
-   for (uint8_t i = 0; i < CONFIG_OUTPUT_PROCESS_NUM_OF_PINS; i++)
+   bool changed = false;
+   for (uint8_t i = 0; i < tOutputProcess::Instance->getNumOfOutputs(); i++)
    {
-      mResult.State[i] = tOutputProcess::Instance->GetOutputState(i);
+      uint8_t State = tOutputProcess::Instance->GetOutputState(i);
+      if (mResult.State[i] != State)
+      {
+         mResult.State[i] = State;
+         changed = true;
+      }
+
       mResult.Timer [i] = tOutputProcess::Instance->GetOutputTimer(i);
    }
 
+   if (changed)
+   {
+      onMeasurementCompleted(true, EV_TYPE_MEASUREMENT_CHANGE);
+   }
+}
+
+void tOutputStateSensor::doTriggerMeasurement()
+{
    onMeasurementCompleted(true);
 }
 
