@@ -109,7 +109,7 @@ public:
 
   uint8_t SetOutput(uint8_t outputId, uint8_t State, uint16_t timer, bool timerLongerOnly)
   {
-    if (outputId < mNumOfOutputs)
+    if (outputId < getNumOfOutputs())
     {
     	Output[outputId].Set(State,timer,timerLongerOnly);
     	return STATUS_SUCCESS;
@@ -119,7 +119,7 @@ public:
 
   uint8_t ToggleOutput(uint8_t outputId, uint16_t timer)
   {
-    if (outputId < mNumOfOutputs)
+    if (outputId < getNumOfOutputs())
     {
     	Output[outputId].Toggle(timer);
     	return STATUS_SUCCESS;
@@ -131,14 +131,14 @@ public:
   uint8_t  GetOutputTimersStateMap();
   uint8_t  GetOutputState(uint8_t outputId)
   {
-    if (outputId < mNumOfOutputs)
+    if (outputId < getNumOfOutputs())
       return (Output[outputId].GetState());
     else return 0;
   }
 
   uint16_t GetOutputTimer(uint8_t outputId)
   {
-    if (outputId < mNumOfOutputs)
+    if (outputId < getNumOfOutputs())
       return (Output[outputId].GetTimer());
     else return 0;
   }

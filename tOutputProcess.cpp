@@ -182,7 +182,7 @@ static tOutputProcess *tOutputProcess::Instance;
 
 void tOutputProcess::service()
 {
-	for (uint8_t i = 0; i < mNumOfOutputs; i++)
+	for (uint8_t i = 0; i < getNumOfOutputs(); i++)
 	{
     Output[i].Tick();
 	}
@@ -192,7 +192,7 @@ void tOutputProcess::service()
 uint8_t  tOutputProcess::GetOutputStateMap()
 {
   uint8_t Map = 0;
-  for (uint8_t i = 0; i < mNumOfOutputs; i++)
+  for (uint8_t i = 0; i < getNumOfOutputs(); i++)
   {
     if (Output[i].GetState())
       Map |= 1 << i;
@@ -204,7 +204,7 @@ uint8_t  tOutputProcess::GetOutputStateMap()
 uint8_t  tOutputProcess::GetOutputTimersStateMap()
 {
   uint8_t Map = 0;
-  for (uint8_t i = 0; i < mNumOfOutputs; i++)
+  for (uint8_t i = 0; i < getNumOfOutputs(); i++)
   {
     if (Output[i].GetTimer())
       Map |= 1 << i;
@@ -241,7 +241,7 @@ void tOutputProcess::onMessage(uint8_t type, uint16_t data, void *pData)
         {
             uint16_t DefTimer;
             tMessageTypeOutputStateRequest* Message = (tMessageTypeOutputStateRequest*)(pFrame->Data);
-            if (Message->OutputID < mNumOfOutputs)
+            if (Message->OutputID < getNumOfOutputs())
             {
                 tOutgoingFrames::SendMsgOutputStateResponse(pFrame->SenderDevId,Message->OutputID,GetOutputState(Message->OutputID), GetOutputTimer(Message->OutputID),0);
             }
@@ -251,7 +251,7 @@ void tOutputProcess::onMessage(uint8_t type, uint16_t data, void *pData)
     case MESSAGE_TYPE_SET_OUTPUT:
         {
             tMessageTypeSetOutput* Message = (tMessageTypeSetOutput*)(pFrame->Data);
-            if (Message->OutId < mNumOfOutputs)
+            if (Message->OutId < getNumOfOutputs())
             {
                uint16_t Timer = Message->Timer;
                SetOutput(Message->OutId,Message->State,Timer,ForceTimer);
