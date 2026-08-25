@@ -32,7 +32,7 @@ public:
 	   typedef struct
 	   {
 		   uint8_t NumOfPins;
-	       uint8_t State[MAX_NUM_OF_PINS];
+	       uint16_t StateBitmap;
 	       uint16_t Timer[MAX_NUM_OF_PINS];
 	   } tResult_api_v1;
 

@@ -41,7 +41,7 @@ uint8_t tSensorJsonFormatter_OutputState_api_1::FormatJSON(Stream *pStream, tSen
       pStream->print(F("\"Out_"));
       pStream->print(i);
       pStream->print(F("\":{\"State\":"));
-      pStream->print(pResult->State[i]);
+      pStream->print((pResult->StateBitmap & (1 << i)) ? 1 : 0);
       pStream->print(F(",\"Timer\":"));
       int16_t timer = pResult->Timer[i] - timerCorrection;
       if (timer < 0) 
@@ -69,9 +69,10 @@ uint8_t tOutputStateSensor::onSetConfig()
 	if (CONFIG_OUTPUT_PROCESS_NUM_OF_PINS > MAX_NUM_OF_PINS)
 		return STATUS_SENSOR_CREATE_ERROR;
 
+    mResult.StateBitmap = 0;
 	for (uint8_t i = 0; i < MAX_NUM_OF_PINS; i++)
 	{
-	     mResult.State[i] = 0;
+      mResult.Timer[i] = 0;
 	}
 
     mResult.NumOfPins = tOutputProcess::Instance->getNumOfOutputs();
@@ -85,13 +86,17 @@ void tOutputStateSensor::doTimeTick()
    for (uint8_t i = 0; i < tOutputProcess::Instance->getNumOfOutputs(); i++)
    {
       uint8_t State = tOutputProcess::Instance->GetOutputState(i);
-      if (mResult.State[i] != State)
+      if (((mResult.StateBitmap & (1 << i)) ? 1 : 0) != State)
       {
-         mResult.State[i] = State;
+         if (State)
+            mResult.StateBitmap |= (1 << i);
+         else
+            mResult.StateBitmap &= ~(1 << i);
+         
          changed = true;
       }
 
-      mResult.Timer [i] = tOutputProcess::Instance->GetOutputTimer(i);
+      mResult.Timer[i] = tOutputProcess::Instance->GetOutputTimer(i);
    }
 
    if (changed)
