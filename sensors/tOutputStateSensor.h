@@ -29,13 +29,20 @@ class tOutputStateSensorTypes
 public:
 
 	   static const uint8_t MAX_NUM_OF_PINS = 16;
-	   typedef struct
+	   template<int SIZE>
+	   struct tResult_api_v1
 	   {
 		   uint8_t NumOfPins;
 	       uint16_t StateBitmap;
-	       uint16_t Timer[MAX_NUM_OF_PINS];
-	   } tResult_api_v1;
+	       uint16_t Timer[SIZE];
+	   };
 
+	   static uint8_t getResultSize(uint8_t NumOfPins)
+	   {
+			if (NumOfPins > MAX_NUM_OF_PINS)
+			   return 0;
+		    return sizeof(tResult_api_v1<0>) + sizeof(uint16_t) * NumOfPins;
+	   }
 };
 #endif
 
@@ -45,7 +52,7 @@ public:
    tOutputStateSensor(uint8_t sensorID);
 
    static const uint8_t API_VERSION = 1;
-   typedef tResult_api_v1 tResult;
+   using tResult = tResult_api_v1<MAX_NUM_OF_PINS>;
 
 protected:
    virtual void doTimeTick();

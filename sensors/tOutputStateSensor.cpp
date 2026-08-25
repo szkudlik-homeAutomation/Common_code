@@ -19,16 +19,16 @@ const char *tSensorJsonFormatter_OutputState_api_1::getSensorTypeName()
 
 uint8_t tSensorJsonFormatter_OutputState_api_1::FormatJSON(Stream *pStream, tSensorCache *cache)
 {
-   if (cache->getDataBlobSize() != sizeof(tOutputStateSensorTypes::tResult_api_v1))
-   {
-         return STATUS_JSON_ENCODE_ERROR;
-   }
-
-   tOutputStateSensorTypes::tResult_api_v1 *pResult =
-		   (tOutputStateSensorTypes::tResult_api_v1 *) cache->getData();
+   tOutputStateSensorTypes::tResult_api_v1<tOutputStateSensorTypes::MAX_NUM_OF_PINS> *pResult =
+		   (tOutputStateSensorTypes::tResult_api_v1<tOutputStateSensorTypes::MAX_NUM_OF_PINS> *) cache->getData();
 
    if (pResult->NumOfPins > tOutputStateSensorTypes::MAX_NUM_OF_PINS)
 	   return STATUS_JSON_ENCODE_ERROR;
+
+   if (cache->getDataBlobSize() != tOutputStateSensorTypes::getResultSize(pResult->NumOfPins))
+   {
+         return STATUS_JSON_ENCODE_ERROR;
+   }
 
    pStream->print(F("\"NumOfOutputs\":"));
    pStream->print(pResult->NumOfPins);
@@ -58,7 +58,6 @@ uint8_t tSensorJsonFormatter_OutputState_api_1::FormatJSON(Stream *pStream, tSen
 tOutputStateSensor::tOutputStateSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_OUTPUT_STATES, sensorID, API_VERSION, 0, NULL)
 {
    mCurrentMeasurementBlob = (void*) &mResult;
-   mMeasurementBlobSize = sizeof(mResult);
 }
 
 uint8_t tOutputStateSensor::onSetConfig()
@@ -76,6 +75,9 @@ uint8_t tOutputStateSensor::onSetConfig()
 	}
 
     mResult.NumOfPins = tOutputProcess::Instance->getNumOfOutputs();
+
+    mMeasurementBlobSize = tOutputStateSensorTypes::getResultSize(mResult.NumOfPins);
+    
 
     return STATUS_SUCCESS;
 }
