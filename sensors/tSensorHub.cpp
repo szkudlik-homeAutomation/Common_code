@@ -14,7 +14,7 @@
 #include "tSensorFactory.h"
 #include "../tMessageReciever.h"
 
-static tSensorHub *tSensorHub::Instance = NULL;
+tSensorHub *tSensorHub::Instance = NULL;
 
 uint8_t tSensorHub::getSensorID(const char * pSensorName)
 {

@@ -24,7 +24,7 @@
 #include "tOutputStateSensor.h"
 #include "tTgs2603AnalogSensor.h"
 
-static tSensorFactory* tSensorFactory::Instance;
+tSensorFactory* tSensorFactory::Instance = NULL;
 
 tSensor *tSensorFactory::CreateSensor(uint8_t SensorType, uint8_t SensorID,
 		  const __FlashStringHelper *pSensorName, uint8_t ApiVersion, void *pConfigBlob,
