@@ -55,7 +55,7 @@ void tHttpServlet::SendResponse503()
 
 void tHttpServlet::SendResponse424()
 {
-	pOwner->SendFlashString(PSTR("HTTP/1.1 424 OK\r\nContent-Type: text/plain\r\n\r\n424 No data from remote device\r\nVersion: "));
+	pOwner->SendFlashString(PSTR("HTTP/1.1 424 Failed Dependency\r\nContent-Type: text/plain\r\n\r\n424 No data from remote device\r\nVersion: "));
 	pOwner->SendFlashString(PSTR(FW_VERSION));
 	pOwner->SendFlashString(PSTR("\r\n"));
 }
@@ -116,8 +116,16 @@ char * tHttpServlet::FindParameter(const char * Param,  char **ppValue, uint8_t 
       // found
       if (ParamNameLen)
       {
-        if (NULL != ppValue) *ppValue = Buf+ParamNameLen+1;
-        if (NULL != pValueLen) *pValueLen = ParamLen - ParamNameLen - 1 ;
+        if (ParamNameLen < ParamLen)
+        {
+          if (NULL != ppValue) *ppValue = Buf+ParamNameLen+1;
+          if (NULL != pValueLen) *pValueLen = ParamLen - ParamNameLen - 1;
+        }
+        else
+        {
+          if (NULL != ppValue) *ppValue = NULL;
+          if (NULL != pValueLen) *pValueLen = 0;
+        }
       }
 
       return Buf;

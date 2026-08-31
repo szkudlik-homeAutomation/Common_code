@@ -41,11 +41,13 @@ void NetworkHwInitFromEeprom()
 
 void NetworkHwSaveIpsToEeprom()
 {
-    for(uint8_t i= 0; i < 4; i++) EEPROM.update(EEPROM_IP+i,Ethernet.localIP[i]);
-    for(uint8_t i= 0; i < 4; i++) EEPROM.update(EEPROM_IPMASK+i,Ethernet.subnetMask[i]);
-    for(uint8_t i= 0; i < 4; i++) EEPROM.update(EEPROM_GATEWAY+i,Ethernet.gatewayIP[i]);
-    for(uint8_t i= 0; i < 4; i++) EEPROM.update(EEPROM_DNS+i,Ethernet.dnsServerIP[i]);
-    for(uint8_t i= 0; i < 6; i++) EEPROM.update(EEPROM_MAC+i,Ethernet.MACAddress[i]);
+    for(uint8_t i= 0; i < 4; i++) EEPROM.update(EEPROM_IP+i,Ethernet.localIP()[i]);
+    for(uint8_t i= 0; i < 4; i++) EEPROM.update(EEPROM_IPMASK+i,Ethernet.subnetMask()[i]);
+    for(uint8_t i= 0; i < 4; i++) EEPROM.update(EEPROM_GATEWAY+i,Ethernet.gatewayIP()[i]);
+    for(uint8_t i= 0; i < 4; i++) EEPROM.update(EEPROM_DNS+i,Ethernet.dnsServerIP()[i]);
+    uint8_t mac[6];
+    Ethernet.MACAddress(mac);
+    for(uint8_t i= 0; i < 6; i++) EEPROM.update(EEPROM_MAC+i,mac[i]);
 };
 
 #endif //CONFIG_IP_ADDRESES_FROM_EEPROM

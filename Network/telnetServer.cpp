@@ -229,6 +229,7 @@ error:
 static bool trigger_ScanNodes(Commander &Cmdr)
 {
    NodeScanTask::trigger();
+   return true;
 }
 #endif //CONFIG_NODE_SCAN_TASK
 
@@ -524,6 +525,6 @@ const commandList_t TelnetCommands[] = {
 
 };
 
-tTelnetServer TelnetServer(TelnetCommands,sizeof(TelnetCommands));
+tTelnetServer TelnetServer(TelnetCommands,sizeof(TelnetCommands)/sizeof(TelnetCommands[0]));
 
 #endif // CONFIG_TELNET_SERVER

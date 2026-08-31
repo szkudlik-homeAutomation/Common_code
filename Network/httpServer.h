@@ -26,7 +26,7 @@ class tHttpServlet
     void SendVersionAndPageClose();
 
     bool GetParameter(const char * Param) { return (NULL != FindParameter(Param,NULL,NULL)); }
-    bool GetParameter(const char * Param, unsigned *pValue);
+    bool GetParameter(const char * Param, uint16_t *pValue);
 
 
   private:
