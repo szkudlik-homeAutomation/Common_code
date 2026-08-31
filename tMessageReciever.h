@@ -59,11 +59,11 @@ typedef struct tWorkerTaskFinishedEvent {
 
 class tMessageReciever {
 public:
-	tMessageReciever()  { pNext = pFirst ; pFirst = this; }
-	~tMessageReciever();
+	tMessageReciever() : pNext(pFirst), mMessageMask(0) { pFirst = this; }
+	virtual ~tMessageReciever();
 
-	void RegisterMessageType(uint8_t type)   { mMessageMask |= 1 << type ; }
-	void UnRegisterMessageType(uint8_t type) { mMessageMask &=  ~(uint32_t)(1 << type); }
+	void RegisterMessageType(uint8_t type)   { mMessageMask |= (uint32_t)1 << type; }
+	void UnRegisterMessageType(uint8_t type) { mMessageMask &= ~((uint32_t)1 << type); }
 
 	static void Dispatch(uint8_t type, uint16_t data, void *pData);
 protected:
