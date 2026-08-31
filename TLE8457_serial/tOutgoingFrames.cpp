@@ -27,12 +27,14 @@ bool tOutgoingFrames::SendMsgVersionResponse(uint8_t RecieverID, uint8_t Major, 
   Msg.Patch = Patch;
 
   CommSenderProcess::Instance->Enqueue(RecieverID,MESSAGE_TYPE_FW_VERSION_RESPONSE,sizeof(Msg),&Msg);
+  return true;
 };
 
 bool tOutgoingFrames::SendMsgReset(uint8_t RecieverID)
 {
   DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_FORCE_RESET");
   CommSenderProcess::Instance->Enqueue(RecieverID,MESSAGE_TYPE_FORCE_RESET,0,NULL);
+  return true;
 }
 
 bool tOutgoingFrames::SendMsgStatus(uint8_t RecieverID, uint8_t Status)
@@ -41,6 +43,7 @@ bool tOutgoingFrames::SendMsgStatus(uint8_t RecieverID, uint8_t Status)
     DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_GENERAL_STATUS");
     Msg.Status = Status;
     CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_GENERAL_STATUS, sizeof(Msg), &Msg);
+    return true;
 }
 
 #if CONFIG_OUTPUT_PROCESS
@@ -100,7 +103,7 @@ bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8
 
 #if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 
-static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
+bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
 		void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment)
 {
     DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_EVENT");
@@ -119,11 +122,12 @@ static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorI
     memcpy(Message.Payload, pPayload, payloadSize);
 
     CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_EVENT, sizeof(tMessageSensorEvent), &Message);
+    return true;
 }
 #endif CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 
 #if CONFIG_SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
-static bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod)
+bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod)
 {
 	tMessageSensorConfigure Msg;
 	DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_CONFIGURE");
@@ -148,6 +152,7 @@ static bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t Sen
 	}
 
 	CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CONFIGURE, sizeof(Msg), &Msg);
+	return true;
 }
 
 #endif //CONFIG_SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES

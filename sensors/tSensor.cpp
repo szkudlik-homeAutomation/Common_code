@@ -241,6 +241,7 @@ void tSensorProcess::setup() {}
 uint8_t tSensor::DeleteAllSensorsFromEeprom()
 {
     EEPROM.write(EEPROM_NUM_OF_SENSORS, 0);
+    return STATUS_SUCCESS;
 }
 
 typedef struct
