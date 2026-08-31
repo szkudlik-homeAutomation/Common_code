@@ -43,9 +43,12 @@ void tMessageReciever::Dispatch(uint8_t type, uint16_t data, void *pData)
 	tMessageReciever *pCurrent = pFirst;
 	while (pCurrent != NULL)
 	{
-		if (pCurrent->mMessageMask & (1 << type ))
+		if (pCurrent->mMessageMask & ((uint32_t)1 << type))
 		{
+			tMessageReciever *pNext = pCurrent->pNext;
 			pCurrent->onMessage(type,data,pData);
+			pCurrent = pNext;
+			continue;
 		}
 
 		pCurrent=pCurrent->pNext;
