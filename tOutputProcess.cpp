@@ -178,7 +178,7 @@ class tOutputProcess_default : public tOutputProcess
 tOutputProcess_default OutputProcess;
 #endif
 
-tOutputProcess *tOutputProcess::Instance;
+tOutputProcess *tOutputProcess::Instance = NULL;
 
 void tOutputProcess::service()
 {
