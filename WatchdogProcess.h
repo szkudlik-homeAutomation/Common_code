@@ -40,10 +40,12 @@ private:
 class tWatchdogProcess : public  Process
 {
   public:
-  tWatchdogProcess() : Process(WATCHDOG_PRIORITY, SERVICE_SECONDLY, RUNTIME_FOREVER) {}
-  virtual void setup()
+  tWatchdogProcess() : Process(WATCHDOG_PRIORITY, SERVICE_SECONDLY, RUNTIME_FOREVER) 
   {
-    watchdog.enable(Watchdog::TIMEOUT_8S);
+      // enable watchdog with 8s timeout
+      // reset watchdog here to avoid reset during boot, before all items are created and registered
+      watchdog.reset();
+      watchdog.enable(Watchdog::TIMEOUT_8S);
   }
   virtual void service();
 
