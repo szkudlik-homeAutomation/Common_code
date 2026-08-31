@@ -117,7 +117,8 @@ tSensorCache *tSensorCache::getByName(const char * pSensorName)
    tSensorCache *pSensorDesc = pFirst;
    while (pSensorDesc != NULL)
    {
-      if (strcmp(pSensorDesc->GetName(), pSensorName) == 0)
+      if (pSensorDesc->GetName() != NULL &&
+          strcmp(pSensorDesc->GetName(), pSensorName) == 0)
       {
          return pSensorDesc;
       }
@@ -129,7 +130,7 @@ tSensorCache *tSensorCache::getByName(const char * pSensorName)
 
 uint8_t tSensorCache::setDataBlobSize(uint8_t dataBlobSize)
 {
-	uint8_t MemSize = dataBlobSize;
+	uint16_t MemSize = dataBlobSize;
     if (0 == dataBlobSize)
         return STATUS_SUCCESS;
 
@@ -316,8 +317,14 @@ uint8_t tSensorCache::addDataSegment(uint8_t SegmentSeq, void *Payload)
         return STATUS_DATA_SEQ_ERROR;
     }
 
+    if (pRemoteDataCache == NULL)
+    {
+        setError(state_data_transfer_error);
+        return STATUS_SENSOR_INCORRECT_STATE;
+    }
+
     uint8_t toCopy = SENSOR_MEASUREMENT_PAYLOAD_SIZE;
-    uint8_t offset = SegmentSeq * SENSOR_MEASUREMENT_PAYLOAD_SIZE;
+    uint16_t offset = (uint16_t)SegmentSeq * SENSOR_MEASUREMENT_PAYLOAD_SIZE;
     if (toCopy > getDataBlobSize() - offset)
     {
      toCopy = getDataBlobSize() - offset;
