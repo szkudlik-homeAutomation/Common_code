@@ -42,7 +42,9 @@ void NodeScanTask::onMessage(uint8_t type, uint16_t data, void *pData)
 		return;
 
     tCommunicationFrame *pFrame = (tCommunicationFrame *)pData;
-	mActiveNodesMap |= 1 << (pFrame->SenderDevId - 1);
+    uint8_t nodeIdx = pFrame->SenderDevId - 1;
+	if (nodeIdx < CONFIG_TLE8457_MAX_NUM_OF_NODES)
+		mActiveNodesMap |= (uint32_t)1 << nodeIdx;
 }
 
 #endif //CONFIG_NODE_SCAN_TASK

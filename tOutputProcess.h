@@ -41,7 +41,7 @@ class tOutput
 {
 public:
   static const uint8_t PIN_NOT_ASSIGNED = 255;
-  tOutput() :mPin(PIN_NOT_ASSIGNED) {}
+  tOutput() : mPin(PIN_NOT_ASSIGNED), mTimer(0), mState(0), mPolarity(0), Reserved(0) {}
 
   // polarity 1 means active high, 0 means active low
   void SetPin(uint8_t pin, uint8_t Polarity);
@@ -127,8 +127,8 @@ public:
     return STATUS_UNSUPPORTED;
   }
 
-  uint8_t  GetOutputStateMap();
-  uint8_t  GetOutputTimersStateMap();
+  uint16_t GetOutputStateMap();
+  uint16_t GetOutputTimersStateMap();
   uint8_t  GetOutputState(uint8_t outputId)
   {
     if (outputId < getNumOfOutputs())

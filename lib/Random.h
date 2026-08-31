@@ -6,7 +6,7 @@
 class Random
 {
   public:
-	Random() {};
+	Random() : a(0), b(0), c(0), x(0) {};
 
     Random(uint8_t Seed)
     {
@@ -26,7 +26,7 @@ class Random
       x++;               //x is incremented every round and is not affected by any other variable
       a = (a ^ c ^ x);   //note the mix of addition and XOR
       b = (b + a);       //And the use of very few instructions
-      c = (c + (b >> 1)^a); //the right shift is to ensure that high-order bits from b can affect
+      c = (c + ((b >> 1)^a)); //the right shift is to ensure that high-order bits from b can affect
       return (c);
     }
 

@@ -11,7 +11,7 @@
 class tButton
 {
 public:
-	tButton() : mActiveTime(0), mLastClickTime(0) {}
+	tButton() : mActiveTime(0), mLastClickTime(255) {}
 
 	
 	static const uint8_t STATE_NO_CHANGE = 0;

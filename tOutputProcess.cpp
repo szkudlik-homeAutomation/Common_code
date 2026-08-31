@@ -189,25 +189,25 @@ void tOutputProcess::service()
 }
 
 
-uint8_t  tOutputProcess::GetOutputStateMap()
+uint16_t tOutputProcess::GetOutputStateMap()
 {
-  uint8_t Map = 0;
+  uint16_t Map = 0;
   for (uint8_t i = 0; i < getNumOfOutputs(); i++)
   {
     if (Output[i].GetState())
-      Map |= 1 << i;
+      Map |= (uint16_t)1 << i;
   }
 
   return Map;
 }
 
-uint8_t  tOutputProcess::GetOutputTimersStateMap()
+uint16_t tOutputProcess::GetOutputTimersStateMap()
 {
-  uint8_t Map = 0;
+  uint16_t Map = 0;
   for (uint8_t i = 0; i < getNumOfOutputs(); i++)
   {
     if (Output[i].GetTimer())
-      Map |= 1 << i;
+      Map |= (uint16_t)1 << i;
   }
 
   return Map;

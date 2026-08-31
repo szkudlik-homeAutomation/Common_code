@@ -34,7 +34,7 @@ void tInputProcess::service()
   }
 
   // do we need to send a frame?
-  if ((event.ShortClick) | (event.LongClick) | (event.DoubleClick))
+  if ((event.ShortClick) || (event.LongClick) || (event.DoubleClick))
   {
       tMessageReciever::Dispatch(MessageType_DigialInputEvent, 0, &event);
   }
@@ -67,6 +67,7 @@ uint8_t tButton::Process()
       if (mLastClickTime <= DOUBLE_CLICK_TICKS_MAX )
       {
             State = STATE_DOUBLECLICK;
+            mLastClickTime = 255;
       }
       else
       {
