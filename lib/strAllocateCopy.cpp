@@ -10,7 +10,9 @@
 
 char *strAllocateCopy(const char * source, uint8_t  sizeLimit)
 {
-	uint8_t size = strlen(source);
+	if (NULL == source)
+		return NULL;
+	size_t size = strnlen(source, sizeLimit);
 	if (size > sizeLimit)
 		size = sizeLimit;
 

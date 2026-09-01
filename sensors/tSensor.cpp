@@ -356,11 +356,11 @@ uint8_t tSensor::setParitalConfig(uint8_t seq, void *data, uint8_t ChunkSize)
 
     mPartialConfigSeq++;
 
-    uint8_t configOffset = ChunkSize * seq;
-    uint8_t toCopy = mConfigBlobSize - configOffset;
-    if (toCopy > ChunkSize) toCopy = ChunkSize;
-    if (toCopy == 0)
+    uint16_t configOffset = (uint16_t)ChunkSize * seq;
+    if (configOffset >= mConfigBlobSize)
         return STATUS_DATA_SEQ_ERROR;
+    uint16_t toCopy = mConfigBlobSize - configOffset;
+    if (toCopy > ChunkSize) toCopy = ChunkSize;
 
     memcpy((uint8_t *)mConfigBlobPtr + configOffset, data, toCopy);
 
