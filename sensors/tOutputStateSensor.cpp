@@ -41,7 +41,7 @@ uint8_t tSensorJsonFormatter_OutputState_api_1::FormatJSON(Stream *pStream, tSen
       pStream->print(F("\"Out_"));
       pStream->print(i);
       pStream->print(F("\":{\"State\":"));
-      pStream->print((pResult->StateBitmap & (1 << i)) ? 1 : 0);
+      pStream->print((pResult->StateBitmap & ((uint16_t)1 << i)) ? 1 : 0);
       pStream->print(F(",\"Timer\":"));
       int16_t timer = pResult->Timer[i] - timerCorrection;
       if (timer < 0) 
@@ -88,12 +88,12 @@ void tOutputStateSensor::doTimeTick()
    for (uint8_t i = 0; i < tOutputProcess::Instance->getNumOfOutputs(); i++)
    {
       uint8_t State = tOutputProcess::Instance->GetOutputState(i);
-      if (((mResult.StateBitmap & (1 << i)) ? 1 : 0) != State)
+      if (((mResult.StateBitmap & ((uint16_t)1 << i)) ? 1 : 0) != State)
       {
          if (State)
-            mResult.StateBitmap |= (1 << i);
+            mResult.StateBitmap |= (uint16_t)1 << i;
          else
-            mResult.StateBitmap &= ~(1 << i);
+            mResult.StateBitmap &= ~((uint16_t)1 << i);
          
          changed = true;
       }
