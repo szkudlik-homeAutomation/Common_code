@@ -238,7 +238,7 @@ void tSensorProcess::setup() {}
 #if CONFIG_SENSORS_STORE_IN_EEPROM
 
 
-uint8_t tSensor::DeleteAllSensorsFromEeprom()
+void tSensor::DeleteAllSensorsFromEeprom()
 {
     EEPROM.write(EEPROM_NUM_OF_SENSORS, 0);
 }

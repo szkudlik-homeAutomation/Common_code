@@ -17,6 +17,7 @@ uint8_t tSensorCache::setAsDetected()
 {
 	if (isDetected()) return STATUS_SENSOR_INCORRECT_STATE;
 	mState = state_not_configured;
+	return STATUS_SUCCESS;
 }
 
 uint8_t tSensorCache::setSensorType(uint8_t SensorType, uint8_t ApiVersion)

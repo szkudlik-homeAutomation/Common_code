@@ -47,6 +47,7 @@ uint8_t tSensorHub::getCachedSensorData(uint8_t SensorID, uint8_t deviceId, uint
 
    *dataBlobSize = pSensorCache->getDataBlobSize();
    *pDataBlob = pSensorCache->getData();
+   return STATUS_SUCCESS;
 }
 
 
@@ -144,6 +145,7 @@ uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
 		  pStream->print("\r\n");
       }
    }
+   return STATUS_SUCCESS;
 }
 
 #endif // CONFIG_SENSORS_JSON_OUTPUT
@@ -169,6 +171,7 @@ uint8_t tSensorHub::getCachedAggregatedSensorsDataJson(Stream *pStream)
 
 	pStream->print(F("\"NumOfSensors\":"));
 	pStream->print(cnt);
+	return STATUS_SUCCESS;
 }
 #endif // CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT
 

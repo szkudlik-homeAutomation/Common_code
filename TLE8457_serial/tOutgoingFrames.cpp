@@ -12,14 +12,13 @@
 #include "TLE8457_serial_lib.h"
 
 // VERSION HANDSHAKE
-bool tOutgoingFrames::SendMsgVersionRequest(uint8_t RecieverID)
+void tOutgoingFrames::SendMsgVersionRequest(uint8_t RecieverID)
 {
   DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_FW_VERSION_REQUEST");
   CommSenderProcess::Instance->Enqueue(RecieverID,MESSAGE_TYPE_FW_VERSION_REQUEST,0,NULL);
-  return true;
 }
 
-bool tOutgoingFrames::SendMsgVersionResponse(uint8_t RecieverID, uint8_t Major, uint8_t Minor, uint8_t Patch)
+void tOutgoingFrames::SendMsgVersionResponse(uint8_t RecieverID, uint8_t Major, uint8_t Minor, uint8_t Patch)
 {
   tMessageTypeFwVesionResponse Msg;
   Msg.Major = Major;
@@ -29,13 +28,13 @@ bool tOutgoingFrames::SendMsgVersionResponse(uint8_t RecieverID, uint8_t Major, 
   CommSenderProcess::Instance->Enqueue(RecieverID,MESSAGE_TYPE_FW_VERSION_RESPONSE,sizeof(Msg),&Msg);
 };
 
-bool tOutgoingFrames::SendMsgReset(uint8_t RecieverID)
+void tOutgoingFrames::SendMsgReset(uint8_t RecieverID)
 {
   DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_FORCE_RESET");
   CommSenderProcess::Instance->Enqueue(RecieverID,MESSAGE_TYPE_FORCE_RESET,0,NULL);
 }
 
-bool tOutgoingFrames::SendMsgStatus(uint8_t RecieverID, uint8_t Status)
+void tOutgoingFrames::SendMsgStatus(uint8_t RecieverID, uint8_t Status)
 {
     tMesssageGeneralStatus Msg;
     DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_GENERAL_STATUS");
@@ -45,34 +44,31 @@ bool tOutgoingFrames::SendMsgStatus(uint8_t RecieverID, uint8_t Status)
 
 #if CONFIG_OUTPUT_PROCESS
 // OVERVIEW STATE HANDSHAKE
-bool tOutgoingFrames::SendMsgOverviewStateRequest(uint8_t RecieverID)
+void tOutgoingFrames::SendMsgOverviewStateRequest(uint8_t RecieverID)
 {
   DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_OVERVIEW_STATE_REQUEST");
   CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_OVERVIEW_STATE_REQUEST, 0, NULL);
-  return true;
 }
 
-bool tOutgoingFrames::SendMsgOverviewStateResponse(uint8_t RecieverID, uint8_t  PowerState, uint8_t  TimerState)
+void tOutgoingFrames::SendMsgOverviewStateResponse(uint8_t RecieverID, uint8_t  PowerState, uint8_t  TimerState)
 {
   tMessageTypeOverviewStateResponse Msg;
   Msg.PowerState = PowerState;
   Msg.TimerState = TimerState;
   DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_OVERVIEW_STATE_RESPONSE");
   CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_OVERVIEW_STATE_RESPONSE, sizeof(Msg), &Msg);
-  return true;
 }
 
 // GET OUTPUT STATE HANDSHAKE
-bool tOutgoingFrames::SendMsgOutputStateRequest(uint8_t RecieverID, uint8_t  OutputID)
+void tOutgoingFrames::SendMsgOutputStateRequest(uint8_t RecieverID, uint8_t  OutputID)
 {
   tMessageTypeOutputStateRequest Msg;
   Msg.OutputID = OutputID;
   DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_OUTPUT_STATE_REQUEST");
   CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_OUTPUT_STATE_REQUEST, sizeof(Msg), &Msg);
-  return true;
-};
+}
 
-bool tOutgoingFrames::SendMsgOutputStateResponse(uint8_t RecieverID, uint8_t  OutputID, uint8_t  PowerState, uint16_t TimerValue, uint16_t DefaultTimer)
+void tOutgoingFrames::SendMsgOutputStateResponse(uint8_t RecieverID, uint8_t  OutputID, uint8_t  PowerState, uint16_t TimerValue, uint16_t DefaultTimer)
 {
   tMessageTypeOutputStateResponse Msg;
   Msg.OutputID = OutputID;
@@ -81,9 +77,7 @@ bool tOutgoingFrames::SendMsgOutputStateResponse(uint8_t RecieverID, uint8_t  Ou
   Msg.DefaultTimer = DefaultTimer;
   DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_OUTPUT_STATE_RESPONSE");
   CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_OUTPUT_STATE_RESPONSE, sizeof(Msg), &Msg);
-
-  return true;
-};
+}
 
 // SET OUTPUT
 bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8_t  State, uint16_t Timer)
@@ -100,7 +94,7 @@ bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8
 
 #if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 
-static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
+bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorID, uint8_t EventType, bool onDemand,
 		void *pPayload, uint8_t payloadSize, uint8_t seq, bool LastSegment)
 {
     DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_EVENT");
@@ -119,11 +113,12 @@ static bool tOutgoingFrames::SendSensorEvent(uint8_t RecieverID, uint8_t SensorI
     memcpy(Message.Payload, pPayload, payloadSize);
 
     CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_EVENT, sizeof(tMessageSensorEvent), &Message);
+    return true;
 }
 #endif CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL
 
 #if CONFIG_SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
-static bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod)
+bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod)
 {
 	tMessageSensorConfigure Msg;
 	DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SENSOR_CONFIGURE");
@@ -148,6 +143,7 @@ static bool tOutgoingFrames::SendSensorConfigure(uint8_t RecieverID, uint8_t Sen
 	}
 
 	CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SENSOR_CONFIGURE, sizeof(Msg), &Msg);
+	return true;
 }
 
 #endif //CONFIG_SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
