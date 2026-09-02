@@ -72,6 +72,11 @@ uint8_t tImpulseSensor::onSetConfig()
 
 tImpulseSensor::tImpulseSensor(uint8_t sensorID) : tSensor(SENSOR_TYPE_IMPULSE, sensorID, API_VERSION, sizeof(Config), &Config)
 {
+	if (mLastSensorNum >= IMPULSE_SENSOR_MAX_SENSORS)
+	{
+		mSensorNum = IMPULSE_SENSOR_MAX_SENSORS; // mark as invalid; onSetConfig will return error
+		return;
+	}
 	mSensorNum = mLastSensorNum++;
 	mResult.Count = 0;
 	mResult.Sum = 0;

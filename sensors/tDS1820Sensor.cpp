@@ -131,6 +131,8 @@ uint8_t tDS1820Sensor::onSetConfig()
    // calculate size of the result
    mMeasurementBlobSize = sizeof(tResult) + (sizeof(tDs1820Data) * mNumOfDevices);
    mCurrentMeasurementBlob = malloc(mMeasurementBlobSize);
+   if (NULL == mCurrentMeasurementBlob)
+       return STATUS_GENERAL_FAILURE;
 
    getCurrentMeasurement()->Avg = Config.Avg;
    getCurrentMeasurement()->NumOfDevices = mNumOfDevices;
@@ -199,7 +201,10 @@ void tDS1820Sensor::doTimeTick()
                   Success = false;  // error
                }
             }
-            getCurrentMeasurement()->Dev[0].Temperature /= NumOfValidMeasurements;
+            if (NumOfValidMeasurements > 0)
+               getCurrentMeasurement()->Dev[0].Temperature /= NumOfValidMeasurements;
+            else
+               Success = false;
          }
          else  // is !Config.Avg
          {
@@ -233,6 +238,7 @@ uint8_t tDS1820Sensor::compareAddr(uint8_t* pDeviceAddress1, uint8_t* pDeviceAdd
          return false;
       }
    }
+   return true;
 }
 
 uint8_t tDS1820Sensor::findDevID(uint8_t* pDeviceAddress)
