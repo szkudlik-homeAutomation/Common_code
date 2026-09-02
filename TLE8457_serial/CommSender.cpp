@@ -55,6 +55,8 @@ void CommSenderProcess::Enqueue(uint8_t DstDevId, uint8_t MessageType, uint8_t D
 
 void CommSenderProcess::service()
 {
+  if (CommRecieverProcess::Instance == NULL) return;
+
   if (isSending)
   {
     // wait till the frame has been physically sent

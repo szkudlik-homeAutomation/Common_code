@@ -21,7 +21,8 @@ void COMM_SERIAL_EVENT() {
 CommRecieverProcess::CommRecieverProcess()
    : Process(LOW_PRIORITY,CommSenderProcess::frameTransmissionTime),
      mRetransTableHead(0),
-     mSelfDevId(0)
+     mSelfDevId(0),
+     mSelfFrameMark(false)
 {
   Instance = this;
   SetState(STATE_NOT_CONFIGURED);
