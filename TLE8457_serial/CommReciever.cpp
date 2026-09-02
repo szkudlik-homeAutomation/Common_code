@@ -154,7 +154,6 @@ void CommRecieverProcess::ProcessFrame()
     // this is a frame sent by us, mark that it has been properly recieved and drop the frame
      DEBUG_PRINTLN_2("SELF SENT FRAME RECIEVED");
      mSelfFrameMark = true;
-     return;
   }
 
   // are we the reciever?
