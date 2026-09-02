@@ -193,8 +193,8 @@ void tSensorControlFromRemote::HandeMsgRestoreSensorsFromEeprom(uint8_t SenderID
 void tSensorControlFromRemote::HandeMsgCleanSensorsFromEeprom(uint8_t SenderID)
 {
 	uint8_t result;
-	result = tSensor::DeleteAllSensorsFromEeprom();
-    tOutgoingFrames::SendMsgStatus(SenderID, result);
+	tSensor::DeleteAllSensorsFromEeprom();
+    tOutgoingFrames::SendMsgStatus(SenderID, STATUS_SUCCESS);
 }
 
 #endif CONFIG_SENSORS_STORE_IN_EEPROM_REMOTE_CONTROL

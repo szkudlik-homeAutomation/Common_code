@@ -59,8 +59,8 @@ void tSensorHubMessageReciever::HandleMsgSensorDetected(uint8_t SenderID, tMessa
 
     if (!Message->isConfigured && STATUS_SUCCESS == result)
     {
-    	result = pSensorCache->setAsDetected();
-    	return; // not configured yet, skip config
+    	pSensorCache->setAsDetected();
+    	return; // not configured yet, skip config, ignore setAsDetected() result
     }
 
     if (STATUS_SUCCESS == result)
