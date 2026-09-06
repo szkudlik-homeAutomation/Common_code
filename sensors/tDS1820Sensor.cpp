@@ -150,7 +150,7 @@ uint8_t tDS1820Sensor::onSetConfig()
             DEBUG_PRINTLN_3("            ERROR device not found");
             return STATUS_CONFIG_SET_ERROR;
          }
-#if CONFIG_LOGLEVEL_3
+#if DEBUG_LOGLEVEL_3
          else
          {
             DEBUG_PRINT_3("             FOUND, serial: ");
@@ -158,7 +158,7 @@ uint8_t tDS1820Sensor::onSetConfig()
             printAddress((uint8_t*)getCurrentMeasurement()->Dev[i].Addr, &CONFIG_LOGGER_SERIAL);
             DEBUG_PRINTLN_3("");
          }
-#endif
+#endif // DEBUG_LOGLEVEL_3
       }
    }
    return STATUS_SUCCESS;

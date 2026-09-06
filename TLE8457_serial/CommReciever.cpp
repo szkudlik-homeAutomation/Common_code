@@ -130,7 +130,7 @@ void CommRecieverProcess::ProcessFrame()
   }
 
 
-  #if CONFIG_LOGLEVEL_1
+  #if DEBUG_LOGLEVEL_1
     // printout frame
     CONFIG_LOGGER_SERIAL.print(F("SenderDevId = 0x"));
     CONFIG_LOGGER_SERIAL.print(mFrame.SenderDevId,HEX);
@@ -146,7 +146,7 @@ void CommRecieverProcess::ProcessFrame()
       CONFIG_LOGGER_SERIAL.print(mFrame.Data[i],HEX);
     }
     CONFIG_LOGGER_SERIAL.println();
-  #endif
+  #endif // DEBUG_LOGLEVEL_1
 
   // are we the sender?
   if (mFrame.SenderDevId ==  mSelfDevId)
