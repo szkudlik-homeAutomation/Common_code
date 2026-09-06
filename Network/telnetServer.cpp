@@ -525,6 +525,6 @@ const commandList_t TelnetCommands[] = {
 
 };
 
-tTelnetServer TelnetServer(TelnetCommands,sizeof(TelnetCommands)/sizeof(TelnetCommands[0]));
+tTelnetServer TelnetServer(TelnetCommands,sizeof(TelnetCommands));
 
 #endif // CONFIG_TELNET_SERVER
