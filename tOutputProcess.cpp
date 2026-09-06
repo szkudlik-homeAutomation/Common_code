@@ -258,6 +258,18 @@ void tOutputProcess::onMessage(uint8_t type, uint16_t data, void *pData)
             }
         }
         break;
+
+    case MESSAGE_TYPE_SET_OUTPUT_MASK:
+        {
+            tMessageTypeSetOutputMask* Message = (tMessageTypeSetOutputMask*)(pFrame->Data);
+            for (uint8_t i = 0; i < getNumOfOutputs(); i++)
+            {
+                if (Message->OutMask & ((uint16_t)1 << i))
+                {
+                    SetOutput(i, Message->StateMask & ((uint16_t)1 << i) ? 1 : 0, Message->Timer, ForceTimer);
+                }
+            }
+        }
     }
 #endif // CONFIG_TLE8457_COMM_LIB
 }

@@ -231,4 +231,18 @@ C_ASSERT(sizeof(tMessageSensorStop) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
 #define MESSAGE_TYPE_SENSORS_RESTORE 0x1C
 #define MESSAGE_TYPE_SENSORS_CLEAN 0x1D
 
-#endif CONFIG_TLE8457_COMM_LIB
+/**
+ * Sent by the central node - arbitrary set state of outputs
+ */
+#define MESSAGE_TYPE_SET_OUTPUT_MASK 0x1E
+typedef struct
+{
+  uint16_t  OutMask;      // the output mask to be set
+  uint16_t  StateMask;    // the state mask corresponding to the output mask
+  uint16_t Timer;         // timer when the output should be turned off. In seconds, 0 means forever, 0xFFFF means default timer value, common for all outputs
+} tMessageTypeSetOutputMask;
+C_ASSERT(sizeof(tMessageTypeSetOutputMask) <= CONFIG_COMMUNICATION_PAYLOAD_DATA_SIZE);
+
+
+
+#endif // CONFIG_TLE8457_COMM_LIB

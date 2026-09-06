@@ -90,6 +90,17 @@ bool tOutgoingFrames::SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8
   CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SET_OUTPUT, sizeof(Message), &Message);
   return true;
 }
+
+bool tOutgoingFrames::SendMsgSetOutputMask(uint8_t RecieverID, uint16_t OutMask, uint16_t StateMask, uint16_t Timer)
+{
+  tMessageTypeSetOutputMask Message;
+  Message.OutMask = OutMask;
+  Message.StateMask = StateMask;
+  Message.Timer = Timer;
+  DEBUG_PRINTLN_3("===================>sending MESSAGE_TYPE_SET_OUTPUT_MASK");
+  CommSenderProcess::Instance->Enqueue(RecieverID, MESSAGE_TYPE_SET_OUTPUT_MASK, sizeof(Message), &Message);
+  return true;
+}
 #endif // CONFIG_OUTPUT_PROCESS
 
 #if CONFIG_SENSOR_SEND_EVENTS_USING_SERIAL

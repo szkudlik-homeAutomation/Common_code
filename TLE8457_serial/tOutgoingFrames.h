@@ -20,11 +20,13 @@ public:
     static void SendMsgStatus(uint8_t RecieverID, uint8_t Status);
 
 #if CONFIG_OUTPUT_PROCESS
+//FIX: sendig of request frames should be independent from output process
     static void SendMsgOverviewStateRequest(uint8_t RecieverID);
     static void SendMsgOverviewStateResponse(uint8_t RecieverID, uint8_t  PowerState, uint8_t  TimerState);
     static void SendMsgOutputStateRequest(uint8_t RecieverID, uint8_t  OutputID);
     static void SendMsgOutputStateResponse(uint8_t RecieverID, uint8_t  OutputID, uint8_t  PowerState, uint16_t TimerValue, uint16_t DefaultTimer);
     static bool SendMsgSetOutput(uint8_t RecieverID, uint8_t  OutId, uint8_t  State, uint16_t Timer);
+    static bool SendMsgSetOutputMask(uint8_t RecieverID, uint16_t OutMask, uint16_t StateMask, uint16_t Timer);
 #endif // CONFIG_OUTPUT_PROCESS
 #if CONFIG_SENSORS_CONTROL_SENDER_OF_CONTOL_MESSAGES
     static bool SendSensorConfigure(uint8_t RecieverID, uint8_t SensorID, uint8_t seq, bool LastSegment, void *pPayload, uint8_t payloadSize, uint16_t MeasurementPeriod);
