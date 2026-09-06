@@ -4,7 +4,6 @@
  *  Created on: Dec 9, 2022
  *      Author: mszkudli
  */
-
 #include "../../../../global.h"
 
 #if CONFIG_OUTPUT_CONTROL_SERVLET
@@ -18,20 +17,35 @@
 
 bool tOutputSetServlet::ProcessAndResponse()
 {
-   uint8_t Status;
-   uint16_t Output;  // output iD
-   uint16_t State;  // 1 - on, 0 - off
+   uint16_t Output_or_OutputMask;  // output mask, bitmap
+   bool isMask = false;
+   
+   uint16_t State_or_StateBitmap;  // output mask, bitmap
    uint16_t Timer = 0; // TODO DEFAULT_TIMER;
    uint16_t Device;
    bool ParametersOK = true;
-
-#if CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
    bool ExternalDevice = false;
-   ExternalDevice = GetParameter("Dev",&Device);
-#endif // CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
 
-   ParametersOK &= GetParameter("Out",&Output);
-   ParametersOK &= GetParameter("State",&State);
+   // there may be single output or multiple outputs specified
+   // url for single output: ...?Out=<output_id>&State=<state>&Timer=<timer_value> or Dev=<device_id>&Out=<output_id>&State=<state>&Timer=<timer_value>
+
+   // url for bitmap:
+   // ...?OutMask=<output_mask>&State=<state_bitmap>&Timer=<timer_value common for all outputs> or Dev=<device_id>&OutMask=<output_mask>&State=<state_bitmap>&Timer=<timer_value common for all outputs>
+
+   #if CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
+      ExternalDevice = GetParameter("Dev",&Device); // check if external device parameter is provided
+   #endif // CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
+
+   if (GetParameter("OutMask",&Output_or_OutputMask))
+   {
+       isMask = true;
+       ParametersOK &= GetParameter("State",&State_or_StateBitmap);
+   }
+   else
+   {
+       ParametersOK &= GetParameter("Out",&Output_or_OutputMask);
+       ParametersOK &= GetParameter("State",&State_or_StateBitmap);
+   }
    GetParameter("Timer",&Timer);    // optional
 
    if (! ParametersOK)
@@ -40,38 +54,76 @@ bool tOutputSetServlet::ProcessAndResponse()
      return false;
    }
 
-   DEBUG_PRINT_2("==>HTTP set output, Out=");
-   DEBUG_2(print(Output,DEC));
-   DEBUG_PRINT_2(" State=");
-   DEBUG_2(print(State,DEC));
-   DEBUG_PRINT_2(" Timer=");
-   DEBUG_2(println(Timer,DEC));
+   #if DEBUG_LOGLEVEL_2   
+      if (isMask)
+      {
+         DEBUG_PRINT_2("==>HTTP set output, OutputMask=");
+         DEBUG_2(print(Output_or_OutputMask,BIN));
+         DEBUG_PRINT_2(" StateMask=");
+         DEBUG_2(print(State_or_StateBitmap,BIN));
+         DEBUG_PRINT_2(" Timer=");
+         DEBUG_2(println(Timer,DEC));
+      }
+      else
+      {
+         DEBUG_PRINT_2("==>HTTP set output, Output=");
+         DEBUG_2(print(Output_or_OutputMask,DEC));
+         DEBUG_PRINT_2(" State=");
+         DEBUG_2(print(State_or_StateBitmap,DEC));
+         DEBUG_PRINT_2(" Timer=");
+         DEBUG_2(println(Timer,DEC));
+      }
+   #endif // DEBUG_LOGLEVEL_2
 
-#if CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
    if (ExternalDevice)
    {
-	   tOutgoingFrames::SendMsgSetOutput(Device, Output, State, Timer);
-	   SendResponse200();
-	   return false;
-   }
-#endif // CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
+      // send command to external device
+      #if CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL
+      if (isMask)
+         tOutgoingFrames::SendMsgSetOutputMask(Device, Output_or_OutputMask, State_or_StateBitmap, Timer);
+      else         
+         tOutgoingFrames::SendMsgSetOutput(Device, Output_or_OutputMask, State_or_StateBitmap, Timer);
 
-#if CONFIG_OUTPUT_PROCESS
-   if (NULL != tOutputProcess::Instance) {
-	   Status = tOutputProcess::Instance->SetOutput(Output,State,Timer,tOutputProcess::ForceTimer);
-		if (STATUS_SUCCESS == Status) {
-			SendResponse200();
-		} else {
-			SendResponse400();
-		}
-	   return false;
-   }
-#endif // CONFIG_OUTPUT_PROCESS
+         SendResponse200();
+      #else
+         // handle case when TLE8457 serial is not used
+         SendResponse501();
+      #endif // CONFIG_OUTPUT_CONTROL_SERVLET_USE_TLE8457_SERIAL      
 
-   SendResponse501();
+      return false;
+   }
+
+   #if CONFIG_OUTPUT_PROCESS
+      // local device handling, check if output process instance is available
+      if (NULL == tOutputProcess::Instance && !ExternalDevice) 
+      {
+         SendResponse501();
+         return false;
+      }
+
+      if (isMask)
+      {
+         for(uint8_t out = 0; out < 16; out++)
+         {
+            if ((Output_or_OutputMask & (1 << out)) == 0)
+               continue;
+
+            uint8_t state = (State_or_StateBitmap & ((uint16_t)1 << out)) ? 1 : 0;
+
+            tOutputProcess::Instance->SetOutput(out, state, Timer, tOutputProcess::ForceTimer);
+         }
+      }
+      else
+      {
+         tOutputProcess::Instance->SetOutput(Output_or_OutputMask,(State_or_StateBitmap ? 1 : 0),Timer,tOutputProcess::ForceTimer);
+      }
+      SendResponse200();
+   #else // CONFIG_OUTPUT_PROCESS
+      SendResponse501();
+   #endif // CONFIG_OUTPUT_PROCESS
+
    return false;
 }
-
 
 bool tOutputStateServlet::ProcessAndResponse()
 {
