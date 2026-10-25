@@ -16,6 +16,7 @@ public:
 	tApplication() {Instance = this;}
 
 	void Setup();
+	static void resetSystem();
 
 protected:
 	/* called just after the logger is initialized

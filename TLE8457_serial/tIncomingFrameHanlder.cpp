@@ -8,6 +8,7 @@
 #include "../../../global.h"
 #if CONFIG_TLE8457_COMM_LIB
 
+#include "../tApplication.h"
 #include "tIncomingFrameHanlder.h"
 #include "tOutgoingFrames.h"
 
@@ -35,8 +36,7 @@ void tIncomingFrameHanlder::onMessage(uint8_t type, uint16_t data, void *pData)
 
        case MESSAGE_TYPE_FORCE_RESET:
              DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_FORCE_RESET");
-             cli();
-             while(1); // let watchdog reboot the device
+             tApplication::resetSystem();   // never returns
            break;
        case MESSAGE_TYPE_GENERAL_STATUS:
            DEBUG_PRINTLN_3("===================>MESSAGE_TYPE_GENERAL_STATUS");

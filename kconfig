@@ -11,6 +11,33 @@ config WATCHDOG
     bool "Enable Watchdog Timer"
     default y
     
+config WATCHDOG_GPIO_RESET
+    bool "Enable GPIO reset on watchdog"
+    depends on WATCHDOG
+    default n
+    help
+      Pulse a GPIO pin to reset the system (or external hardware).
+      pin is always active low with open-drain type
+
+config WATCHDOG_GPIO_RESET_TIMEOUT
+    int "Timeout in seconds for asserting GPIO reset, must be shorter  than Watchdog Timer Timeout"
+    depends on WATCHDOG_GPIO_RESET
+    range 2 7
+    default 2
+
+config WATCHDOG_GPIO_RESET_PIN
+    int "Reset GPIO pin number"
+    depends on WATCHDOG_GPIO_RESET
+    range 0 255
+    default 0
+
+
+config WATCHDOG_GPIO_RESET_PULSE_TIME_MS
+    int "Reset GPIO pulse time (ms)"
+    depends on WATCHDOG_GPIO_RESET
+    range 1 10000
+    default 100
+
 config WORKER_PROCESS
     bool "Enable Worker Process"
     default n
