@@ -59,6 +59,12 @@ tSensorControlFromRemote SensorControlFromRemote;
 
 tApplication *tApplication::Instance;
 
+void tApplication::resetSystem() {
+#if CONFIG_WATCHDOG
+	WatchdogProcess.resetSystem();
+#endif
+}
+
 void tApplication::Setup() {
 
 #if CONFIG_LOGGER_TRANSPORT_SERIAL

@@ -43,8 +43,47 @@ void tWatchdogProcess::service()
    {
       // set in HW that everything is fine
       watchdog.reset();
+      #if CONFIG_WATCHDOG_GPIO_RESET
+      mGpioTimeoutCnt = 0;
+      #endif // CONFIG_WATCHDOG_GPIO_RESET
    }
+   #if CONFIG_WATCHDOG_GPIO_RESET
+   else
+   {
+      mGpioTimeoutCnt++;
+      if (mGpioTimeoutCnt >= CONFIG_WATCHDOG_GPIO_RESET_TIMEOUT)
+      {
+         doGpioReset();
+      }
+   }
+   #endif // CONFIG_WATCHDOG_GPIO_RESET
+   
 }
 
+#if CONFIG_WATCHDOG_GPIO_RESET
+void tWatchdogProcess::doGpioReset()
+{
+
+   digitalWrite(CONFIG_WATCHDOG_GPIO_RESET_PIN, LOW);
+   pinMode(CONFIG_WATCHDOG_GPIO_RESET_PIN, OUTPUT);   // set the GPIO pin to output mode for triggering the reset pulse (open-drain, strong pull down)
+
+   // wait for the reset pulse to be recognized by the hardware
+   // note - if the gpio reset pin reset CPU this delay may not be reached
+   delay(CONFIG_WATCHDOG_GPIO_RESET_PULSE_TIME_MS);
+
+   pinMode(CONFIG_WATCHDOG_GPIO_RESET_PIN, INPUT); // set back to input mode after the reset pulse (weak pull-up)
+}
+#endif // CONFIG_WATCHDOG_GPIO_RESET
+
+void tWatchdogProcess::resetSystem()
+{
+   #if CONFIG_WATCHDOG_GPIO_RESET
+   doGpioReset();
+   #endif // CONFIG_WATCHDOG_GPIO_RESET
+
+   // stop interrupts and wait for HW watchdog to reset the system
+   noInterrupts();
+   while (true) {}
+}
 
 #endif //CONFIG_WATCHDOG
