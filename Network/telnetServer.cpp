@@ -32,6 +32,8 @@
 #include "../../../global.h"
 #if CONFIG_TELNET_SERVER
 
+#include "../tApplication.h"
+
 #ifdef TELNET_APP_SPECIFIC_INCLUDE
 #include TELNET_APP_SPECIFIC_INCLUDE
 #endif // TELNET_APP_SPECIFIC_INCLUDE
@@ -145,8 +147,8 @@ static bool send_GetVersion_local(Commander &Cmdr)
 
 static bool send_Reset_local(Commander &Cmdr)
 {
-    cli();
-    while(1); // let watchdog reboot the device
+    tApplication::resetSystem();
+    return true;  // never returns, system will reset
 }
 
 #endif //CONFIG_TLE8457_COMM_LIB
