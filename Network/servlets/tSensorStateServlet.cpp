@@ -13,9 +13,12 @@
 
 bool tSensorStateServlet::ProcessAndResponse()
 {
+   uint16_t verbose = 0;
+   GetParameter("verbose", &verbose);
+
    pOwner->SendFlashString(PSTR("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n{\"Sensors\":{\r\n"));
 
-   tSensorHub::Instance->getCachedSensorsDataJson(&pOwner->mEthernetClient);
+   tSensorHub::Instance->getCachedSensorsDataJson(&pOwner->mEthernetClient, !!verbose);
 
    pOwner->SendFlashString(PSTR("}\r\n"));
 

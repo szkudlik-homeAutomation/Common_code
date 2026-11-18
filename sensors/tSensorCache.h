@@ -140,7 +140,7 @@ public:
 	 *
 	 * note! format JSON should support all APIs that are in the system (backward compatibility)
 	 */
-   uint8_t formatJSON(Stream *pStream);
+   uint8_t formatJSON(Stream *pStream, bool verbose);
 #endif //CONFIG_SENSORS_JSON_OUTPUT
 
 #if CONFIG_SENSOR_AGGREAGETED_JSON_OUTPUT

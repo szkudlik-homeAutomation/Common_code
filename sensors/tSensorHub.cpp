@@ -118,7 +118,7 @@ uint8_t tSensorHub::RegisterSensor(uint8_t SensorID, uint8_t deviceId, const __F
 }
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, uint8_t deviceId, Stream *pStream)
+uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, uint8_t deviceId, Stream *pStream, bool verbose)
 {
    tSensorCache *pSensorCache = tSensorCache::getByID(SensorID, deviceId);
    if (NULL == pSensorCache)
@@ -126,15 +126,15 @@ uint8_t tSensorHub::getCachedSensorDataJson(uint8_t SensorID, uint8_t deviceId, 
       return STATUS_UNKNOWN_SENSOR_ID;
    }
 
-   return pSensorCache->formatJSON(pStream);
+   return pSensorCache->formatJSON(pStream, verbose);
 }
 
-uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream)
+uint8_t tSensorHub::getCachedSensorsDataJson(Stream *pStream, bool verbose)
 {
    tSensorCache *pSensorCache = tSensorCache::getFirst();
    while(NULL != pSensorCache)
    {
-      uint8_t result = pSensorCache->formatJSON(pStream);
+      uint8_t result = pSensorCache->formatJSON(pStream, verbose);
       pSensorCache = pSensorCache->getNext();
       if (result == STATUS_SUCCESS)
       {

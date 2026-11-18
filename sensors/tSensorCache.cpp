@@ -197,7 +197,7 @@ void tSensorCache::UpdateTimeout()
 }
 
 #if CONFIG_SENSORS_JSON_OUTPUT
-uint8_t tSensorCache::formatJSON(Stream *pStream)
+uint8_t tSensorCache::formatJSON(Stream *pStream, bool verbose)
 {
    uint8_t SensorStatus = STATUS_SUCCESS;
    if (NULL == GetName())
@@ -216,75 +216,80 @@ uint8_t tSensorCache::formatJSON(Stream *pStream)
 		   SensorStatus = mFormatJSON->FormatJSON(pStream, this);
 	   }
    }
+   pStream->print(F("}"));
 
-   pStream->print(F("},\"GeneralData\":{\"State\":"));
-   pStream->print(mState);
-   pStream->print(F(",\"StateString\":"));
-   switch (mState)
+   if (verbose)
    {
-   case state_not_seen:
-   	   pStream->print(F("\"sensor not detected\""));
-   	   break;
-   case	state_not_configured:
-   	   pStream->print(F("\"sensor not configured\""));
-   	   break;
-   case state_no_data_recieved:
-   	   pStream->print(F("\"no_data_recieved\""));
-   	   break;
-   case state_working:
-   	   pStream->print(F("\"working\""));
-   	   break;
-   case state_timeout:
-   	   pStream->print(F("\"timeout\""));
-   	   break;
-   case state_sensor_error_reported:
-   	   pStream->print(F("\"sensor_error_reported\""));
-   	   break;
-   case state_create_error:
-   	   pStream->print(F("\"create_error\""));
-   	   break;
-   case state_incorrect_data_size:
-   	   pStream->print(F("\"incorrect_data_size\""));
-   	   break;
-   case state_inconsistent_params:
-   	   pStream->print(F("\"inconsistent_params\""));
-   	   break;
-   case state_data_transfer_error:
-       pStream->print(F("\"data_transfer_error\""));
-       break;
+		pStream->print(F(",\"GeneralData\":{\"State\":"));
+		pStream->print(mState);
+		pStream->print(F(",\"StateString\":"));
+		switch (mState)
+		{
+		case state_not_seen:
+			pStream->print(F("\"sensor not detected\""));
+			break;
+		case	state_not_configured:
+			pStream->print(F("\"sensor not configured\""));
+			break;
+		case state_no_data_recieved:
+			pStream->print(F("\"no_data_recieved\""));
+			break;
+		case state_working:
+			pStream->print(F("\"working\""));
+			break;
+		case state_timeout:
+			pStream->print(F("\"timeout\""));
+			break;
+		case state_sensor_error_reported:
+			pStream->print(F("\"sensor_error_reported\""));
+			break;
+		case state_create_error:
+			pStream->print(F("\"create_error\""));
+			break;
+		case state_incorrect_data_size:
+			pStream->print(F("\"incorrect_data_size\""));
+			break;
+		case state_inconsistent_params:
+			pStream->print(F("\"inconsistent_params\""));
+			break;
+		case state_data_transfer_error:
+			pStream->print(F("\"data_transfer_error\""));
+			break;
 
 
-   default: pStream->print(F("\"unknown\""));
+		default: pStream->print(F("\"unknown\""));
+		}
+
+		if (isConfigured())
+		{
+			pStream->print(F(",\"SensorType\":"));
+			pStream->print(mSensorType);
+
+			pStream->print(F(",\"SensorStatus\":"));
+			pStream->print(SensorStatus);
+
+			pStream->print(F(",\"ApiVersion\":"));
+			pStream->print(mSensorApiVersion);
+
+			pStream->print(F(",\"Period_100ms\":"));
+			pStream->print(mMeasurementPeriod);
+
+			pStream->print(F(",\"LastUpdate_100ms\":"));
+			pStream->print(getTimeSinceUpdate());
+
+			#if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
+			pStream->print(F(",\"NodeID\":"));
+			pStream->print(mNodeID);
+			#endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
+		}
+
+		pStream->print(F(",\"ID\":"));
+		pStream->print(mSensorID);
+
+
+		pStream->print(F("}"));
    }
-
-   if (isConfigured())
-   {
-	   pStream->print(F(",\"SensorType\":"));
-	   pStream->print(mSensorType);
-
-	   pStream->print(F(",\"SensorStatus\":"));
-	   pStream->print(SensorStatus);
-
-	   pStream->print(F(",\"ApiVersion\":"));
-	   pStream->print(mSensorApiVersion);
-
-	   pStream->print(F(",\"Period_100ms\":"));
-	   pStream->print(mMeasurementPeriod);
-
-	   pStream->print(F(",\"LastUpdate_100ms\":"));
-	   pStream->print(getTimeSinceUpdate());
-
-	   #if CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
-	   pStream->print(F(",\"NodeID\":"));
-	   pStream->print(mNodeID);
-	   #endif CONFIG_SENSOR_HUB_FOR_REMOTE_SENSORS
-   }
-
-   pStream->print(F(",\"ID\":"));
-   pStream->print(mSensorID);
-
-
-   pStream->print(F("}}"));
+	pStream->print(F("}"));
 
    return STATUS_SUCCESS;
 }

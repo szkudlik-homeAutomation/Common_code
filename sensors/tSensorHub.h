@@ -56,13 +56,13 @@ public:
 	 *
 	 * @retval SENSOR_STATUS_UNKNOWN_SENSOR
 	 */
-	uint8_t getCachedSensorDataJson(uint8_t SensorID, uint8_t deviceId, Stream *pStream);
+	uint8_t getCachedSensorDataJson(uint8_t SensorID, uint8_t deviceId, Stream *pStream, bool verbose);
 
    /**
     * get all sensor data as JSON
     * get data from a sensor stored locally, formatted in JSON, and stream them to provided (tcp)stream
     */
-   uint8_t getCachedSensorsDataJson(Stream *pStream);
+   uint8_t getCachedSensorsDataJson(Stream *pStream, bool verbose);
 
 #endif // CONFIG_SENSORS_JSON_OUTPUT
 
